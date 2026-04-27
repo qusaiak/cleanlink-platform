@@ -26,13 +26,21 @@ dependencies:
   flutter_spinkit: ^5.2.2
   lottie: ^3.3.3
   flutter_localization: ^0.4.0
+  url_launcher: ^6.3.2
+  cached_network_image: ^3.4.1
+  fluttertoast: ^9.0.0
+  retrofit: ^4.9.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  
+  build_runner: ^2.13.1
   flutter_gen_runner: ^5.13.0+1
+  retrofit_generator: ^10.2.3
 
+
+  flutter_lints: ^6.0.0
 
 flutter_gen:
   output: lib/core/utils/gen/
@@ -45,13 +53,16 @@ flutter_gen:
     lottie: true
 
 flutter:
-
   generate: true
   uses-material-design: true
 
   assets:
     - assets/images/
     - assets/images/placeholders/
+    - assets/images/onboarding/
+    - assets/images/logo/
+    - assets/icons/
+    - assets/animations/
 
 
   fonts:
