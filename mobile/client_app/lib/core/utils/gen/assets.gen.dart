@@ -12,18 +12,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart' as _svg;
-import 'package:lottie/lottie.dart' as _lottie;
 import 'package:vector_graphics/vector_graphics.dart' as _vg;
-
-class $AssetsAnimationsGen {
-  const $AssetsAnimationsGen();
-
-  /// File path: assets/animations/splash_animation.json
-  LottieGenImage get splashAnimation => const LottieGenImage('assets/animations/splash_animation.json');
-
-  /// List of all assets
-  List<LottieGenImage> get values => [splashAnimation];
-}
 
 class $AssetsIconsGen {
   const $AssetsIconsGen();
@@ -90,7 +79,6 @@ class $AssetsImagesPlaceholdersGen {
 class Assets {
   const Assets._();
 
-  static const $AssetsAnimationsGen animations = $AssetsAnimationsGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }
@@ -143,21 +131,6 @@ class SvgGenImage {
       loader = _svg.SvgAssetLoader(_assetName, assetBundle: bundle, packageName: package, theme: theme, colorMapper: colorMapper);
     }
     return _svg.SvgPicture(loader, key: key, matchTextDirection: matchTextDirection, width: width, height: height, fit: fit, alignment: alignment, allowDrawingOutsideViewBox: allowDrawingOutsideViewBox, placeholderBuilder: placeholderBuilder, semanticsLabel: semanticsLabel, excludeFromSemantics: excludeFromSemantics, colorFilter: colorFilter ?? (color == null ? null : ColorFilter.mode(color, colorBlendMode)), clipBehavior: clipBehavior, cacheColorFilter: cacheColorFilter);
-  }
-
-  String get path => _assetName;
-
-  String get keyName => _assetName;
-}
-
-class LottieGenImage {
-  const LottieGenImage(this._assetName, {this.flavors = const {}});
-
-  final String _assetName;
-  final Set<String> flavors;
-
-  _lottie.LottieBuilder lottie({Animation<double>? controller, bool? animate, _lottie.FrameRate? frameRate, bool? repeat, bool? reverse, _lottie.LottieDelegates? delegates, _lottie.LottieOptions? options, void Function(_lottie.LottieComposition)? onLoaded, _lottie.LottieImageProviderFactory? imageProviderFactory, Key? key, AssetBundle? bundle, Widget Function(BuildContext, Widget, _lottie.LottieComposition?)? frameBuilder, ImageErrorWidgetBuilder? errorBuilder, double? width, double? height, BoxFit? fit, AlignmentGeometry? alignment, String? package, bool? addRepaintBoundary, FilterQuality? filterQuality, void Function(String)? onWarning, _lottie.LottieDecoder? decoder, _lottie.RenderCache? renderCache, bool? backgroundLoading}) {
-    return _lottie.Lottie.asset(_assetName, controller: controller, animate: animate, frameRate: frameRate, repeat: repeat, reverse: reverse, delegates: delegates, options: options, onLoaded: onLoaded, imageProviderFactory: imageProviderFactory, key: key, bundle: bundle, frameBuilder: frameBuilder, errorBuilder: errorBuilder, width: width, height: height, fit: fit, alignment: alignment, package: package, addRepaintBoundary: addRepaintBoundary, filterQuality: filterQuality, onWarning: onWarning, decoder: decoder, renderCache: renderCache, backgroundLoading: backgroundLoading);
   }
 
   String get path => _assetName;
