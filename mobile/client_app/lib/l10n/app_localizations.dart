@@ -115,6 +115,354 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Welcome'**
   String get welcome;
+
+  /// No description provided for @help_text_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your service and schedule a cleaning with just a few taps.'**
+  String get help_text_1;
+
+  /// No description provided for @help_text_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Our experienced cleaners deliver high-quality and reliable service.'**
+  String get help_text_2;
+
+  /// No description provided for @help_text_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Sit back and enjoy your spotless home while we handle the work.'**
+  String get help_text_3;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// No description provided for @new_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'NEW'**
+  String get new_badge;
+
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get history;
+
+  /// No description provided for @profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// No description provided for @error_connection_timeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection timed out. Please try again.'**
+  String get error_connection_timeout;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @logging_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Logging in...'**
+  String get logging_in;
+
+  /// No description provided for @successful_login_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Login Successfully'**
+  String get successful_login_message;
+
+  /// No description provided for @successful_registration_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Registered Successfully'**
+  String get successful_registration_message;
+
+  /// No description provided for @personal_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Details'**
+  String get personal_details;
+
+  /// No description provided for @do_not_have_an_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account? '**
+  String get do_not_have_an_account;
+
+  /// No description provided for @invalid_mobile_number_error_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid mobile number'**
+  String get invalid_mobile_number_error_message;
+
+  /// No description provided for @empty_field_error_message.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get empty_field_error_message;
+
+  /// No description provided for @short_password_error_message.
+  ///
+  /// In en, this message translates to:
+  /// **'password must be at least 6 characters'**
+  String get short_password_error_message;
+
+  /// No description provided for @password_with_regex_error_message.
+  ///
+  /// In en, this message translates to:
+  /// **'password must contain at least 1 letter and 1 number'**
+  String get password_with_regex_error_message;
+
+  /// No description provided for @password_confirmation_error_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password does not match password'**
+  String get password_confirmation_error_message;
+
+  /// No description provided for @verify_account_error_message.
+  ///
+  /// In en, this message translates to:
+  /// **'please verify your account'**
+  String get verify_account_error_message;
+
+  /// No description provided for @verify_account_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Account'**
+  String get verify_account_action;
+
+  /// No description provided for @did_not_receive_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t receive code? '**
+  String get did_not_receive_code;
+
+  /// No description provided for @resend_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get resend_code;
+
+  /// No description provided for @error_connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your internet connection'**
+  String get error_connection;
+
+  /// No description provided for @creating_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating account...'**
+  String get creating_account;
+
+  /// No description provided for @verify_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Verification'**
+  String get verify_account;
+
+  /// No description provided for @verifying.
+  ///
+  /// In en, this message translates to:
+  /// **'Verifying...'**
+  String get verifying;
+
+  /// No description provided for @auth_login_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome'**
+  String get auth_login_title;
+
+  /// No description provided for @auth_login_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to continue managing your cleaning services'**
+  String get auth_login_subtitle;
+
+  /// No description provided for @auth_register_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get auth_register_title;
+
+  /// No description provided for @auth_register_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start your premium journey'**
+  String get auth_register_subtitle;
+
+  /// No description provided for @auth_phone_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get auth_phone_label;
+
+  /// No description provided for @auth_phone_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'9xx xxx xxx'**
+  String get auth_phone_hint;
+
+  /// No description provided for @auth_password_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get auth_password_label;
+
+  /// No description provided for @auth_password_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get auth_password_hint;
+
+  /// No description provided for @auth_confirm_password_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get auth_confirm_password_label;
+
+  /// No description provided for @auth_confirm_password_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-enter your password'**
+  String get auth_confirm_password_hint;
+
+  /// No description provided for @auth_old_password_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Old password'**
+  String get auth_old_password_label;
+
+  /// No description provided for @auth_new_password_label.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get auth_new_password_label;
+
+  /// No description provided for @auth_forgot_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get auth_forgot_password;
+
+  /// No description provided for @auth_create_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new account'**
+  String get auth_create_account;
+
+  /// No description provided for @auth_have_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? '**
+  String get auth_have_account;
+
+  /// No description provided for @auth_sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get auth_sign_in;
+
+  /// No description provided for @auth_sign_up.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign up'**
+  String get auth_sign_up;
+
+  /// No description provided for @auth_login_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get auth_login_button;
+
+  /// No description provided for @auth_register_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get auth_register_button;
+
+  /// No description provided for @auth_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get auth_continue;
+
+  /// No description provided for @validation_required.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get validation_required;
+
+  /// No description provided for @validation_phone_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid syrian phone number'**
+  String get validation_phone_invalid;
+
+  /// No description provided for @validation_password_short.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 8 characters'**
+  String get validation_password_short;
+
+  /// No description provided for @validation_password_uppercase.
+  ///
+  /// In en, this message translates to:
+  /// **'Must contain an uppercase letter'**
+  String get validation_password_uppercase;
+
+  /// No description provided for @validation_password_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Must contain a number'**
+  String get validation_password_number;
+
+  /// No description provided for @validation_passwords_no_match.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get validation_passwords_no_match;
+
+  /// No description provided for @validation_must_accept_terms.
+  ///
+  /// In en, this message translates to:
+  /// **'You must accept the terms'**
+  String get validation_must_accept_terms;
+
+  /// No description provided for @validation_age_18.
+  ///
+  /// In en, this message translates to:
+  /// **'You must be at least 18 years old'**
+  String get validation_age_18;
+
+  /// No description provided for @validation_required_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name'**
+  String get validation_required_name;
 }
 
 class _AppLocalizationsDelegate
