@@ -66,5 +66,43 @@
   "validation_passwords_no_match": "كلمات المرور غير متطابقة",
   "validation_must_accept_terms": "يجب الموافقة على الشروط",
   "validation_age_18": "يجب أن يكون عمرك 18 سنة على الأقل",
-  "validation_required_name": "الرجاء إدخال الاسم"
+  "validation_required_name": "الرجاء إدخال الاسم",
+  "auth_password_strength": "قوة كلمة المرور",
+  "auth_password_weak": "ضعيفة",
+  "auth_password_medium": "متوسطة",
+  "auth_password_strong": "قوية",
+  "auth_forgot_title": "نسيت كلمة المرور",
+  "auth_forgot_subtitle": "أدخل رقم هاتفك وسنرسل إليك رمز التحقق",
+  "auth_send_reset_code": "إرسال رمز التحقق",
+  "auth_back_to_login": "العودة لتسجيل الدخول",
+  "auth_reset_title": "إعادة تعيين كلمة المرور",
+  "auth_reset_subtitle": "أنشئ كلمة مرور جديدة وقوية لحسابك",
+  "auth_reset_button": "إعادة تعيين كلمة المرور",
+  "auth_change_password_title": "تغيير كلمة المرور",
+  "auth_change_password_subtitle": "حدّث كلمة المرور للحفاظ على حسابك آمناً",
+  "auth_update_password": "تحديث كلمة المرور",
+  "auth_full_name": "الاسم الكامل",
+  "auth_full_name_hint": "أدخل اسمك الكامل",
+  "auth_gender": "الجنس",
+  "auth_gender_male": "ذكر",
+  "auth_gender_female": "أنثى",
+  "auth_gender_other": "آخر",
+  "auth_gender_not_say": "أفضّل عدم الإجابة",
+  "auth_birth_date": "تاريخ الميلاد",
+  "auth_birth_date_hint": "اختر تاريخ ميلادك",
+  "auth_otp_title": "أدخل رمز التحقق",
+  "auth_otp_subtitle": "أرسلنا رمزاً مكوناً من 6 أرقام إلى {phone}",
+  "@auth_otp_subtitle": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+  "auth_otp_resend_in": "إعادة إرسال الرمز خلال {seconds} ث",
+  "@auth_otp_resend_in": {
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "auth_otp_resend": "إعادة إرسال الرمز",
+  "auth_otp_verify": "تحقق"
 }

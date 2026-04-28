@@ -199,4 +199,93 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get validation_required_name => 'الرجاء إدخال الاسم';
+
+  @override
+  String get auth_password_strength => 'قوة كلمة المرور';
+
+  @override
+  String get auth_password_weak => 'ضعيفة';
+
+  @override
+  String get auth_password_medium => 'متوسطة';
+
+  @override
+  String get auth_password_strong => 'قوية';
+
+  @override
+  String get auth_forgot_title => 'نسيت كلمة المرور';
+
+  @override
+  String get auth_forgot_subtitle => 'أدخل رقم هاتفك وسنرسل إليك رمز التحقق';
+
+  @override
+  String get auth_send_reset_code => 'إرسال رمز التحقق';
+
+  @override
+  String get auth_back_to_login => 'العودة لتسجيل الدخول';
+
+  @override
+  String get auth_reset_title => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get auth_reset_subtitle => 'أنشئ كلمة مرور جديدة وقوية لحسابك';
+
+  @override
+  String get auth_reset_button => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get auth_change_password_title => 'تغيير كلمة المرور';
+
+  @override
+  String get auth_change_password_subtitle =>
+      'حدّث كلمة المرور للحفاظ على حسابك آمناً';
+
+  @override
+  String get auth_update_password => 'تحديث كلمة المرور';
+
+  @override
+  String get auth_full_name => 'الاسم الكامل';
+
+  @override
+  String get auth_full_name_hint => 'أدخل اسمك الكامل';
+
+  @override
+  String get auth_gender => 'الجنس';
+
+  @override
+  String get auth_gender_male => 'ذكر';
+
+  @override
+  String get auth_gender_female => 'أنثى';
+
+  @override
+  String get auth_gender_other => 'آخر';
+
+  @override
+  String get auth_gender_not_say => 'أفضّل عدم الإجابة';
+
+  @override
+  String get auth_birth_date => 'تاريخ الميلاد';
+
+  @override
+  String get auth_birth_date_hint => 'اختر تاريخ ميلادك';
+
+  @override
+  String get auth_otp_title => 'أدخل رمز التحقق';
+
+  @override
+  String auth_otp_subtitle(String phone) {
+    return 'أرسلنا رمزاً مكوناً من 6 أرقام إلى $phone';
+  }
+
+  @override
+  String auth_otp_resend_in(int seconds) {
+    return 'إعادة إرسال الرمز خلال $seconds ث';
+  }
+
+  @override
+  String get auth_otp_resend => 'إعادة إرسال الرمز';
+
+  @override
+  String get auth_otp_verify => 'تحقق';
 }

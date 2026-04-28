@@ -463,6 +463,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter your name'**
   String get validation_required_name;
+
+  /// No description provided for @auth_password_strength.
+  ///
+  /// In en, this message translates to:
+  /// **'Password strength'**
+  String get auth_password_strength;
+
+  /// No description provided for @auth_password_weak.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get auth_password_weak;
+
+  /// No description provided for @auth_password_medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get auth_password_medium;
+
+  /// No description provided for @auth_password_strong.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong'**
+  String get auth_password_strong;
+
+  /// No description provided for @auth_forgot_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password'**
+  String get auth_forgot_title;
+
+  /// No description provided for @auth_forgot_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your phone number and we\'ll send you a verification code'**
+  String get auth_forgot_subtitle;
+
+  /// No description provided for @auth_send_reset_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Send reset code'**
+  String get auth_send_reset_code;
+
+  /// No description provided for @auth_back_to_login.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to login'**
+  String get auth_back_to_login;
+
+  /// No description provided for @auth_reset_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get auth_reset_title;
+
+  /// No description provided for @auth_reset_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new strong password for your account'**
+  String get auth_reset_subtitle;
+
+  /// No description provided for @auth_reset_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get auth_reset_button;
+
+  /// No description provided for @auth_change_password_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get auth_change_password_title;
+
+  /// No description provided for @auth_change_password_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your password to keep your account safe'**
+  String get auth_change_password_subtitle;
+
+  /// No description provided for @auth_update_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Update password'**
+  String get auth_update_password;
+
+  /// No description provided for @auth_full_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get auth_full_name;
+
+  /// No description provided for @auth_full_name_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name'**
+  String get auth_full_name_hint;
+
+  /// No description provided for @auth_gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get auth_gender;
+
+  /// No description provided for @auth_gender_male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get auth_gender_male;
+
+  /// No description provided for @auth_gender_female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get auth_gender_female;
+
+  /// No description provided for @auth_gender_other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get auth_gender_other;
+
+  /// No description provided for @auth_gender_not_say.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer not to say'**
+  String get auth_gender_not_say;
+
+  /// No description provided for @auth_birth_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Birth date'**
+  String get auth_birth_date;
+
+  /// No description provided for @auth_birth_date_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your birth date'**
+  String get auth_birth_date_hint;
+
+  /// No description provided for @auth_otp_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter verification code'**
+  String get auth_otp_title;
+
+  /// No description provided for @auth_otp_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a 6-digit code to {phone}'**
+  String auth_otp_subtitle(String phone);
+
+  /// No description provided for @auth_otp_resend_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code in {seconds}s'**
+  String auth_otp_resend_in(int seconds);
+
+  /// No description provided for @auth_otp_resend.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get auth_otp_resend;
+
+  /// No description provided for @auth_otp_verify.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get auth_otp_verify;
 }
 
 class _AppLocalizationsDelegate

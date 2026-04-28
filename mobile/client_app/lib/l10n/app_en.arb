@@ -66,5 +66,43 @@
   "validation_passwords_no_match": "Passwords do not match",
   "validation_must_accept_terms": "You must accept the terms",
   "validation_age_18": "You must be at least 18 years old",
-  "validation_required_name": "Please enter your name"
+  "validation_required_name": "Please enter your name",
+  "auth_password_strength": "Password strength",
+  "auth_password_weak": "Weak",
+  "auth_password_medium": "Medium",
+  "auth_password_strong": "Strong",
+  "auth_forgot_title": "Forgot password",
+  "auth_forgot_subtitle": "Enter your phone number and we'll send you a verification code",
+  "auth_send_reset_code": "Send reset code",
+  "auth_back_to_login": "Back to login",
+  "auth_reset_title": "Reset password",
+  "auth_reset_subtitle": "Create a new strong password for your account",
+  "auth_reset_button": "Reset password",
+  "auth_change_password_title": "Change password",
+  "auth_change_password_subtitle": "Update your password to keep your account safe",
+  "auth_update_password": "Update password",
+  "auth_full_name": "Full name",
+  "auth_full_name_hint": "Enter your full name",
+  "auth_gender": "Gender",
+  "auth_gender_male": "Male",
+  "auth_gender_female": "Female",
+  "auth_gender_other": "Other",
+  "auth_gender_not_say": "Prefer not to say",
+  "auth_birth_date": "Birth date",
+  "auth_birth_date_hint": "Select your birth date",
+  "auth_otp_title": "Enter verification code",
+  "auth_otp_subtitle": "We sent a 6-digit code to {phone}",
+  "@auth_otp_subtitle": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+  "auth_otp_resend_in": "Resend code in {seconds}s",
+  "@auth_otp_resend_in": {
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "auth_otp_resend": "Resend code",
+  "auth_otp_verify": "Verify"
 }

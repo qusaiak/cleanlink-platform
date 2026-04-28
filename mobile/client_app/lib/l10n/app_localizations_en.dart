@@ -201,4 +201,95 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get validation_required_name => 'Please enter your name';
+
+  @override
+  String get auth_password_strength => 'Password strength';
+
+  @override
+  String get auth_password_weak => 'Weak';
+
+  @override
+  String get auth_password_medium => 'Medium';
+
+  @override
+  String get auth_password_strong => 'Strong';
+
+  @override
+  String get auth_forgot_title => 'Forgot password';
+
+  @override
+  String get auth_forgot_subtitle =>
+      'Enter your phone number and we\'ll send you a verification code';
+
+  @override
+  String get auth_send_reset_code => 'Send reset code';
+
+  @override
+  String get auth_back_to_login => 'Back to login';
+
+  @override
+  String get auth_reset_title => 'Reset password';
+
+  @override
+  String get auth_reset_subtitle =>
+      'Create a new strong password for your account';
+
+  @override
+  String get auth_reset_button => 'Reset password';
+
+  @override
+  String get auth_change_password_title => 'Change password';
+
+  @override
+  String get auth_change_password_subtitle =>
+      'Update your password to keep your account safe';
+
+  @override
+  String get auth_update_password => 'Update password';
+
+  @override
+  String get auth_full_name => 'Full name';
+
+  @override
+  String get auth_full_name_hint => 'Enter your full name';
+
+  @override
+  String get auth_gender => 'Gender';
+
+  @override
+  String get auth_gender_male => 'Male';
+
+  @override
+  String get auth_gender_female => 'Female';
+
+  @override
+  String get auth_gender_other => 'Other';
+
+  @override
+  String get auth_gender_not_say => 'Prefer not to say';
+
+  @override
+  String get auth_birth_date => 'Birth date';
+
+  @override
+  String get auth_birth_date_hint => 'Select your birth date';
+
+  @override
+  String get auth_otp_title => 'Enter verification code';
+
+  @override
+  String auth_otp_subtitle(String phone) {
+    return 'We sent a 6-digit code to $phone';
+  }
+
+  @override
+  String auth_otp_resend_in(int seconds) {
+    return 'Resend code in ${seconds}s';
+  }
+
+  @override
+  String get auth_otp_resend => 'Resend code';
+
+  @override
+  String get auth_otp_verify => 'Verify';
 }
