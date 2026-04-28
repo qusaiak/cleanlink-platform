@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Text controllers, [FocusNode]s, and [FormState] keys for auth screens.
-/// Owned by [AuthCubit] and disposed in [AuthCubit.close].
+/// Owned by [AuthBloc] and disposed in [AuthBloc.close].
 class AuthFormControllers {
   AuthFormControllers();
 
@@ -27,18 +27,6 @@ class AuthFormControllers {
   // ── OTP ───────────────────────────────────────────────────────────────────
   final TextEditingController otpCode = TextEditingController();
   final FocusNode otpFocus = FocusNode();
-
-  // ── Forgot password ───────────────────────────────────────────────────────
-  final GlobalKey<FormState> forgotFormKey = GlobalKey<FormState>();
-  final TextEditingController forgotPhone = TextEditingController();
-  final FocusNode forgotPhoneFocus = FocusNode();
-
-  // ── Reset password ────────────────────────────────────────────────────────
-  final GlobalKey<FormState> resetFormKey = GlobalKey<FormState>();
-  final TextEditingController resetNewPassword = TextEditingController();
-  final TextEditingController resetConfirmPassword = TextEditingController();
-  final FocusNode resetNewFocus = FocusNode();
-  final FocusNode resetConfirmFocus = FocusNode();
 
   // ── Change password ─────────────────────────────────────────────────────────
   final GlobalKey<FormState> changeFormKey = GlobalKey<FormState>();
@@ -67,14 +55,6 @@ class AuthFormControllers {
 
     otpCode.dispose();
     otpFocus.dispose();
-
-    forgotPhone.dispose();
-    forgotPhoneFocus.dispose();
-
-    resetNewPassword.dispose();
-    resetConfirmPassword.dispose();
-    resetNewFocus.dispose();
-    resetConfirmFocus.dispose();
 
     changeOldPassword.dispose();
     changeNewPassword.dispose();

@@ -19,6 +19,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           isConfirmPasswordVis: false,
           isLoadingLogin: false,
           isLoadingRegister: false,
+          isVerifyAccountLoading: false,
+          isRequestResendVerificationCodeLoading: false,
         ),
       ) {
     on<Login>(onLogin);
