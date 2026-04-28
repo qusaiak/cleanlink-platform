@@ -2,16 +2,16 @@ import 'dart:developer';
 
 import 'package:client_app/config/routes/route_animation.dart';
 import 'package:client_app/core/widgets/custom_connection_timeout.dart';
+import 'package:client_app/features/auth/presentation/pages/change_password_page.dart';
 import 'package:client_app/features/auth/presentation/pages/login_page.dart';
+import 'package:client_app/features/auth/presentation/pages/otp_page.dart';
 import 'package:client_app/features/auth/presentation/pages/register_page.dart';
-import 'package:client_app/features/auth/presentation/pages/verification_code_page.dart';
 import 'package:client_app/features/base/presentation/pages/base_page.dart';
 import 'package:client_app/features/history/presentation/pages/history_page.dart';
 import 'package:client_app/features/home/presentation/pages/home_page.dart';
 import 'package:client_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:client_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:client_app/features/search/presentation/pages/search_page.dart';
-import 'package:client_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,9 +23,8 @@ class AppRouter {
   static const kConnectionTimeout = '/connection_timeout';
   static const kLogin = '/login';
   static const kRegister = '/register';
-  static const kVerificationAccount = 'verification_account';
-  static const kForgotPassword = 'forgot_password';
-  static const kResetPassword = 'reset_password';
+  static const kOtp = '/otp';
+  static const kResetPassword = '/reset_password';
   static const kChangePassword = '/change_password';
 
   static const kHome = '/home';
@@ -97,14 +96,18 @@ class AppRouter {
         path: kRegister,
         pageBuilder: (context, state) =>
             slideTransitionHorizontal(const RegisterPage()),
-        routes: [
-          GoRoute(
-            path: '$kVerificationAccount/:gsm',
-            pageBuilder: (context, state) => slideTransitionHorizontal(
-              VerificationCodePage(state.pathParameters['gsm']!.toString()),
-            ),
-          ),
-        ],
+      ),
+      GoRoute(
+        path: kOtp,
+        pageBuilder: (context, state) {
+          final phone = (state.extra as String?) ?? '';
+          return slideTransitionHorizontal(OtpPage(phone: phone,));
+        },
+      ),
+      GoRoute(
+        path: kChangePassword,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const ChangePasswordPage()),
       ),
 
       /// ================= SHELL NAV =================
