@@ -1,3 +1,4 @@
+import 'package:client_app/core/utils/functions/spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -55,17 +56,8 @@ class _AppPrimaryButtonState extends State<AppPrimaryButton> {
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
               child: widget.loading
-                  ? SizedBox(
-                      key: const ValueKey('loading'),
-                      width: 20.r,
-                      height: 20.r,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    )
+                  ? spinKitApp(Colors.white)
                   : Row(
-                      key: const ValueKey('content'),
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (widget.icon != null) ...[
