@@ -37,7 +37,7 @@ class ServerFailure extends Failure {
         BuildContext context =
         AppRouter.router.configuration.navigatorKey.currentContext!;
         final router = GoRouter.of(context);
-        router.pushReplacement(AppRouter.kConnectionTimeoutPage);
+        router.pushReplacement(AppRouter.kConnectionTimeout);
         return const ServerFailure(
           'Connection timeout with api server',
           ErrorCode.connectionTimeout,
