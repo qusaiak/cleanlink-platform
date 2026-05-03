@@ -631,6 +631,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Verify'**
   String get auth_otp_verify;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @support.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get support;
+
+  /// No description provided for @updates.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates'**
+  String get updates;
+
+  /// No description provided for @check_for_update.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for Updates'**
+  String get check_for_update;
+
+  /// No description provided for @help_center_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Help Center'**
+  String get help_center_title;
+
+  /// No description provided for @contact_us.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact us'**
+  String get contact_us;
+
+  /// No description provided for @setting_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get setting_title;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @dialog_change_language_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Change language'**
+  String get dialog_change_language_title;
+
+  /// No description provided for @dialog_change_language_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure about changing application language to Arabic?'**
+  String get dialog_change_language_body;
+
+  /// No description provided for @privacy_policy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacy_policy;
+
+  /// No description provided for @terms_of_use.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
+  String get terms_of_use;
+
+  /// No description provided for @delete_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get delete_account;
+
+  /// No description provided for @suggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions'**
+  String get suggestions;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @notification_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get notification_setting;
+
+  /// No description provided for @my_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'My Profile'**
+  String get my_profile;
+
+  /// No description provided for @contact_us_title.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re here to help'**
+  String get contact_us_title;
+
+  /// No description provided for @contact_us_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Send us your issue and we\'ll get back to you.'**
+  String get contact_us_body;
+
+  /// No description provided for @mobile_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile Number'**
+  String get mobile_number;
+
+  /// No description provided for @title.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get title;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
+  /// No description provided for @hint_email.
+  ///
+  /// In en, this message translates to:
+  /// **'gxxxx@gmail.com'**
+  String get hint_email;
+
+  /// No description provided for @hint_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Message title'**
+  String get hint_title;
+
+  /// No description provided for @hint_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Your message...'**
+  String get hint_description;
+
+  /// No description provided for @help_center_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick answers to your questions'**
+  String get help_center_body;
+
+  /// No description provided for @app_lang.
+  ///
+  /// In en, this message translates to:
+  /// **'Application Language'**
+  String get app_lang;
+
+  /// No description provided for @txt_english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get txt_english;
+
+  /// No description provided for @txt_arabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic'**
+  String get txt_arabic;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @dialog_delete_account_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get dialog_delete_account_title;
+
+  /// No description provided for @dialog_delete_account_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to continue deleting your account? This action cannot be undone.'**
+  String get dialog_delete_account_body;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @book_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Now'**
+  String get book_now;
+
+  /// No description provided for @categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get categories;
+
+  /// No description provided for @popular_companies.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Companies'**
+  String get popular_companies;
+
+  /// No description provided for @popular_services.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Services'**
+  String get popular_services;
 }
 
 class _AppLocalizationsDelegate
