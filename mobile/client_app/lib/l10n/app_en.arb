@@ -16,6 +16,7 @@
   "home": "Home",
   "search": "Search",
   "history": "History",
+  "bookings": "Bookings",
   "profile": "Profile",
   "error_connection_timeout": "Connection timed out. Please try again.",
   "retry": "Retry",

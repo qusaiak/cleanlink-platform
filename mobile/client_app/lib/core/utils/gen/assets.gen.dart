@@ -35,6 +35,9 @@ class $AssetsImagesGen {
 
   /// Directory path: assets/images/placeholders
   $AssetsImagesPlaceholdersGen get placeholders => const $AssetsImagesPlaceholdersGen();
+
+  /// Directory path: assets/images/test
+  $AssetsImagesTestGen get test => const $AssetsImagesTestGen();
 }
 
 class $AssetsImagesLogoGen {
@@ -74,6 +77,16 @@ class $AssetsImagesPlaceholdersGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [imagePlaceholder, personPlaceholder];
+}
+
+class $AssetsImagesTestGen {
+  const $AssetsImagesTestGen();
+
+  /// File path: assets/images/test/test.jpg
+  AssetGenImage get test => const AssetGenImage('assets/images/test/test.jpg');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [test];
 }
 
 class Assets {

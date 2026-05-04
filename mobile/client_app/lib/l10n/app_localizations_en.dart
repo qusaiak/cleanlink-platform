@@ -45,6 +45,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get history => 'History';
 
   @override
+  String get bookings => 'Bookings';
+
+  @override
   String get profile => 'Profile';
 
   @override

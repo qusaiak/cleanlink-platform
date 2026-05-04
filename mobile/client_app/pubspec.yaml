@@ -61,6 +61,7 @@ flutter:
     - assets/images/placeholders/
     - assets/images/onboarding/
     - assets/images/logo/
+    - assets/images/test/
     - assets/icons/
     - assets/animations/
 

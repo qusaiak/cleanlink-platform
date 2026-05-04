@@ -45,6 +45,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get history => 'السجل';
 
   @override
+  String get bookings => 'الحجوزات';
+
+  @override
   String get profile => 'الملف الشخصي';
 
   @override

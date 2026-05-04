@@ -164,6 +164,12 @@ abstract class AppLocalizations {
   /// **'History'**
   String get history;
 
+  /// No description provided for @bookings.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookings'**
+  String get bookings;
+
   /// No description provided for @profile.
   ///
   /// In en, this message translates to:
