@@ -183,8 +183,8 @@ class _BasePageState extends State<BasePage> with WidgetsBindingObserver {
                       label: AppLocalizations.of(context)!.search,
                     ),
                     BottomNavigationBarItem(
-                      icon: const Icon(Icons.history),
-                      label: AppLocalizations.of(context)!.history,
+                      icon: const Icon(Icons.calendar_month),
+                      label: AppLocalizations.of(context)!.bookings,
                     ),
                     BottomNavigationBarItem(
                       icon: state.isOfferBadgeShown!
