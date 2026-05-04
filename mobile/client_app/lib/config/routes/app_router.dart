@@ -7,9 +7,11 @@ import 'package:client_app/features/auth/presentation/pages/login_page.dart';
 import 'package:client_app/features/auth/presentation/pages/otp_page.dart';
 import 'package:client_app/features/auth/presentation/pages/register_page.dart';
 import 'package:client_app/features/base/presentation/pages/base_page.dart';
-import 'package:client_app/features/history/presentation/pages/history_page.dart';
+import 'package:client_app/features/bookings/presentation/pages/bookings_page.dart';
 import 'package:client_app/features/home/presentation/pages/home_page.dart';
 import 'package:client_app/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:client_app/features/profile/presentation/pages/contact_us_page.dart';
+import 'package:client_app/features/profile/presentation/pages/help_center_page.dart';
 import 'package:client_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:client_app/features/search/presentation/pages/search_page.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +28,12 @@ class AppRouter {
   static const kOtp = '/otp';
   static const kResetPassword = '/reset_password';
   static const kChangePassword = '/change_password';
+  static const kContactUs = '/contact_us';
+  static const kHelpCenter = '/help_center';
 
   static const kHome = '/home';
   static const kSearch = '/search';
-  static const kHistory = '/history';
+  static const kBookings = '/bookings';
   static const kProfile = '/profile';
 
   /// ===============================
@@ -39,7 +43,7 @@ class AppRouter {
 
   static final _homeKey = GlobalKey<NavigatorState>(debugLabel: 'home');
   static final _searchKey = GlobalKey<NavigatorState>(debugLabel: 'search');
-  static final _historyKey = GlobalKey<NavigatorState>(debugLabel: 'history');
+  static final _bookingsKey = GlobalKey<NavigatorState>(debugLabel: 'bookings');
   static final _profileKey = GlobalKey<NavigatorState>(debugLabel: 'profile');
 
   /// ===============================
@@ -53,7 +57,7 @@ class AppRouter {
   /// ===============================
   static final router = GoRouter(
     observers: [MyNavigatorObserver()],
-    initialLocation: '/',
+    initialLocation: kHome,
     navigatorKey: rootNavigatorKey,
     routes: [
       /// ================= SPLASH =================
@@ -109,6 +113,16 @@ class AppRouter {
         pageBuilder: (context, state) =>
             slideTransitionHorizontal(const ChangePasswordPage()),
       ),
+      GoRoute(
+        path: kContactUs,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const ContactUsPage()),
+      ),
+      GoRoute(
+        path: kHelpCenter,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const HelpCenterPage()),
+      ),
 
       /// ================= SHELL NAV =================
       StatefulShellRoute.indexedStack(
@@ -140,14 +154,14 @@ class AppRouter {
             ],
           ),
 
-          /// HISTORY
+          /// BOOKINGS
           StatefulShellBranch(
-            navigatorKey: _historyKey,
+            navigatorKey: _bookingsKey,
             routes: [
               GoRoute(
-                path: kHistory,
+                path: kBookings,
                 pageBuilder: (context, state) =>
-                    slideTransitionHorizontal(HistoryPage(key: state.pageKey)),
+                    slideTransitionHorizontal(BookingsPage(key: state.pageKey)),
               ),
             ],
           ),
