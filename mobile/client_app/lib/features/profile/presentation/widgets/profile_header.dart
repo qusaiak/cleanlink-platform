@@ -1,57 +1,90 @@
+import 'dart:ui';
+import 'package:client_app/l10n/app_localizations.dart';
+
+import 'edit_button.dart';
+import 'statistic.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../bloc/profile_bloc.dart';
+import '../../../../core/utils/gen/assets.gen.dart';
 
-class ProfileHeader extends StatefulWidget {
+class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key});
 
   @override
-  State<ProfileHeader> createState() => _ProfileHeaderState();
-}
-
-class _ProfileHeaderState extends State<ProfileHeader> {
-  @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context).colorScheme;
 
-    return BlocBuilder<ProfileBloc, ProfileState>(
-      builder: (context, state) {
-        return Column(
-          children: [
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: CircleAvatar(
-                radius: 48.w,
-                backgroundColor: Colors.grey.shade300,
-                backgroundImage: const NetworkImage(
-                  "https://i.pravatar.cc/300",
-                ),
-              ),
-            ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(18.r),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+        child: Container(
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18.r),
+            color: Colors.grey.withValues(alpha: 0.06),
+            border: Border.all(color: theme.primary, width: 1.5),
+          ),
 
-            SizedBox(height: 12.h),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Qusai Abo Khier",
-                  style: Styles.textStyle16.copyWith(
-                    fontWeight: FontWeight.w600,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(3.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: theme.primary,
+                    ),
+                    child: CircleAvatar(
+                      radius: 30.r,
+                      backgroundImage: AssetImage(Assets.images.test.test.path),
+                    ),
                   ),
-                ),
-              ],
-            ),
 
-            SizedBox(height: 20.h),
-          ],
-        );
-      },
+                  SizedBox(width: 10.w),
+
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Qusai Abo Khier",
+                          style: Styles.textStyle14.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          "qusai@gmail.com",
+                          style: Styles.textStyle11.copyWith(
+                            color: theme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  EditButton(),
+                ],
+              ),
+
+              SizedBox(height: 16.h),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Statistic(title: AppLocalizations.of(context)!.bookings, value: "12"),
+                  Statistic(title: AppLocalizations.of(context)!.favorites, value: "5"),
+                  Statistic(title: AppLocalizations.of(context)!.reviews, value: "8"),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -34,7 +34,30 @@ class _ProfileContentState extends State<ProfileContent> {
     return Column(
       children: [
         SectionCard(
-          title: AppLocalizations.of(context)!.appearance,
+          title: AppLocalizations.of(context)!.activity,
+          children: [
+            CustomTile(
+              icon: Icons.favorite_border,
+              title: AppLocalizations.of(context)!.favorites,
+              onTap: () {
+              },
+            ),
+            CustomTile(
+              icon: Icons.star_border,
+              title: AppLocalizations.of(context)!.my_reviews,
+              onTap: () {
+              },
+            ),
+            CustomTile(
+              icon: Icons.payment,
+              title: AppLocalizations.of(context)!.payment_history,
+              onTap: () {
+              },
+            ),
+          ],
+        ),
+        SectionCard(
+          title: AppLocalizations.of(context)!.setting_title,
           children: [
             CustomTile(
               icon: Icons.language,
@@ -125,7 +148,7 @@ class _ProfileContentState extends State<ProfileContent> {
           ],
         ),
         SectionCard(
-          title: AppLocalizations.of(context)!.my_profile,
+          title: AppLocalizations.of(context)!.security,
           children: [
             CustomTile(
               icon: Icons.lock,
@@ -187,15 +210,6 @@ class _ProfileContentState extends State<ProfileContent> {
             // ),
           ],
         ),
-        // SectionCard(
-        //   title: AppLocalizations.of(context)!.updates,
-        //   children: [
-        //     CustomTile(
-        //       icon: Icons.system_update,
-        //       title: AppLocalizations.of(context)!.check_for_update,
-        //     ),
-        //   ],
-        // ),
         SizedBox(height: 24.h),
         Column(
           children: [
