@@ -2,6 +2,8 @@ import 'package:client_app/config/theme/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/utils/gen/assets.gen.dart';
+
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({super.key});
 
@@ -13,13 +15,14 @@ class HomeAppBar extends StatelessWidget {
       child: Row(
         children: [
           Container(
+            padding: EdgeInsets.all(3.w),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: theme.primary, width: 1.5),
+              color: theme.primary,
             ),
             child: CircleAvatar(
-              radius: 25,
-              backgroundImage: NetworkImage("https://i.pravatar.cc/150?img=3"),
+              radius: 25.r,
+              backgroundImage: AssetImage(Assets.images.test.test.path),
             ),
           ),
 
@@ -32,14 +35,17 @@ class HomeAppBar extends StatelessWidget {
                 Text(
                   "Qusai Abo Khier",
                   style: Styles.textStyle16.copyWith(
-                      fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 6),
                 Row(
                   children: [
-                     Icon(Icons.location_on_rounded,
-                        size: 14, color: theme.onSurfaceVariant),
+                    Icon(
+                      Icons.location_on_rounded,
+                      size: 14,
+                      color: theme.onSurfaceVariant,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       "New York City",
@@ -75,8 +81,10 @@ class HomeAppBar extends StatelessWidget {
                 right: -2,
                 top: -2,
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 5,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.redAccent,
                     borderRadius: BorderRadius.circular(12),

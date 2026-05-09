@@ -8,14 +8,18 @@ import 'package:client_app/features/auth/presentation/pages/otp_page.dart';
 import 'package:client_app/features/auth/presentation/pages/register_page.dart';
 import 'package:client_app/features/base/presentation/pages/base_page.dart';
 import 'package:client_app/features/bookings/presentation/pages/bookings_page.dart';
+import 'package:client_app/features/companies/presentation/pages/companies_page.dart';
 import 'package:client_app/features/home/presentation/pages/home_page.dart';
 import 'package:client_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:client_app/features/profile/presentation/pages/contact_us_page.dart';
 import 'package:client_app/features/profile/presentation/pages/help_center_page.dart';
 import 'package:client_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:client_app/features/search/presentation/pages/search_page.dart';
+import 'package:client_app/features/services/presentation/pages/services_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../features/categories/presentation/pages/categories_page.dart';
 
 class AppRouter {
   /// ===============================
@@ -30,6 +34,9 @@ class AppRouter {
   static const kChangePassword = '/change_password';
   static const kContactUs = '/contact_us';
   static const kHelpCenter = '/help_center';
+  static const kCategories = '/categories';
+  static const kCompanies = '/companies';
+  static const kServices = '/services';
 
   static const kHome = '/home';
   static const kSearch = '/search';
@@ -122,6 +129,21 @@ class AppRouter {
         path: kHelpCenter,
         pageBuilder: (context, state) =>
             slideTransitionHorizontal(const HelpCenterPage()),
+      ),
+      GoRoute(
+        path: kCategories,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const CategoriesPage()),
+      ),
+      GoRoute(
+        path: kCompanies,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const CompaniesPage()),
+      ),
+      GoRoute(
+        path: kServices,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const ServicesPage()),
       ),
 
       /// ================= SHELL NAV =================

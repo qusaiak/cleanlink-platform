@@ -4,6 +4,8 @@ import 'package:client_app/features/home/presentation/widgets/home_app_bar.dart'
 import 'package:client_app/features/home/presentation/widgets/services_section.dart';
 import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../config/routes/app_router.dart';
 import 'categories_section.dart';
 import 'offers_section.dart';
 
@@ -27,21 +29,27 @@ class HomeBody extends StatelessWidget {
             RowTitle(
               iconData: Icons.category,
               title: AppLocalizations.of(context)!.categories,
-              onTap: () {},
+              onTap: () {
+                GoRouter.of(context).push(AppRouter.kCategories);
+              },
             ),
             const CategoriesSection(),
             const SizedBox(height: 24),
             RowTitle(
               iconData: Icons.business,
               title: AppLocalizations.of(context)!.popular_companies,
-              onTap: () {},
+              onTap: () {
+                GoRouter.of(context).push(AppRouter.kCompanies);
+              },
             ),
             const CompaniesSection(),
             const SizedBox(height: 24),
             RowTitle(
               iconData: Icons.cleaning_services,
               title: AppLocalizations.of(context)!.popular_services,
-              onTap: () {},
+              onTap: () {
+                GoRouter.of(context).push(AppRouter.kServices);
+              },
             ),
             const ServicesSection(),
           ],

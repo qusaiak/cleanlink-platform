@@ -9,29 +9,7 @@ class ServicesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final services = [
-      ServiceModel(
-        title: "House Cleaning",
-        price: "\$25",
-        duration: "2h",
-        company: "SparkleClean",
-        image: Assets.images.test.test.path,
-      ),
-      ServiceModel(
-        title: "Deep Cleaning",
-        price: "\$60",
-        duration: "3h",
-        company: "ShinePro",
-        image: Assets.images.test.test.path,
-      ),
-      ServiceModel(
-        title: "House Cleaning",
-        price: "\$25",
-        duration: "2h",
-        company: "SparkleClean",
-        image: Assets.images.test.test.path,
-      ),
-    ];
+    final services = ServicesData.all.take(2).toList();
 
     return ListView.separated(
       padding: EdgeInsets.symmetric(horizontal: 20.w),

@@ -9,26 +9,7 @@ class CompaniesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final companies = [
-      CompanyModel(
-        name: "SparkleClean",
-        location: "New York",
-        rating: 4.9,
-        image: Assets.images.test.test.path,
-      ),
-      CompanyModel(
-        name: "ShinePro",
-        location: "London",
-        rating: 4.8,
-        image: Assets.images.test.test.path,
-      ),
-      CompanyModel(
-        name: "SparkleClean",
-        location: "New York",
-        rating: 4.9,
-        image: Assets.images.test.test.path,
-      ),
-    ];
+    final companies = CompaniesData.all.take(3).toList();
 
     return SizedBox(
       height: 210.h,
