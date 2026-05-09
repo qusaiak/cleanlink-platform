@@ -419,4 +419,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get popular_services => 'أفضل الخدمات';
+
+  @override
+  String get all_categories => 'جميع التصنيفات';
+
+  @override
+  String get all_companies => 'جميع الشركات';
+
+  @override
+  String get all_services => 'جميع الخدمات';
+
+  @override
+  String get activity => 'النشاط';
+
+  @override
+  String get favorites => 'المفضلة';
+
+  @override
+  String get my_reviews => 'تقييماتي';
+
+  @override
+  String get payment_history => 'سجل الدفع';
+
+  @override
+  String get security => 'الحماية';
+
+  @override
+  String get edit => 'تعديل';
+
+  @override
+  String get reviews => 'التقييمات';
 }

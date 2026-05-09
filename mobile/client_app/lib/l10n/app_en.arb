@@ -147,5 +147,15 @@
   "book_now": "Book Now",
   "categories": "Categories",
   "popular_companies": "Popular Companies",
-  "popular_services": "Popular Services"
+  "popular_services": "Popular Services",
+  "all_categories": "All Categories",
+  "all_companies": "All Companies",
+  "all_services": "All Services",
+  "activity": "Activity",
+  "favorites": "Favorites",
+  "my_reviews": "My Reviews",
+  "payment_history": "Payment History",
+  "security": "Security",
+  "edit": "Edit",
+  "reviews": "Reviews"
 }

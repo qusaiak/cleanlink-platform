@@ -147,5 +147,15 @@
   "book_now": "احجز الآن",
   "categories": "التصنيفات",
   "popular_companies": "أفضل الشركات",
-  "popular_services": "أفضل الخدمات"
+  "popular_services": "أفضل الخدمات",
+  "all_categories": "جميع التصنيفات",
+  "all_companies": "جميع الشركات",
+  "all_services": "جميع الخدمات",
+  "activity": "النشاط",
+  "favorites": "المفضلة",
+  "my_reviews": "تقييماتي",
+  "payment_history": "سجل الدفع",
+  "security": "الحماية",
+  "edit": "تعديل",
+  "reviews": "التقييمات"
 }

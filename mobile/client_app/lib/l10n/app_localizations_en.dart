@@ -424,4 +424,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get popular_services => 'Popular Services';
+
+  @override
+  String get all_categories => 'All Categories';
+
+  @override
+  String get all_companies => 'All Companies';
+
+  @override
+  String get all_services => 'All Services';
+
+  @override
+  String get activity => 'Activity';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get my_reviews => 'My Reviews';
+
+  @override
+  String get payment_history => 'Payment History';
+
+  @override
+  String get security => 'Security';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get reviews => 'Reviews';
 }

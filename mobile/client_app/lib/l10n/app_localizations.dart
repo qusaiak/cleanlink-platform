@@ -889,6 +889,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Popular Services'**
   String get popular_services;
+
+  /// No description provided for @all_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'All Categories'**
+  String get all_categories;
+
+  /// No description provided for @all_companies.
+  ///
+  /// In en, this message translates to:
+  /// **'All Companies'**
+  String get all_companies;
+
+  /// No description provided for @all_services.
+  ///
+  /// In en, this message translates to:
+  /// **'All Services'**
+  String get all_services;
+
+  /// No description provided for @activity.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get activity;
+
+  /// No description provided for @favorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
+
+  /// No description provided for @my_reviews.
+  ///
+  /// In en, this message translates to:
+  /// **'My Reviews'**
+  String get my_reviews;
+
+  /// No description provided for @payment_history.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment History'**
+  String get payment_history;
+
+  /// No description provided for @security.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get security;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @reviews.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get reviews;
 }
 
 class _AppLocalizationsDelegate
