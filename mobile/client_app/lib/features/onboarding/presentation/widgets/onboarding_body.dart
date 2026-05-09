@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_router.dart';
+import '../../../../core/storage/shared_storage.dart';
+import '../../../../core/storage/storage_data.dart';
 import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../../core/widgets/custom_dots_indicator.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -88,10 +90,10 @@ class _OnboardingBodyState extends State<OnboardingBody> {
               MoveNextPage(
                 onTap: () async {
                   if (state.current == 2) {
-                    // await SharedStorage.set(
-                    //   StorageData.isOnboarding,
-                    //   "true",
-                    // );
+                    await SharedStorage.set(
+                      StorageData.isOnboarding,
+                      "true",
+                    );
                     router.go(AppRouter.kLogin);
                   } else {
                     state.pageController!.nextPage(

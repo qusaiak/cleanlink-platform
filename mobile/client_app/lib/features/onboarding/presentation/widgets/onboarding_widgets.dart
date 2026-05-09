@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/styles.dart';
+import '../../../../core/storage/shared_storage.dart';
+import '../../../../core/storage/storage_data.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class SkipButton extends StatelessWidget {
@@ -20,7 +22,7 @@ class SkipButton extends StatelessWidget {
       child: TextButton(
         onPressed: () async {
           // Routing to Login
-          // await SharedStorage.set(StorageData.isOnboarding, "true");
+          await SharedStorage.set(StorageData.isOnboarding, "true");
           router.go(AppRouter.kLogin);
         },
         child: Text(
