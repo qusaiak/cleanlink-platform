@@ -1,0 +1,81 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../core/storage/shared_storage.dart';
+import '../core/storage/storage_data.dart';
+import '../core/utils/bloc_observer.dart';
+import '../firebase_api.dart';
+import '../injection_container.dart';
+import 'app_info/app_device_info.dart';
+import 'app_info/app_lifecycle_tracker.dart';
+import 'app_info/app_package_info.dart';
+import 'app_preferences/app_preferences.dart';
+import 'language/app_language_info.dart';
+import 'theme/app_theme_info.dart';
+import '../firebase_options.dart';
+
+abstract class Bindings {
+  Bindings._();
+
+  static Future<void> init() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
+    await _initializeFirebase();
+    await _initializeEnvironment();
+    await _initializeBlocObserver();
+    await AppLanguageInfo.initialize();
+    await AppThemeInfo.initialize();
+    await AppPackageInfo.initialize();
+    await AppDeviceInfo.initialize();
+    await AppPreferences.initialize();
+    await clearAllUserData();
+    await initializeDependencies();
+    _configureErrorHandling();
+    AppLifecycleTracker();
+  }
+
+  static Future<void> clearAllUserData() async {
+    if (!await SharedStorage.hasData(StorageData.isOnboarding)) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+
+      const secureStorage = FlutterSecureStorage();
+      await secureStorage.deleteAll();
+
+    }
+  }
+
+  static Future<void> _initializeFirebase() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    await FirebaseApi().initNotifications();
+  }
+
+  static Future<void> _initializeEnvironment() async {
+    await dotenv.load(fileName: "local_config.env");
+  }
+
+
+  static Future<void> _initializeBlocObserver() async {
+    Bloc.observer = MyBlocObserver();
+  }
+
+  static void _configureErrorHandling() {
+    FlutterError.onError = (details) {
+      FlutterError.presentError(details);
+    };
+    PlatformDispatcher.instance.onError = (error, stack) {
+      return true;
+    };
+  }
+}
