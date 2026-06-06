@@ -1,3 +1,4 @@
+import 'package:client_app/config/constants/config_keys.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ abstract class Bindings {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-
+    await SharedStorage.init();
     await _initializeFirebase();
     await _initializeEnvironment();
     await _initializeBlocObserver();
@@ -62,7 +63,7 @@ abstract class Bindings {
   }
 
   static Future<void> _initializeEnvironment() async {
-    await dotenv.load(fileName: "local_config.env");
+    await dotenv.load(fileName: ConfigKeys.fileName);
   }
 
 
