@@ -1,28 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../config/theme/styles.dart';
+
 class RatingBadge extends StatelessWidget {
   final double rating;
 
-  const RatingBadge({required this.rating});
+  const RatingBadge({super.key, required this.rating});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: 10.w,
+        vertical: 6.h,
+      ),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.6),
-        borderRadius: BorderRadius.circular(12.r),
+        color: Colors.white.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(30.r),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.2),
+        ),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.star, color: Colors.amber, size: 14.sp),
+          Icon(
+            Icons.star_rounded,
+            color: Colors.amber,
+            size: 16.sp,
+          ),
           SizedBox(width: 4.w),
           Text(
             rating.toString(),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12.sp,
+            style: Styles.textStyle11.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),

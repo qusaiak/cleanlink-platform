@@ -449,4 +449,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reviews => 'التقييمات';
+
+  @override
+  String get show_more => 'عرض المزيد';
+
+  @override
+  String get about_us => 'معلومات عنا';
 }

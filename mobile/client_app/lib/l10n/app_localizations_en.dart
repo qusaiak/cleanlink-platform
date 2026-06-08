@@ -454,4 +454,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reviews => 'Reviews';
+
+  @override
+  String get show_more => 'Show More';
+
+  @override
+  String get about_us => 'About Us';
 }

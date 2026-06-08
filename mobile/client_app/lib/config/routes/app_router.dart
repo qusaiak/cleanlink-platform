@@ -9,6 +9,7 @@ import 'package:client_app/features/auth/presentation/pages/register_page.dart';
 import 'package:client_app/features/base/presentation/pages/base_page.dart';
 import 'package:client_app/features/bookings/presentation/pages/bookings_page.dart';
 import 'package:client_app/features/companies/presentation/pages/companies_page.dart';
+import 'package:client_app/features/companies/presentation/pages/company_details_page.dart';
 import 'package:client_app/features/home/presentation/pages/home_page.dart';
 import 'package:client_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:client_app/features/profile/presentation/pages/contact_us_page.dart';
@@ -37,6 +38,7 @@ class AppRouter {
   static const kCategories = '/categories';
   static const kCompanies = '/companies';
   static const kServices = '/services';
+  static const kCompanyDetails = '/company_details';
 
   static const kHome = '/home';
   static const kSearch = '/search';
@@ -112,7 +114,7 @@ class AppRouter {
         path: kOtp,
         pageBuilder: (context, state) {
           final phone = (state.extra as String?) ?? '';
-          return slideTransitionHorizontal(OtpPage(phone: phone,));
+          return slideTransitionHorizontal(OtpPage(phone: phone));
         },
       ),
       GoRoute(
@@ -144,6 +146,11 @@ class AppRouter {
         path: kServices,
         pageBuilder: (context, state) =>
             slideTransitionHorizontal(const ServicesPage()),
+      ),
+      GoRoute(
+        path: kCompanyDetails,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const CompanyDetailsPage()),
       ),
 
       /// ================= SHELL NAV =================
