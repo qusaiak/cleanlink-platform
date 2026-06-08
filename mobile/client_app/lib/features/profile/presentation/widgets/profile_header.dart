@@ -21,12 +21,7 @@ class ProfileHeader extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
         child: Container(
           padding: EdgeInsets.all(16.w),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18.r),
-            color: Colors.grey.withValues(alpha: 0.06),
-            border: Border.all(color: theme.primary, width: 1.5),
-          ),
-
+          color: Colors.grey.withValues(alpha: 0.06),
           child: Column(
             children: [
               Row(
