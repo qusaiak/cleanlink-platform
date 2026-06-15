@@ -872,11 +872,11 @@ abstract class AppLocalizations {
   /// **'Book Now'**
   String get book_now;
 
-  /// No description provided for @categories.
+  /// No description provided for @popular_categories.
   ///
   /// In en, this message translates to:
-  /// **'Categories'**
-  String get categories;
+  /// **'Popular Categories'**
+  String get popular_categories;
 
   /// No description provided for @popular_companies.
   ///
@@ -907,6 +907,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All Services'**
   String get all_services;
+
+  /// No description provided for @all_regions.
+  ///
+  /// In en, this message translates to:
+  /// **'All Regions'**
+  String get all_regions;
+
+  /// No description provided for @all_providers.
+  ///
+  /// In en, this message translates to:
+  /// **'All Providers'**
+  String get all_providers;
+
+  /// No description provided for @all_offers.
+  ///
+  /// In en, this message translates to:
+  /// **'All Offers'**
+  String get all_offers;
 
   /// No description provided for @activity.
   ///
@@ -961,6 +979,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'About Us'**
   String get about_us;
+
+  /// No description provided for @booking_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Details'**
+  String get booking_details;
+
+  /// No description provided for @selected_package_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Package'**
+  String get selected_package_label;
+
+  /// No description provided for @date_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date_label;
+
+  /// No description provided for @select_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Select date'**
+  String get select_date;
+
+  /// No description provided for @time_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get time_label;
+
+  /// No description provided for @select_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Select time'**
+  String get select_time;
+
+  /// No description provided for @address_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get address_label;
+
+  /// No description provided for @address_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Address'**
+  String get address_hint;
+
+  /// No description provided for @notes_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notes_label;
+
+  /// No description provided for @coupon_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon'**
+  String get coupon_label;
+
+  /// No description provided for @coupon_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter coupon code'**
+  String get coupon_hint;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @total_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total_label;
+
+  /// No description provided for @confirm_booking.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Booking'**
+  String get confirm_booking;
+
+  /// No description provided for @coupon_applied.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon applied'**
+  String get coupon_applied;
+
+  /// No description provided for @invalid_coupon.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid coupon code'**
+  String get invalid_coupon;
+
+  /// No description provided for @booking_successful.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Successful'**
+  String get booking_successful;
+
+  /// No description provided for @booking_successful_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your booking was created successfully.'**
+  String get booking_successful_message;
+
+  /// No description provided for @search_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search_title;
+
+  /// No description provided for @search_search_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for movies, series, channels and more...'**
+  String get search_search_hint;
+
+  /// No description provided for @search_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get search_categories;
+
+  /// No description provided for @search_companies.
+  ///
+  /// In en, this message translates to:
+  /// **'Companies'**
+  String get search_companies;
+
+  /// No description provided for @search_services.
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get search_services;
+
+  /// No description provided for @search_regions.
+  ///
+  /// In en, this message translates to:
+  /// **'Regions'**
+  String get search_regions;
+
+  /// No description provided for @search_providers.
+  ///
+  /// In en, this message translates to:
+  /// **'Providers'**
+  String get search_providers;
+
+  /// No description provided for @search_offers.
+  ///
+  /// In en, this message translates to:
+  /// **'Offers'**
+  String get search_offers;
+
+  /// No description provided for @search_all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get search_all;
+
+  /// No description provided for @search_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get search_filter;
+
+  /// No description provided for @search_tags.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get search_tags;
+
+  /// No description provided for @search_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Order'**
+  String get search_order;
+
+  /// No description provided for @search_ascending.
+  ///
+  /// In en, this message translates to:
+  /// **'Ascending'**
+  String get search_ascending;
+
+  /// No description provided for @search_descending.
+  ///
+  /// In en, this message translates to:
+  /// **'Descending'**
+  String get search_descending;
+
+  /// No description provided for @search_release_year.
+  ///
+  /// In en, this message translates to:
+  /// **'Release Year'**
+  String get search_release_year;
+
+  /// No description provided for @search_rate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate'**
+  String get search_rate;
+
+  /// No description provided for @search_apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get search_apply;
+
+  /// No description provided for @search_reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get search_reset;
+
+  /// No description provided for @search_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for companies, services, categories and more...'**
+  String get search_hint;
+
+  /// No description provided for @search_no_results.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get search_no_results;
+
+  /// No description provided for @search_availability.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get search_availability;
+
+  /// No description provided for @search_price_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Price Range'**
+  String get search_price_range;
+
+  /// No description provided for @search_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get search_rating;
+
+  /// No description provided for @search_distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get search_distance;
+
+  /// No description provided for @search_sort_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
+  String get search_sort_by;
+
+  /// No description provided for @search_filter_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by'**
+  String get search_filter_by;
+
+  /// No description provided for @search_clear_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get search_clear_filters;
+
+  /// No description provided for @search_today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get search_today;
+
+  /// No description provided for @search_tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get search_tomorrow;
+
+  /// No description provided for @search_week.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get search_week;
 }
 
 class _AppLocalizationsDelegate

@@ -16,6 +16,7 @@ import 'package:client_app/features/profile/presentation/pages/contact_us_page.d
 import 'package:client_app/features/profile/presentation/pages/help_center_page.dart';
 import 'package:client_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:client_app/features/search/presentation/pages/search_page.dart';
+import 'package:client_app/features/services/presentation/pages/service_details_page.dart';
 import 'package:client_app/features/services/presentation/pages/services_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -35,10 +36,22 @@ class AppRouter {
   static const kChangePassword = '/change_password';
   static const kContactUs = '/contact_us';
   static const kHelpCenter = '/help_center';
-  static const kCategories = '/categories';
+
+  static const kAppContentPage = '/content';
+
   static const kCompanies = '/companies';
   static const kServices = '/services';
-  static const kCompanyDetails = '/company_details';
+  static const kCategories = '/categories';
+  static const kRegions = '/regions';
+  static const kProviders = '/providers';
+  static const kOffers = '/offers';
+
+  static const kCompanyDetails = '/company';
+  static const kServiceDetails = '/service';
+  static const kCategoryDetails = '/category';
+  static const kRegionDetails = '/region';
+  static const kProviderDetails = '/provider';
+  static const kOfferDetails = '/offer';
 
   static const kHome = '/home';
   static const kSearch = '/search';
@@ -151,6 +164,11 @@ class AppRouter {
         path: kCompanyDetails,
         pageBuilder: (context, state) =>
             slideTransitionHorizontal(const CompanyDetailsPage()),
+      ),
+      GoRoute(
+        path: kServiceDetails,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const ServiceDetailsPage()),
       ),
 
       /// ================= SHELL NAV =================

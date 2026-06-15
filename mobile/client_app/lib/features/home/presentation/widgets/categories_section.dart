@@ -9,7 +9,6 @@ class CategoriesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categories = CategoriesData.all.take(6).toList();
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: GridView.builder(
@@ -34,3 +33,12 @@ class CategoriesSection extends StatelessWidget {
     );
   }
 }
+
+
+// RowTitle(
+// iconData: Icons.category,
+// title: AppLocalizations.of(context)!.popular_categories,
+// onTap: () {
+// GoRouter.of(context).push(AppRouter.kCategories);
+// },
+// ),

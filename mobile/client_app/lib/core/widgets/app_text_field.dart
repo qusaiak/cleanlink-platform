@@ -9,7 +9,7 @@ import '../../config/theme/styles.dart';
 class AppTextField extends StatelessWidget {
   const AppTextField({
     super.key,
-    required this.controller,
+    this.controller,
     required this.label,
     this.hint,
     this.prefix,
@@ -29,7 +29,7 @@ class AppTextField extends StatelessWidget {
     this.autofocus = false,
   });
 
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String label;
   final String? hint;
   final Widget? prefix;
@@ -91,8 +91,13 @@ class AppTextField extends StatelessWidget {
             hintStyle: Styles.textStyle14.copyWith(
               color: theme.onSurface.withValues(alpha: 0.5),
             ),
-            prefixIcon: prefix,
-            suffixIcon: suffix,
+            prefixIcon: prefix == null
+                ? null
+                : Center(widthFactor: 1, heightFactor: 1, child: prefix),
+
+            suffixIcon: suffix == null
+                ? null
+                : Center(widthFactor: 1, heightFactor: 1, child: suffix),
             isDense: true,
             filled: true,
             fillColor: theme.onSurface.withValues(alpha: 0.04),
@@ -102,8 +107,10 @@ class AppTextField extends StatelessWidget {
             ),
             border: _border(theme.onSurface.withValues(alpha: 0.3)),
             enabledBorder: _border(theme.onSurface.withValues(alpha: 0.3)),
-            focusedBorder:
-                _border(AppColor.primaryColor.withValues(alpha: 0.9), width: 1.4),
+            focusedBorder: _border(
+              AppColor.primaryColor.withValues(alpha: 0.9),
+              width: 1.4,
+            ),
             errorBorder: _border(AppColor.errorDark, width: 1),
             focusedErrorBorder: _border(AppColor.errorDark, width: 1.4),
             errorStyle: Styles.textStyle11.copyWith(

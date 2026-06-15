@@ -36,6 +36,9 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/placeholders
   $AssetsImagesPlaceholdersGen get placeholders => const $AssetsImagesPlaceholdersGen();
 
+  /// Directory path: assets/images/search
+  $AssetsImagesSearchGen get search => const $AssetsImagesSearchGen();
+
   /// Directory path: assets/images/test
   $AssetsImagesTestGen get test => const $AssetsImagesTestGen();
 }
@@ -77,6 +80,31 @@ class $AssetsImagesPlaceholdersGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [imagePlaceholder, personPlaceholder];
+}
+
+class $AssetsImagesSearchGen {
+  const $AssetsImagesSearchGen();
+
+  /// File path: assets/images/search/categories.png
+  AssetGenImage get categories => const AssetGenImage('assets/images/search/categories.png');
+
+  /// File path: assets/images/search/companies.png
+  AssetGenImage get companies => const AssetGenImage('assets/images/search/companies.png');
+
+  /// File path: assets/images/search/offers.png
+  AssetGenImage get offers => const AssetGenImage('assets/images/search/offers.png');
+
+  /// File path: assets/images/search/providers.png
+  AssetGenImage get providers => const AssetGenImage('assets/images/search/providers.png');
+
+  /// File path: assets/images/search/regions.png
+  AssetGenImage get regions => const AssetGenImage('assets/images/search/regions.png');
+
+  /// File path: assets/images/search/services.png
+  AssetGenImage get services => const AssetGenImage('assets/images/search/services.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [categories, companies, offers, providers, regions, services];
 }
 
 class $AssetsImagesTestGen {

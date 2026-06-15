@@ -412,7 +412,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get book_now => 'احجز الآن';
 
   @override
-  String get categories => 'التصنيفات';
+  String get popular_categories => 'أفضل التصنيفات';
 
   @override
   String get popular_companies => 'أفضل الشركات';
@@ -428,6 +428,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get all_services => 'جميع الخدمات';
+
+  @override
+  String get all_regions => 'جميع المناطق';
+
+  @override
+  String get all_providers => 'جميع المزودين';
+
+  @override
+  String get all_offers => 'All Offers';
 
   @override
   String get activity => 'النشاط';
@@ -455,4 +464,148 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get about_us => 'معلومات عنا';
+
+  @override
+  String get booking_details => 'تفاصيل الحجز';
+
+  @override
+  String get selected_package_label => 'الباقة المختارة';
+
+  @override
+  String get date_label => 'التاريخ';
+
+  @override
+  String get select_date => 'اختر التاريخ';
+
+  @override
+  String get time_label => 'الوقت';
+
+  @override
+  String get select_time => 'اختر الوقت';
+
+  @override
+  String get address_label => 'العنوان';
+
+  @override
+  String get address_hint => 'عنوان المنزل';
+
+  @override
+  String get notes_label => 'ملاحظات';
+
+  @override
+  String get coupon_label => 'كود الخصم';
+
+  @override
+  String get coupon_hint => 'أدخل كود الخصم';
+
+  @override
+  String get apply => 'تطبيق';
+
+  @override
+  String get total_label => 'الإجمالي';
+
+  @override
+  String get confirm_booking => 'تأكيد الحجز';
+
+  @override
+  String get coupon_applied => 'تم تطبيق كود الخصم';
+
+  @override
+  String get invalid_coupon => 'كود الخصم غير صالح';
+
+  @override
+  String get booking_successful => 'تم الحجز بنجاح';
+
+  @override
+  String get booking_successful_message => 'تم إنشاء الحجز بنجاح.';
+
+  @override
+  String get search_title => 'استكشف';
+
+  @override
+  String get search_search_hint => 'ابحث عن أفلام، مسلسلات، قنوات والمزيد...';
+
+  @override
+  String get search_categories => 'التصنيفات';
+
+  @override
+  String get search_companies => 'الشركات';
+
+  @override
+  String get search_services => 'الخدمات';
+
+  @override
+  String get search_regions => 'المناطق';
+
+  @override
+  String get search_providers => 'المزودين';
+
+  @override
+  String get search_offers => 'العروض';
+
+  @override
+  String get search_all => 'الكل';
+
+  @override
+  String get search_filter => 'تصفية';
+
+  @override
+  String get search_tags => 'الوسوم';
+
+  @override
+  String get search_order => 'الترتيب';
+
+  @override
+  String get search_ascending => 'تصاعدي';
+
+  @override
+  String get search_descending => 'تنازلي';
+
+  @override
+  String get search_release_year => 'سنة الإصدار';
+
+  @override
+  String get search_rate => 'التقييم';
+
+  @override
+  String get search_apply => 'تطبيق';
+
+  @override
+  String get search_reset => 'إعادة تعيين';
+
+  @override
+  String get search_hint => 'ابحث عن شركات، خدمات، تصنيفات والمزيد...';
+
+  @override
+  String get search_no_results => 'لم يتم العثور على نتائج';
+
+  @override
+  String get search_availability => 'التوفر';
+
+  @override
+  String get search_price_range => 'نطاق السعر';
+
+  @override
+  String get search_rating => 'التقييم';
+
+  @override
+  String get search_distance => 'المسافة';
+
+  @override
+  String get search_sort_by => 'ترتيب حسب';
+
+  @override
+  String get search_filter_by => 'تصفية حسب';
+
+  @override
+  String get search_clear_filters => 'مسح الفلاتر';
+
+  @override
+  String get search_today => 'اليوم';
+
+  @override
+  String get search_tomorrow => 'غداً';
+
+  @override
+  String get search_week => 'هذا الأسبوع';
 }

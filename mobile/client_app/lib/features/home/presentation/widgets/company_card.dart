@@ -9,17 +9,17 @@ import '../../data/models/company_model.dart';
 
 class CompanyCard extends StatelessWidget {
   final CompanyModel company;
+  final VoidCallback? onTap;
 
-  const CompanyCard({super.key, required this.company});
+  const CompanyCard({super.key, required this.company, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        GoRouter.of(context).push(AppRouter.kCompanyDetails);
-      },
+      onTap: onTap,
       child: Container(
         width: 200.w,
+        margin: EdgeInsets.symmetric(horizontal: 8.w),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.r)),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20.r),

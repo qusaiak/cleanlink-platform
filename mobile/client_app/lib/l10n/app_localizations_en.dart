@@ -417,7 +417,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get book_now => 'Book Now';
 
   @override
-  String get categories => 'Categories';
+  String get popular_categories => 'Popular Categories';
 
   @override
   String get popular_companies => 'Popular Companies';
@@ -433,6 +433,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get all_services => 'All Services';
+
+  @override
+  String get all_regions => 'All Regions';
+
+  @override
+  String get all_providers => 'All Providers';
+
+  @override
+  String get all_offers => 'All Offers';
 
   @override
   String get activity => 'Activity';
@@ -460,4 +469,151 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get about_us => 'About Us';
+
+  @override
+  String get booking_details => 'Booking Details';
+
+  @override
+  String get selected_package_label => 'Selected Package';
+
+  @override
+  String get date_label => 'Date';
+
+  @override
+  String get select_date => 'Select date';
+
+  @override
+  String get time_label => 'Time';
+
+  @override
+  String get select_time => 'Select time';
+
+  @override
+  String get address_label => 'Address';
+
+  @override
+  String get address_hint => 'Home Address';
+
+  @override
+  String get notes_label => 'Notes';
+
+  @override
+  String get coupon_label => 'Coupon';
+
+  @override
+  String get coupon_hint => 'Enter coupon code';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String get total_label => 'Total';
+
+  @override
+  String get confirm_booking => 'Confirm Booking';
+
+  @override
+  String get coupon_applied => 'Coupon applied';
+
+  @override
+  String get invalid_coupon => 'Invalid coupon code';
+
+  @override
+  String get booking_successful => 'Booking Successful';
+
+  @override
+  String get booking_successful_message =>
+      'Your booking was created successfully.';
+
+  @override
+  String get search_title => 'Search';
+
+  @override
+  String get search_search_hint =>
+      'Search for movies, series, channels and more...';
+
+  @override
+  String get search_categories => 'Categories';
+
+  @override
+  String get search_companies => 'Companies';
+
+  @override
+  String get search_services => 'Services';
+
+  @override
+  String get search_regions => 'Regions';
+
+  @override
+  String get search_providers => 'Providers';
+
+  @override
+  String get search_offers => 'Offers';
+
+  @override
+  String get search_all => 'All';
+
+  @override
+  String get search_filter => 'Filter';
+
+  @override
+  String get search_tags => 'Tags';
+
+  @override
+  String get search_order => 'Order';
+
+  @override
+  String get search_ascending => 'Ascending';
+
+  @override
+  String get search_descending => 'Descending';
+
+  @override
+  String get search_release_year => 'Release Year';
+
+  @override
+  String get search_rate => 'Rate';
+
+  @override
+  String get search_apply => 'Apply';
+
+  @override
+  String get search_reset => 'Reset';
+
+  @override
+  String get search_hint =>
+      'Search for companies, services, categories and more...';
+
+  @override
+  String get search_no_results => 'No results found';
+
+  @override
+  String get search_availability => 'Availability';
+
+  @override
+  String get search_price_range => 'Price Range';
+
+  @override
+  String get search_rating => 'Rating';
+
+  @override
+  String get search_distance => 'Distance';
+
+  @override
+  String get search_sort_by => 'Sort by';
+
+  @override
+  String get search_filter_by => 'Filter by';
+
+  @override
+  String get search_clear_filters => 'Clear filters';
+
+  @override
+  String get search_today => 'Today';
+
+  @override
+  String get search_tomorrow => 'Tomorrow';
+
+  @override
+  String get search_week => 'This Week';
 }

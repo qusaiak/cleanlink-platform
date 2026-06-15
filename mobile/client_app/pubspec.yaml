@@ -74,6 +74,7 @@ flutter:
     - assets/images/onboarding/
     - assets/images/logo/
     - assets/images/test/
+    - assets/images/search/
     - assets/icons/
     - assets/animations/
 

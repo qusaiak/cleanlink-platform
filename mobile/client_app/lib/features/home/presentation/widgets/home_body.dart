@@ -26,31 +26,10 @@ class HomeBody extends StatelessWidget {
             const SizedBox(height: 20),
             const OffersSection(),
             const SizedBox(height: 24),
-            RowTitle(
-              iconData: Icons.category,
-              title: AppLocalizations.of(context)!.categories,
-              onTap: () {
-                GoRouter.of(context).push(AppRouter.kCategories);
-              },
-            ),
             const CategoriesSection(),
             const SizedBox(height: 24),
-            RowTitle(
-              iconData: Icons.business,
-              title: AppLocalizations.of(context)!.popular_companies,
-              onTap: () {
-                GoRouter.of(context).push(AppRouter.kCompanies);
-              },
-            ),
             const CompaniesSection(),
             const SizedBox(height: 24),
-            RowTitle(
-              iconData: Icons.cleaning_services,
-              title: AppLocalizations.of(context)!.popular_services,
-              onTap: () {
-                GoRouter.of(context).push(AppRouter.kServices);
-              },
-            ),
             const ServicesSection(),
           ],
         ),

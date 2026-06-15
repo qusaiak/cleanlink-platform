@@ -6,7 +6,6 @@ abstract class AppColor {
   // General
   static const Color dialogSuccess = Color(0xFF22C55E);
   static const Color dialogFailed = Color(0xFFEF4444);
-  static const Color transparent = Colors.transparent;
 
   // Primary (Teal - Cleaning identity)
   static const Color primaryColor = Color(0xFF00A8A8);
@@ -19,6 +18,26 @@ abstract class AppColor {
 
   // Accent (Success / eco feeling)
   static const Color accentColor = Color(0xFFA5D6A7);
+
+  // =======================
+  // SEMANTIC
+  // =======================
+  static const Color success = Color(0xFF24B364);
+  static const Color error = Color(0xFFFE5151);
+  static const Color warning = Color(0xFFFFB020);
+  static const Color info = Color(0xFF3B82F6);
+
+  static const Color onSuccess = white;
+  static const Color onError = white;
+  static const Color onWarning = black;
+  static const Color onInfo = white;
+
+  // =======================
+  // COMMON
+  // =======================
+  static const Color transparent = Colors.transparent;
+  static const Color border = gray300;
+  static const Color divider = gray200;
 
   /// ================= LIGHT =================
   static const Color backgroundColorLight = Color(0xFFFFFFFF);
@@ -61,6 +80,8 @@ abstract class AppColor {
   static const Color onErrorDark = Color(0xFFFFFFFF);
 
   /// ================= GRAYS =================
+  static const Color white = Color(0xFFFFFFFF);
+  static const Color black = Color(0xFF000000);
   static const Color gray100 = Color(0xFFF8FAFC);
   static const Color gray200 = Color(0xFFE2E8F0);
   static const Color gray300 = Color(0xFFCBD5E1);
