@@ -45,6 +45,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get history => 'History';
 
   @override
+  String get bookings => 'Bookings';
+
+  @override
   String get profile => 'Profile';
 
   @override
@@ -292,4 +295,169 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get auth_otp_verify => 'Verify';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get support => 'Support';
+
+  @override
+  String get updates => 'Updates';
+
+  @override
+  String get check_for_update => 'Check for Updates';
+
+  @override
+  String get help_center_title => 'Help Center';
+
+  @override
+  String get contact_us => 'Contact us';
+
+  @override
+  String get setting_title => 'Settings';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get dialog_change_language_title => 'Change language';
+
+  @override
+  String get dialog_change_language_body =>
+      'Are you sure about changing application language to Arabic?';
+
+  @override
+  String get privacy_policy => 'Privacy Policy';
+
+  @override
+  String get terms_of_use => 'Terms of Use';
+
+  @override
+  String get delete_account => 'Delete Account';
+
+  @override
+  String get suggestions => 'Suggestions';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get notification_setting => 'Push Notifications';
+
+  @override
+  String get my_profile => 'My Profile';
+
+  @override
+  String get contact_us_title => 'We\'re here to help';
+
+  @override
+  String get contact_us_body =>
+      'Send us your issue and we\'ll get back to you.';
+
+  @override
+  String get mobile_number => 'Mobile Number';
+
+  @override
+  String get title => 'Title';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get optional => 'Optional';
+
+  @override
+  String get hint_email => 'gxxxx@gmail.com';
+
+  @override
+  String get hint_title => 'Message title';
+
+  @override
+  String get hint_description => 'Your message...';
+
+  @override
+  String get help_center_body => 'Quick answers to your questions';
+
+  @override
+  String get app_lang => 'Application Language';
+
+  @override
+  String get txt_english => 'English';
+
+  @override
+  String get txt_arabic => 'Arabic';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get dialog_delete_account_title => 'Delete Account';
+
+  @override
+  String get dialog_delete_account_body =>
+      'Do you want to continue deleting your account? This action cannot be undone.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get book_now => 'Book Now';
+
+  @override
+  String get categories => 'Categories';
+
+  @override
+  String get popular_companies => 'Popular Companies';
+
+  @override
+  String get popular_services => 'Popular Services';
+
+  @override
+  String get all_categories => 'All Categories';
+
+  @override
+  String get all_companies => 'All Companies';
+
+  @override
+  String get all_services => 'All Services';
+
+  @override
+  String get activity => 'Activity';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get my_reviews => 'My Reviews';
+
+  @override
+  String get payment_history => 'Payment History';
+
+  @override
+  String get security => 'Security';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get reviews => 'Reviews';
+
+  @override
+  String get show_more => 'Show More';
+
+  @override
+  String get about_us => 'About Us';
 }

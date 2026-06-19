@@ -45,6 +45,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get history => 'السجل';
 
   @override
+  String get bookings => 'الحجوزات';
+
+  @override
   String get profile => 'الملف الشخصي';
 
   @override
@@ -288,4 +291,168 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get auth_otp_verify => 'تحقق';
+
+  @override
+  String get yes => 'نعم';
+
+  @override
+  String get no => 'لا';
+
+  @override
+  String get ok => 'حسناً';
+
+  @override
+  String get support => 'الدعم';
+
+  @override
+  String get updates => 'التحديثات';
+
+  @override
+  String get check_for_update => 'تحقق من وجود تحديث';
+
+  @override
+  String get help_center_title => 'مركز المساعدة';
+
+  @override
+  String get contact_us => 'تواصل معنا';
+
+  @override
+  String get setting_title => 'الإعدادات';
+
+  @override
+  String get logout => 'تسجيل الخروج';
+
+  @override
+  String get dialog_change_language_title => 'تغيير اللغة';
+
+  @override
+  String get dialog_change_language_body =>
+      'هل انت متأكد من تغيير لغة التطبيق إلى الإنكليزية؟';
+
+  @override
+  String get privacy_policy => 'سياسة الخصوصية';
+
+  @override
+  String get terms_of_use => 'شروط الاستخدام';
+
+  @override
+  String get delete_account => 'حذف الحساب';
+
+  @override
+  String get suggestions => 'اقتراحات';
+
+  @override
+  String get appearance => 'المظهر';
+
+  @override
+  String get notification_setting => 'الإشعارات';
+
+  @override
+  String get my_profile => 'الملف الشخصي';
+
+  @override
+  String get contact_us_title => 'نحن هنا للمساعدة';
+
+  @override
+  String get contact_us_body => 'أرسل إلينا مشكلتك، وسنتواصل معك.';
+
+  @override
+  String get mobile_number => 'رقم الموبايل';
+
+  @override
+  String get title => 'العنوان';
+
+  @override
+  String get email => 'البريد الإلكتروني';
+
+  @override
+  String get description => 'الوصف';
+
+  @override
+  String get send => 'إرسال';
+
+  @override
+  String get optional => 'اختياري';
+
+  @override
+  String get hint_email => 'gxxxx@gmail.com';
+
+  @override
+  String get hint_title => 'عنوان الرسالة';
+
+  @override
+  String get hint_description => 'اكتب رسالتك...';
+
+  @override
+  String get help_center_body => 'إجابات سريعة على أسئلتك';
+
+  @override
+  String get app_lang => 'اللغة';
+
+  @override
+  String get txt_english => 'اللغة الإنكليزية';
+
+  @override
+  String get txt_arabic => 'اللغة العربية';
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String get dialog_delete_account_title => 'حذف الحساب';
+
+  @override
+  String get dialog_delete_account_body =>
+      'هل تريد متابعة حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get book_now => 'احجز الآن';
+
+  @override
+  String get categories => 'التصنيفات';
+
+  @override
+  String get popular_companies => 'أفضل الشركات';
+
+  @override
+  String get popular_services => 'أفضل الخدمات';
+
+  @override
+  String get all_categories => 'جميع التصنيفات';
+
+  @override
+  String get all_companies => 'جميع الشركات';
+
+  @override
+  String get all_services => 'جميع الخدمات';
+
+  @override
+  String get activity => 'النشاط';
+
+  @override
+  String get favorites => 'المفضلة';
+
+  @override
+  String get my_reviews => 'تقييماتي';
+
+  @override
+  String get payment_history => 'سجل الدفع';
+
+  @override
+  String get security => 'الحماية';
+
+  @override
+  String get edit => 'تعديل';
+
+  @override
+  String get reviews => 'التقييمات';
+
+  @override
+  String get show_more => 'عرض المزيد';
+
+  @override
+  String get about_us => 'معلومات عنا';
 }

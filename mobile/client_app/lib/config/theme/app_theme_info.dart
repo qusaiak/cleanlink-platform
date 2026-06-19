@@ -1,19 +1,21 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../../core/storage/shared_storage.dart';
+import '../../core/storage/storage_data.dart';
 
 class AppThemeInfo {
   static bool _isLight = true;
 
   static Future<void> initialize() async {
-    // if (!await SharedStorage.hasData(StorageData.isLight)) {
-    //   bool systemIsLight =
-    //       WidgetsBinding.instance.platformDispatcher.platformBrightness ==
-    //       Brightness.light;
-    //   _isLight = systemIsLight;
-    //   await setTheme(_isLight);
-    // } else {
-    //   _isLight = await SharedStorage.get(StorageData.isLight) ?? true;
-    // }
+    if (!await SharedStorage.hasData(StorageData.isLight)) {
+      bool systemIsLight =
+          WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+          Brightness.light;
+      _isLight = systemIsLight;
+      await setTheme(_isLight);
+    } else {
+      _isLight = await SharedStorage.get(StorageData.isLight) ?? true;
+    }
   }
 
   static bool get isLight {
@@ -29,12 +31,12 @@ class AppThemeInfo {
   }
 
   static Future<void> setTheme(bool isLight) async {
-    // _isLight = isLight;
-    // await SharedStorage.set(StorageData.isLight, isLight);
+    _isLight = isLight;
+    await SharedStorage.set(StorageData.isLight, isLight);
   }
 
   static Future<void> toggleTheme() async {
-    // _isLight = !_isLight;
-    // await SharedStorage.set(StorageData.isLight, _isLight);
+    _isLight = !_isLight;
+    await SharedStorage.set(StorageData.isLight, _isLight);
   }
 }
