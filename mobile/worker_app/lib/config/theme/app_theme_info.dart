@@ -29,12 +29,12 @@ class AppThemeInfo {
   }
 
   static Future<void> setTheme(bool isLight) async {
-    // _isLight = isLight;
+    _isLight = isLight;
     // await SharedStorage.set(StorageData.isLight, isLight);
   }
 
   static Future<void> toggleTheme() async {
-    // _isLight = !_isLight;
+    _isLight = !_isLight;
     // await SharedStorage.set(StorageData.isLight, _isLight);
   }
 }

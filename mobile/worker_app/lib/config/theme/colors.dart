@@ -41,6 +41,11 @@ abstract class AppColor {
 
   static const Color successColor = Color(0xFF22C55E);
 
+  /// Amber used for "paused" task state and the "busy" worker status.
+  /// (No warning tone existed in the palette; added to keep status colors
+  /// consistent across the worker screens instead of hard-coding them.)
+  static const Color warningColor = Color(0xFFF59E0B);
+
   /// ================= DARK =================
   static const Color backgroundColorDark = Color(0xFF0B1215);
   static const Color secondaryBackgroundColorDark = Color(0xFF121A1D);

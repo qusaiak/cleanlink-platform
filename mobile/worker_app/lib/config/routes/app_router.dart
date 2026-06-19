@@ -9,13 +9,16 @@ import '../../core/widgets/custom_connection_timeout.dart';
 import '../../features/auth/presentation/pages/change_password_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/otp_page.dart';
-import '../../features/auth/presentation/pages/register_page.dart';
-import '../../features/base/presentation/pages/base_page.dart';
-import '../../features/history/presentation/pages/history_page.dart';
+
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/notifications/presentation/pages/notifications_page.dart';
+import '../../features/search/domain/entities/search_query.dart';
+import '../../features/search/presentation/pages/search_results_page.dart';
+import '../../features/tasks/domain/entities/task.dart';
+import '../../features/tasks/presentation/pages/task_details_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
-import '../../features/profile/presentation/pages/profile_page.dart';
-import '../../features/search/presentation/pages/search_page.dart';
+import '../../features/profile/presentation/pages/worker_profile_page.dart';
+import '../../features/settings/presentation/pages/settings_page.dart';
 
 class AppRouter {
   /// ===============================
@@ -24,25 +27,22 @@ class AppRouter {
   static const kOnboarding = '/onboarding';
   static const kConnectionTimeout = '/connection_timeout';
   static const kLogin = '/login';
-  static const kRegister = '/register';
+
   static const kOtp = '/otp';
   static const kResetPassword = '/reset_password';
   static const kChangePassword = '/change_password';
 
   static const kHome = '/home';
-  static const kSearch = '/search';
-  static const kHistory = '/history';
+  static const kTaskDetails = '/task_details';
   static const kProfile = '/profile';
+  static const kSettings = '/settings';
+  static const kNotifications = '/notifications';
+  static const kSearch = '/search';
 
   /// ===============================
   /// NAV KEYS
   /// ===============================
   static final rootNavigatorKey = GlobalKey<NavigatorState>();
-
-  static final _homeKey = GlobalKey<NavigatorState>(debugLabel: 'home');
-  static final _searchKey = GlobalKey<NavigatorState>(debugLabel: 'search');
-  static final _historyKey = GlobalKey<NavigatorState>(debugLabel: 'history');
-  static final _profileKey = GlobalKey<NavigatorState>(debugLabel: 'profile');
 
   /// ===============================
   /// APP STATE (TEMP SAFE FLAGS)
@@ -55,7 +55,7 @@ class AppRouter {
   /// ===============================
   static final router = GoRouter(
     observers: [MyNavigatorObserver()],
-    initialLocation: '/',
+    initialLocation: kOnboarding,
     navigatorKey: rootNavigatorKey,
     routes: [
       /// ================= SPLASH =================
@@ -91,14 +91,10 @@ class AppRouter {
         pageBuilder: (context, state) {
           isSplashDone = true;
           isOnboardingDone = true;
-          return const MaterialPage(child: LoginPage());
+          return MaterialPage(child: LoginPage());
         },
       ),
-      GoRoute(
-        path: kRegister,
-        pageBuilder: (context, state) =>
-            slideTransitionHorizontal(const RegisterPage()),
-      ),
+
       GoRoute(
         path: kOtp,
         pageBuilder: (context, state) {
@@ -112,60 +108,56 @@ class AppRouter {
             slideTransitionHorizontal(const ChangePasswordPage()),
       ),
 
-      /// ================= SHELL NAV =================
-      StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) {
-          return BasePage(navigationShell: navigationShell);
-        },
-        branches: <StatefulShellBranch>[
-          /// HOME
-          StatefulShellBranch(
-            navigatorKey: _homeKey,
-            routes: [
-              GoRoute(
-                path: kHome,
-                pageBuilder: (context, state) =>
-                    slideTransitionHorizontal(HomePage(key: state.pageKey)),
-              ),
-            ],
-          ),
+      /// ================= TASK DETAILS =================
+      /// Pushed over the home screen; the [Task] is passed via `extra`.
+      GoRoute(
+        path: kTaskDetails,
+        pageBuilder: (context, state) => slideTransitionHorizontal(
+          TaskDetailsPage(task: state.extra as Task),
+        ),
+      ),
 
-          /// SEARCH
-          StatefulShellBranch(
-            navigatorKey: _searchKey,
-            routes: [
-              GoRoute(
-                path: kSearch,
-                pageBuilder: (context, state) =>
-                    slideTransitionHorizontal(SearchPage(key: state.pageKey)),
-              ),
-            ],
-          ),
+      /// ================= HOME =================
+      /// The single main screen. Profile/Settings are reached from its drawer.
+      GoRoute(
+        path: kHome,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(HomePage(key: state.pageKey)),
+      ),
 
-          /// HISTORY
-          StatefulShellBranch(
-            navigatorKey: _historyKey,
-            routes: [
-              GoRoute(
-                path: kHistory,
-                pageBuilder: (context, state) =>
-                    slideTransitionHorizontal(HistoryPage(key: state.pageKey)),
-              ),
-            ],
-          ),
+      /// ================= PROFILE =================
+      GoRoute(
+        path: kProfile,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(WorkerProfilePage(key: state.pageKey)),
+      ),
 
-          /// PROFILE
-          StatefulShellBranch(
-            navigatorKey: _profileKey,
-            routes: [
-              GoRoute(
-                path: kProfile,
-                pageBuilder: (context, state) =>
-                    slideTransitionHorizontal(ProfilePage(key: state.pageKey)),
-              ),
-            ],
+      /// ================= SETTINGS =================
+      GoRoute(
+        path: kSettings,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(SettingsPage(key: state.pageKey)),
+      ),
+
+      /// ================= NOTIFICATIONS =================
+      /// Pushed from the top-bar bell on the home screen.
+      GoRoute(
+        path: kNotifications,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(NotificationsPage(key: state.pageKey)),
+      ),
+
+      /// ================= SEARCH =================
+      /// Pushed from the top-bar search field; the chosen [SearchQuery] is
+      /// passed via `extra` and run on open.
+      GoRoute(
+        path: kSearch,
+        pageBuilder: (context, state) => slideTransitionHorizontal(
+          SearchResultsPage(
+            key: state.pageKey,
+            initialQuery: state.extra as SearchQuery?,
           ),
-        ],
+        ),
       ),
     ],
 

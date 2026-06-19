@@ -15,9 +15,9 @@ class IntroView extends StatelessWidget {
       child: Column(
         children: [
           /// 📌 TOP IMAGE ONLY
-          SizedBox(
-            height: 600.h,
-            width: double.infinity,
+          /// Flexible so it takes the available height instead of a fixed
+          /// 600.h, which overflowed the column on shorter screens.
+          Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
               child: ClipRRect(
@@ -30,7 +30,7 @@ class IntroView extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 30.h),
+          SizedBox(height: 24.h),
 
           /// 📌 TITLE
           Padding(
@@ -44,6 +44,10 @@ class IntroView extends StatelessWidget {
               maxLines: 3,
             ),
           ),
+
+          /// Bottom breathing room so the title clears the overlaid dots
+          /// indicator and the "next" button.
+          SizedBox(height: 90.h),
         ],
       ),
     );

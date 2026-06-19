@@ -19,6 +19,15 @@ class AppValidators {
     return null;
   }
 
+  static String? email(String? value, BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final v = (value ?? '').trim();
+    if (v.isEmpty) return l.validation_required;
+    final emailRegex = RegExp(r'^[\w.\-+]+@([\w\-]+\.)+[\w\-]{2,}$');
+    if (!emailRegex.hasMatch(v)) return l.validation_email_invalid;
+    return null;
+  }
+
   static String? phone(String? value, BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final v = (value ?? '').replaceAll(RegExp(r'\D'), '');

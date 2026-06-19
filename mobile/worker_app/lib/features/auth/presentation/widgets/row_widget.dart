@@ -1,7 +1,7 @@
 
-import 'package:flutter/material.dart';
-
 import '../../../../config/theme/styles.dart';
+import '../bloc/auth_bloc.dart';
+import 'package:flutter/material.dart';
 
 class RowWidget extends StatelessWidget {
   const RowWidget({

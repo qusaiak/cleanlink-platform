@@ -1,0 +1,66 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../bloc/notifications_bloc.dart';
+
+/// The top-bar notifications button: a bell with a live unread badge driven by
+/// [NotificationsBloc]. Tapping it calls [onTap] (navigates to the feed).
+///
+/// Must be placed under a [NotificationsBloc] provider (supplied at the
+/// tasks-screen level).
+class NotificationBell extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const NotificationBell({super.key, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context).colorScheme;
+    final unread = context.select<NotificationsBloc, int>(
+      (b) => b.state.unreadCount,
+    );
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          width: 42.w,
+          height: 42.w,
+          decoration: BoxDecoration(
+            color: theme.primary.withValues(alpha: 0.1),
+            shape: BoxShape.circle,
+          ),
+          child: IconButton(
+            padding: EdgeInsets.zero,
+            icon: Icon(Icons.notifications_rounded, color: theme.primary),
+            onPressed: onTap,
+          ),
+        ),
+        if (unread > 0)
+          PositionedDirectional(
+            end: -2,
+            top: -2,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+              constraints: BoxConstraints(minWidth: 18.w),
+              decoration: BoxDecoration(
+                color: theme.error,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(color: theme.surface, width: 1.5),
+              ),
+              child: Text(
+                unread > 99 ? '99+' : '$unread',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 9.sp,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}

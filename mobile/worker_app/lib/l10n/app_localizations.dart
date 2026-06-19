@@ -164,6 +164,12 @@ abstract class AppLocalizations {
   /// **'History'**
   String get history;
 
+  /// No description provided for @bookings.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookings'**
+  String get bookings;
+
   /// No description provided for @profile.
   ///
   /// In en, this message translates to:
@@ -416,6 +422,12 @@ abstract class AppLocalizations {
   /// **'This field is required'**
   String get validation_required;
 
+  /// No description provided for @validation_email_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address'**
+  String get validation_email_invalid;
+
   /// No description provided for @validation_phone_invalid.
   ///
   /// In en, this message translates to:
@@ -631,6 +643,726 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Verify'**
   String get auth_otp_verify;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @support.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get support;
+
+  /// No description provided for @updates.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates'**
+  String get updates;
+
+  /// No description provided for @check_for_update.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for Updates'**
+  String get check_for_update;
+
+  /// No description provided for @help_center_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Help Center'**
+  String get help_center_title;
+
+  /// No description provided for @contact_us.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact us'**
+  String get contact_us;
+
+  /// No description provided for @setting_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get setting_title;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @dialog_change_language_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Change language'**
+  String get dialog_change_language_title;
+
+  /// No description provided for @dialog_change_language_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure about changing application language to Arabic?'**
+  String get dialog_change_language_body;
+
+  /// No description provided for @privacy_policy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacy_policy;
+
+  /// No description provided for @terms_of_use.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
+  String get terms_of_use;
+
+  /// No description provided for @delete_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get delete_account;
+
+  /// No description provided for @suggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions'**
+  String get suggestions;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @notification_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get notification_setting;
+
+  /// No description provided for @my_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'My Profile'**
+  String get my_profile;
+
+  /// No description provided for @contact_us_title.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re here to help'**
+  String get contact_us_title;
+
+  /// No description provided for @contact_us_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Send us your issue and we\'ll get back to you.'**
+  String get contact_us_body;
+
+  /// No description provided for @mobile_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile Number'**
+  String get mobile_number;
+
+  /// No description provided for @title.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get title;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
+  /// No description provided for @hint_email.
+  ///
+  /// In en, this message translates to:
+  /// **'gxxxx@gmail.com'**
+  String get hint_email;
+
+  /// No description provided for @hint_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Message title'**
+  String get hint_title;
+
+  /// No description provided for @hint_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Your message...'**
+  String get hint_description;
+
+  /// No description provided for @help_center_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick answers to your questions'**
+  String get help_center_body;
+
+  /// No description provided for @app_lang.
+  ///
+  /// In en, this message translates to:
+  /// **'Application Language'**
+  String get app_lang;
+
+  /// No description provided for @txt_english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get txt_english;
+
+  /// No description provided for @txt_arabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic'**
+  String get txt_arabic;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @dialog_delete_account_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get dialog_delete_account_title;
+
+  /// No description provided for @dialog_delete_account_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to continue deleting your account? This action cannot be undone.'**
+  String get dialog_delete_account_body;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @book_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Now'**
+  String get book_now;
+
+  /// No description provided for @categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get categories;
+
+  /// No description provided for @popular_companies.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Companies'**
+  String get popular_companies;
+
+  /// No description provided for @popular_services.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Services'**
+  String get popular_services;
+
+  /// No description provided for @tasks_title.
+  ///
+  /// In en, this message translates to:
+  /// **'My Daily Tasks'**
+  String get tasks_title;
+
+  /// No description provided for @tasks_remaining_today.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining Today'**
+  String get tasks_remaining_today;
+
+  /// No description provided for @tasks_completed_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Tasks'**
+  String get tasks_completed_label;
+
+  /// No description provided for @tasks_list_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Task List'**
+  String get tasks_list_title;
+
+  /// No description provided for @tasks_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get tasks_filter;
+
+  /// No description provided for @filter_all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filter_all;
+
+  /// No description provided for @task_request_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Request #{number}'**
+  String task_request_number(String number);
+
+  /// No description provided for @task_status_assigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned'**
+  String get task_status_assigned;
+
+  /// No description provided for @task_status_on_the_way.
+  ///
+  /// In en, this message translates to:
+  /// **'On the way'**
+  String get task_status_on_the_way;
+
+  /// No description provided for @task_status_in_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get task_status_in_progress;
+
+  /// No description provided for @task_status_paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get task_status_paused;
+
+  /// No description provided for @task_status_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get task_status_completed;
+
+  /// No description provided for @task_status_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get task_status_cancelled;
+
+  /// No description provided for @task_action_start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Work'**
+  String get task_action_start;
+
+  /// No description provided for @task_action_complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get task_action_complete;
+
+  /// No description provided for @task_action_pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get task_action_pause;
+
+  /// No description provided for @tasks_empty_title.
+  ///
+  /// In en, this message translates to:
+  /// **'No current tasks'**
+  String get tasks_empty_title;
+
+  /// No description provided for @tasks_empty_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New tasks will appear here once they are assigned to you.'**
+  String get tasks_empty_subtitle;
+
+  /// No description provided for @tasks_load_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load tasks'**
+  String get tasks_load_failed;
+
+  /// No description provided for @task_started_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Task started'**
+  String get task_started_message;
+
+  /// No description provided for @task_paused_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Task paused'**
+  String get task_paused_message;
+
+  /// No description provided for @task_completed_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Task completed successfully'**
+  String get task_completed_message;
+
+  /// No description provided for @task_accepted_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Task accepted'**
+  String get task_accepted_message;
+
+  /// No description provided for @task_cancelled_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Task cancelled'**
+  String get task_cancelled_message;
+
+  /// No description provided for @task_status_updated_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Status updated to {status}'**
+  String task_status_updated_message(String status);
+
+  /// No description provided for @task_action_failed_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Action failed. Please try again'**
+  String get task_action_failed_message;
+
+  /// No description provided for @task_open_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the task. Please try again'**
+  String get task_open_failed;
+
+  /// No description provided for @task_management_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Management'**
+  String get task_management_title;
+
+  /// No description provided for @task_details_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Details'**
+  String get task_details_section;
+
+  /// No description provided for @task_required_tools.
+  ///
+  /// In en, this message translates to:
+  /// **'Required Tools'**
+  String get task_required_tools;
+
+  /// No description provided for @task_time_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get task_time_label;
+
+  /// No description provided for @task_date_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get task_date_label;
+
+  /// No description provided for @task_duration_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get task_duration_label;
+
+  /// No description provided for @task_package_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Package'**
+  String get task_package_label;
+
+  /// No description provided for @task_included_section.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s included'**
+  String get task_included_section;
+
+  /// No description provided for @task_urgent_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent Task'**
+  String get task_urgent_badge;
+
+  /// No description provided for @visual_documentation.
+  ///
+  /// In en, this message translates to:
+  /// **'Visual Documentation'**
+  String get visual_documentation;
+
+  /// No description provided for @photo_before.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo before start'**
+  String get photo_before;
+
+  /// No description provided for @photo_after.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo after completion'**
+  String get photo_after;
+
+  /// No description provided for @update_status_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Status'**
+  String get update_status_section;
+
+  /// No description provided for @update_status_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Status'**
+  String get update_status_button;
+
+  /// No description provided for @attach_photo_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Add photo'**
+  String get attach_photo_title;
+
+  /// No description provided for @take_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get take_photo;
+
+  /// No description provided for @choose_from_gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get choose_from_gallery;
+
+  /// No description provided for @photo_added_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo added'**
+  String get photo_added_message;
+
+  /// No description provided for @photo_pick_failed_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t add the photo'**
+  String get photo_pick_failed_message;
+
+  /// No description provided for @current_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Status'**
+  String get current_status;
+
+  /// No description provided for @availability_available.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get availability_available;
+
+  /// No description provided for @availability_busy.
+  ///
+  /// In en, this message translates to:
+  /// **'Busy'**
+  String get availability_busy;
+
+  /// No description provided for @availability_offline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get availability_offline;
+
+  /// No description provided for @overall_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall Rating'**
+  String get overall_rating;
+
+  /// No description provided for @completed_tasks_count.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Tasks'**
+  String get completed_tasks_count;
+
+  /// No description provided for @job_id_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Job ID'**
+  String get job_id_label;
+
+  /// No description provided for @profile_load_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load profile'**
+  String get profile_load_failed;
+
+  /// No description provided for @profile_updated_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profile_updated_message;
+
+  /// No description provided for @edit_email_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit email'**
+  String get edit_email_title;
+
+  /// No description provided for @edit_job_id_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Job ID'**
+  String get edit_job_id_title;
+
+  /// No description provided for @availability_updated_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your status changed to {status}'**
+  String availability_updated_message(String status);
+
+  /// No description provided for @notifications_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications_title;
+
+  /// No description provided for @notifications_mark_all_read.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get notifications_mark_all_read;
+
+  /// No description provided for @notifications_empty_title.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet'**
+  String get notifications_empty_title;
+
+  /// No description provided for @notifications_empty_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'When a client requests you for a service, it will show up here.'**
+  String get notifications_empty_subtitle;
+
+  /// No description provided for @notifications_load_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load notifications'**
+  String get notifications_load_failed;
+
+  /// No description provided for @notification_received.
+  ///
+  /// In en, this message translates to:
+  /// **'Received'**
+  String get notification_received;
+
+  /// No description provided for @search_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search_title;
+
+  /// No description provided for @search_mode_general.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get search_mode_general;
+
+  /// No description provided for @search_mode_custom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get search_mode_custom;
+
+  /// No description provided for @search_by_service_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Service name'**
+  String get search_by_service_name;
+
+  /// No description provided for @search_by_client_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Client name'**
+  String get search_by_client_name;
+
+  /// No description provided for @search_by_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get search_by_location;
+
+  /// No description provided for @search_by_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get search_by_time;
+
+  /// No description provided for @search_general_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search across all services…'**
+  String get search_general_hint;
+
+  /// No description provided for @search_custom_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by {field}…'**
+  String search_custom_hint(String field);
+
+  /// No description provided for @search_hint_prompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Search services by name, client, location or time.'**
+  String get search_hint_prompt;
+
+  /// No description provided for @search_no_results.
+  ///
+  /// In en, this message translates to:
+  /// **'No services match your search'**
+  String get search_no_results;
+
+  /// No description provided for @search_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Search failed. Please try again'**
+  String get search_failed;
+
+  /// No description provided for @price_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} SAR'**
+  String price_amount(String amount);
+
+  /// No description provided for @greeting_hello.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello,'**
+  String get greeting_hello;
 }
 
 class _AppLocalizationsDelegate

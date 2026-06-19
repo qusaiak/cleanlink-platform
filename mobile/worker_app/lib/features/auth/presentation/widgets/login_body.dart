@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -61,16 +62,12 @@ class LoginBody extends StatelessWidget {
               label: l.auth_login_button,
               // loading: state.isLoading,
               // onPressed: bloc.submitLogin,
-              onPressed: () {},
+              onPressed: () {
+                context.push(AppRouter.kHome);
+              },
             ),
             SizedBox(height: 14.h),
-            Center(
-              child: AuthLinkButton(
-                label: l.auth_create_account,
-                onTap: () => context.push(AppRouter.kRegister),
-              ),
-            ),
-            SizedBox(height: 24.h),
+
           ],
         ),
       ),
