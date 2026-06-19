@@ -529,10 +529,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get search_title => 'Search';
 
   @override
-  String get search_search_hint =>
-      'Search for movies, series, channels and more...';
-
-  @override
   String get search_categories => 'Categories';
 
   @override
@@ -551,7 +547,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get search_offers => 'Offers';
 
   @override
-  String get search_all => 'All';
+  String get all => 'All';
 
   @override
   String get search_filter => 'Filter';
@@ -616,4 +612,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get search_week => 'This Week';
+
+  @override
+  String get my_bookings => 'My Bookings';
+
+  @override
+  String get ongoing => 'Ongoing';
+
+  @override
+  String get upcoming => 'Upcoming';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get cancelled => 'Cancelled';
 }

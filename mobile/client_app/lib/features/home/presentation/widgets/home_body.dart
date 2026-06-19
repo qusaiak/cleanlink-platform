@@ -26,6 +26,13 @@ class HomeBody extends StatelessWidget {
             const SizedBox(height: 20),
             const OffersSection(),
             const SizedBox(height: 24),
+            RowTitle(
+              iconData: Icons.category,
+              title: AppLocalizations.of(context)!.popular_categories,
+              onTap: () {
+                GoRouter.of(context).push(AppRouter.kCategories);
+              },
+            ),
             const CategoriesSection(),
             const SizedBox(height: 24),
             const CompaniesSection(),

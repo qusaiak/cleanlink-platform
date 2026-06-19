@@ -1,41 +1,39 @@
-
 import 'package:client_app/config/theme/app_theme_info.dart';
 import 'package:client_app/config/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 PreferredSizeWidget customAppBar(
-    String title,
-    IconData? leading,
-    List<Widget>? actions,
-    VoidCallback? onPressedLeading,
-    Color color) {
+  String title,
+  IconData? leading,
+  List<Widget>? actions,
+  VoidCallback? onPressedLeading,
+  Color color,
+) {
   return AppBar(
     systemOverlayStyle: SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
+      statusBarColor: AppColor.transparent,
       statusBarIconBrightness: AppThemeInfo.isLight
           ? Brightness.dark
           : Brightness.light,
-      statusBarBrightness: AppThemeInfo.isLight ? Brightness.dark : Brightness
-          .light,
+      statusBarBrightness: AppThemeInfo.isLight
+          ? Brightness.dark
+          : Brightness.light,
     ),
     leading: leading != null
         ? IconButton(
             onPressed: onPressedLeading,
-            icon: Icon(
-              leading,
-              color: color,
-            ),
+            icon: Icon(leading, color: color),
           )
         : null,
     centerTitle: false,
-    backgroundColor: AppColor.transparent,
+    backgroundColor: AppThemeInfo.isLight ? AppColor.backgroundColorLight : AppColor.backgroundColorDark,
     scrolledUnderElevation: 0,
-    shadowColor: Colors.transparent,
-    foregroundColor: Colors.transparent,
-    surfaceTintColor: Colors.transparent,
+    shadowColor: AppColor.transparent,
+    foregroundColor: AppColor.transparent,
+    surfaceTintColor: AppColor.transparent,
     elevation: 0,
-    title: Text(title, style: TextStyle(color: color),),
+    title: Text(title, style: TextStyle(color: color)),
     actions: actions,
   );
 }

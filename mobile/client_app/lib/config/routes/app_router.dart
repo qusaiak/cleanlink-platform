@@ -7,7 +7,7 @@ import 'package:client_app/features/auth/presentation/pages/login_page.dart';
 import 'package:client_app/features/auth/presentation/pages/otp_page.dart';
 import 'package:client_app/features/auth/presentation/pages/register_page.dart';
 import 'package:client_app/features/base/presentation/pages/base_page.dart';
-import 'package:client_app/features/bookings/presentation/pages/bookings_page.dart';
+import 'package:client_app/features/bookings/presentation/pages/my_bookings_page.dart';
 import 'package:client_app/features/companies/presentation/pages/companies_page.dart';
 import 'package:client_app/features/companies/presentation/pages/company_details_page.dart';
 import 'package:client_app/features/home/presentation/pages/home_page.dart';
@@ -21,6 +21,7 @@ import 'package:client_app/features/services/presentation/pages/services_page.da
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/bookings/presentation/pages/track_service_page.dart';
 import '../../features/categories/presentation/pages/categories_page.dart';
 
 class AppRouter {
@@ -36,6 +37,7 @@ class AppRouter {
   static const kChangePassword = '/change_password';
   static const kContactUs = '/contact_us';
   static const kHelpCenter = '/help_center';
+  static const kTrackService = '/track_service';
 
   static const kAppContentPage = '/content';
 
@@ -170,6 +172,11 @@ class AppRouter {
         pageBuilder: (context, state) =>
             slideTransitionHorizontal(const ServiceDetailsPage()),
       ),
+      // GoRoute(
+      //   path: kTrackService,
+      //   pageBuilder: (context, state) =>
+      //       slideTransitionHorizontal(const TrackServicePage()),
+      // ),
 
       /// ================= SHELL NAV =================
       StatefulShellRoute.indexedStack(
@@ -207,8 +214,9 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: kBookings,
-                pageBuilder: (context, state) =>
-                    slideTransitionHorizontal(BookingsPage(key: state.pageKey)),
+                pageBuilder: (context, state) => slideTransitionHorizontal(
+                  MyBookingsPage(key: state.pageKey),
+                ),
               ),
             ],
           ),

@@ -1094,12 +1094,6 @@ abstract class AppLocalizations {
   /// **'Search'**
   String get search_title;
 
-  /// No description provided for @search_search_hint.
-  ///
-  /// In en, this message translates to:
-  /// **'Search for movies, series, channels and more...'**
-  String get search_search_hint;
-
   /// No description provided for @search_categories.
   ///
   /// In en, this message translates to:
@@ -1136,11 +1130,11 @@ abstract class AppLocalizations {
   /// **'Offers'**
   String get search_offers;
 
-  /// No description provided for @search_all.
+  /// No description provided for @all.
   ///
   /// In en, this message translates to:
   /// **'All'**
-  String get search_all;
+  String get all;
 
   /// No description provided for @search_filter.
   ///
@@ -1267,6 +1261,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This Week'**
   String get search_week;
+
+  /// No description provided for @my_bookings.
+  ///
+  /// In en, this message translates to:
+  /// **'My Bookings'**
+  String get my_bookings;
+
+  /// No description provided for @ongoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Ongoing'**
+  String get ongoing;
+
+  /// No description provided for @upcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get upcoming;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get cancelled;
 }
 
 class _AppLocalizationsDelegate

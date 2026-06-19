@@ -523,9 +523,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get search_title => 'استكشف';
 
   @override
-  String get search_search_hint => 'ابحث عن أفلام، مسلسلات، قنوات والمزيد...';
-
-  @override
   String get search_categories => 'التصنيفات';
 
   @override
@@ -544,7 +541,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get search_offers => 'العروض';
 
   @override
-  String get search_all => 'الكل';
+  String get all => 'الكل';
 
   @override
   String get search_filter => 'تصفية';
@@ -608,4 +605,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get search_week => 'هذا الأسبوع';
+
+  @override
+  String get my_bookings => 'حجوزاتي';
+
+  @override
+  String get ongoing => 'جارٍ';
+
+  @override
+  String get upcoming => 'قادم';
+
+  @override
+  String get completed => 'مكتمل';
+
+  @override
+  String get cancelled => 'ملغى';
 }

@@ -2,6 +2,7 @@ import 'package:client_app/config/routes/app_router.dart';
 import 'package:client_app/config/theme/app_themes.dart';
 import 'package:client_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:client_app/features/base/presentation/bloc/base_bloc.dart';
+import 'package:client_app/features/bookings/presentation/bloc/bookings_bloc.dart';
 import 'package:client_app/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:client_app/injection_container.dart';
 import 'package:client_app/l10n/app_localizations.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthBloc>(create: (BuildContext context) => sl()),
         BlocProvider<BaseBloc>(create: (BuildContext context) => sl()),
         BlocProvider<ProfileBloc>(create: (BuildContext context) => sl()),
+        BlocProvider<BookingsBloc>(create: (BuildContext context) => sl()),
       ],
       child: ScreenUtilInit(
         minTextAdapt: true,

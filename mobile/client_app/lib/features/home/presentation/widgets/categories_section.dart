@@ -33,12 +33,3 @@ class CategoriesSection extends StatelessWidget {
     );
   }
 }
-
-
-// RowTitle(
-// iconData: Icons.category,
-// title: AppLocalizations.of(context)!.popular_categories,
-// onTap: () {
-// GoRouter.of(context).push(AppRouter.kCategories);
-// },
-// ),

@@ -189,7 +189,7 @@
   "search_regions": "المناطق",
   "search_providers": "المزودين",
   "search_offers": "العروض",
-  "search_all": "الكل",
+  "all": "الكل",
   "search_filter": "تصفية",
   "search_tags": "الوسوم",
   "search_order": "الترتيب",
@@ -210,5 +210,10 @@
   "search_clear_filters": "مسح الفلاتر",
   "search_today": "اليوم",
   "search_tomorrow": "غداً",
-  "search_week": "هذا الأسبوع"
+  "search_week": "هذا الأسبوع",
+  "my_bookings": "حجوزاتي",
+  "ongoing": "جارٍ",
+  "upcoming": "قادم",
+  "completed": "مكتمل",
+  "cancelled": "ملغى"
 }
