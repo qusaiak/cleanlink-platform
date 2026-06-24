@@ -16,14 +16,13 @@ class Login extends AuthEvent {
 
 class Register extends AuthEvent {
   final String userName;
-  final String phoneNumber;
   final String email;
   final String password;
 
-  const Register(this.userName, this.phoneNumber, this.email, this.password);
+  const Register(this.userName, this.email, this.password);
 
   @override
-  List<Object> get props => [userName, phoneNumber, email, password];
+  List<Object> get props => [userName, email, password];
 }
 
 class RequestResendVerificationCode extends AuthEvent {

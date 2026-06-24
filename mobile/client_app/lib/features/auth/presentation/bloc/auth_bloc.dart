@@ -3,12 +3,18 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/error/failure.dart';
+import '../../domain/entities/user_entity.dart';
+import '../../domain/usecases/login_usecase.dart';
+import '../../domain/usecases/register_usecase.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc()
+  final LoginUseCase _loginUseCase;
+  final RegisterUseCase _registerUseCase;
+
+  AuthBloc(this._loginUseCase, this._registerUseCase)
     : forms = AuthFormControllers(),
       super(
         const AuthState().copyWith(
@@ -24,6 +30,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       ) {
     on<Login>(onLogin);
+    on<Register>(onRegister);
     on<ChangePasswordView>(onChangePasswordView);
   }
 
@@ -33,14 +40,55 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(status: AuthStatus.loadingLogin));
 
     try {
-      await Future.delayed(const Duration(seconds: 1));
+      final auth = await _loginUseCase(
+        LoginParams(email: event.email, password: event.password),
+      );
 
-      emit(state.copyWith(status: AuthStatus.successLogin));
-    } catch (e) {
+      emit(
+        state.copyWith(
+          status: AuthStatus.successLogin,
+          token: auth.accessToken,
+          user: auth.user,
+        ),
+      );
+    } on Failure catch (failure) {
+      emit(state.copyWith(status: AuthStatus.errorLogin, error: failure));
+    } catch (_) {
       emit(
         state.copyWith(
           status: AuthStatus.errorLogin,
           error: const ServerFailure("Login failed", ""),
+        ),
+      );
+    }
+  }
+
+  Future<void> onRegister(Register event, Emitter<AuthState> emit) async {
+    emit(state.copyWith(status: AuthStatus.loadingRegister));
+
+    try {
+      final auth = await _registerUseCase(
+        RegisterParams(
+          fullname: event.userName,
+          email: event.email,
+          password: event.password,
+        ),
+      );
+
+      emit(
+        state.copyWith(
+          status: AuthStatus.successRegister,
+          token: auth.accessToken,
+          user: auth.user,
+        ),
+      );
+    } on Failure catch (failure) {
+      emit(state.copyWith(status: AuthStatus.errorRegister, error: failure));
+    } catch (_) {
+      emit(
+        state.copyWith(
+          status: AuthStatus.errorRegister,
+          error: const ServerFailure("Registration failed", ""),
         ),
       );
     }

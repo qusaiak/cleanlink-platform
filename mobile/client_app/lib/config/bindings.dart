@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../core/session/user_session.dart';
 import '../core/storage/shared_storage.dart';
 import '../core/storage/storage_data.dart';
 import '../core/utils/bloc_observer.dart';
@@ -40,6 +41,7 @@ abstract class Bindings {
     await AppPreferences.initialize();
     await clearAllUserData();
     await initializeDependencies();
+    await sl<UserSession>().load();
     _configureErrorHandling();
     AppLifecycleTracker();
   }

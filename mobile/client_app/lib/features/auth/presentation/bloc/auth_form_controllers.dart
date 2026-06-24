@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
 
-/// Text controllers, [FocusNode]s, and [FormState] keys for auth screens.
-/// Owned by [AuthBloc] and disposed in [AuthBloc.close].
 class AuthFormControllers {
   AuthFormControllers();
 
   // ── Login ─────────────────────────────────────────────────────────────────
   final GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
-  final TextEditingController loginPhone = TextEditingController();
+  final TextEditingController loginEmail = TextEditingController();
   final TextEditingController loginPassword = TextEditingController();
-  final FocusNode loginPhoneFocus = FocusNode();
+  final FocusNode loginEmailFocus = FocusNode();
   final FocusNode loginPasswordFocus = FocusNode();
 
   // ── Register ────────────────────────────────────────────────────────────────
   final GlobalKey<FormState> registerFormKey = GlobalKey<FormState>();
   final TextEditingController registerName = TextEditingController();
-  final TextEditingController registerPhone = TextEditingController();
+  final TextEditingController registerEmail = TextEditingController();
   final TextEditingController registerPassword = TextEditingController();
   final TextEditingController registerConfirmPassword = TextEditingController();
   final TextEditingController registerBirthDateDisplay = TextEditingController();
   final FocusNode registerNameFocus = FocusNode();
-  final FocusNode registerPhoneFocus = FocusNode();
+  final FocusNode registerEmailFocus = FocusNode();
   final FocusNode registerPasswordFocus = FocusNode();
   final FocusNode registerConfirmFocus = FocusNode();
 
@@ -38,18 +36,18 @@ class AuthFormControllers {
   final FocusNode changeConfirmFocus = FocusNode();
 
   void dispose() {
-    loginPhone.dispose();
+    loginEmail.dispose();
     loginPassword.dispose();
-    loginPhoneFocus.dispose();
+    loginEmailFocus.dispose();
     loginPasswordFocus.dispose();
 
     registerName.dispose();
-    registerPhone.dispose();
+    registerEmail.dispose();
     registerPassword.dispose();
     registerConfirmPassword.dispose();
     registerBirthDateDisplay.dispose();
     registerNameFocus.dispose();
-    registerPhoneFocus.dispose();
+    registerEmailFocus.dispose();
     registerPasswordFocus.dispose();
     registerConfirmFocus.dispose();
 

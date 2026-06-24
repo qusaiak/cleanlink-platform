@@ -19,6 +19,7 @@ enum AuthStatus {
 class AuthState extends Equatable {
   final AuthStatus? status;
   final String? token;
+  final UserEntity? user;
   final bool? isLoadingLogin;
   final bool? isLoadingRegister;
   final bool? isVerifyAccountLoading;
@@ -32,6 +33,7 @@ class AuthState extends Equatable {
   const AuthState({
     this.status,
     this.token,
+    this.user,
     this.isLoadingLogin,
     this.isLoadingRegister,
     this.isVerifyAccountLoading,
@@ -46,6 +48,7 @@ class AuthState extends Equatable {
   AuthState copyWith({
     AuthStatus? status,
     String? token,
+    UserEntity? user,
     bool? isLoadingLogin,
     bool? isLoadingRegister,
     bool? isVerifyAccountLoading,
@@ -59,6 +62,7 @@ class AuthState extends Equatable {
     return AuthState(
       status: status ?? this.status,
       token: token ?? this.token,
+      user: user ?? this.user,
       isLoadingLogin: isLoadingLogin ?? this.isLoadingLogin,
       isLoadingRegister: isLoadingRegister ?? this.isLoadingRegister,
       isVerifyAccountLoading:
@@ -78,6 +82,7 @@ class AuthState extends Equatable {
   List<Object?> get props => [
     status,
     token,
+    user,
     isLoadingLogin,
     isLoadingRegister,
     isVerifyAccountLoading,
