@@ -5,9 +5,12 @@ import '../../../../config/constants/constants.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../core/widgets/row_title.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../domain/entities/company_entity.dart';
 
 class AboutCompanySection extends StatefulWidget {
-  const AboutCompanySection({super.key});
+  final CompanyEntity company;
+
+  const AboutCompanySection({super.key, required this.company});
 
   @override
   State<AboutCompanySection> createState() => _AboutCompanySectionState();
@@ -29,8 +32,8 @@ class _AboutCompanySectionState extends State<AboutCompanySection> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
+                widget.company.descriptionEn,
                 maxLines: 2,
-                "And you've confirmed it is properly restricted, you can generally resolve or dismiss the alertand you've confirmed it is properly restricted, you can generally resolve or dismiss the alertand you've confirmed it is properly restricted, you can generally resolve or dismiss the alertand you've confirmed it is properly restricted, you can generally resolve or dismiss the alert",
                 style: Styles.textStyle12.copyWith(
                   color: theme.onSurfaceVariant,
                 ),
@@ -88,9 +91,8 @@ class _AboutCompanySectionState extends State<AboutCompanySection> {
                               ),
                               SizedBox(height: 16.h),
                               Text(
+                                widget.company.descriptionEn,
                                 maxLines: 10000,
-                                "and you've confirmed it is properly restricted, you can generally resolve or dismiss the alertand you've confirmed it is properly restricted, you can generally resolve or dismiss the alertand you've confirmed it is properly restricted, you can generally resolve or dismiss the alertand you've confirmed it is properly restricted, you can generally resolve or dismiss the alert",
-
                                 style: Styles.textStyle12.copyWith(
                                   color: theme.onSurfaceVariant,
                                 ),

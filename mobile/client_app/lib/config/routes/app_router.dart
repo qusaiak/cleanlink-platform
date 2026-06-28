@@ -5,6 +5,7 @@ import 'package:client_app/core/widgets/custom_connection_timeout.dart';
 import 'package:client_app/features/auth/presentation/pages/change_password_page.dart';
 import 'package:client_app/features/auth/presentation/pages/login_page.dart';
 import 'package:client_app/features/auth/presentation/pages/otp_page.dart';
+import 'package:client_app/features/auth/presentation/pages/personal_details_page.dart';
 import 'package:client_app/features/auth/presentation/pages/register_page.dart';
 import 'package:client_app/features/base/presentation/pages/base_page.dart';
 import 'package:client_app/features/bookings/presentation/pages/my_bookings_page.dart';
@@ -21,17 +22,22 @@ import 'package:client_app/features/services/presentation/pages/services_page.da
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/bookings/presentation/pages/track_service_page.dart';
+import '../../core/storage/shared_storage.dart';
+import '../../core/storage/storage_data.dart';
 import '../../features/categories/presentation/pages/categories_page.dart';
+import '../../features/track_service/presentation/pages/track_service_page.dart';
 
 class AppRouter {
   /// ===============================
   /// ROUTES
   /// ===============================
+  static const kRoot = '/';
+
   static const kOnboarding = '/onboarding';
   static const kConnectionTimeout = '/connection_timeout';
   static const kLogin = '/login';
   static const kRegister = '/register';
+  static const kPersonalDetails = '/personal_details';
   static const kOtp = '/otp';
   static const kResetPassword = '/reset_password';
   static const kChangePassword = '/change_password';
@@ -81,7 +87,7 @@ class AppRouter {
   /// ===============================
   static final router = GoRouter(
     observers: [MyNavigatorObserver()],
-    initialLocation: kHome,
+    initialLocation: kRoot,
     navigatorKey: rootNavigatorKey,
     routes: [
       /// ================= SPLASH =================
@@ -126,6 +132,11 @@ class AppRouter {
             slideTransitionHorizontal(const RegisterPage()),
       ),
       GoRoute(
+        path: kPersonalDetails,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const PersonalDetailsPage()),
+      ),
+      GoRoute(
         path: kOtp,
         pageBuilder: (context, state) {
           final phone = (state.extra as String?) ?? '';
@@ -163,20 +174,41 @@ class AppRouter {
             slideTransitionHorizontal(const ServicesPage()),
       ),
       GoRoute(
-        path: kCompanyDetails,
+        path: kRegions,
         pageBuilder: (context, state) =>
-            slideTransitionHorizontal(const CompanyDetailsPage()),
+            slideTransitionHorizontal(const CategoriesPage()),
+      ),
+      GoRoute(
+        path: kProviders,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const CompaniesPage()),
+      ),
+      GoRoute(
+        path: kOffers,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const ServicesPage()),
+      ),
+      GoRoute(
+        path: kCompanyDetails,
+        pageBuilder: (context, state) => slideTransitionHorizontal(
+          CompanyDetailsPage(id: state.extra as int),
+        ),
       ),
       GoRoute(
         path: kServiceDetails,
-        pageBuilder: (context, state) =>
-            slideTransitionHorizontal(const ServiceDetailsPage()),
+        pageBuilder: (context, state) => slideTransitionHorizontal(
+          ServiceDetailsPage(id: state.extra as int),
+        ),
       ),
-      // GoRoute(
-      //   path: kTrackService,
-      //   pageBuilder: (context, state) =>
-      //       slideTransitionHorizontal(const TrackServicePage()),
-      // ),
+      GoRoute(
+        path: kTrackService,
+        pageBuilder: (context, state) {
+          final bookingId = state.extra is int ? state.extra as int : 1001;
+          return slideTransitionHorizontal(
+            TrackServicePage(bookingId: bookingId),
+          );
+        },
+      ),
 
       /// ================= SHELL NAV =================
       StatefulShellRoute.indexedStack(
@@ -237,27 +269,76 @@ class AppRouter {
     ],
 
     /// ===============================
-    /// REDIRECT (FIXED LOGIC)
+    /// REDIRECT
     /// ===============================
-    // redirect: (context, state) async {
-    //   debugPrint(state.fullPath);
-    //   if (!isSplashDone) {
-    //     return '/';
-    //   }
-    //   if (!isOnboardingDone) {
-    //     return kOnboarding;
-    //   }
-    //   // if (!await SharedStorage.authenticated && state.fullPath == kHome) {
-    //   //   return kLogin;
-    //   // }
-    //   return null;
-    // },
+    redirect: (context, state) async {
+      final location = state.fullPath;
+
+      final onboardingDone = await SharedStorage.hasData(
+        StorageData.isOnboarding,
+      );
+
+      final authenticated = await SharedStorage.authenticated;
+
+      debugPrint('''
+Location: $location
+Onboarding: $onboardingDone
+Auth: $authenticated
+''');
+
+      /// FIRST RUN
+      if (!onboardingDone && location != kOnboarding) {
+        return kOnboarding;
+      }
+
+      /// AFTER ONBOARDING
+      if (onboardingDone &&
+          !authenticated &&
+          location != kLogin &&
+          location != kRegister &&
+          location != kOtp) {
+        return kLogin;
+      }
+
+      /// LOGGED IN
+      if (authenticated &&
+          (location == kLogin ||
+              location == kRegister ||
+              location == kOnboarding ||
+              location == kRoot)) {
+        return kHome;
+      }
+
+      return null;
+    },
   );
 
   static String returnFullPath() {
-    return AppRouter.router.state.fullPath!;
+    return router.state.fullPath ?? kRoot;
   }
 }
+
+//   /// ===============================
+//   /// REDIRECT (FIXED LOGIC)
+//   /// ===============================
+//   redirect: (context, state) async {
+//     debugPrint("fullPath: ${state.fullPath}");
+//     // if (!isSplashDone) {
+//     //   return '/';
+//     // }
+//     if (!await SharedStorage.hasData(StorageData.isOnboarding)) {
+//       return kOnboarding;
+//     }
+//     if (!await SharedStorage.authenticated && state.fullPath == kHome) {
+//       return kLogin;
+//     }
+//     return null;
+//   },
+// );
+//   static String returnFullPath() {
+//     return AppRouter.router.state.fullPath!;
+//   }
+// }
 
 class MyNavigatorObserver extends NavigatorObserver {
   @override

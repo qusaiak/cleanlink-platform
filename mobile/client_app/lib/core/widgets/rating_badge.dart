@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../config/theme/styles.dart';
 
 class RatingBadge extends StatelessWidget {
-  final double rating;
+  final String rating;
 
   const RatingBadge({super.key, required this.rating});
 
@@ -32,7 +32,7 @@ class RatingBadge extends StatelessWidget {
           ),
           SizedBox(width: 4.w),
           Text(
-            rating.toString(),
+            rating,
             style: Styles.textStyle11.copyWith(
               fontWeight: FontWeight.w600,
             ),

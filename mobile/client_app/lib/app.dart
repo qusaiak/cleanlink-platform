@@ -3,13 +3,17 @@ import 'package:client_app/config/theme/app_themes.dart';
 import 'package:client_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:client_app/features/base/presentation/bloc/base_bloc.dart';
 import 'package:client_app/features/bookings/presentation/bloc/bookings_bloc.dart';
+import 'package:client_app/features/categories/presentation/bloc/categories_bloc.dart';
+import 'package:client_app/features/companies/presentation/bloc/companies_bloc.dart';
 import 'package:client_app/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:client_app/features/services/presentation/bloc/services_bloc.dart';
 import 'package:client_app/injection_container.dart';
 import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'config/theme/app_theme_info.dart';
+import 'features/home/presentation/bloc/home_bloc.dart';
 import 'l10n/l10n.dart';
 
 class MyApp extends StatelessWidget {
@@ -23,6 +27,10 @@ class MyApp extends StatelessWidget {
         BlocProvider<BaseBloc>(create: (BuildContext context) => sl()),
         BlocProvider<ProfileBloc>(create: (BuildContext context) => sl()),
         BlocProvider<BookingsBloc>(create: (BuildContext context) => sl()),
+        BlocProvider<HomeBloc>(create: (BuildContext context) => sl()),
+        BlocProvider<CompaniesBloc>(create: (BuildContext context) => sl()),
+        BlocProvider<CategoriesBloc>(create: (BuildContext context) => sl()),
+        BlocProvider<ServicesBloc>(create: (BuildContext context) => sl()),
       ],
       child: ScreenUtilInit(
         minTextAdapt: true,

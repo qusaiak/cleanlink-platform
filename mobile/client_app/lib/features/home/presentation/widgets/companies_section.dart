@@ -8,17 +8,20 @@ import '../../../../core/widgets/content/content_section.dart';
 import '../../../../core/widgets/content/content_section_type.dart';
 import '../../../../core/widgets/content/content_view.dart';
 import '../../../../core/widgets/custom_list_section.dart';
+import '../../../../core/widgets/dummy_data.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../data/models/company_model.dart';
+import '../../../companies/data/models/company_model.dart';
 import '../../../../core/utils/gen/assets.gen.dart';
+import '../../../companies/domain/entities/company_entity.dart';
 import 'company_card.dart';
 
 class CompaniesSection extends StatelessWidget {
-  const CompaniesSection({super.key});
+  final List<CompanyEntity> companies;
+  const CompaniesSection({super.key, required this.companies});
 
   @override
   Widget build(BuildContext context) {
-    final companies = CompaniesData.all.take(3).toList();
+    // final companies = CompaniesData.all.take(3).toList();
     return CustomListSection(
       title: AppLocalizations.of(context)!.popular_companies,
       onTitleTap: () {
@@ -30,7 +33,7 @@ class CompaniesSection extends StatelessWidget {
       itemBuilder: (context, index) => CompanyCard(
         company: companies[index],
         onTap: () {
-          GoRouter.of(context).push(AppRouter.kCompanyDetails);
+          GoRouter.of(context).push(AppRouter.kCompanyDetails, extra: companies[index].id);
         },
       ),
     );

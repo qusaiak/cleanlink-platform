@@ -5,7 +5,7 @@ import 'section_header.dart';
 class CustomListSection extends StatelessWidget {
   const CustomListSection({
     super.key,
-    required this.title,
+    this.title,
     required this.itemCount,
     required this.itemBuilder,
 
@@ -21,7 +21,7 @@ class CustomListSection extends StatelessWidget {
     this.shrinkWrap = false,
   });
 
-  final String title;
+  final String? title;
   final int itemCount;
   final Widget Function(BuildContext context, int index) itemBuilder;
 
@@ -56,15 +56,26 @@ class CustomListSection extends StatelessWidget {
       itemBuilder: itemBuilder,
     );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        iconData != null
-            ? RowTitle(iconData: iconData!, title: title, onTap: onTitleTap)
-            : SectionHeader(title: title, onTap: onTitleTap),
+    return title != null
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              iconData != null
+                  ? RowTitle(
+                      iconData: iconData!,
+                      title: title!,
+                      onTap: onTitleTap,
+                    )
+                  : SectionHeader(title: title!, onTap: onTitleTap),
 
-        if (isVertical) list else SizedBox(height: itemExtent, child: list),
-      ],
-    );
+              if (isVertical)
+                list
+              else
+                SizedBox(height: itemExtent, child: list),
+            ],
+          )
+        : isVertical
+        ? list
+        : SizedBox(height: itemExtent, child: list);
   }
 }

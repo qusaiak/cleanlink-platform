@@ -1,22 +1,101 @@
+import 'package:client_app/core/utils/functions/spinkit.dart';
+import 'package:client_app/features/companies/presentation/bloc/companies_bloc.dart';
+import 'package:client_app/features/home/presentation/widgets/company_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../home/data/models/company_model.dart';
-import '../../../home/presentation/widgets/company_card.dart';
+import 'package:go_router/go_router.dart';
 
-class CompaniesBody extends StatelessWidget {
+import '../../../../config/routes/app_router.dart';
+import '../../../../core/widgets/custom_list_section.dart';
+import '../../../../l10n/app_localizations.dart';
+
+class CompaniesBody extends StatefulWidget {
   const CompaniesBody({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final companies = CompaniesData.all;
+  State<CompaniesBody> createState() => _CompaniesBodyState();
+}
 
-    return ListView.separated(
-      padding: const EdgeInsets.all(20),
-      itemCount: companies.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 14),
-      itemBuilder: (_, i) {
-        final company = companies[i];
-        return SizedBox(height: 200.w, child: CompanyCard(company: company));
+class _CompaniesBodyState extends State<CompaniesBody> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<CompaniesBloc>().add(GetCompaniesEvent());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var theme = Theme.of(context).colorScheme;
+    return BlocBuilder<CompaniesBloc, CompaniesState>(
+      builder: (context, state) {
+        if (state is CompaniesLoading) {
+          return Center(child: spinKitApp(theme.primary));
+        }
+
+        if (state is CompaniesError) {
+          return Center(
+            child: Padding(
+              padding: EdgeInsets.all(20.w),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.error_outline, size: 42.sp),
+
+                  SizedBox(height: 10.h),
+
+                  Text(state.error, textAlign: TextAlign.center),
+
+                  SizedBox(height: 16.h),
+
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<CompaniesBloc>().add(GetCompaniesEvent());
+                    },
+                    child: Text(AppLocalizations.of(context)!.retry),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        if (state is CompaniesLoaded) {
+          final companies = state.companies;
+
+          if (companies.isEmpty) {
+            return const Center(child: Text('No companies found'));
+          }
+
+          return CustomListSection(
+            isVertical: true,
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            itemExtent: 200.w,
+            itemCount: companies.length,
+            separator: SizedBox(height: 14.h),
+
+            itemBuilder: (_, index) {
+              final company = companies[index];
+
+              return SizedBox(
+                height: 200.w,
+                child: CompanyCard(
+                  company: company,
+                  onTap: () {
+                    GoRouter.of(
+                      context,
+                    ).push(AppRouter.kCompanyDetails, extra: company.id);
+                  },
+                ),
+              );
+            },
+          );
+        }
+
+        return const SizedBox.shrink();
       },
     );
   }

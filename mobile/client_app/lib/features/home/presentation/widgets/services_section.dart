@@ -7,16 +7,19 @@ import '../../../../core/widgets/content/content_list_view.dart';
 import '../../../../core/widgets/content/content_mock_data.dart';
 import '../../../../core/widgets/content/content_section_type.dart';
 import '../../../../core/widgets/custom_list_section.dart';
+import '../../../../core/widgets/dummy_data.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../data/models/service_model.dart';
+import '../../../services/data/models/service_model.dart';
 import '../../../../core/utils/gen/assets.gen.dart';
+import '../../../services/domain/entities/service_entity.dart';
 
 class ServicesSection extends StatelessWidget {
-  const ServicesSection({super.key});
+  final List<ServiceEntity> services;
+  const ServicesSection({super.key, required this.services});
 
   @override
   Widget build(BuildContext context) {
-    final services = ServicesData.all.take(2).toList();
+    // final services = ServicesData.all.take(2).toList();
     return CustomListSection(
       title: AppLocalizations.of(context)!.popular_services,
       onTitleTap: () {
@@ -32,7 +35,7 @@ class ServicesSection extends StatelessWidget {
       itemBuilder: (context, index) => ServiceTile(
         service: services[index],
         onTap: () {
-          GoRouter.of(context).push(AppRouter.kServiceDetails);
+          GoRouter.of(context).push(AppRouter.kServiceDetails,extra: services[index].id);
         },
       ),
     );

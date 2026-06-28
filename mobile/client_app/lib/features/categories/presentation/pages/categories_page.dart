@@ -11,7 +11,7 @@ class CategoriesPage extends StatelessWidget {
     var theme = Theme.of(context)!.colorScheme;
     return Scaffold(
       appBar: customAppBar(
-        AppLocalizations.of(context)!.popular_categories,
+        AppLocalizations.of(context)!.all_categories,
         null,
         [],
         () {},

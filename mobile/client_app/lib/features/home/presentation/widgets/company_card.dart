@@ -1,14 +1,12 @@
+import 'package:client_app/features/companies/domain/entities/company_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-
-import '../../../../config/routes/app_router.dart';
+import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../../core/widgets/custom_image_view.dart';
 import '../../../../core/widgets/rating_badge.dart';
-import '../../data/models/company_model.dart';
 
 class CompanyCard extends StatelessWidget {
-  final CompanyModel company;
+  final CompanyEntity company;
   final VoidCallback? onTap;
 
   const CompanyCard({super.key, required this.company, this.onTap});
@@ -48,7 +46,7 @@ class CompanyCard extends StatelessWidget {
               Positioned(
                 top: 12.h,
                 right: 12.w,
-                child: RatingBadge(rating: company.rating),
+                child: RatingBadge(rating: company.rating.toString()),
               ),
 
               Positioned(
@@ -59,7 +57,7 @@ class CompanyCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      company.name,
+                      company.nameEn,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -79,7 +77,7 @@ class CompanyCard extends StatelessWidget {
                         SizedBox(width: 4.w),
                         Expanded(
                           child: Text(
-                            company.location,
+                            company.locationEn,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(

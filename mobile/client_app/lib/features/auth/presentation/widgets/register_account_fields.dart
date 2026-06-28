@@ -1,4 +1,5 @@
 import 'package:client_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:client_app/features/auth/presentation/widgets/auth_email_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,7 +33,7 @@ class RegisterAccountFields extends StatelessWidget {
           textInputAction: TextInputAction.next,
           autofocus: true,
           validator: (v) => AppValidators.name(v, context),
-          onFieldSubmitted: (_) => f.registerPhoneFocus.requestFocus(),
+          onFieldSubmitted: (_) => f.registerEmailFocus.requestFocus(),
           prefix: Icon(
             Icons.person_outline_rounded,
             color: theme.onSurface.withValues(alpha: 0.55),
@@ -40,11 +41,11 @@ class RegisterAccountFields extends StatelessWidget {
           ),
         ),
         SizedBox(height: 16.h),
-        AuthPhoneField(
-          controller: f.registerPhone,
-          focusNode: f.registerPhoneFocus,
-          label: l.auth_phone_label,
-          hint: l.auth_phone_hint,
+        AuthEmailField(
+          controller: f.registerEmail,
+          focusNode: f.registerEmailFocus,
+          label: l.auth_email_label,
+          hint: l.auth_email_hint,
           textInputAction: TextInputAction.next,
           onFieldSubmitted: (_) => f.registerPasswordFocus.requestFocus(),
         ),
@@ -64,14 +65,12 @@ class RegisterAccountFields extends StatelessWidget {
           focusNode: f.registerConfirmFocus,
           label: l.auth_confirm_password_label,
           hint: l.auth_confirm_password_hint,
-          textInputAction: TextInputAction.next,
+          textInputAction: TextInputAction.done,
           validator: (v) => AppValidators.confirmPassword(
             v,
             f.registerPassword.text,
             context,
           ),
-          onFieldSubmitted: (_) {},
-          // bloc.pickRegisterBirthDate(context),
         ),
       ],
     );

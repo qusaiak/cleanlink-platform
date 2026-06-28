@@ -1,15 +1,17 @@
 import 'package:client_app/config/theme/styles.dart';
 import 'package:client_app/core/widgets/custom_elevated_button.dart';
 import 'package:client_app/core/widgets/custom_image_view.dart';
-import 'package:client_app/features/home/data/models/offer_model.dart';
+import 'package:client_app/features/services/domain/entities/service_entity.dart';
 import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/utils/gen/assets.gen.dart';
+
 class OfferCard extends StatelessWidget {
   const OfferCard({super.key, required this.offer, required this.isActive});
 
-  final OfferModel offer;
+  final ServiceEntity offer;
   final bool isActive;
 
   @override
@@ -35,6 +37,7 @@ class OfferCard extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             CustomImageView(
+              // imagePath: Assets.images.test.test.path,
               imagePath: offer.image,
               fit: BoxFit.cover,
               width: double.infinity,
@@ -57,40 +60,60 @@ class OfferCard extends StatelessWidget {
               padding: EdgeInsets.all(18.w),
               child: Align(
                 alignment: Alignment.bottomLeft,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      offer.title,
-                      style: Styles.textStyle18.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            offer.nameEn,
+                            overflow: TextOverflow.ellipsis,
+                            style: Styles.textStyle16.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
 
-                    SizedBox(height: 6.h),
+                          SizedBox(height: 4.h),
 
-                    Text(
-                      offer.subtitle,
-                      style: Styles.textStyle12.copyWith(color: Colors.white70),
-                    ),
+                          Text(
+                            offer.descriptionEn,
+                            overflow: TextOverflow.ellipsis,
+                            style: Styles.textStyle12.copyWith(
+                              color: Colors.white70,
+                            ),
+                          ),
 
-                    SizedBox(height: 14.h),
+                          SizedBox(height: 8.h),
 
-                    CustomElevatedButton(
-                      width: 120.w,
-                      text: AppLocalizations.of(context)!.book_now,
-                      buttonTextStyle: Styles.textStyle12.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      buttonStyle: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(theme.primary),
-                      ),
-                      onPressed: () {},
-                    ),
-                  ],
+                          SizedBox(
+                            height: 34.h,
+                            width: 120.w,
+                            child: CustomElevatedButton(
+                              text: AppLocalizations.of(context)!.book_now,
+
+                              buttonTextStyle: Styles.textStyle12.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+
+                              buttonStyle: ButtonStyle(
+                                backgroundColor: WidgetStateProperty.all(
+                                  theme.primary,
+                                ),
+                              ),
+
+                              onPressed: () {},
+                            ),
+
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

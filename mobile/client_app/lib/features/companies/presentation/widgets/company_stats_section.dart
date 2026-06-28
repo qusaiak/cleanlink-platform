@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/styles.dart';
+import '../../domain/entities/company_entity.dart';
 
 class CompanyStatsSection extends StatelessWidget {
-  const CompanyStatsSection({super.key});
+  final CompanyEntity company;
+
+  const CompanyStatsSection({super.key, required this.company});
 
   @override
   Widget build(BuildContext context) {
@@ -17,21 +20,21 @@ class CompanyStatsSection extends StatelessWidget {
         crossAxisSpacing: 10.w,
         mainAxisSpacing: 10.h,
         childAspectRatio: 2.4,
-        children: const [
+        children: [
           _StatCard(
             icon: Icons.star_rounded,
-            value: "4.9",
+            value: company.rating,
             title: "Rating",
+          ),
+          _StatCard(
+            icon: Icons.cleaning_services_rounded,
+            value: company.services.length.toString(),
+            title: "Services",
           ),
           _StatCard(
             icon: Icons.reviews_rounded,
             value: "150+",
             title: "Reviews",
-          ),
-          _StatCard(
-            icon: Icons.cleaning_services_rounded,
-            value: "50+",
-            title: "Services",
           ),
           _StatCard(
             icon: Icons.people_alt_rounded,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../widgets/onboarding_body.dart';
 
 class OnboardingPage extends StatelessWidget {
@@ -7,8 +6,9 @@ class OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.white,
+    var theme = Theme.of(context);
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: null,
       body: OnboardingBody(),
     );

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+
 class ListItem extends StatelessWidget {
   const ListItem({
     super.key,
     required this.imagePath,
     required this.title,
-    required this.duration,
+    this.subtitle,
+    this.trailingText,
     this.onTap,
   });
 
   final String imagePath;
   final String title;
-  final String duration;
+  final String? subtitle;
+  final String? trailingText;
   final VoidCallback? onTap;
 
   @override
@@ -19,15 +23,18 @@ class ListItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        height: 200,
+        margin: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 8,
+        ),
+        height: 220,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.black.withValues(alpha: 0.25),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
             ),
           ],
           image: DecorationImage(
@@ -37,45 +44,70 @@ class ListItem extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(14),
             gradient: LinearGradient(
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [
-                Colors.black.withValues(alpha: 0.7),
+                Colors.black.withValues(alpha: .8),
                 Colors.transparent,
               ],
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(14),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment:
+              MainAxisAlignment.end,
+              crossAxisAlignment:
+              CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    fontWeight:
+                    FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const Icon(Icons.play_circle_fill,
-                        color: Colors.white, size: 18),
-                    const SizedBox(width: 4),
-                    Text(
-                      duration,
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 12,
-                      ),
+
+                if (subtitle != null) ...[
+                  const SizedBox(height: 4),
+
+                  Text(
+                    subtitle!,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 13,
                     ),
-                  ],
-                ),
+                  ),
+                ],
+
+                if (trailingText != null) ...[
+                  const SizedBox(height: 8),
+
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.info_outline,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+
+                      const SizedBox(width: 6),
+
+                      Text(
+                        trailingText!,
+                        style:
+                        const TextStyle(
+                          color:
+                          Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),

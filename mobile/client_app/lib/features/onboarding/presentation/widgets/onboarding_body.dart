@@ -43,7 +43,6 @@ class _OnboardingBodyState extends State<OnboardingBody> {
       ),
     ];
 
-    // Pre-cache the images
     for (var content in contents) {
       precacheImage(AssetImage(content.imageUrl), context);
     }

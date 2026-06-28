@@ -219,7 +219,10 @@ class BookingCard extends StatelessWidget {
 
                                     label: const Text("Track"),
                               onPressed: () {
-                                      GoRouter.of(context).push(AppRouter.kTrackService);
+                                      GoRouter.of(context).push(
+                                        AppRouter.kTrackService,
+                                        extra: booking.id,
+                                      );
                               },
                             )
                                 : SizedBox(),

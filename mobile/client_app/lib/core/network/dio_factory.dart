@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../config/constants/app_config.dart';
+import 'auth_interceptor.dart';
 import 'http_headers.dart';
 
 abstract class DioFactory {
@@ -13,12 +14,10 @@ abstract class DioFactory {
         connectTimeout: Duration(milliseconds: AppConfig.timeout),
         receiveTimeout: Duration(milliseconds: AppConfig.timeout),
         sendTimeout: Duration(milliseconds: AppConfig.timeout),
-        headers: {
-          HttpHeader.accept.value: 'application/json',
-        },
+        headers: {HttpHeader.accept.value: 'application/json'},
       ),
     );
-
+    dio.interceptors.add(AuthInterceptor());
     if (AppConfig.enableLogs) {
       dio.interceptors.add(
         LogInterceptor(
@@ -33,11 +32,12 @@ abstract class DioFactory {
     return dio;
   }
 
-  static void setAuthToken(Dio dio, String? token) {
-    if (token == null || token.isEmpty) {
-      dio.options.headers.remove('Authorization');
-    } else {
-      dio.options.headers['Authorization'] = 'Bearer $token';
-    }
-  }
+  // static void setAuthToken(Dio dio, String? token) {
+  //   print("setAuthToken");
+  //   if (token == null || token.isEmpty) {
+  //     dio.options.headers.remove('Authorization');
+  //   } else {
+  //     dio.options.headers['Authorization'] = 'Bearer $token';
+  //   }
+  // }
 }

@@ -1,49 +1,31 @@
+import 'package:client_app/features/services/domain/entities/service_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../../core/widgets/custom_image_view.dart';
+import '../../../../core/widgets/dummy_data.dart';
 import '../../../../core/widgets/row_title.dart';
-import '../../../home/data/models/service_model.dart';
+import '../../../services/data/models/service_model.dart';
 import '../../../home/presentation/widgets/service_tile.dart';
 
 class CompanyServicesSection extends StatelessWidget {
-  const CompanyServicesSection({super.key});
+  final List<ServiceEntity> services;
+  const CompanyServicesSection({super.key, required this.services});
 
   @override
   Widget build(BuildContext context) {
-    final services = [
-      ServiceModel(
-        title: "House Cleaning",
-        company: "Sparkle Clean",
-        duration: "2 Hours",
-        price: "\$25",
-        image: Assets.images.test.test.path,
-      ),
-      ServiceModel(
-        title: "Deep Cleaning",
-        company: "Sparkle Clean",
-        duration: "4 Hours",
-        price: "\$60",
-        image: Assets.images.test.test.path,
-      ),
-      ServiceModel(
-        title: "Sofa Cleaning",
-        company: "Sparkle Clean",
-        duration: "1 Hour",
-        price: "\$20",
-        image: Assets.images.test.test.path,
-      ),
-    ];
+    // final services = ServicesData.all;
 
     return Column(
       children: [
         RowTitle(
           iconData: Icons.cleaning_services_rounded,
           title: "Available Services",
-          onTap: () {
-          },
+          onTap: () {},
         ),
 
         SizedBox(height: 12.h),
@@ -60,6 +42,12 @@ class CompanyServicesSection extends StatelessWidget {
                 width: 300.w,
                 child: ServiceTile(
                   service: services[index],
+                  onTap: () {
+                    GoRouter.of(context).push(
+                      AppRouter.kServiceDetails,
+                      extra: services[index].id,
+                    );
+                  },
                 ),
               );
             },

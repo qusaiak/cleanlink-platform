@@ -1,15 +1,16 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:client_app/features/home/data/models/offer_model.dart';
 import 'package:client_app/features/home/presentation/widgets/offer_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/colors.dart';
 import '../../../../core/utils/gen/assets.gen.dart';
+import '../../../services/domain/entities/service_entity.dart';
 
 class OffersSection extends StatefulWidget {
-  const OffersSection({super.key});
+  final List<ServiceEntity> offers;
+  const OffersSection({super.key, required this.offers});
 
   @override
   State<OffersSection> createState() => _OffersSectionState();
@@ -18,29 +19,29 @@ class OffersSection extends StatefulWidget {
 class _OffersSectionState extends State<OffersSection> {
   final ValueNotifier<int> _currentIndex = ValueNotifier(0);
 
-  static final offers = [
-    OfferModel(
-      title: '20% Off Deep Cleaning',
-      subtitle: 'First booking discount',
-      image: Assets.images.test.test.path,
-    ),
-    OfferModel(
-      title: 'Home Cleaning Experts',
-      subtitle: 'Trusted professionals',
-      image: Assets.images.test.test.path,
-    ),
-    OfferModel(
-      title: 'Fast Booking',
-      subtitle: 'Book in seconds',
-      image: Assets.images.test.test.path,
-    ),
-  ];
+  // static final offers = [
+  //   OfferModel(
+  //     title: '20% Off Deep Cleaning',
+  //     subtitle: 'First booking discount',
+  //     image: Assets.images.test.test.path,
+  //   ),
+  //   OfferModel(
+  //     title: 'Home Cleaning Experts',
+  //     subtitle: 'Trusted professionals',
+  //     image: Assets.images.test.test.path,
+  //   ),
+  //   OfferModel(
+  //     title: 'Fast Booking',
+  //     subtitle: 'Book in seconds',
+  //     image: Assets.images.test.test.path,
+  //   ),
+  // ];
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    for (final offer in offers) {
+    for (final offer in widget.offers) {
       precacheImage(AssetImage(offer.image), context);
     }
   }
@@ -53,16 +54,18 @@ class _OffersSectionState extends State<OffersSection> {
 
   @override
   Widget build(BuildContext context) {
+    print("oooooooooooooooo");
+    print(widget.offers);
     return Column(
       children: [
         CarouselSlider.builder(
-          itemCount: offers.length,
+          itemCount: widget.offers.length,
           itemBuilder: (_, index, __) {
             return ValueListenableBuilder<int>(
               valueListenable: _currentIndex,
               builder: (_, currentIndex, __) {
                 return OfferCard(
-                  offer: offers[index],
+                  offer: widget.offers[index],
                   isActive: currentIndex == index,
                 );
               },
@@ -93,7 +96,10 @@ class _OffersSectionState extends State<OffersSection> {
         ValueListenableBuilder<int>(
           valueListenable: _currentIndex,
           builder: (_, currentIndex, __) {
-            return _DotsIndicator(count: offers.length, index: currentIndex);
+            return _DotsIndicator(
+              count: widget.offers.length,
+              index: currentIndex,
+            );
           },
         ),
       ],

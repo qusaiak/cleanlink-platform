@@ -16,7 +16,7 @@ class LoginPage extends StatelessWidget {
         } else if (state.status == AuthStatus.errorLogin &&
             state.error != null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error.toString())),
+            SnackBar(content: Text(state.error!.message)),
           );
         }
       },

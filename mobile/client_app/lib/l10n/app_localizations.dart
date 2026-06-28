@@ -212,6 +212,24 @@ abstract class AppLocalizations {
   /// **'Personal Details'**
   String get personal_details;
 
+  /// No description provided for @personal_details_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your profile to start booking services'**
+  String get personal_details_subtitle;
+
+  /// No description provided for @complete_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Profile'**
+  String get complete_profile;
+
+  /// No description provided for @home_greeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello, {name}'**
+  String home_greeting(String name);
+
   /// No description provided for @do_not_have_an_account.
   ///
   /// In en, this message translates to:
@@ -1291,6 +1309,336 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancelled'**
   String get cancelled;
+
+  /// No description provided for @track_service_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Track Service'**
+  String get track_service_title;
+
+  /// No description provided for @track_open_full_map.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Map'**
+  String get track_open_full_map;
+
+  /// No description provided for @track_distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get track_distance;
+
+  /// No description provided for @track_eta.
+  ///
+  /// In en, this message translates to:
+  /// **'ETA'**
+  String get track_eta;
+
+  /// No description provided for @track_estimated_arrival.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Arrival'**
+  String get track_estimated_arrival;
+
+  /// No description provided for @track_minutes_short.
+  ///
+  /// In en, this message translates to:
+  /// **'mins'**
+  String get track_minutes_short;
+
+  /// No description provided for @track_kilometers_short.
+  ///
+  /// In en, this message translates to:
+  /// **'km'**
+  String get track_kilometers_short;
+
+  /// No description provided for @track_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get track_now;
+
+  /// No description provided for @status_assigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned'**
+  String get status_assigned;
+
+  /// No description provided for @status_on_the_way.
+  ///
+  /// In en, this message translates to:
+  /// **'On The Way'**
+  String get status_on_the_way;
+
+  /// No description provided for @status_arrived.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrived'**
+  String get status_arrived;
+
+  /// No description provided for @status_service_started.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Started'**
+  String get status_service_started;
+
+  /// No description provided for @status_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get status_completed;
+
+  /// No description provided for @track_msg_assigned.
+  ///
+  /// In en, this message translates to:
+  /// **'A cleaner has been assigned'**
+  String get track_msg_assigned;
+
+  /// No description provided for @track_msg_on_the_way.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaner is approaching'**
+  String get track_msg_on_the_way;
+
+  /// No description provided for @track_msg_arrived.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaner has arrived'**
+  String get track_msg_arrived;
+
+  /// No description provided for @track_msg_service_started.
+  ///
+  /// In en, this message translates to:
+  /// **'Service in progress'**
+  String get track_msg_service_started;
+
+  /// No description provided for @track_msg_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Service completed'**
+  String get track_msg_completed;
+
+  /// No description provided for @track_assigned_cleaner.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned Cleaner'**
+  String get track_assigned_cleaner;
+
+  /// No description provided for @track_services_done.
+  ///
+  /// In en, this message translates to:
+  /// **'services done'**
+  String get track_services_done;
+
+  /// No description provided for @track_call.
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get track_call;
+
+  /// No description provided for @track_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get track_chat;
+
+  /// No description provided for @track_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Progress'**
+  String get track_progress;
+
+  /// No description provided for @booking_confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Confirmed'**
+  String get booking_confirmed;
+
+  /// No description provided for @cleaner_assigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaner Assigned'**
+  String get cleaner_assigned;
+
+  /// No description provided for @service_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Details'**
+  String get service_details;
+
+  /// No description provided for @detail_service.
+  ///
+  /// In en, this message translates to:
+  /// **'Service'**
+  String get detail_service;
+
+  /// No description provided for @detail_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get detail_date;
+
+  /// No description provided for @detail_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get detail_time;
+
+  /// No description provided for @detail_duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get detail_duration;
+
+  /// No description provided for @detail_address.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get detail_address;
+
+  /// No description provided for @detail_payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get detail_payment;
+
+  /// No description provided for @track_worker_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Track Worker'**
+  String get track_worker_btn;
+
+  /// No description provided for @cancel_service.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Service'**
+  String get cancel_service;
+
+  /// No description provided for @track_error_generic.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong while loading tracking'**
+  String get track_error_generic;
+
+  /// No description provided for @track_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get track_retry;
+
+  /// No description provided for @track_cancel_confirm_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Service?'**
+  String get track_cancel_confirm_title;
+
+  /// No description provided for @track_cancel_confirm_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this service? This action cannot be undone.'**
+  String get track_cancel_confirm_message;
+
+  /// No description provided for @track_yes_cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, Cancel'**
+  String get track_yes_cancel;
+
+  /// No description provided for @track_keep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep It'**
+  String get track_keep;
+
+  /// No description provided for @track_cancelled_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Service cancelled successfully'**
+  String get track_cancelled_message;
+
+  /// No description provided for @validation_email_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address'**
+  String get validation_email_invalid;
+
+  /// No description provided for @validation_email_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get validation_email_required;
+
+  /// No description provided for @auth_email_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get auth_email_label;
+
+  /// No description provided for @auth_email_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get auth_email_hint;
+
+  /// No description provided for @sp.
+  ///
+  /// In en, this message translates to:
+  /// **'S.P'**
+  String get sp;
+
+  /// No description provided for @working_hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Working Hours'**
+  String get working_hours;
+
+  /// No description provided for @working_days.
+  ///
+  /// In en, this message translates to:
+  /// **'Working Days'**
+  String get working_days;
+
+  /// No description provided for @closed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get closed;
+
+  /// No description provided for @open_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Now'**
+  String get open_now;
+
+  /// No description provided for @overview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overview;
+
+  /// No description provided for @choose_package.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Package'**
+  String get choose_package;
+
+  /// No description provided for @what_is_included.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s included'**
+  String get what_is_included;
+
+  /// No description provided for @customer_reviews.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Reviews'**
+  String get customer_reviews;
+
+  /// No description provided for @view_details.
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get view_details;
 }
 
 class _AppLocalizationsDelegate

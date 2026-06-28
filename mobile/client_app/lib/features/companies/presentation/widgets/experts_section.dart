@@ -7,9 +7,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../../core/widgets/row_title.dart';
+import '../../domain/entities/company_entity.dart';
 
 class ExpertsSection extends StatefulWidget {
-  const ExpertsSection({super.key});
+  final CompanyEntity company;
+
+  const ExpertsSection({super.key, required this.company});
 
   @override
   State<ExpertsSection> createState() => _ExpertsSectionState();

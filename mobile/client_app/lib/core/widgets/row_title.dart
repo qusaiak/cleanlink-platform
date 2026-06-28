@@ -8,17 +8,19 @@ class RowTitle extends StatelessWidget {
     required this.iconData,
     required this.title,
     this.onTap,
+    this.padding,
   });
 
   final IconData iconData;
   final String title;
   final VoidCallback? onTap;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).colorScheme;
     return Padding(
-      padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 5.h),
+      padding: padding ?? EdgeInsets.only(left: 20.w, right: 20.w, top: 5.h),
       child: GestureDetector(
         onTap: onTap,
         child: Container(

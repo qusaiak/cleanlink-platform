@@ -18,6 +18,21 @@ class RegisterBody extends StatelessWidget {
 
   final AuthState state;
 
+  void _submit(BuildContext context, AuthBloc bloc) {
+    if (state.status == AuthStatus.loadingRegister) return;
+    FocusScope.of(context).unfocus();
+    final f = bloc.forms;
+    if (f.registerFormKey.currentState?.validate() ?? false) {
+      bloc.add(
+        Register(
+          f.registerName.text.trim(),
+          f.registerEmail.text.trim(),
+          f.registerPassword.text,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
@@ -39,19 +54,12 @@ class RegisterBody extends StatelessWidget {
             ),
             SizedBox(height: 28.h),
             RegisterAccountFields(state: state),
-            // RegisterPersonalFields(state: state),
             SizedBox(height: 14.h),
-            // AcceptTermsTile(
-            //   accepted: state.termsAccepted,
-            //   showError: state.showTermsError && !state.termsAccepted,
-            //   onChanged: bloc.toggleTerms,
-            // ),
             SizedBox(height: 18.h),
             AppPrimaryButton(
               label: l.auth_register_button,
-              // loading: state.isLoading,
-              // onPressed: () => bloc.submitRegister(context),
-              onPressed: () {},
+              loading: state.status == AuthStatus.loadingRegister,
+              onPressed: () => _submit(context, bloc),
             ),
             SizedBox(height: 14.h),
             Center(

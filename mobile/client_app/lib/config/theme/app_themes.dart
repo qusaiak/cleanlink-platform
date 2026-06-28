@@ -15,6 +15,8 @@ ThemeData lightTheme() {
     primaryColorDark: AppColor.primaryDark,
     appBarTheme: appBarLightTheme(),
     bottomNavigationBarTheme: bottomNavigationBarThemeDataLight(),
+    iconTheme: const IconThemeData(color: AppColor.primaryLight),
+    scaffoldBackgroundColor: AppColor.backgroundColorLight,
     colorScheme: const ColorScheme.light(
       surfaceContainerHighest: AppColor.onBackgroundColorLight,
       brightness: Brightness.light,
@@ -44,6 +46,7 @@ ThemeData darkTheme() {
     appBarTheme: appBarDarkTheme(),
     bottomNavigationBarTheme: bottomNavigationBarThemeDataDark(),
     iconTheme: const IconThemeData(color: AppColor.primaryDark),
+    scaffoldBackgroundColor: AppColor.backgroundColorDark,
     colorScheme: const ColorScheme(
       surfaceContainerHighest: AppColor.secondaryBackgroundColorDark,
       brightness: Brightness.dark,

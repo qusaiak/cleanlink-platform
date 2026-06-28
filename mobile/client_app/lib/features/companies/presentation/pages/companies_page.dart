@@ -12,7 +12,7 @@ class CompaniesPage extends StatelessWidget {
 
     return Scaffold(
       appBar: customAppBar(
-        AppLocalizations.of(context)!.popular_companies,
+        AppLocalizations.of(context)!.all_companies,
         null,
         [],
         () {},

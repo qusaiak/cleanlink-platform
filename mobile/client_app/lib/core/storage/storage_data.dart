@@ -18,6 +18,9 @@ enum StorageData<T> implements Storable {
   email(clearOnLogout: true),
   userProfilePhoto(clearOnLogout: true),
   pushNotifications(clearOnLogout: true),
+  phone(clearOnLogout: true),
+  address(clearOnLogout: true),
+  image(clearOnLogout: true),
 
   // App preferences
   connectionType(secure: true, clearOnLogout: true),

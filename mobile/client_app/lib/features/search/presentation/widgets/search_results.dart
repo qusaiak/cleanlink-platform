@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/utils/functions/spinkit.dart';
 import '../../../../core/widgets/content/content_grid_view.dart';
 import '../../../../core/widgets/content/content_list_view.dart';
 import '../../../../core/widgets/content/content_mock_data.dart';
@@ -28,13 +29,13 @@ class SearchResults extends StatelessWidget {
     ),
     ContentSection(
       id: 'search_categories',
-      title: 'Programs',
+      title: 'Categories',
       type: ContentSectionType.categories,
       items: ContentMockData.itemsFor(ContentSectionType.categories),
     ),
     ContentSection(
       id: 'search_regions',
-      title: 'Channels',
+      title: 'Regions',
       type: ContentSectionType.regions,
       items: ContentMockData.itemsFor(ContentSectionType.regions),
     ),
@@ -54,6 +55,7 @@ class SearchResults extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context).colorScheme;
     final bottomInset = MediaQuery.of(context).padding.bottom;
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
@@ -65,8 +67,9 @@ class SearchResults extends StatelessWidget {
             SizedBox(height: 16.h),
             Expanded(
               child: state.isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _buildTabContent(state.selectedTab, bottomInset),
+                  ?            Center(child: spinKitApp(theme.primary))
+
+            : _buildTabContent(state.selectedTab, bottomInset),
             ),
           ],
         );

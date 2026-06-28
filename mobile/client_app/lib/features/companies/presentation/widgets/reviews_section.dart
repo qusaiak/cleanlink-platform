@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:client_app/config/theme/colors.dart';
+import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -8,9 +9,12 @@ import '../../../../config/theme/styles.dart';
 import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../../core/widgets/rating_badge.dart';
 import '../../../../core/widgets/row_title.dart';
+import '../../domain/entities/company_entity.dart';
 
 class ReviewsSection extends StatelessWidget {
-  const ReviewsSection({super.key});
+  final CompanyEntity company;
+
+  const ReviewsSection({super.key, required this.company});
 
   @override
   Widget build(BuildContext context) {
@@ -19,21 +23,21 @@ class ReviewsSection extends StatelessWidget {
         "name": "Michael Ross",
         "review":
             "Excellent service and professional team. The cleaning quality exceeded my expectations.",
-        "rating": 5.0,
+        "rating": "5.0",
         "date": "2 days ago",
       },
       {
         "name": "Sarah Ahmed",
         "review":
             "Very friendly staff and quick booking process. Highly recommended.",
-        "rating": 4.8,
+        "rating": "4.8",
         "date": "1 week ago",
       },
       {
         "name": "John Carter",
         "review":
             "The team arrived on time and did a fantastic job. Everything was completed professionally and on schedule.",
-        "rating": 5.0,
+        "rating": "5.0",
         "date": "2 weeks ago",
       },
     ];
@@ -42,30 +46,28 @@ class ReviewsSection extends StatelessWidget {
       children: [
         RowTitle(
           iconData: Icons.reviews_outlined,
-          title: "Customer Reviews",
+          title: AppLocalizations.of(context)!.customer_reviews,
           onTap: () {},
+          padding: EdgeInsets.all(0),
         ),
 
         SizedBox(height: 12.h),
 
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            children: List.generate(reviews.length, (index) {
-              final review = reviews[index];
+        Column(
+          children: List.generate(reviews.length, (index) {
+            final review = reviews[index];
 
-              return Padding(
-                padding: EdgeInsets.only(bottom: 14.h),
-                child: GlassReviewCard(
-                  name: review["name"] as String,
-                  review: review["review"] as String,
-                  rating: review["rating"] as double,
-                  date: review["date"] as String,
-                  isTopReview: index == 0,
-                ),
-              );
-            }),
-          ),
+            return Padding(
+              padding: EdgeInsets.only(bottom: 14.h),
+              child: GlassReviewCard(
+                name: review["name"] as String,
+                review: review["review"] as String,
+                rating: review["rating"] as String,
+                date: review["date"] as String,
+                isTopReview: index == 0,
+              ),
+            );
+          }),
         ),
       ],
     );
@@ -84,7 +86,7 @@ class GlassReviewCard extends StatelessWidget {
 
   final String name;
   final String review;
-  final double rating;
+  final String rating;
   final String date;
   final bool isTopReview;
 
@@ -234,7 +236,7 @@ class ReviewBubbleDialog extends StatelessWidget {
 
   final String name;
   final String review;
-  final double rating;
+  final String rating;
   final String date;
 
   @override

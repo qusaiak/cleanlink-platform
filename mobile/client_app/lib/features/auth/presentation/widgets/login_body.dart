@@ -1,4 +1,5 @@
 import 'package:client_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:client_app/features/auth/presentation/widgets/auth_email_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,13 +12,21 @@ import '../widgets/auth_header.dart';
 import '../widgets/auth_link_button.dart';
 import '../widgets/auth_logo.dart';
 import '../widgets/auth_password_field.dart';
-import '../widgets/auth_phone_field.dart';
 import '../widgets/auth_scaffold.dart';
 
 class LoginBody extends StatelessWidget {
   const LoginBody({super.key, required this.state});
 
   final AuthState state;
+
+  void _submit(BuildContext context, AuthBloc bloc) {
+    if (state.status == AuthStatus.loadingLogin) return;
+    FocusScope.of(context).unfocus();
+    final f = bloc.forms;
+    if (f.loginFormKey.currentState?.validate() ?? false) {
+      bloc.add(Login(f.loginEmail.text.trim(), f.loginPassword.text));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +48,11 @@ class LoginBody extends StatelessWidget {
               subtitle: l.auth_login_subtitle,
             ),
             SizedBox(height: 32.h),
-            AuthPhoneField(
-              controller: f.loginPhone,
-              focusNode: f.loginPhoneFocus,
-              label: l.auth_phone_label,
-              hint: l.auth_phone_hint,
+            AuthEmailField(
+              controller: f.loginEmail,
+              focusNode: f.loginEmailFocus,
+              label: l.auth_email_label,
+              hint: l.auth_email_hint,
               textInputAction: TextInputAction.next,
               onFieldSubmitted: (_) => f.loginPasswordFocus.requestFocus(),
             ),
@@ -54,14 +63,12 @@ class LoginBody extends StatelessWidget {
               label: l.auth_password_label,
               hint: l.auth_password_hint,
               textInputAction: TextInputAction.done,
-              // onFieldSubmitted: (_) => bloc.submitLogin(),
             ),
             SizedBox(height: 30.h),
             AppPrimaryButton(
               label: l.auth_login_button,
-              // loading: state.isLoading,
-              // onPressed: bloc.submitLogin,
-              onPressed: () {},
+              loading: state.status == AuthStatus.loadingLogin,
+              onPressed: () => _submit(context, bloc),
             ),
             SizedBox(height: 14.h),
             Center(

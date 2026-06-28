@@ -4,9 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../../core/widgets/custom_image_view.dart';
+import '../../domain/entities/company_entity.dart';
 
 class CompanyHeaderSection extends StatelessWidget {
-  const CompanyHeaderSection({super.key});
+  final CompanyEntity company;
+
+  const CompanyHeaderSection({super.key, required this.company});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +43,7 @@ class CompanyHeaderSection extends StatelessWidget {
                 );
               },
               child: Text(
-                "SparkleClean Services",
+                company.nameEn,
                 style: Styles.textStyle16.copyWith(fontWeight: FontWeight.w700),
               ),
             ),
@@ -48,7 +51,7 @@ class CompanyHeaderSection extends StatelessWidget {
               children: [
                 Positioned.fill(
                   child: CustomImageView(
-                    imagePath: Assets.images.test.test.path,
+                    imagePath: company.image,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -75,7 +78,7 @@ class CompanyHeaderSection extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        "SparkleClean Services",
+                        company.nameEn,
                         style: Styles.textStyle18.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -85,7 +88,7 @@ class CompanyHeaderSection extends StatelessWidget {
                       const SizedBox(height: 6),
 
                       Text(
-                        "Professional Home Cleaning",
+                        "${company.region.nameEn} | ${company.locationEn}",
                         style: Styles.textStyle12.copyWith(
                           color: Colors.white70,
                         ),

@@ -25,33 +25,32 @@ class SearchSectionsGrid extends StatelessWidget {
     _SectionItem(
       titleBuilder: (l10n) => l10n.all_companies,
       imagePlaceholder: Assets.images.search.companies.path,
-      route: AppRouter.kHome,
-      // route: AppRouter.kMoviesPage,
+      route: AppRouter.kCompanies,
     ),
     _SectionItem(
       titleBuilder: (l10n) => l10n.all_services,
       imagePlaceholder: Assets.images.search.services.path,
-      route: AppRouter.kHome,
+      route: AppRouter.kServices,
     ),
     _SectionItem(
       titleBuilder: (l10n) => l10n.all_categories,
       imagePlaceholder: Assets.images.search.categories.path,
-      route: AppRouter.kHome,
+      route: AppRouter.kCategories,
     ),
     _SectionItem(
       titleBuilder: (l10n) => l10n.all_regions,
       imagePlaceholder: Assets.images.search.regions.path,
-      route: AppRouter.kHome,
+      route: AppRouter.kRegions,
     ),
     _SectionItem(
       titleBuilder: (l10n) => l10n.all_providers,
       imagePlaceholder: Assets.images.search.providers.path,
-      route: AppRouter.kHome,
+      route: AppRouter.kProviders,
     ),
     _SectionItem(
       titleBuilder: (l10n) => l10n.all_offers,
       imagePlaceholder: Assets.images.search.offers.path,
-      route: AppRouter.kHome,
+      route: AppRouter.kOffers,
     ),
   ];
 

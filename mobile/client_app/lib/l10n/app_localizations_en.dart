@@ -71,6 +71,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get personal_details => 'Personal Details';
 
   @override
+  String get personal_details_subtitle =>
+      'Complete your profile to start booking services';
+
+  @override
+  String get complete_profile => 'Complete Profile';
+
+  @override
+  String home_greeting(String name) {
+    return 'Hello, $name';
+  }
+
+  @override
   String get do_not_have_an_account => 'Don\'t have an account? ';
 
   @override
@@ -627,4 +639,171 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cancelled => 'Cancelled';
+
+  @override
+  String get track_service_title => 'Track Service';
+
+  @override
+  String get track_open_full_map => 'Open Map';
+
+  @override
+  String get track_distance => 'Distance';
+
+  @override
+  String get track_eta => 'ETA';
+
+  @override
+  String get track_estimated_arrival => 'Estimated Arrival';
+
+  @override
+  String get track_minutes_short => 'mins';
+
+  @override
+  String get track_kilometers_short => 'km';
+
+  @override
+  String get track_now => 'Now';
+
+  @override
+  String get status_assigned => 'Assigned';
+
+  @override
+  String get status_on_the_way => 'On The Way';
+
+  @override
+  String get status_arrived => 'Arrived';
+
+  @override
+  String get status_service_started => 'Service Started';
+
+  @override
+  String get status_completed => 'Completed';
+
+  @override
+  String get track_msg_assigned => 'A cleaner has been assigned';
+
+  @override
+  String get track_msg_on_the_way => 'Cleaner is approaching';
+
+  @override
+  String get track_msg_arrived => 'Cleaner has arrived';
+
+  @override
+  String get track_msg_service_started => 'Service in progress';
+
+  @override
+  String get track_msg_completed => 'Service completed';
+
+  @override
+  String get track_assigned_cleaner => 'Assigned Cleaner';
+
+  @override
+  String get track_services_done => 'services done';
+
+  @override
+  String get track_call => 'Call';
+
+  @override
+  String get track_chat => 'Chat';
+
+  @override
+  String get track_progress => 'Service Progress';
+
+  @override
+  String get booking_confirmed => 'Booking Confirmed';
+
+  @override
+  String get cleaner_assigned => 'Cleaner Assigned';
+
+  @override
+  String get service_details => 'Service Details';
+
+  @override
+  String get detail_service => 'Service';
+
+  @override
+  String get detail_date => 'Date';
+
+  @override
+  String get detail_time => 'Time';
+
+  @override
+  String get detail_duration => 'Duration';
+
+  @override
+  String get detail_address => 'Address';
+
+  @override
+  String get detail_payment => 'Payment Method';
+
+  @override
+  String get track_worker_btn => 'Track Worker';
+
+  @override
+  String get cancel_service => 'Cancel Service';
+
+  @override
+  String get track_error_generic =>
+      'Something went wrong while loading tracking';
+
+  @override
+  String get track_retry => 'Retry';
+
+  @override
+  String get track_cancel_confirm_title => 'Cancel Service?';
+
+  @override
+  String get track_cancel_confirm_message =>
+      'Are you sure you want to cancel this service? This action cannot be undone.';
+
+  @override
+  String get track_yes_cancel => 'Yes, Cancel';
+
+  @override
+  String get track_keep => 'Keep It';
+
+  @override
+  String get track_cancelled_message => 'Service cancelled successfully';
+
+  @override
+  String get validation_email_invalid => 'Please enter a valid email address';
+
+  @override
+  String get validation_email_required => 'Email is required';
+
+  @override
+  String get auth_email_label => 'Email';
+
+  @override
+  String get auth_email_hint => 'Enter your email';
+
+  @override
+  String get sp => 'S.P';
+
+  @override
+  String get working_hours => 'Working Hours';
+
+  @override
+  String get working_days => 'Working Days';
+
+  @override
+  String get closed => 'Closed';
+
+  @override
+  String get open_now => 'Open Now';
+
+  @override
+  String get overview => 'Overview';
+
+  @override
+  String get choose_package => 'Choose Package';
+
+  @override
+  String get what_is_included => 'What\'s included';
+
+  @override
+  String get customer_reviews => 'Customer Reviews';
+
+  @override
+  String get view_details => 'View Details';
 }

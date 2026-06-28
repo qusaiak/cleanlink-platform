@@ -2,10 +2,12 @@ import 'package:client_app/features/companies/presentation/widgets/company_detai
 import 'package:flutter/material.dart';
 
 class CompanyDetailsPage extends StatelessWidget {
-  const CompanyDetailsPage({super.key});
+  final int id;
+
+  const CompanyDetailsPage({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: CompanyDetailsBody());
+    return Scaffold(body: CompanyDetailsBody(id: id,));
   }
 }

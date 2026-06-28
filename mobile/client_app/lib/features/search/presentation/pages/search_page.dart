@@ -78,9 +78,9 @@ class _SearchViewState extends State<_SearchView> {
               child: BlocBuilder<SearchBloc, SearchState>(
                 buildWhen: (prev, curr) => prev.isSearching != curr.isSearching,
                 builder: (context, state) {
-                  if (state.isSearching) {
-                    return const SearchResults();
-                  }
+                  // if (state.isSearching) {
+                  //   return const SearchResults();
+                  // }
                   return _buildSearchContent(l10n, theme);
                 },
               ),

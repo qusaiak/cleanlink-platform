@@ -70,6 +70,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get personal_details => 'معلومات شخصية';
 
   @override
+  String get personal_details_subtitle => 'أكمل ملفك الشخصي لبدء حجز الخدمات';
+
+  @override
+  String get complete_profile => 'إكمال الملف الشخصي';
+
+  @override
+  String home_greeting(String name) {
+    return 'أهلاً، $name';
+  }
+
+  @override
   String get do_not_have_an_account => 'ليس لديك حساب؟';
 
   @override
@@ -620,4 +631,170 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get cancelled => 'ملغى';
+
+  @override
+  String get track_service_title => 'تتبع الخدمة';
+
+  @override
+  String get track_open_full_map => 'فتح الخريطة';
+
+  @override
+  String get track_distance => 'المسافة';
+
+  @override
+  String get track_eta => 'وقت الوصول';
+
+  @override
+  String get track_estimated_arrival => 'الوصول المتوقع';
+
+  @override
+  String get track_minutes_short => 'دقيقة';
+
+  @override
+  String get track_kilometers_short => 'كم';
+
+  @override
+  String get track_now => 'الآن';
+
+  @override
+  String get status_assigned => 'تم التعيين';
+
+  @override
+  String get status_on_the_way => 'في الطريق';
+
+  @override
+  String get status_arrived => 'وصل';
+
+  @override
+  String get status_service_started => 'بدأت الخدمة';
+
+  @override
+  String get status_completed => 'اكتملت';
+
+  @override
+  String get track_msg_assigned => 'تم تعيين عامل نظافة';
+
+  @override
+  String get track_msg_on_the_way => 'عامل النظافة في الطريق إليك';
+
+  @override
+  String get track_msg_arrived => 'وصل عامل النظافة';
+
+  @override
+  String get track_msg_service_started => 'الخدمة قيد التنفيذ';
+
+  @override
+  String get track_msg_completed => 'اكتملت الخدمة';
+
+  @override
+  String get track_assigned_cleaner => 'عامل النظافة المعين';
+
+  @override
+  String get track_services_done => 'خدمة منجزة';
+
+  @override
+  String get track_call => 'اتصال';
+
+  @override
+  String get track_chat => 'محادثة';
+
+  @override
+  String get track_progress => 'مراحل الخدمة';
+
+  @override
+  String get booking_confirmed => 'تم تأكيد الحجز';
+
+  @override
+  String get cleaner_assigned => 'تم تعيين عامل النظافة';
+
+  @override
+  String get service_details => 'تفاصيل الخدمة';
+
+  @override
+  String get detail_service => 'الخدمة';
+
+  @override
+  String get detail_date => 'التاريخ';
+
+  @override
+  String get detail_time => 'الوقت';
+
+  @override
+  String get detail_duration => 'المدة';
+
+  @override
+  String get detail_address => 'العنوان';
+
+  @override
+  String get detail_payment => 'طريقة الدفع';
+
+  @override
+  String get track_worker_btn => 'تتبع العامل';
+
+  @override
+  String get cancel_service => 'إلغاء الخدمة';
+
+  @override
+  String get track_error_generic => 'حدث خطأ أثناء تحميل التتبع';
+
+  @override
+  String get track_retry => 'إعادة المحاولة';
+
+  @override
+  String get track_cancel_confirm_title => 'إلغاء الخدمة؟';
+
+  @override
+  String get track_cancel_confirm_message =>
+      'هل أنت متأكد أنك تريد إلغاء هذه الخدمة؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get track_yes_cancel => 'نعم، إلغاء';
+
+  @override
+  String get track_keep => 'الاحتفاظ بها';
+
+  @override
+  String get track_cancelled_message => 'تم إلغاء الخدمة بنجاح';
+
+  @override
+  String get validation_email_invalid => 'الرجاء إدخال بريد إلكتروني صالح';
+
+  @override
+  String get validation_email_required => 'البريد الإلكتروني مطلوب';
+
+  @override
+  String get auth_email_label => 'البريد الإلكتروني';
+
+  @override
+  String get auth_email_hint => 'أدخل بريدك الإلكتروني';
+
+  @override
+  String get sp => 'ل.س';
+
+  @override
+  String get working_hours => 'ساعات العمل';
+
+  @override
+  String get working_days => 'أيام العمل';
+
+  @override
+  String get closed => 'مغلق';
+
+  @override
+  String get open_now => 'مفتوح الآن';
+
+  @override
+  String get overview => 'نظرة عامة';
+
+  @override
+  String get choose_package => 'اختر الباقة';
+
+  @override
+  String get what_is_included => 'What\'s included';
+
+  @override
+  String get customer_reviews => 'تقييمات العملاء';
+
+  @override
+  String get view_details => 'عرض التفاصيل';
 }

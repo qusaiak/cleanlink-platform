@@ -46,3 +46,4 @@ app.*.map.json
 local_config.env
 /docs
 /.github/
+/.devin/

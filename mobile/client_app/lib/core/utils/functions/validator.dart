@@ -19,6 +19,22 @@ class AppValidators {
     return null;
   }
 
+  static String? email(String? value, BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    if (value == null || value.trim().isEmpty) {
+      return l.validation_email_required;
+    }
+
+    const pattern =
+        r'^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$';
+
+    if (!RegExp(pattern).hasMatch(value.trim())) {
+      return l.validation_email_invalid;
+    }
+
+    return null;
+  }
+
   static String? phone(String? value, BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final v = (value ?? '').replaceAll(RegExp(r'\D'), '');

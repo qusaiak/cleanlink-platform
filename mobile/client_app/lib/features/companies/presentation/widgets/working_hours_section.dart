@@ -1,11 +1,15 @@
+import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/styles.dart';
 import '../../../../core/widgets/row_title.dart';
+import '../../domain/entities/company_entity.dart';
 
 class WorkingHoursSection extends StatelessWidget {
-  const WorkingHoursSection({super.key});
+  final CompanyEntity company;
+
+  const WorkingHoursSection({super.key, required this.company});
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +17,9 @@ class WorkingHoursSection extends StatelessWidget {
 
     return Column(
       children: [
-        const RowTitle(
+        RowTitle(
           iconData: Icons.access_time_rounded,
-          title: "Working Hours",
+          title: AppLocalizations.of(context)!.working_hours,
         ),
 
         SizedBox(height: 12.h),
@@ -53,7 +57,7 @@ class WorkingHoursSection extends StatelessWidget {
                   SizedBox(width: 8.w),
 
                   Text(
-                    "Open Now",
+                    AppLocalizations.of(context)!.open_now,
                     style: Styles.textStyle12.copyWith(
                       color: Colors.green,
                       fontWeight: FontWeight.w700,

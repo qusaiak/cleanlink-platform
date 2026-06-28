@@ -7,7 +7,7 @@ import '../../../../l10n/app_localizations.dart';
 
 class BookingDetailsPage extends StatefulWidget {
   final String packageName;
-  final int price;
+  final double price;
 
   const BookingDetailsPage({
     super.key,
@@ -25,7 +25,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
-  int get _total => (widget.price).clamp(0, 1000000);
+  num get _total => (widget.price).clamp(0, 1000000);
 
   @override
   void dispose() {
@@ -255,7 +255,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
               label: AppLocalizations.of(context)!.selected_package_label,
               hint: widget.packageName,
               suffix: Text(
-                '\$${widget.price}',
+                "${widget.price} ${AppLocalizations.of(context)!.sp}",
                 style: Styles.textStyle14.copyWith(color: theme.primary),
                 textAlign: TextAlign.center,
               ),

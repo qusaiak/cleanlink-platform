@@ -12,7 +12,7 @@ class ServicesPage extends StatelessWidget {
 
     return Scaffold(
       appBar: customAppBar(
-        AppLocalizations.of(context)!.popular_services,
+        AppLocalizations.of(context)!.all_services,
         null,
         [],
         () {},
