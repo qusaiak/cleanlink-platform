@@ -1,15 +1,13 @@
+import 'package:equatable/equatable.dart';
+
+import '../../../companies/domain/entities/manager_entity.dart';
 import 'manager_entity.dart';
 
-class RegionEntity {
+class RegionEntity extends Equatable {
   final int id;
-
-
   final String name;
-
   final String image;
-
   final int managerId;
-
   final ManagerEntity? manager;
 
   const RegionEntity({
@@ -19,4 +17,7 @@ class RegionEntity {
     required this.managerId,
     this.manager,
   });
+
+  @override
+  List<Object?> get props => [id, name, image, managerId, manager];
 }
