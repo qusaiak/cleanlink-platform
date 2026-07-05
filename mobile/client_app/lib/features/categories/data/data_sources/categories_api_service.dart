@@ -3,6 +3,7 @@ import 'package:retrofit/retrofit.dart';
 
 import '../../../../config/constants/api_endpoints.dart';
 import '../models/categories_response_model.dart';
+import '../models/category_details_response_model.dart';
 
 part 'categories_api_service.g.dart';
 
@@ -13,4 +14,9 @@ abstract class CategoriesApiService {
 
   @GET(ApiEndpoints.categoriesEndpoint)
   Future<HttpResponse<CategoriesResponseModel>> getCategories();
+
+  @GET("${ApiEndpoints.categoriesEndpoint}/{id}")
+  Future<HttpResponse<CategoryDetailsResponseModel>> getCategory(
+    @Path("id") int id,
+  );
 }

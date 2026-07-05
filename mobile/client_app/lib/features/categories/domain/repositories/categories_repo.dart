@@ -2,4 +2,6 @@ import 'package:client_app/features/categories/domain/entities/category_entity.d
 
 abstract class CategoriesRepo {
   Future<List<CategoryEntity>> getCategories();
+
+  Future<CategoryEntity> getCategory(int id);
 }

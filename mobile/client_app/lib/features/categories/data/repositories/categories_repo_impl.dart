@@ -13,8 +13,16 @@ class CategoriesRepoImpl implements CategoriesRepo {
   Future<List<CategoryEntity>> getCategories() async {
     try {
       final response = await api.getCategories();
-      print("RAW RESPONSE");
-      print(response.data.data);
+      return response.data.toEntity();
+    } on DioException catch (e) {
+      throw NetworkExceptions.fromDio(e);
+    }
+  }
+
+  @override
+  Future<CategoryEntity> getCategory(int id) async {
+    try {
+      final response = await api.getCategory(id);
       return response.data.toEntity();
     } on DioException catch (e) {
       throw NetworkExceptions.fromDio(e);

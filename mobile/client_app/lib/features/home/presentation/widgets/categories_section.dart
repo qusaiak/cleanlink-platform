@@ -1,6 +1,8 @@
 import 'package:client_app/features/home/presentation/widgets/category_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../config/routes/app_router.dart';
 import '../../../categories/domain/entities/category_entity.dart';
 
 class CategoriesSection extends StatelessWidget {
@@ -24,11 +26,13 @@ class CategoriesSection extends StatelessWidget {
         itemBuilder: (_, i) {
           final item = categories[i];
           return CategoryItem(
-            id: item.id,
-            image: item.image,
-            title: item.nameEn,
+            category: item,
             number: 3,
-            onPressed: () {},
+            onTap: () {
+              GoRouter.of(
+                context,
+              ).push(AppRouter.kCategoryDetails, extra: item.id);
+            },
           );
         },
       ),

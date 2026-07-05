@@ -1,3 +1,4 @@
+import 'package:client_app/features/categories/domain/entities/category_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -6,18 +7,14 @@ import '../../../../config/theme/styles.dart';
 class CategoryItem extends StatelessWidget {
   const CategoryItem({
     super.key,
-    required this.id,
-    required this.image,
-    required this.title,
+    required this.category,
     required this.number,
-    required this.onPressed,
+    this.onTap,
   });
 
-  final int id;
-  final String image;
-  final String title;
+  final CategoryEntity category;
   final int number;
-  final VoidCallback? onPressed;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +23,7 @@ class CategoryItem extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: onPressed,
+        onTap: onTap,
         borderRadius: BorderRadius.circular(24.r),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
@@ -46,7 +43,7 @@ class CategoryItem extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 Image.network(
-                  image,
+                  category.image,
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) {
                     return Container(
@@ -79,7 +76,7 @@ class CategoryItem extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
-                      title,
+                      category.name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: number == 2

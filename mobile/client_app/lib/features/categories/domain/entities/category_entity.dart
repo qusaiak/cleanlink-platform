@@ -1,25 +1,25 @@
-class CategoryEntity {
+import 'package:client_app/features/services/domain/entities/service_entity.dart';
+import 'package:equatable/equatable.dart';
+
+import 'category_service_entity.dart';
+
+class CategoryEntity extends Equatable {
   final int id;
-
-  final String nameAr;
-  final String nameEn;
-
-  final String descriptionAr;
-  final String descriptionEn;
-
+  final String name;
+  final String description;
   final String image;
-
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final List<ServiceEntity> services;
 
   const CategoryEntity({
     required this.id,
-    required this.nameAr,
-    required this.nameEn,
-    required this.descriptionAr,
-    required this.descriptionEn,
+    required this.name,
+    required this.description,
     required this.image,
-    required this.createdAt,
-    required this.updatedAt,
+    this.services = const [],
   });
+
+  int get serviceCount => services.length;
+
+  @override
+  List<Object?> get props => [id, name, description, image, services];
 }

@@ -4,5 +4,10 @@ abstract class CategoriesEvent {
   const CategoriesEvent();
 }
 
-class GetCategoriesEvent
-    extends CategoriesEvent {}
+class GetCategoriesEvent extends CategoriesEvent {}
+
+class GetCategoryEvent extends CategoriesEvent {
+  final int id;
+
+  const GetCategoryEvent(this.id);
+}

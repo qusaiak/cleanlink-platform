@@ -1,8 +1,9 @@
 import 'package:client_app/features/categories/presentation/bloc/categories_bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../config/routes/app_router.dart';
 import '../../../../core/utils/functions/spinkit.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../home/presentation/widgets/category_item.dart';
@@ -30,7 +31,6 @@ class _CategoriesBodyState extends State<CategoriesBody> {
         if (state is CategoriesLoading) {
           return Center(child: spinKitApp(theme.primary));
         }
-
         if (state is CategoriesError) {
           return Center(
             child: Padding(
@@ -77,12 +77,12 @@ class _CategoriesBodyState extends State<CategoriesBody> {
               itemBuilder: (_, i) {
                 final item = categories[i];
                 return CategoryItem(
-                  id: item.id!,
-                  image: item.image!,
-                  title: item.nameEn!,
+                  category: item,
                   number: 2,
-                  onPressed: () {
-                    /// Navigate to services by category (later)
+                  onTap: () {
+                    GoRouter.of(
+                      context,
+                    ).push(AppRouter.kCategoryDetails, extra: item.id);
                   },
                 );
               },
