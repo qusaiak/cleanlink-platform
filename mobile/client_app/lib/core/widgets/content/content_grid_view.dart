@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'content_item_factory.dart';
 import 'content_navigator.dart';
@@ -8,30 +9,50 @@ class ContentGridView extends StatelessWidget {
   const ContentGridView({super.key, required this.type, required this.items});
 
   final ContentSectionType type;
-  final List<String> items;
 
-  double get _childAspectRatio =>
-      (type == ContentSectionType.providers || type == ContentSectionType.categories)
-      ? 1.0
-      : 2 / 3;
+  final List<dynamic> items;
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-      itemCount: items.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        mainAxisSpacing: 8,
-        crossAxisSpacing: 2,
-        childAspectRatio: _childAspectRatio,
+    if (items.isEmpty) {
+      return const Center(child: Text('No results found'));
+    }
+    return Padding(
+      padding: EdgeInsets.only(
+        right: 10.w,
+        left: 10.w,
+        bottom: MediaQuery.of(context).padding.bottom,
       ),
-      itemBuilder: (context, index) => ContentItemFactory.build(
-        type: type,
-        imagePath: items[index],
-        index: index,
-        onTap: () =>
-            ContentNavigator.openItemDetails(context, type: type, index: index),
+      child: GridView.builder(
+        itemCount: items.length,
+        padding: EdgeInsets.zero,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 14.h,
+          crossAxisSpacing: 14.w,
+          childAspectRatio: 1,
+        ),
+        itemBuilder: (context, index) {
+          final item = items[index];
+
+          return ContentItemFactory.buildListItem(
+            context,
+
+            type: type,
+
+            item: item,
+
+            index: index,
+
+            onTap: () {
+              ContentNavigator.openItemDetails(
+                context,
+                type: type,
+                id: item.id,
+              );
+            },
+          );
+        },
       ),
     );
   }
