@@ -17,7 +17,7 @@ class CompanyCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 200.w,
-        margin: EdgeInsets.symmetric(horizontal: 8.w),
+        // margin: EdgeInsets.symmetric(horizontal: 8.w),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.r)),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20.r),
@@ -57,7 +57,7 @@ class CompanyCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      company.nameEn,
+                      company.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -77,7 +77,7 @@ class CompanyCard extends StatelessWidget {
                         SizedBox(width: 4.w),
                         Expanded(
                           child: Text(
-                            company.locationEn,
+                            company.location,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(

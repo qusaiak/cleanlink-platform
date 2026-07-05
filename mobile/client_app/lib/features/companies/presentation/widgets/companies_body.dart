@@ -18,7 +18,6 @@ class CompaniesBody extends StatefulWidget {
 }
 
 class _CompaniesBodyState extends State<CompaniesBody> {
-
   @override
   void initState() {
     super.initState();
@@ -30,6 +29,10 @@ class _CompaniesBodyState extends State<CompaniesBody> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context).colorScheme;
     return BlocBuilder<CompaniesBloc, CompaniesState>(
+      buildWhen: (_, current) =>
+          current is CompaniesLoading ||
+          current is CompaniesLoaded ||
+          current is CompaniesError,
       builder: (context, state) {
         if (state is CompaniesLoading) {
           return Center(child: spinKitApp(theme.primary));
@@ -76,7 +79,7 @@ class _CompaniesBodyState extends State<CompaniesBody> {
             itemExtent: 200.w,
             itemCount: companies.length,
             separator: SizedBox(height: 14.h),
-
+            padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 4.h),
             itemBuilder: (_, index) {
               final company = companies[index];
 

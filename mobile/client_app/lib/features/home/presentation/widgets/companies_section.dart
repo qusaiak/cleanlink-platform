@@ -22,19 +22,24 @@ class CompaniesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final companies = CompaniesData.all.take(3).toList();
-    return CustomListSection(
-      title: AppLocalizations.of(context)!.popular_companies,
-      onTitleTap: () {
-        GoRouter.of(context).push(AppRouter.kCompanies);
-      },
-      itemExtent: 200.w,
-      itemCount: companies.length,
-      iconData: Icons.business,
-      itemBuilder: (context, index) => CompanyCard(
-        company: companies[index],
-        onTap: () {
-          GoRouter.of(context).push(AppRouter.kCompanyDetails, extra: companies[index].id);
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 4.h),
+      child: CustomListSection(
+        title: AppLocalizations.of(context)!.popular_companies,
+        onTitleTap: () {
+          GoRouter.of(context).push(AppRouter.kCompanies);
         },
+        itemExtent: 200.w,
+        itemCount: companies.length,
+        iconData: Icons.business,
+        itemBuilder: (context, index) => CompanyCard(
+          company: companies[index],
+          onTap: () {
+            GoRouter.of(
+              context,
+            ).push(AppRouter.kCompanyDetails, extra: companies[index].id);
+          },
+        ),
       ),
     );
   }

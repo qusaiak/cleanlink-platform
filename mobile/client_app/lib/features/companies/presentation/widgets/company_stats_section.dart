@@ -23,7 +23,7 @@ class CompanyStatsSection extends StatelessWidget {
         children: [
           _StatCard(
             icon: Icons.star_rounded,
-            value: company.rating,
+            value: company.rating.toString(),
             title: "Rating",
           ),
           _StatCard(
@@ -33,7 +33,7 @@ class CompanyStatsSection extends StatelessWidget {
           ),
           _StatCard(
             icon: Icons.reviews_rounded,
-            value: "150+",
+            value: company.reviews.length.toString(),
             title: "Reviews",
           ),
           _StatCard(
@@ -63,16 +63,11 @@ class _StatCard extends StatelessWidget {
     final theme = Theme.of(context).colorScheme;
 
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 10.w,
-        vertical: 8.h,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
       decoration: BoxDecoration(
         color: theme.surface,
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(
-          color: theme.outline.withOpacity(.1),
-        ),
+        border: Border.all(color: theme.outline.withOpacity(.1)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(.03),
@@ -90,11 +85,7 @@ class _StatCard extends StatelessWidget {
               color: theme.primary.withOpacity(.1),
               borderRadius: BorderRadius.circular(10.r),
             ),
-            child: Icon(
-              icon,
-              size: 18.sp,
-              color: theme.primary,
-            ),
+            child: Icon(icon, size: 18.sp, color: theme.primary),
           ),
 
           SizedBox(width: 8.w),

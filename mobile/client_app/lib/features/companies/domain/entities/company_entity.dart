@@ -1,3 +1,5 @@
+import 'package:client_app/features/companies/domain/entities/review_entity.dart';
+import 'package:client_app/features/companies/domain/entities/worker_entity.dart';
 import 'package:client_app/features/services/domain/entities/service_entity.dart';
 
 import 'manager_entity.dart';
@@ -10,20 +12,19 @@ class CompanyEntity {
 
   final int regionId;
 
-  final String nameAr;
-  final String nameEn;
+  final String name;
 
-  final String descriptionAr;
-  final String descriptionEn;
+  final String description;
 
   final String image;
 
-  final String locationAr;
-  final String locationEn;
+  final String location;
 
-  final String rating;
+  final int rating;
 
-  final int isOpen;
+  final bool isOpen;
+
+  final bool isFavorite;
 
   final String startHour;
   final String closeHour;
@@ -34,6 +35,10 @@ class CompanyEntity {
 
   final List<ServiceEntity> services;
 
+  final List<WorkerEntity> workers;
+
+  final List<ReviewEntity> reviews;
+
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -41,21 +46,65 @@ class CompanyEntity {
     required this.id,
     required this.managerId,
     required this.regionId,
-    required this.nameAr,
-    required this.nameEn,
-    required this.descriptionAr,
-    required this.descriptionEn,
+    required this.name,
+    required this.description,
     required this.image,
-    required this.locationAr,
-    required this.locationEn,
+    required this.location,
     required this.rating,
     required this.isOpen,
+    required this.isFavorite,
     required this.startHour,
     required this.closeHour,
     required this.manager,
     required this.region,
     required this.services,
+    required this.workers,
+    required this.reviews,
     required this.createdAt,
     required this.updatedAt,
   });
+
+  CompanyEntity copyWith({
+    int? id,
+    int? managerId,
+    int? regionId,
+    String? name,
+    String? description,
+    String? image,
+    String? location,
+    int? rating,
+    bool? isOpen,
+    bool? isFavorite,
+    String? startHour,
+    String? closeHour,
+    ManagerEntity? manager,
+    RegionEntity? region,
+    List<ServiceEntity>? services,
+    List<WorkerEntity>? workers,
+    List<ReviewEntity>? reviews,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return CompanyEntity(
+      id: id ?? this.id,
+      managerId: managerId ?? this.managerId,
+      regionId: regionId ?? this.regionId,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      image: image ?? this.image,
+      location: location ?? this.location,
+      rating: rating ?? this.rating,
+      isOpen: isOpen ?? this.isOpen,
+      isFavorite: isFavorite ?? this.isFavorite,
+      startHour: startHour ?? this.startHour,
+      closeHour: closeHour ?? this.closeHour,
+      manager: manager ?? this.manager,
+      region: region ?? this.region,
+      services: services ?? this.services,
+      workers: workers ?? this.workers,
+      reviews: reviews ?? this.reviews,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 }

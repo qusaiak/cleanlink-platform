@@ -13,8 +13,6 @@ class CompaniesRepoImpl implements CompaniesRepo {
   Future<List<CompanyEntity>> getCompanies() async {
     try {
       final response = await api.getCompanies();
-      print("RAW RESPONSE");
-      print(response.data.data);
       return response.data.toEntity();
     } on DioException catch (e) {
       throw NetworkExceptions.fromDio(e);

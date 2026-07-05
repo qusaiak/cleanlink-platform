@@ -96,7 +96,7 @@ class _CompanyDetailsBodyState extends State<CompanyDetailsBody> {
 
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        child: ReviewsSection(company: company),
+                        child: ReviewsSection(reviews: company.reviews),
                       ),
                       SizedBox(height: 30),
                     ],

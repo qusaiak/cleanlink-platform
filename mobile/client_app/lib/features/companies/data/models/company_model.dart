@@ -1,3 +1,6 @@
+import 'package:client_app/features/companies/data/models/review_model.dart';
+import 'package:client_app/features/companies/data/models/worker_model.dart';
+import 'package:client_app/features/companies/domain/entities/worker_entity.dart';
 import 'package:client_app/features/services/data/models/service_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'manager_model.dart';
@@ -14,20 +17,18 @@ class CompanyModel {
   final int? managerId;
   final int? regionId;
 
-  final String? nameAr;
-  final String? nameEn;
+  final String? name;
 
-  final String? descriptionAr;
-  final String? descriptionEn;
+  final String? description;
 
   final String? image;
 
-  final String? locationAr;
-  final String? locationEn;
+  final String? location;
 
-  final String? rating;
+  final int? rating;
 
-  final int? isOpen;
+  final bool? isOpen;
+  final bool? isFavorite;
 
   final String? startHour;
   final String? closeHour;
@@ -35,6 +36,8 @@ class CompanyModel {
   final ManagerModel? manager;
   final RegionModel? region;
   final List<ServiceModel>? services;
+  final List<WorkerModel>? workers;
+  final List<ReviewModel>? reviews;
 
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -43,20 +46,20 @@ class CompanyModel {
     this.id,
     this.managerId,
     this.regionId,
-    this.nameAr,
-    this.nameEn,
-    this.descriptionAr,
-    this.descriptionEn,
+    this.name,
+    this.description,
     this.image,
-    this.locationAr,
-    this.locationEn,
+    this.location,
     this.rating,
     this.isOpen,
+    this.isFavorite,
     this.startHour,
     this.closeHour,
     this.manager,
     this.region,
     this.services,
+    this.workers,
+    this.reviews,
     this.createdAt,
     this.updatedAt,
   });
@@ -70,15 +73,13 @@ class CompanyModel {
     id: id ?? 0,
     managerId: managerId ?? 0,
     regionId: regionId ?? 0,
-    nameAr: nameAr ?? "",
-    nameEn: nameEn ?? "",
-    descriptionAr: descriptionAr ?? "",
-    descriptionEn: descriptionEn ?? "",
+    name: name ?? "",
+    description: description ?? "",
     image: image ?? "",
-    locationAr: locationAr ?? "",
-    locationEn: locationEn ?? "",
-    rating: rating ?? "0",
-    isOpen: isOpen ?? 1,
+    location: location ?? "",
+    rating: rating ?? 0,
+    isOpen: isOpen ?? true,
+    isFavorite: isFavorite ?? false,
     startHour: startHour ?? "",
     closeHour: closeHour ?? "",
     manager:
@@ -88,18 +89,16 @@ class CompanyModel {
         region?.toEntity() ??
         RegionEntity(
           id: 0,
-          nameAr: '',
-          nameEn: '',
+          name: '',
+          image: '',
           managerId: 0,
           manager:
               manager?.toEntity() ??
               ManagerEntity(id: 0, fullname: '', email: '', role: ''),
         ),
-    services:
-    services
-        ?.map((e) => e.toEntity())
-        .toList() ??
-        [],
+    services: services?.map((e) => e.toEntity()).toList() ?? [],
+    workers: workers?.map((e) => e.toEntity()).toList() ?? [],
+    reviews: reviews?.map((e) => e.toEntity()).toList() ?? [],
     createdAt: createdAt ?? DateTime.now(),
     updatedAt: updatedAt ?? DateTime.now(),
   );

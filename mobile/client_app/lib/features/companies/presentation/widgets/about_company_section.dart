@@ -32,7 +32,7 @@ class _AboutCompanySectionState extends State<AboutCompanySection> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.company.descriptionEn,
+                widget.company.description,
                 maxLines: 2,
                 style: Styles.textStyle12.copyWith(
                   color: theme.onSurfaceVariant,
@@ -91,7 +91,7 @@ class _AboutCompanySectionState extends State<AboutCompanySection> {
                               ),
                               SizedBox(height: 16.h),
                               Text(
-                                widget.company.descriptionEn,
+                                widget.company.description,
                                 maxLines: 10000,
                                 style: Styles.textStyle12.copyWith(
                                   color: theme.onSurfaceVariant,
