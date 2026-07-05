@@ -4,26 +4,20 @@ abstract class SearchEvent {
   const SearchEvent();
 }
 
-/// Search
-class StartSearching extends SearchEvent {
-  const StartSearching();
-}
-
-class StopSearching extends SearchEvent {
-  const StopSearching();
-}
-
 class UpdateSearchQuery extends SearchEvent {
   final String query;
 
   const UpdateSearchQuery(this.query);
 }
 
+class Search extends SearchEvent {
+  const Search();
+}
+
 class ClearSearch extends SearchEvent {
   const ClearSearch();
 }
 
-/// Filters
 class SelectTab extends SearchEvent {
   final SearchTab tab;
 
@@ -49,17 +43,35 @@ class UpdatePriceRange extends SearchEvent {
 }
 
 class UpdateDistance extends SearchEvent {
-  final double? distance;
+  final double distance;
 
   const UpdateDistance(this.distance);
 }
 
 class UpdateMinRate extends SearchEvent {
-  final double? rate;
+  final double rate;
 
   const UpdateMinRate(this.rate);
 }
 
+class UpdateRegion extends SearchEvent {
+  final int regionId;
+
+  const UpdateRegion(this.regionId);
+}
+
 class ResetFilters extends SearchEvent {
   const ResetFilters();
+}
+
+class ApplyFiltersAndSearch extends SearchEvent {
+  final int? regionId;
+  final RangeValues priceRange;
+  final double? rate;
+
+  const ApplyFiltersAndSearch({
+    this.regionId,
+    required this.priceRange,
+    this.rate,
+  });
 }

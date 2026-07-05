@@ -19,7 +19,7 @@ class SearchTabs extends StatelessWidget {
       SearchTab.services: l10n.search_services,
       SearchTab.categories: l10n.search_categories,
       SearchTab.regions: l10n.search_regions,
-      SearchTab.providers: l10n.search_providers,
+      // SearchTab.providers: l10n.search_providers,
       SearchTab.offers: l10n.search_offers,
     };
 

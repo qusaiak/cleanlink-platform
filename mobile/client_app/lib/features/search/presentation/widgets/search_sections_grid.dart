@@ -42,11 +42,11 @@ class SearchSectionsGrid extends StatelessWidget {
       imagePlaceholder: Assets.images.search.regions.path,
       route: AppRouter.kRegions,
     ),
-    _SectionItem(
-      titleBuilder: (l10n) => l10n.all_providers,
-      imagePlaceholder: Assets.images.search.providers.path,
-      route: AppRouter.kProviders,
-    ),
+    // _SectionItem(
+    //   titleBuilder: (l10n) => l10n.all_providers,
+    //   imagePlaceholder: Assets.images.search.providers.path,
+    //   route: AppRouter.kProviders,
+    // ),
     _SectionItem(
       titleBuilder: (l10n) => l10n.all_offers,
       imagePlaceholder: Assets.images.search.offers.path,
@@ -61,30 +61,30 @@ class SearchSectionsGrid extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 11.w),
       child: Column(
         children: [
-          _buildSectionCard(
-            section: _sections[0],
-            l10n: l10n,
-            aspectRatio: 16 / 9,
-            context: context,
-          ),
-          SizedBox(height: 12.h),
           _buildTwoSquaresRow(
-            left: _sections[1],
-            right: _sections[2],
+            left: _sections[0],
+            right: _sections[1],
             l10n: l10n,
             context: context,
           ),
           SizedBox(height: 12.h),
           _buildSectionCard(
-            section: _sections[3],
+            section: _sections[2],
             l10n: l10n,
             aspectRatio: 16 / 9,
             context: context,
           ),
           SizedBox(height: 12.h),
+          // _buildSectionCard(
+          //   section: _sections[3],
+          //   l10n: l10n,
+          //   aspectRatio: 16 / 9,
+          //   context: context,
+          // ),
+          // SizedBox(height: 12.h),
           _buildTwoSquaresRow(
-            left: _sections[4],
-            right: _sections[5],
+            left: _sections[3],
+            right: _sections[4],
             l10n: l10n,
             context: context,
           ),

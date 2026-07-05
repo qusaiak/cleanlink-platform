@@ -14,44 +14,6 @@ import 'search_tabs.dart';
 class SearchResults extends StatelessWidget {
   const SearchResults({super.key});
 
-  static final _allSections = <ContentSection>[
-    ContentSection(
-      id: 'search_companies',
-      title: 'Companies',
-      type: ContentSectionType.companies,
-      items: ContentMockData.itemsFor(ContentSectionType.companies),
-    ),
-    ContentSection(
-      id: 'search_services',
-      title: 'Services',
-      type: ContentSectionType.services,
-      items: ContentMockData.itemsFor(ContentSectionType.services),
-    ),
-    ContentSection(
-      id: 'search_categories',
-      title: 'Categories',
-      type: ContentSectionType.categories,
-      items: ContentMockData.itemsFor(ContentSectionType.categories),
-    ),
-    ContentSection(
-      id: 'search_regions',
-      title: 'Regions',
-      type: ContentSectionType.regions,
-      items: ContentMockData.itemsFor(ContentSectionType.regions),
-    ),
-    ContentSection(
-      id: 'search_providers',
-      title: 'Providers',
-      type: ContentSectionType.providers,
-      items: ContentMockData.itemsFor(ContentSectionType.providers),
-    ),
-    ContentSection(
-      id: 'search_offers',
-      title: 'Offers',
-      type: ContentSectionType.offers,
-      items: ContentMockData.itemsFor(ContentSectionType.offers),
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +29,8 @@ class SearchResults extends StatelessWidget {
             SizedBox(height: 16.h),
             Expanded(
               child: state.isLoading
-                  ?            Center(child: spinKitApp(theme.primary))
-
-            : _buildTabContent(state.selectedTab, bottomInset),
+                  ? Center(child: spinKitApp(theme.primary))
+                  : _buildTabContent(state, bottomInset),
             ),
           ],
         );
@@ -77,43 +38,137 @@ class SearchResults extends StatelessWidget {
     );
   }
 
-  Widget _buildTabContent(SearchTab tab, double bottomInset) {
-    switch (tab) {
+  Widget _buildTabContent(SearchState state, double bottomInset) {
+    final data = state.data;
+
+    if (data == null) {
+      return const SizedBox();
+    }
+
+    switch (state.selectedTab) {
       case SearchTab.all:
         return SingleChildScrollView(
           padding: EdgeInsets.only(bottom: bottomInset),
-          child: ContentView(sections: _allSections),
+
+          child: ContentView(
+            sections: [
+              ContentSection(
+                title: 'Companies',
+
+                type: ContentSectionType.companies,
+
+                items: data.companies,
+              ),
+
+              ContentSection(
+                title: 'Services',
+
+                type: ContentSectionType.services,
+
+                items: data.services,
+              ),
+
+              ContentSection(
+                title: 'Categories',
+
+                type: ContentSectionType.categories,
+
+                items: data.categories,
+              ),
+
+              ContentSection(
+                title: 'Regions',
+
+                type: ContentSectionType.regions,
+
+                items: data.regions,
+              ),
+
+              ContentSection(
+                title: 'Offers',
+
+                type: ContentSectionType.offers,
+
+                items: data.offers,
+              ),
+            ],
+          ),
         );
+
       case SearchTab.companies:
         return ContentListView(
           type: ContentSectionType.companies,
-          items: ContentMockData.itemsFor(ContentSectionType.companies),
+
+          items: data.companies,
         );
+
       case SearchTab.services:
         return ContentListView(
           type: ContentSectionType.services,
-          items: ContentMockData.itemsFor(ContentSectionType.services),
+
+          items: data.services,
         );
+
       case SearchTab.categories:
         return ContentGridView(
           type: ContentSectionType.categories,
-          items: ContentMockData.itemsFor(ContentSectionType.categories),
+
+          items: data.categories,
         );
+
       case SearchTab.regions:
         return ContentListView(
           type: ContentSectionType.regions,
-          items: ContentMockData.itemsFor(ContentSectionType.regions),
+
+          items: data.regions,
         );
-      case SearchTab.providers:
-        return ContentGridView(
-          type: ContentSectionType.providers,
-          items: ContentMockData.itemsFor(ContentSectionType.providers),
-        );
+
       case SearchTab.offers:
         return ContentListView(
           type: ContentSectionType.offers,
-          items: ContentMockData.itemsFor(ContentSectionType.offers),
+
+          items: data.offers,
         );
     }
   }
+
+  // Widget _buildTabContent(SearchTab tab, double bottomInset) {
+  //   switch (tab) {
+  //     case SearchTab.all:
+  //       return SingleChildScrollView(
+  //         padding: EdgeInsets.only(bottom: bottomInset),
+  //         child: ContentView(sections: _allSections),
+  //       );
+  //     case SearchTab.companies:
+  //       return ContentListView(
+  //         type: ContentSectionType.companies,
+  //         items: ContentMockData.itemsFor(ContentSectionType.companies),
+  //       );
+  //     case SearchTab.services:
+  //       return ContentListView(
+  //         type: ContentSectionType.services,
+  //         items: ContentMockData.itemsFor(ContentSectionType.services),
+  //       );
+  //     case SearchTab.categories:
+  //       return ContentGridView(
+  //         type: ContentSectionType.categories,
+  //         items: ContentMockData.itemsFor(ContentSectionType.categories),
+  //       );
+  //     case SearchTab.regions:
+  //       return ContentListView(
+  //         type: ContentSectionType.regions,
+  //         items: ContentMockData.itemsFor(ContentSectionType.regions),
+  //       );
+  //     // case SearchTab.providers:
+  //     //   return ContentGridView(
+  //     //     type: ContentSectionType.providers,
+  //     //     items: ContentMockData.itemsFor(ContentSectionType.providers),
+  //     //   );
+  //     case SearchTab.offers:
+  //       return ContentListView(
+  //         type: ContentSectionType.offers,
+  //         items: ContentMockData.itemsFor(ContentSectionType.offers),
+  //       );
+  //   }
+  // }
 }
