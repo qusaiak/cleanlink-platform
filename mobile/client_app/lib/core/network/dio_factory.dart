@@ -31,13 +31,4 @@ abstract class DioFactory {
 
     return dio;
   }
-
-  // static void setAuthToken(Dio dio, String? token) {
-  //   print("setAuthToken");
-  //   if (token == null || token.isEmpty) {
-  //     dio.options.headers.remove('Authorization');
-  //   } else {
-  //     dio.options.headers['Authorization'] = 'Bearer $token';
-  //   }
-  // }
 }
