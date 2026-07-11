@@ -25,8 +25,8 @@ class ProfileBody extends StatelessWidget {
                 child: Column(
                   children: [
                     const ProfileHeader(),
-                    SizedBox(height: 16.h),
-                    _ProfileInfoCard(),
+                    // SizedBox(height: 16.h),
+                    // _ProfileInfoCard(),
                     SizedBox(height: 16.h),
                     const ProfileContent(),
                   ],
@@ -40,76 +40,76 @@ class ProfileBody extends StatelessWidget {
   }
 }
 
-class _ProfileInfoCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
-    return ListenableBuilder(
-      listenable: sl<UserSession>(),
-      builder: (context, child) {
-        final session = sl<UserSession>();
-        final phone = session.phone;
-        final address = session.address;
+// class _ProfileInfoCard extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final theme = Theme.of(context).colorScheme;
+//     return ListenableBuilder(
+//       listenable: sl<UserSession>(),
+//       builder: (context, child) {
+//         final session = sl<UserSession>();
+//         final phone = session.phone;
+//         final address = session.address;
+//
+//         if ((phone == null || phone.isEmpty) &&
+//             (address == null || address.isEmpty)) {
+//           return const SizedBox.shrink();
+//         }
+//
+//         return Container(
+//           padding: EdgeInsets.all(16.w),
+//           decoration: BoxDecoration(
+//             color: theme.onSurface.withValues(alpha: 0.04),
+//             borderRadius: BorderRadius.circular(18.r),
+//           ),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Text(
+//                 AppLocalizations.of(context)!.personal_details,
+//                 style: TextStyle(
+//                   fontSize: 14.sp,
+//                   fontWeight: FontWeight.w600,
+//                   color: theme.onSurface,
+//                 ),
+//               ),
+//               SizedBox(height: 12.h),
+//               if (phone != null && phone.isNotEmpty)
+//                 _InfoRow(icon: Icons.phone, text: "0$phone"),
+//               if (phone != null && phone.isNotEmpty) SizedBox(height: 8.h),
+//               if (address != null && address.isNotEmpty)
+//                 _InfoRow(icon: Icons.location_on, text: address),
+//             ],
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
 
-        if ((phone == null || phone.isEmpty) &&
-            (address == null || address.isEmpty)) {
-          return const SizedBox.shrink();
-        }
-
-        return Container(
-          padding: EdgeInsets.all(16.w),
-          decoration: BoxDecoration(
-            color: theme.onSurface.withValues(alpha: 0.04),
-            borderRadius: BorderRadius.circular(18.r),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppLocalizations.of(context)!.personal_details,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  color: theme.onSurface,
-                ),
-              ),
-              SizedBox(height: 12.h),
-              if (phone != null && phone.isNotEmpty)
-                _InfoRow(icon: Icons.phone, text: "0$phone"),
-              if (phone != null && phone.isNotEmpty) SizedBox(height: 8.h),
-              if (address != null && address.isNotEmpty)
-                _InfoRow(icon: Icons.location_on, text: address),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.icon, required this.text});
-
-  final IconData icon;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
-    return Row(
-      children: [
-        Icon(icon, size: 18, color: theme.primary),
-        SizedBox(width: 10.w),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: theme.onSurface.withValues(alpha: 0.8),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
+// class _InfoRow extends StatelessWidget {
+//   const _InfoRow({required this.icon, required this.text});
+//
+//   final IconData icon;
+//   final String text;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final theme = Theme.of(context).colorScheme;
+//     return Row(
+//       children: [
+//         Icon(icon, size: 18, color: theme.primary),
+//         SizedBox(width: 10.w),
+//         Expanded(
+//           child: Text(
+//             text,
+//             style: TextStyle(
+//               fontSize: 13.sp,
+//               color: theme.onSurface.withValues(alpha: 0.8),
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }

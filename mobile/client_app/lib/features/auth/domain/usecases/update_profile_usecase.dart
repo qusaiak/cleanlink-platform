@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 
 import '../entities/user_profile_entity.dart';
@@ -10,7 +12,6 @@ class UpdateProfileUseCase {
 
   Future<UserProfileEntity> call(UpdateProfileParams params) {
     return repo.updateProfile(
-      token: params.token,
       image: params.image,
       address: params.address,
       phone: params.phone,
@@ -19,18 +20,16 @@ class UpdateProfileUseCase {
 }
 
 class UpdateProfileParams extends Equatable {
-  final String token;
-  final String image;
+  final File? image;
   final String address;
   final String phone;
 
   const UpdateProfileParams({
-    required this.token,
-    required this.image,
+    this.image,
     required this.address,
     required this.phone,
   });
 
   @override
-  List<Object?> get props => [token, image, address, phone];
+  List<Object?> get props => [image?.path, address, phone];
 }

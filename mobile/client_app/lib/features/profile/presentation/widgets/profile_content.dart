@@ -8,7 +8,9 @@ import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/app_theme_info.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
+import '../../../../core/session/user_session.dart';
 import '../../../../core/widgets/custom_dialog.dart';
+import '../../../../injection_container.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../bloc/profile_bloc.dart';
 import 'custom_tile.dart';
@@ -33,6 +35,27 @@ class _ProfileContentState extends State<ProfileContent> {
     var theme = Theme.of(context)!.colorScheme;
     return Column(
       children: [
+        ListenableBuilder(
+          listenable: sl<UserSession>(),
+          builder: (context, child) {
+            final session = sl<UserSession>();
+            final phone = session.phone;
+            final address = session.address;
+
+            if ((phone == null || phone.isEmpty) &&
+                (address == null || address.isEmpty)) {
+              return const SizedBox.shrink();
+            }
+
+            return SectionCard(
+              title: AppLocalizations.of(context)!.personal_details,
+              children: [
+                CustomTile(icon: Icons.phone, title: "0$phone"),
+                CustomTile(icon: Icons.location_on, title: address!),
+              ],
+            );
+          },
+        ),
         SectionCard(
           title: AppLocalizations.of(context)!.activity,
           children: [
@@ -40,19 +63,18 @@ class _ProfileContentState extends State<ProfileContent> {
               icon: Icons.favorite_border,
               title: AppLocalizations.of(context)!.favorites,
               onTap: () {
+                GoRouter.of(context).push(AppRouter.kFavorites);
               },
             ),
             CustomTile(
               icon: Icons.star_border,
               title: AppLocalizations.of(context)!.my_reviews,
-              onTap: () {
-              },
+              onTap: () {},
             ),
             CustomTile(
               icon: Icons.payment,
               title: AppLocalizations.of(context)!.payment_history,
-              onTap: () {
-              },
+              onTap: () {},
             ),
           ],
         ),
@@ -74,8 +96,8 @@ class _ProfileContentState extends State<ProfileContent> {
                       context,
                     )!.dialog_change_language_body,
                     onTap: () {
-                      context.read<ProfileBloc>().add(ChangeLanguageEvent());
                       Navigator.of(dialogContext).pop();
+                      context.read<ProfileBloc>().add(ChangeLanguageEvent());
                     },
                     onCancel: () {
                       Navigator.of(dialogContext).pop();
