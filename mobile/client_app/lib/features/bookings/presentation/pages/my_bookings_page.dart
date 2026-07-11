@@ -1,219 +1,173 @@
-import 'package:client_app/core/widgets/custom_appbar.dart';
-import 'package:client_app/l10n/app_localizations.dart';
+import 'package:client_app/core/utils/functions/spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../config/language/app_language_info.dart';
+import '../../../../core/widgets/app_empty_state.dart';
+import '../../../../core/widgets/custom_appbar.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../bloc/bookings_bloc.dart';
 import '../widgets/booking_card.dart';
-import '../widgets/booking_empty_state.dart';
 import '../widgets/bookings_tab_bar.dart';
-import '../../domain/entities/booking_entity.dart';
-import '../../domain/entities/worker_entity.dart';
 
-class MyBookingsPage extends StatelessWidget {
+class MyBookingsPage extends StatefulWidget {
   const MyBookingsPage({super.key});
+  @override
+  State<MyBookingsPage> createState() => _MyBookingsPageState();
+}
+
+class _MyBookingsPageState extends State<MyBookingsPage> {
+  String? _lastLanguageCode;
+  bool _matchesTab(BookingTab tab, String status) {
+    switch (tab) {
+      case BookingTab.all:
+        return true;
+      case BookingTab.pending:
+        return status == 'pending' || status == 'upcoming';
+      case BookingTab.assigned:
+        return status == 'ongoing' ||
+            status == 'accepted' ||
+            status == 'approved';
+      case BookingTab.completed:
+        return status == 'completed';
+      case BookingTab.cancelled:
+        return status == 'canceled' || status == 'cancelled';
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _lastLanguageCode = AppLanguageInfo.languageCode;
+    context.read<BookingsBloc>().add(const GetOrdersEvent());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final currentLanguageCode = AppLanguageInfo.languageCode;
+
+    if (_lastLanguageCode != null && _lastLanguageCode != currentLanguageCode) {
+      _lastLanguageCode = currentLanguageCode;
+
+      context.read<BookingsBloc>().add(const GetOrdersEvent());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context).colorScheme;
-    final List<BookingEntity> mockBookings = [
-      BookingEntity(
-        id: 1001,
-
-        serviceName: "Deep Cleaning",
-
-        companyName: "CleanLink Services",
-
-        worker: const WorkerEntity(id: 1, name: "Ahmed Ali", image: ""),
-
-        date: DateTime.now(),
-
-        time: "09:30 AM - 11:30 AM",
-
-        status: "completed",
-
-        price: 120,
+    final colors = Theme.of(context).colorScheme;
+    return Scaffold(
+      appBar: customAppBar(
+        AppLocalizations.of(context)!.my_bookings,
+        null,
+        const [],
+        () {},
+        colors.onSurface,
       ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            const BookingsTabBar(),
+            SizedBox(height: 12.h),
+            Expanded(
+              child: BlocBuilder<BookingsBloc, BookingsState>(
+                builder: (context, state) {
+                  final colors = Theme.of(context).colorScheme;
 
-      BookingEntity(
-        id: 1002,
+                  if (state.isLoadingOrders || !state.hasLoadedOrders) {
+                    return Center(child: spinKitApp(colors.primary));
+                  }
 
-        serviceName: "Apartment Cleaning",
-
-        companyName: "CleanLink Premium",
-
-        worker: const WorkerEntity(id: 2, name: "Mohammad Hassan", image: ""),
-
-        date: DateTime.now().add(const Duration(days: 1)),
-
-        time: "01:00 PM - 03:00 PM",
-
-        status: "ongoing",
-
-        price: 90,
-      ),
-
-      BookingEntity(
-        id: 1003,
-
-        serviceName: "Kitchen Cleaning",
-
-        companyName: "Sparkle Clean",
-
-        worker: null,
-
-        date: DateTime.now().add(const Duration(days: 3)),
-
-        time: "08:00 AM - 10:00 AM",
-
-        status: "upcoming",
-
-        price: 60,
-      ),
-
-      BookingEntity(
-        id: 1004,
-
-        serviceName: "Villa Cleaning",
-
-        companyName: "CleanLink Pro",
-
-        worker: const WorkerEntity(id: 3, name: "Omar Khaled", image: ""),
-
-        date: DateTime.now().subtract(const Duration(days: 2)),
-
-        time: "02:00 PM - 04:00 PM",
-
-        status: "completed",
-
-        price: 250,
-      ),
-
-      BookingEntity(
-        id: 1005,
-
-        serviceName: "Office Cleaning",
-
-        companyName: "CleanLink Business",
-
-        worker: const WorkerEntity(id: 4, name: "Ali Mustafa", image: ""),
-
-        date: DateTime.now(),
-
-        time: "11:00 AM - 01:00 PM",
-
-        status: "cancelled",
-
-        price: 180,
-      ),
-    ];
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        appBar: customAppBar(
-          AppLocalizations.of(context)!.my_bookings,
-          null,
-          [],
-          () {},
-          theme.onSurface,
-        ),
-        body: SafeArea(
-          child: Column(
-            children: [
-              const BookingsTabBar(),
-
-              SizedBox(height: 12.h),
-
-              Expanded(
-                child: BlocBuilder<BookingsBloc, BookingsState>(
-                  // builder: (_, state) {
-                  //   if (state.loading) {
-                  //     return const CircularProgressIndicator();
-                  //   }
-                  //
-                  //   if (mockBookings.isEmpty) {
-                  //     return const BookingEmptyState();
-                  //   }
-                  //
-                  //   return RefreshIndicator(
-                  //     onRefresh: () async {
-                  //       context.read<BookingsBloc>().add(
-                  //         const RefreshBookings(),
-                  //       );
-                  //     },
-                  //
-                  //     child: ListView.separated(
-                  //       padding: EdgeInsets.only(bottom: 120.h),
-                  //
-                  //       itemCount: mockBookings.length,
-                  //
-                  //       separatorBuilder: (_, __) => SizedBox(height: 14.h),
-                  //
-                  //       itemBuilder: (_, index) {
-                  //         return BookingCard(booking: mockBookings[index]);
-                  //       },
-                  //     ),
-                  //   );
-                  // },
-                  builder: (_, state) {
-                    if (state.loading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    final filteredBookings = switch (state.selectedTab) {
-                      BookingTab.all => mockBookings,
-
-                      BookingTab.ongoing =>
-                        mockBookings
-                            .where((e) => e.status.toLowerCase() == "ongoing")
-                            .toList(),
-
-                      BookingTab.upcoming =>
-                        mockBookings
-                            .where((e) => e.status.toLowerCase() == "upcoming")
-                            .toList(),
-
-                      BookingTab.completed =>
-                        mockBookings
-                            .where((e) => e.status.toLowerCase() == "completed")
-                            .toList(),
-
-                      BookingTab.cancelled =>
-                        mockBookings
-                            .where((e) => e.status.toLowerCase() == "cancelled")
-                            .toList(),
-                    };
-
-                    if (filteredBookings.isEmpty) {
-                      return const BookingEmptyState();
-                    }
-
-                    return RefreshIndicator(
-                      onRefresh: () async {
-                        context.read<BookingsBloc>().add(
-                          const RefreshBookings(),
-                        );
-                      },
-
-                      child: ListView.separated(
-                        // padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
-
-                        itemCount: filteredBookings.length,
-
-                        separatorBuilder: (_, __) => SizedBox(height: 14.h),
-
-                        itemBuilder: (_, index) {
-                          return BookingCard(booking: filteredBookings[index]);
-                        },
+                  if (state.errorMessage != null && state.orders.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(24.w),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              state.errorMessage!,
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 16.h),
+                            ElevatedButton(
+                              onPressed: () {
+                                context.read<BookingsBloc>().add(
+                                  const GetOrdersEvent(),
+                                );
+                              },
+                              child: Text(AppLocalizations.of(context)!.retry),
+                            ),
+                          ],
+                        ),
                       ),
                     );
-                  },
-                ),
+                  }
+
+                  final orders = state.orders
+                      .where(
+                        (order) => _matchesTab(
+                          state.selectedTab,
+                          order.status.toLowerCase(),
+                        ),
+                      )
+                      .toList();
+
+                  if (orders.isEmpty) {
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        final bloc = context.read<BookingsBloc>();
+
+                        bloc.add(const GetOrdersEvent());
+
+                        await bloc.stream.firstWhere(
+                          (state) =>
+                              !state.isLoadingOrders && state.hasLoadedOrders,
+                        );
+                      },
+                      child: ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        children: [
+                          SizedBox(height: 100.h),
+                          AppEmptyState(
+                            icon: Icons.cleaning_services_outlined,
+                            title: AppLocalizations.of(context)!.no_bookings,
+                            body: AppLocalizations.of(
+                              context,
+                            )!.no_bookings_message,
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      final bloc = context.read<BookingsBloc>();
+
+                      bloc.add(const GetOrdersEvent());
+
+                      await bloc.stream.firstWhere(
+                        (state) =>
+                            !state.isLoadingOrders && state.hasLoadedOrders,
+                      );
+                    },
+                    child: ListView.separated(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: EdgeInsets.only(bottom: 24.h),
+                      itemCount: orders.length,
+                      separatorBuilder: (_, _) => SizedBox(height: 14.h),
+                      itemBuilder: (_, index) {
+                        return BookingCard(booking: orders[index]);
+                      },
+                    ),
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

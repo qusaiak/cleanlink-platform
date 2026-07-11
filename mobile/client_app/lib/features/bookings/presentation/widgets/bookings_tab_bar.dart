@@ -16,15 +16,14 @@ class BookingsTabBar extends StatelessWidget {
 
     final tabs = <BookingTab, String>{
       BookingTab.all: l10n.all,
-      BookingTab.ongoing: l10n.ongoing,
-      BookingTab.upcoming: l10n.upcoming,
+      BookingTab.pending: l10n.pending,
+      BookingTab.assigned: l10n.assigned,
       BookingTab.completed: l10n.completed,
-      BookingTab.cancelled: l10n.cancelled,
+      BookingTab.cancelled: l10n.canceled,
     };
 
     return BlocBuilder<BookingsBloc, BookingsState>(
       buildWhen: (prev, curr) => prev.selectedTab != curr.selectedTab,
-
       builder: (context, state) {
         return SizedBox(
           height: 35.h,
@@ -55,7 +54,6 @@ class BookingsTabBar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   alignment: Alignment.center,
-
                   child: Text(
                     entry.value,
                     style: Styles.textStyle12.copyWith(

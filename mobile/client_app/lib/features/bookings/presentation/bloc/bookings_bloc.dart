@@ -1,60 +1,219 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/error/failure.dart';
+import '../../domain/entities/available_day_entity.dart';
+import '../../domain/entities/booking_entity.dart';
+import '../../domain/usecases/book_order_usecase.dart';
+import '../../domain/usecases/cancel_order_usecase.dart';
+import '../../domain/usecases/get_available_slots_usecase.dart';
 import '../../domain/usecases/get_bookings_usecase.dart';
+import '../../domain/usecases/show_order_usecase.dart';
 
 part 'bookings_event.dart';
 part 'bookings_state.dart';
 
 class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
-  final GetBookingsUseCase getBookings;
-
-  BookingsBloc(this.getBookings) : super(BookingsState.initial()) {
-    on(_getBookings);
-
-    on<RefreshBookings>(_refresh);
-
-    on<LoadMoreBookings>(_loadMore);
-
-    on<ChangeTab>(_changeTab);
+  final GetAvailableSlotsUseCase getAvailableSlotsUseCase;
+  final GetOrdersUseCase getOrdersUseCase;
+  final BookOrderUseCase bookOrderUseCase;
+  final ShowOrderUseCase showOrderUseCase;
+  final CancelOrderUseCase cancelOrderUseCase;
+  BookingsBloc(
+    this.getAvailableSlotsUseCase,
+    this.getOrdersUseCase,
+    this.bookOrderUseCase,
+    this.showOrderUseCase,
+    this.cancelOrderUseCase,
+  ) : super(BookingsState.initial()) {
+    on<GetOrdersEvent>(_getOrders);
+    on<BookOrderEvent>(_bookOrder);
+    on<ShowOrderEvent>(_showOrder);
+    on<CancelOrderEvent>(_cancelOrder);
+    on<ResetBookingStateEvent>(
+      (_, emit) => emit(
+        state.copyWith(
+          clearError: true,
+          clearSuccessMessage: true,
+          bookingSuccess: false,
+          cancelSuccess: false,
+        ),
+      ),
+    );
+    on<LoadAvailableSlots>(_loadAvailableSlots);
+    on<SelectDate>(
+      (event, emit) =>
+          emit(state.copyWith(selectedDay: event.day, clearSelectedTime: true)),
+    );
+    on<SelectTime>(
+      (event, emit) => emit(state.copyWith(selectedTime: event.time)),
+    );
+    on<ChangeTab>(
+      (event, emit) => emit(state.copyWith(selectedTab: event.tab)),
+    );
   }
+  String _message(Object error) => error is Failure
+      ? error.message
+      : error.toString().replaceFirst('Exception: ', '');
 
-  Future _getBookings(GetBookings event, Emitter emit) async {
-    emit(state.copyWith(loading: true, error: null));
+  Future<void> _getOrders(
+    GetOrdersEvent event,
+    Emitter<BookingsState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        isLoadingOrders: true,
+        hasLoadedOrders: false,
+        orders: const [],
+        clearError: true,
+      ),
+    );
 
     try {
-      final result = await getBookings();
+      final orders = await getOrdersUseCase();
 
-      emit(state.copyWith(loading: false, bookings: result));
+      emit(
+        state.copyWith(
+          orders: orders,
+          isLoadingOrders: false,
+          hasLoadedOrders: true,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(loading: false, error: e.toString()));
+      emit(
+        state.copyWith(
+          isLoadingOrders: false,
+          hasLoadedOrders: true,
+          errorMessage: _message(e),
+        ),
+      );
     }
   }
 
-  Future _refresh(RefreshBookings event, Emitter emit) async {
-    emit(state.copyWith(refreshing: true));
+  Future<void> _bookOrder(
+    BookOrderEvent event,
+    Emitter<BookingsState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        isBookingOrder: true,
+        bookingSuccess: false,
+        clearError: true,
+        clearSuccessMessage: true,
+      ),
+    );
+    try {
+      final result = await bookOrderUseCase(
+        packageId: event.packageId,
+        location: event.location,
+        startTime: event.startTime,
+        note: event.note,
+      );
+      emit(
+        state.copyWith(
+          isBookingOrder: false,
+          bookingSuccess: true,
+          successMessage: result.message,
+          orders: [
+            result.order,
+            ...state.orders.where((item) => item.id != result.order.id),
+          ],
+          selectedOrder: result.order,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(isBookingOrder: false, errorMessage: _message(e)));
+    }
+  }
+
+  Future<void> _showOrder(
+    ShowOrderEvent event,
+    Emitter<BookingsState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        isLoadingOrderDetails: true,
+        clearError: true,
+        clearSelectedOrder: true,
+      ),
+    );
+    try {
+      emit(
+        state.copyWith(
+          selectedOrder: await showOrderUseCase(event.orderId),
+          isLoadingOrderDetails: false,
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(isLoadingOrderDetails: false, errorMessage: _message(e)),
+      );
+    }
+  }
+
+  Future<void> _cancelOrder(
+    CancelOrderEvent event,
+    Emitter<BookingsState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        isCancelingOrder: true,
+        cancelSuccess: false,
+        clearError: true,
+        clearSuccessMessage: true,
+      ),
+    );
+    try {
+      final result = await cancelOrderUseCase(event.orderId);
+      final canceled = result.order.status.isEmpty
+          ? result.order.copyWith(status: 'canceled')
+          : result.order;
+      emit(
+        state.copyWith(
+          isCancelingOrder: false,
+          cancelSuccess: true,
+          successMessage: result.message,
+          selectedOrder: canceled,
+          orders: state.orders
+              .map((item) => item.id == event.orderId ? canceled : item)
+              .toList(),
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(isCancelingOrder: false, errorMessage: _message(e)));
+    }
+  }
+
+  Future<void> _loadAvailableSlots(
+    LoadAvailableSlots event,
+    Emitter<BookingsState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        isLoadingSlots: true,
+        clearError: true,
+        availableDays: const [],
+        clearSelectedDay: true,
+        clearSelectedTime: true,
+      ),
+    );
 
     try {
-      final result = await getBookings();
+      final days = (await getAvailableSlotsUseCase(
+        event.packageId,
+      )).where((day) => day.hasAvailableSlots).toList();
 
-      emit(state.copyWith(bookings: result, refreshing: false));
-    } catch (_) {
-      emit(state.copyWith(refreshing: false));
+      final first = days.isEmpty ? null : days.first;
+
+      emit(
+        state.copyWith(
+          isLoadingSlots: false,
+          availableDays: days,
+          selectedDay: first,
+          selectedTime: first?.slots.first,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(isLoadingSlots: false, errorMessage: _message(e)));
     }
-  }
-
-  Future _loadMore(LoadMoreBookings event, Emitter emit) async {
-    if (state.loadingMore || state.hasReachedMax) {
-      return;
-    }
-
-    emit(state.copyWith(loadingMore: true));
-
-    await Future.delayed(const Duration(milliseconds: 600));
-
-    emit(state.copyWith(loadingMore: false));
-  }
-
-  void _changeTab(ChangeTab event, Emitter emit) {
-    emit(state.copyWith(selectedTab: event.tab));
   }
 }

@@ -1,80 +1,146 @@
 part of 'bookings_bloc.dart';
 
-enum BookingTab { all, ongoing, upcoming, completed, cancelled }
+enum BookingTab { all, pending, assigned, completed, cancelled }
 
 class BookingsState extends Equatable {
-  final bool loading;
+  final List<OrderEntity> orders;
+  final OrderEntity? selectedOrder;
 
-  final bool loadingMore;
+  final bool isLoadingOrders;
+  final bool hasLoadedOrders;
 
-  final bool refreshing;
+  final bool isBookingOrder;
+  final bool isLoadingOrderDetails;
+  final bool isCancelingOrder;
+  final bool isLoadingSlots;
 
-  final String? error;
+  final String? errorMessage;
+  final String? successMessage;
+
+  final bool bookingSuccess;
+  final bool cancelSuccess;
 
   final BookingTab selectedTab;
 
-  final List bookings;
-
-  final bool hasReachedMax;
+  final List<AvailableDayEntity> availableDays;
+  final AvailableDayEntity? selectedDay;
+  final String? selectedTime;
 
   const BookingsState({
-    required this.loading,
-    required this.loadingMore,
-    required this.refreshing,
+    required this.orders,
+    this.selectedOrder,
+    required this.isLoadingOrders,
+    required this.hasLoadedOrders,
+    required this.isBookingOrder,
+    required this.isLoadingOrderDetails,
+    required this.isCancelingOrder,
+    required this.isLoadingSlots,
+    this.errorMessage,
+    this.successMessage,
+    required this.bookingSuccess,
+    required this.cancelSuccess,
     required this.selectedTab,
-    required this.bookings,
-    required this.hasReachedMax,
-    required this.error,
+    required this.availableDays,
+    this.selectedDay,
+    this.selectedTime,
   });
 
-  factory BookingsState.initial() {
-    return const BookingsState(
-      loading: false,
-      loadingMore: false,
-      refreshing: false,
-      selectedTab: BookingTab.all,
-      bookings: [],
-      hasReachedMax: false,
-      error: null,
-    );
-  }
+  factory BookingsState.initial() => const BookingsState(
+    orders: [],
+    isLoadingOrders: false,
+    hasLoadedOrders: false,
+    isBookingOrder: false,
+    isLoadingOrderDetails: false,
+    isCancelingOrder: false,
+    isLoadingSlots: false,
+    bookingSuccess: false,
+    cancelSuccess: false,
+    selectedTab: BookingTab.all,
+    availableDays: [],
+  );
+
+  bool get loading => isLoadingSlots;
+
+  List<OrderEntity> get bookings => orders;
 
   BookingsState copyWith({
-    bool? loading,
-    bool? loadingMore,
-    bool? refreshing,
+    List<OrderEntity>? orders,
+    OrderEntity? selectedOrder,
+    bool clearSelectedOrder = false,
+
+    bool? isLoadingOrders,
+    bool? hasLoadedOrders,
+
+    bool? isBookingOrder,
+    bool? isLoadingOrderDetails,
+    bool? isCancelingOrder,
+    bool? isLoadingSlots,
+
+    String? errorMessage,
+    bool clearError = false,
+
+    String? successMessage,
+    bool clearSuccessMessage = false,
+
+    bool? bookingSuccess,
+    bool? cancelSuccess,
+
     BookingTab? selectedTab,
-    List? bookings,
-    bool? hasReachedMax,
-    String? error,
+
+    List<AvailableDayEntity>? availableDays,
+    AvailableDayEntity? selectedDay,
+    bool clearSelectedDay = false,
+
+    String? selectedTime,
+    bool clearSelectedTime = false,
   }) {
     return BookingsState(
-      loading: loading ?? this.loading,
+      orders: orders ?? this.orders,
+      selectedOrder:
+      clearSelectedOrder ? null : selectedOrder ?? this.selectedOrder,
 
-      loadingMore: loadingMore ?? this.loadingMore,
+      isLoadingOrders: isLoadingOrders ?? this.isLoadingOrders,
+      hasLoadedOrders: hasLoadedOrders ?? this.hasLoadedOrders,
 
-      refreshing: refreshing ?? this.refreshing,
+      isBookingOrder: isBookingOrder ?? this.isBookingOrder,
+      isLoadingOrderDetails:
+      isLoadingOrderDetails ?? this.isLoadingOrderDetails,
+      isCancelingOrder: isCancelingOrder ?? this.isCancelingOrder,
+      isLoadingSlots: isLoadingSlots ?? this.isLoadingSlots,
+
+      errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
+      successMessage:
+      clearSuccessMessage ? null : successMessage ?? this.successMessage,
+
+      bookingSuccess: bookingSuccess ?? this.bookingSuccess,
+      cancelSuccess: cancelSuccess ?? this.cancelSuccess,
 
       selectedTab: selectedTab ?? this.selectedTab,
 
-      bookings: bookings ?? this.bookings,
-
-      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
-
-      error: error,
+      availableDays: availableDays ?? this.availableDays,
+      selectedDay: clearSelectedDay ? null : selectedDay ?? this.selectedDay,
+      selectedTime:
+      clearSelectedTime ? null : selectedTime ?? this.selectedTime,
     );
   }
 
-  bool get isEmpty => bookings.isEmpty;
-
   @override
   List<Object?> get props => [
-    loading,
-    loadingMore,
-    refreshing,
+    orders,
+    selectedOrder,
+    isLoadingOrders,
+    hasLoadedOrders,
+    isBookingOrder,
+    isLoadingOrderDetails,
+    isCancelingOrder,
+    isLoadingSlots,
+    errorMessage,
+    successMessage,
+    bookingSuccess,
+    cancelSuccess,
     selectedTab,
-    bookings,
-    hasReachedMax,
-    error,
+    availableDays,
+    selectedDay,
+    selectedTime,
   ];
 }

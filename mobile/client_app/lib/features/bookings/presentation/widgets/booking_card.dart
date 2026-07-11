@@ -1,38 +1,32 @@
-import 'package:client_app/core/utils/gen/assets.gen.dart';
-import 'package:client_app/features/bookings/presentation/widgets/booking_info_chip.dart';
-import 'package:client_app/features/bookings/presentation/widgets/booking_status_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:intl/intl.dart';
 import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
-
-import '../../../../core/widgets/custom_image_view.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/booking_entity.dart';
+import 'booking_info_chip.dart';
+import 'booking_status_badge.dart';
 
 class BookingCard extends StatelessWidget {
-  final BookingEntity booking;
-
+  final OrderEntity booking;
   const BookingCard({super.key, required this.booking});
-
   Color _statusColor() {
     switch (booking.status.toLowerCase()) {
-      case 'ongoing':
+      case 'pending':
         return AppColor.primaryColor;
-
-      case 'upcoming':
+      case 'assigned':
+      case 'assigned_to_worker':
         return AppColor.secondaryColor;
-
       case 'completed':
         return AppColor.success;
-
+      case 'canceled':
       case 'cancelled':
         return AppColor.error;
-
       default:
-        return AppColor.primaryColor;
+        return AppColor.secondaryColor;
     }
   }
 
@@ -40,200 +34,90 @@ class BookingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
     final accent = _statusColor();
-    final glassColor = theme.brightness == Brightness.dark
-        ? Colors.white.withOpacity(.05)
-        : Colors.white.withOpacity(.55);
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10.w),
-
-      child: ClipRRect(
+    final package = booking.package;
+    final service = package?.service;
+    final company = service?.company;
+    final date = booking.startTime == null
+        ? '—'
+        : DateFormat(
+            'MMM d, y - h:mm a',
+            Localizations.localeOf(context).languageCode,
+          ).format(booking.startTime!.toLocal());
+    return Semantics(
+      button: true,
+      child: InkWell(
         borderRadius: BorderRadius.circular(20.r),
-
+        onTap: () => context.push(AppRouter.orderDetailsPath(booking.id)),
         child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 10.w),
+          padding: EdgeInsets.all(18.r),
           decoration: BoxDecoration(
-            color: glassColor,
+            color: theme.surface,
             borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: accent),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 26,
-
-                offset: const Offset(0, 10),
-
-                color: theme.shadow.withOpacity(.08),
-              ),
-            ],
+            border: Border.all(color: accent.withValues(alpha: .45)),
           ),
-          child: IntrinsicHeight(
-            child: Row(
-              children: [
-                Container(
-                  width: 10.w,
-
-                  decoration: BoxDecoration(
-                    color: accent,
-
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20.r),
-
-                      bottomLeft: Radius.circular(20.r),
-                    ),
-                  ),
-                ),
-
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(18.r),
-
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                children: [
-                                  Text(
-                                    booking.serviceName,
-
-                                    style: Styles.textStyle16.copyWith(
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-
-                                  SizedBox(height: 4.h),
-
-                                  Text(
-                                    booking.companyName,
-
-                                    style: Styles.textStyle12.copyWith(
-                                      color: theme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            BookingStatusBadge(
-                              status: booking.status.toUpperCase(),
-                              color: accent,
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 18.h),
-
-                        Container(
-                          padding: EdgeInsets.symmetric(vertical: 8.h),
-
-                          decoration: BoxDecoration(
-                            color: AppColor.transparent,
-
-                            borderRadius: BorderRadius.circular(20.r),
-                          ),
-
-                          child: Row(
-                            children: [
-                              // Display person placeholder image if it doesn't assigned to any worker yet or if the worker doesn't have an image
-                              CustomImageView(
-                                imagePath: booking.worker?.name[0] != null
-                                    ? Assets.images.test.worker.path
-                                    : Assets
-                                          .images
-                                          .placeholders
-                                          .personPlaceholder
-                                          .path,
-                                width: 50,
-                                height: 50,
-                                radius: BorderRadius.all(Radius.circular(50.r)),
-                                fit: BoxFit.cover,
-                              ),
-
-                              SizedBox(width: 14.w),
-
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-
-                                  children: [
-                                    Text(
-                                      booking.worker?.name ?? "No worker",
-
-                                      style: Styles.textStyle14,
-                                    ),
-
-                                    SizedBox(height: 4.h),
-
-                                    Text(
-                                      "Assigned Cleaner",
-
-                                      style: Styles.textStyle12,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                        Text(
+                          service?.name ??
+                              package?.name ??
+                              AppLocalizations.of(context)!.service_details,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Styles.textStyle16.copyWith(
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-
-                        SizedBox(height: 18.h),
-
-                        Wrap(
-                          spacing: 8.w,
-
-                          children: [
-                            BookingInfoChip(
-                              icon: Icons.calendar_month_outlined,
-                              text: "Today",
+                        if (package?.name.isNotEmpty == true)
+                          Text(
+                            package!.name,
+                            style: Styles.textStyle12.copyWith(
+                              color: theme.onSurfaceVariant,
                             ),
-
-                            BookingInfoChip(
-                              icon: Icons.schedule_outlined,
-                              text: booking.time,
+                          ),
+                        if (company?.name.isNotEmpty == true)
+                          Text(
+                            company!.name,
+                            style: Styles.textStyle12.copyWith(
+                              color: theme.onSurfaceVariant,
                             ),
-                          ],
-                        ),
-
-                        SizedBox(height: 18.h),
-
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            BookingInfoChip(
-                              icon: Icons.payments_outlined,
-                              text: "${booking.price} \$",
-                            ),
-                            const Spacer(),
-                            (booking.status.toLowerCase() == "ongoing" ||
-                                    booking.status.toLowerCase() == "upcoming")
-                                ? FilledButton.icon(
-                                    style: ButtonStyle(
-                                      backgroundColor: WidgetStateProperty.all(
-                                        theme.primary,
-                                      ),
-                                    ),
-                                    icon: const Icon(Icons.route_rounded),
-
-                                    label: const Text("Track"),
-                              onPressed: () {
-                                      GoRouter.of(context).push(
-                                        AppRouter.kTrackService,
-                                        extra: booking.id,
-                                      );
-                              },
-                            )
-                                : SizedBox(),
-                          ],
-                        ),
+                          ),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
+                  BookingStatusBadge(status: booking.status, color: accent),
+                ],
+              ),
+              SizedBox(height: 12.h),
+              BookingInfoChip(icon: Icons.calendar_month_outlined, text: date),
+              BookingInfoChip(
+                icon: Icons.location_on_outlined,
+                text: booking.location,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: BookingInfoChip(
+                      icon: Icons.schedule_outlined,
+                      text:
+                          '${booking.duration} ${AppLocalizations.of(context)!.minutes}',
+                    ),
+                  ),
+                  BookingInfoChip(
+                    icon: Icons.payments_outlined,
+                    text:
+                        '${booking.totalPrice.toStringAsFixed(2)} ${AppLocalizations.of(context)!.sp}',
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
