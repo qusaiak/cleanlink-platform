@@ -3,7 +3,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:client_app/features/home/presentation/widgets/offer_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../services/domain/entities/service_entity.dart';
@@ -19,33 +21,6 @@ class OffersSection extends StatefulWidget {
 class _OffersSectionState extends State<OffersSection> {
   final ValueNotifier<int> _currentIndex = ValueNotifier(0);
 
-  // static final offers = [
-  //   OfferModel(
-  //     title: '20% Off Deep Cleaning',
-  //     subtitle: 'First booking discount',
-  //     image: Assets.images.test.test.path,
-  //   ),
-  //   OfferModel(
-  //     title: 'Home Cleaning Experts',
-  //     subtitle: 'Trusted professionals',
-  //     image: Assets.images.test.test.path,
-  //   ),
-  //   OfferModel(
-  //     title: 'Fast Booking',
-  //     subtitle: 'Book in seconds',
-  //     image: Assets.images.test.test.path,
-  //   ),
-  // ];
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    for (final offer in widget.offers) {
-      precacheImage(AssetImage(offer.image), context);
-    }
-  }
-
   @override
   void dispose() {
     _currentIndex.dispose();
@@ -54,8 +29,6 @@ class _OffersSectionState extends State<OffersSection> {
 
   @override
   Widget build(BuildContext context) {
-    print("oooooooooooooooo");
-    print(widget.offers);
     return Column(
       children: [
         CarouselSlider.builder(
@@ -67,6 +40,12 @@ class _OffersSectionState extends State<OffersSection> {
                 return OfferCard(
                   offer: widget.offers[index],
                   isActive: currentIndex == index,
+                  onTap: () {
+                    GoRouter.of(context)!.push(
+                      AppRouter.kServiceDetails,
+                      extra: widget.offers[index].id,
+                    );
+                  },
                 );
               },
             );
