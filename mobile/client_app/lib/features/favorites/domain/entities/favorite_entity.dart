@@ -5,8 +5,5 @@ class FavoriteEntity {
   final List<ServiceEntity> services;
   final List<CompanyEntity> companies;
 
-  const FavoriteEntity({
-    required this.services,
-    required this.companies,
-  });
+  const FavoriteEntity({required this.services, required this.companies});
 }

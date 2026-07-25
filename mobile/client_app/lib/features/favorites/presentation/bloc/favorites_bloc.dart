@@ -11,19 +11,16 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
 
   final ToggleFavoriteUseCase toggle;
 
-  FavoritesBloc(
-      this.getFav,
-      this.toggle,
-      ) : super(FavoritesInitial()) {
+  FavoritesBloc(this.getFav, this.toggle) : super(FavoritesInitial()) {
     on<GetFavoritesEvent>(_getFavorites);
 
     on<ToggleFavoriteEvent>(_toggleFavorite);
   }
 
   Future<void> _getFavorites(
-      GetFavoritesEvent event,
-      Emitter<FavoritesState> emit,
-      ) async {
+    GetFavoritesEvent event,
+    Emitter<FavoritesState> emit,
+  ) async {
     emit(FavoritesLoading());
 
     try {
@@ -36,14 +33,11 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   }
 
   Future<void> _toggleFavorite(
-      ToggleFavoriteEvent event,
-      Emitter<FavoritesState> emit,
-      ) async {
+    ToggleFavoriteEvent event,
+    Emitter<FavoritesState> emit,
+  ) async {
     try {
-      await toggle(
-        type: event.type,
-        id: event.id,
-      );
+      await toggle(type: event.type, id: event.id);
 
       // reload from backend
       final refreshed = await getFav();

@@ -8,36 +8,22 @@ part 'favorite_data_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class FavoriteDataModel {
-
   final List<ServiceModel>? services;
 
   final List<CompanyModel>? companies;
 
-  const FavoriteDataModel({
-    this.services,
-    this.companies,
-  });
+  const FavoriteDataModel({this.services, this.companies});
 
-  factory FavoriteDataModel.fromJson(
-      Map<String, dynamic> json) =>
+  factory FavoriteDataModel.fromJson(Map<String, dynamic> json) =>
       _$FavoriteDataModelFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$FavoriteDataModelToJson(this);
+  Map<String, dynamic> toJson() => _$FavoriteDataModelToJson(this);
 
   FavoriteEntity toEntity() {
     return FavoriteEntity(
-      services:
-      services
-          ?.map((e) => e.toEntity())
-          .toList() ??
-          [],
+      services: services?.map((e) => e.toEntity()).toList() ?? [],
 
-      companies:
-      companies
-          ?.map((e) => e.toEntity())
-          .toList() ??
-          [],
+      companies: companies?.map((e) => e.toEntity()).toList() ?? [],
     );
   }
 }

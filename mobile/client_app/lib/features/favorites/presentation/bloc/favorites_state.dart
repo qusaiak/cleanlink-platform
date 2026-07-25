@@ -11,12 +11,8 @@ class FavoritesLoaded extends FavoritesState {
 
   FavoritesLoaded(this.data);
 
-  FavoritesLoaded copyWith({
-    FavoriteEntity? data,
-  }) {
-    return FavoritesLoaded(
-      data ?? this.data,
-    );
+  FavoritesLoaded copyWith({FavoriteEntity? data}) {
+    return FavoritesLoaded(data ?? this.data);
   }
 }
 

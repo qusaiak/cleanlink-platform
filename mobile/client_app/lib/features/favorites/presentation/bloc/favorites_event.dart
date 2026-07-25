@@ -9,8 +9,5 @@ class ToggleFavoriteEvent extends FavoritesEvent {
 
   final int id;
 
-  ToggleFavoriteEvent({
-    required this.type,
-    required this.id,
-  });
+  ToggleFavoriteEvent({required this.type, required this.id});
 }

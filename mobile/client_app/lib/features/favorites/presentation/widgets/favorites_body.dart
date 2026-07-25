@@ -1,8 +1,9 @@
 import 'package:client_app/config/routes/app_router.dart';
-import 'package:client_app/config/theme/styles.dart';
 import 'package:client_app/core/utils/functions/spinkit.dart';
+import 'package:client_app/core/widgets/app_empty_state.dart';
 import 'package:client_app/features/categories/presentation/widgets/category_service_card.dart';
 import 'package:client_app/features/home/presentation/widgets/company_card.dart';
+import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,7 +43,10 @@ class FavoritesBody extends StatelessWidget {
 
             children: [
               services.isEmpty
-                  ? const _EmptyView(title: 'No favorite services')
+                  ? AppEmptyState(
+                      icon: Icons.favorite_border,
+                      title: AppLocalizations.of(context)!.no_favorite_services,
+                    )
                   : ListView.separated(
                       padding: EdgeInsets.symmetric(
                         horizontal: 8.w,
@@ -51,7 +55,7 @@ class FavoritesBody extends StatelessWidget {
 
                       itemCount: services.length,
 
-                      separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                      separatorBuilder: (_, _) => SizedBox(height: 12.h),
 
                       itemBuilder: (context, index) {
                         final service = services[index];
@@ -71,7 +75,12 @@ class FavoritesBody extends StatelessWidget {
                     ),
 
               companies.isEmpty
-                  ? const _EmptyView(title: 'No favorite companies')
+                  ? AppEmptyState(
+                      icon: Icons.business_outlined,
+                      title: AppLocalizations.of(
+                        context,
+                      )!.no_favorite_companies,
+                    )
                   : ListView.separated(
                       padding: EdgeInsets.symmetric(
                         horizontal: 8.w,
@@ -80,7 +89,7 @@ class FavoritesBody extends StatelessWidget {
 
                       itemCount: companies.length,
 
-                      separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                      separatorBuilder: (_, _) => SizedBox(height: 12.h),
 
                       itemBuilder: (context, index) {
                         final company = companies[index];
@@ -108,23 +117,6 @@ class FavoritesBody extends StatelessWidget {
 
         return const SizedBox();
       },
-    );
-  }
-}
-
-class _EmptyView extends StatelessWidget {
-  final String title;
-
-  const _EmptyView({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        title,
-
-        style: Styles.textStyle16.copyWith(fontWeight: FontWeight.bold),
-      ),
     );
   }
 }

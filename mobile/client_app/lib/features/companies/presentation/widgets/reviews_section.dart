@@ -1,53 +1,26 @@
 import 'dart:ui';
-
-import 'package:client_app/config/theme/colors.dart';
+import 'package:client_app/features/companies/domain/entities/review_entity.dart';
 import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../config/theme/styles.dart';
+import '../../../../core/utils/functions/helper_functions.dart';
 import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../../core/widgets/rating_badge.dart';
 import '../../../../core/widgets/row_title.dart';
-import '../../domain/entities/company_entity.dart';
 
 class ReviewsSection extends StatelessWidget {
-  final CompanyEntity company;
+  final List<ReviewEntity> reviews;
 
-  const ReviewsSection({super.key, required this.company});
+  const ReviewsSection({super.key, required this.reviews});
 
   @override
   Widget build(BuildContext context) {
-    final reviews = [
-      {
-        "name": "Michael Ross",
-        "review":
-            "Excellent service and professional team. The cleaning quality exceeded my expectations.",
-        "rating": "5.0",
-        "date": "2 days ago",
-      },
-      {
-        "name": "Sarah Ahmed",
-        "review":
-            "Very friendly staff and quick booking process. Highly recommended.",
-        "rating": "4.8",
-        "date": "1 week ago",
-      },
-      {
-        "name": "John Carter",
-        "review":
-            "The team arrived on time and did a fantastic job. Everything was completed professionally and on schedule.",
-        "rating": "5.0",
-        "date": "2 weeks ago",
-      },
-    ];
-
     return Column(
       children: [
         RowTitle(
           iconData: Icons.reviews_outlined,
           title: AppLocalizations.of(context)!.customer_reviews,
-          onTap: () {},
           padding: EdgeInsets.all(0),
         ),
 
@@ -60,10 +33,11 @@ class ReviewsSection extends StatelessWidget {
             return Padding(
               padding: EdgeInsets.only(bottom: 14.h),
               child: GlassReviewCard(
-                name: review["name"] as String,
-                review: review["review"] as String,
-                rating: review["rating"] as String,
-                date: review["date"] as String,
+                name: review.client.fullname,
+                review: review.comment,
+                rating: review.rating.toString(),
+                date: DateHelper.formatDate(review.createdAt),
+                image: review.client.profile?.image,
                 isTopReview: index == 0,
               ),
             );
@@ -81,6 +55,7 @@ class GlassReviewCard extends StatelessWidget {
     required this.review,
     required this.rating,
     required this.date,
+    this.image,
     this.isTopReview = false,
   });
 
@@ -88,10 +63,12 @@ class GlassReviewCard extends StatelessWidget {
   final String review;
   final String rating;
   final String date;
+  final String? image;
   final bool isTopReview;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context)!.colorScheme;
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -102,6 +79,7 @@ class GlassReviewCard extends StatelessWidget {
             review: review,
             rating: rating,
             date: date,
+            image: image,
           ),
         );
       },
@@ -133,43 +111,22 @@ class GlassReviewCard extends StatelessWidget {
                         Stack(
                           children: [
                             Container(
-                              padding: EdgeInsets.all(2.r),
+                              padding: EdgeInsets.all(1.5.r),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.amber.shade300,
-                                    Colors.orange.shade400,
-                                  ],
-                                ),
+                                color: Colors.white.withOpacity(.25),
                               ),
                               child: CircleAvatar(
                                 radius: 26.r,
-                                backgroundImage: AssetImage(
-                                  Assets.images.test.worker.path,
-                                ),
-                              ),
-                            ),
-
-                            Positioned(
-                              right: 0,
-                              bottom: 0,
-                              child: Container(
-                                width: 16.w,
-                                height: 16.w,
-                                decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 2,
-                                  ),
-                                ),
-                                child: Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                  size: 9.sp,
-                                ),
+                                backgroundImage: (image == "" || image == null)
+                                    ? AssetImage(
+                                        Assets
+                                            .images
+                                            .placeholders
+                                            .personPlaceholder
+                                            .path,
+                                      )
+                                    : NetworkImage(image!),
                               ),
                             ),
                           ],
@@ -232,12 +189,14 @@ class ReviewBubbleDialog extends StatelessWidget {
     required this.review,
     required this.rating,
     required this.date,
+    this.image,
   });
 
   final String name;
   final String review;
   final String rating;
   final String date;
+  final String? image;
 
   @override
   Widget build(BuildContext context) {
@@ -271,43 +230,22 @@ class ReviewBubbleDialog extends StatelessWidget {
                       Stack(
                         children: [
                           Container(
-                            padding: EdgeInsets.all(2.r),
+                            padding: EdgeInsets.all(1.5.r),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.amber.shade300,
-                                  Colors.orange.shade400,
-                                ],
-                              ),
+                              color: Colors.white.withOpacity(.25),
                             ),
                             child: CircleAvatar(
                               radius: 26.r,
-                              backgroundImage: AssetImage(
-                                Assets.images.test.worker.path,
-                              ),
-                            ),
-                          ),
-
-                          Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: Container(
-                              width: 16.w,
-                              height: 16.w,
-                              decoration: BoxDecoration(
-                                color: Colors.green,
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 2,
-                                ),
-                              ),
-                              child: Icon(
-                                Icons.check,
-                                color: Colors.white,
-                                size: 9.sp,
-                              ),
+                              backgroundImage: (image == "" || image == null)
+                                  ? AssetImage(
+                                      Assets
+                                          .images
+                                          .placeholders
+                                          .personPlaceholder
+                                          .path,
+                                    )
+                                  : NetworkImage(image!),
                             ),
                           ),
                         ],
@@ -361,7 +299,7 @@ class ReviewBubbleDialog extends StatelessWidget {
                         Navigator.pop(context);
                       },
                       child: Text(
-                        "Close",
+                        AppLocalizations.of(context)!.close,
                         style: Styles.textStyle12.copyWith(
                           fontWeight: FontWeight.w600,
                           color: theme.primary,
