@@ -46,10 +46,36 @@ abstract class NetworkExceptions {
     if (data is Map<String, dynamic>) {
       final message = data['message'] ?? data['ErrorMessage'];
       final code = (data['status'] ?? data['ErrorCode'] ?? '').toString();
+      final fieldErrors = _fieldErrors(data['errors']);
       if (message != null) {
-        return ServerFailure(message.toString(), code);
+        return ServerFailure(
+          message.toString(),
+          code,
+          fieldErrors: fieldErrors,
+        );
+      }
+      if (fieldErrors.isNotEmpty) {
+        return ServerFailure(
+          fieldErrors.values.first,
+          code,
+          fieldErrors: fieldErrors,
+        );
       }
     }
     return const ServerFailure('There was an error, please try again', '');
+  }
+
+  static Map<String, String> _fieldErrors(dynamic errors) {
+    if (errors is! Map) return const <String, String>{};
+    final result = <String, String>{};
+    for (final entry in errors.entries) {
+      final value = entry.value;
+      if (value is List && value.isNotEmpty) {
+        result[entry.key.toString()] = value.first.toString();
+      } else if (value != null) {
+        result[entry.key.toString()] = value.toString();
+      }
+    }
+    return result;
   }
 }

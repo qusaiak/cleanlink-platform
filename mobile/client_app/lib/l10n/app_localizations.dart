@@ -635,14 +635,14 @@ abstract class AppLocalizations {
   /// No description provided for @auth_otp_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'We sent a 6-digit code to {phone}'**
-  String auth_otp_subtitle(String phone);
+  /// **'We sent a 6-digit code to {email}'**
+  String auth_otp_subtitle(String email);
 
   /// No description provided for @auth_otp_resend_in.
   ///
   /// In en, this message translates to:
-  /// **'Resend code in {seconds}s'**
-  String auth_otp_resend_in(int seconds);
+  /// **'Resend code in {time}'**
+  String auth_otp_resend_in(String time);
 
   /// No description provided for @auth_otp_resend.
   ///
@@ -655,6 +655,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Verify'**
   String get auth_otp_verify;
+
+  /// No description provided for @auth_otp_incomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the complete 6-digit verification code'**
+  String get auth_otp_incomplete;
+
+  /// No description provided for @auth_otp_code_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'A new code was sent'**
+  String get auth_otp_code_sent;
+
+  /// No description provided for @auth_error_generic.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get auth_error_generic;
 
   /// No description provided for @yes.
   ///
@@ -673,6 +691,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get ok;
+
+  /// No description provided for @success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get success;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get warning;
+
+  /// No description provided for @info.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get info;
+
+  /// No description provided for @session_expired_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Session expired'**
+  String get session_expired_title;
+
+  /// No description provided for @session_expired_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has expired. Please log in again to continue.'**
+  String get session_expired_message;
+
+  /// No description provided for @no_data_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No data found'**
+  String get no_data_found;
+
+  /// No description provided for @try_again_later.
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again later.'**
+  String get try_again_later;
+
+  /// No description provided for @no_bookings.
+  ///
+  /// In en, this message translates to:
+  /// **'No bookings yet'**
+  String get no_bookings;
+
+  /// No description provided for @no_bookings_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your reservations will appear here'**
+  String get no_bookings_message;
+
+  /// No description provided for @no_categories_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories found'**
+  String get no_categories_found;
+
+  /// No description provided for @no_offers_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No offers found'**
+  String get no_offers_found;
+
+  /// No description provided for @no_favorite_services.
+  ///
+  /// In en, this message translates to:
+  /// **'No favorite services'**
+  String get no_favorite_services;
+
+  /// No description provided for @no_favorite_companies.
+  ///
+  /// In en, this message translates to:
+  /// **'No favorite companies'**
+  String get no_favorite_companies;
 
   /// No description provided for @support.
   ///
@@ -763,6 +865,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Push Notifications'**
   String get notification_setting;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @no_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications'**
+  String get no_notifications;
+
+  /// No description provided for @no_notifications_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your updates will appear here.'**
+  String get no_notifications_message;
+
+  /// No description provided for @unread.
+  ///
+  /// In en, this message translates to:
+  /// **'Unread'**
+  String get unread;
+
+  /// No description provided for @read.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get read;
+
+  /// No description provided for @notification_marked_as_read.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification marked as read'**
+  String get notification_marked_as_read;
+
+  /// No description provided for @notification_open_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'This notification has no order details yet.'**
+  String get notification_open_failed;
 
   /// No description provided for @my_profile.
   ///
@@ -944,6 +1088,84 @@ abstract class AppLocalizations {
   /// **'All Offers'**
   String get all_offers;
 
+  /// No description provided for @services_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get services_title;
+
+  /// No description provided for @no_services_available.
+  ///
+  /// In en, this message translates to:
+  /// **'No services available'**
+  String get no_services_available;
+
+  /// No description provided for @regions_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Regions'**
+  String get regions_title;
+
+  /// No description provided for @search_regions.
+  ///
+  /// In en, this message translates to:
+  /// **'Regions'**
+  String get search_regions;
+
+  /// No description provided for @no_regions_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No regions found'**
+  String get no_regions_found;
+
+  /// No description provided for @companies_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Companies'**
+  String get companies_title;
+
+  /// No description provided for @no_companies_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No companies found'**
+  String get no_companies_found;
+
+  /// No description provided for @total_companies.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Companies'**
+  String get total_companies;
+
+  /// No description provided for @open_companies.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Now'**
+  String get open_companies;
+
+  /// No description provided for @open_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get open_label;
+
+  /// No description provided for @closed_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get closed_label;
+
+  /// No description provided for @manager_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager'**
+  String get manager_label;
+
+  /// No description provided for @working_hours_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Working hours'**
+  String get working_hours_label;
+
   /// No description provided for @activity.
   ///
   /// In en, this message translates to:
@@ -979,6 +1201,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit'**
   String get edit;
+
+  /// No description provided for @edit_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get edit_profile;
+
+  /// No description provided for @update_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Profile'**
+  String get update_profile;
+
+  /// No description provided for @profile_updated_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profile_updated_successfully;
+
+  /// No description provided for @password_changed_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed successfully'**
+  String get password_changed_successfully;
+
+  /// No description provided for @logout_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to logout?'**
+  String get logout_confirmation;
+
+  /// No description provided for @logout_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Logged out successfully'**
+  String get logout_successfully;
+
+  /// No description provided for @change_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Change photo'**
+  String get change_photo;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @failed_to_pick_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to pick image'**
+  String get failed_to_pick_image;
+
+  /// No description provided for @failed_to_update_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update profile'**
+  String get failed_to_update_profile;
+
+  /// No description provided for @failed_to_logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to logout'**
+  String get failed_to_logout;
+
+  /// No description provided for @fill_required_fields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill all required fields'**
+  String get fill_required_fields;
 
   /// No description provided for @reviews.
   ///
@@ -1129,12 +1423,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Services'**
   String get search_services;
-
-  /// No description provided for @search_regions.
-  ///
-  /// In en, this message translates to:
-  /// **'Regions'**
-  String get search_regions;
 
   /// No description provided for @search_providers.
   ///
@@ -1298,17 +1586,65 @@ abstract class AppLocalizations {
   /// **'Upcoming'**
   String get upcoming;
 
+  /// No description provided for @pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// No description provided for @assigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned'**
+  String get assigned;
+
+  /// No description provided for @in_process.
+  ///
+  /// In en, this message translates to:
+  /// **'In Process'**
+  String get in_process;
+
   /// No description provided for @completed.
   ///
   /// In en, this message translates to:
   /// **'Completed'**
   String get completed;
 
-  /// No description provided for @cancelled.
+  /// No description provided for @canceled.
   ///
   /// In en, this message translates to:
-  /// **'Cancelled'**
-  String get cancelled;
+  /// **'Canceled'**
+  String get canceled;
+
+  /// No description provided for @unknown_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get unknown_status;
+
+  /// No description provided for @team_leader.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Leader'**
+  String get team_leader;
+
+  /// No description provided for @call.
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get call;
+
+  /// No description provided for @phone_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phone_number;
+
+  /// No description provided for @could_not_open_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open phone dialer'**
+  String get could_not_open_phone;
 
   /// No description provided for @track_service_title.
   ///
@@ -1639,6 +1975,288 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View Details'**
   String get view_details;
+
+  /// No description provided for @meet_our_workers.
+  ///
+  /// In en, this message translates to:
+  /// **'Meet Our Workers'**
+  String get meet_our_workers;
+
+  /// No description provided for @years_of_experience.
+  ///
+  /// In en, this message translates to:
+  /// **'Years of experience'**
+  String get years_of_experience;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @no_available_dates.
+  ///
+  /// In en, this message translates to:
+  /// **'No Available Appointments'**
+  String get no_available_dates;
+
+  /// No description provided for @no_available_dates_message.
+  ///
+  /// In en, this message translates to:
+  /// **'There are currently no available dates for this package. Please try again later or choose another package.'**
+  String get no_available_dates_message;
+
+  /// No description provided for @no_available_times.
+  ///
+  /// In en, this message translates to:
+  /// **'No Available Times'**
+  String get no_available_times;
+
+  /// No description provided for @no_available_times_message.
+  ///
+  /// In en, this message translates to:
+  /// **'There are currently no available times for this date. Please try again later or choose another date.'**
+  String get no_available_times_message;
+
+  /// No description provided for @order_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Details'**
+  String get order_details;
+
+  /// No description provided for @order_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Order not found'**
+  String get order_not_found;
+
+  /// No description provided for @cancel_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Order'**
+  String get cancel_order;
+
+  /// No description provided for @cancel_order_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this order?'**
+  String get cancel_order_confirmation;
+
+  /// No description provided for @order_canceled_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Order canceled successfully'**
+  String get order_canceled_successfully;
+
+  /// No description provided for @location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location;
+
+  /// No description provided for @note.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get note;
+
+  /// No description provided for @duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
+  /// No description provided for @minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'minutes'**
+  String get minutes;
+
+  /// No description provided for @total_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Price'**
+  String get total_price;
+
+  /// No description provided for @start_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Time'**
+  String get start_time;
+
+  /// No description provided for @end_time.
+  ///
+  /// In en, this message translates to:
+  /// **'End Time'**
+  String get end_time;
+
+  /// No description provided for @company_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Company Location'**
+  String get company_location;
+
+  /// No description provided for @package_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Package Details'**
+  String get package_details;
+
+  /// No description provided for @attributes.
+  ///
+  /// In en, this message translates to:
+  /// **'Attributes'**
+  String get attributes;
+
+  /// No description provided for @booking_in_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking...'**
+  String get booking_in_progress;
+
+  /// No description provided for @before_and_after.
+  ///
+  /// In en, this message translates to:
+  /// **'Before & After'**
+  String get before_and_after;
+
+  /// No description provided for @add_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Review'**
+  String get add_review;
+
+  /// No description provided for @write_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a Review'**
+  String get write_review;
+
+  /// No description provided for @rating_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a rating'**
+  String get rating_required;
+
+  /// No description provided for @review_comment_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your experience (optional)'**
+  String get review_comment_hint;
+
+  /// No description provided for @submit_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Review'**
+  String get submit_review;
+
+  /// No description provided for @review_submitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Review submitted successfully'**
+  String get review_submitted;
+
+  /// No description provided for @day_monday.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get day_monday;
+
+  /// No description provided for @day_tuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get day_tuesday;
+
+  /// No description provided for @day_wednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get day_wednesday;
+
+  /// No description provided for @day_thursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get day_thursday;
+
+  /// No description provided for @day_friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get day_friday;
+
+  /// No description provided for @day_saturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get day_saturday;
+
+  /// No description provided for @day_sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get day_sunday;
+
+  /// No description provided for @no_service_reviews_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No service reviews yet'**
+  String get no_service_reviews_yet;
+
+  /// No description provided for @service_reviews_will_appear_here.
+  ///
+  /// In en, this message translates to:
+  /// **'Your reviews for services will appear here.'**
+  String get service_reviews_will_appear_here;
+
+  /// No description provided for @no_company_reviews_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No company reviews yet'**
+  String get no_company_reviews_yet;
+
+  /// No description provided for @company_reviews_will_appear_here.
+  ///
+  /// In en, this message translates to:
+  /// **'Your reviews for companies will appear here.'**
+  String get company_reviews_will_appear_here;
+
+  /// No description provided for @no_comment.
+  ///
+  /// In en, this message translates to:
+  /// **'No comment'**
+  String get no_comment;
+
+  /// No description provided for @your_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Your rating'**
+  String get your_rating;
+
+  /// No description provided for @reviewed_on.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed on'**
+  String get reviewed_on;
+
+  /// No description provided for @could_not_load_your_reviews.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load your reviews'**
+  String get could_not_load_your_reviews;
+
+  /// No description provided for @could_not_load_profile_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load profile summary'**
+  String get could_not_load_profile_summary;
+
+  /// No description provided for @failed_to_delete_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not delete your account. Please try again.'**
+  String get failed_to_delete_account;
 }
 
 class _AppLocalizationsDelegate

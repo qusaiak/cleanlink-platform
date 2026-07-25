@@ -14,6 +14,8 @@ abstract class DioFactory {
         connectTimeout: Duration(milliseconds: AppConfig.timeout),
         receiveTimeout: Duration(milliseconds: AppConfig.timeout),
         sendTimeout: Duration(milliseconds: AppConfig.timeout),
+        validateStatus: (status) =>
+            status != null && status >= 200 && status < 300,
         headers: {HttpHeader.accept.value: 'application/json'},
       ),
     );
@@ -22,8 +24,10 @@ abstract class DioFactory {
       dio.interceptors.add(
         LogInterceptor(
           request: true,
-          requestBody: true,
-          responseBody: true,
+          requestHeader: false,
+          requestBody: false,
+          responseHeader: false,
+          responseBody: false,
           error: true,
         ),
       );

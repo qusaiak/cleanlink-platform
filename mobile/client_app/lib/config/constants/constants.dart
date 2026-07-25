@@ -65,6 +65,8 @@ class Constants {
   static String galleryType = "1";
 
   // stores links
-  static String googlePlayStoreLink = "https://play.google.com/store/apps/details?id=site.rand.doremi.prod";
-  static String appStoreLink = "https://play.google.com/store/apps/details?id=site.rand.doremi.prod";
+  static String googlePlayStoreLink =
+      "https://play.google.com/store/apps/details?id=site.rand.doremi.prod";
+  static String appStoreLink =
+      "https://play.google.com/store/apps/details?id=site.rand.doremi.prod";
 }

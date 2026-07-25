@@ -7,16 +7,23 @@ import 'package:client_app/features/auth/presentation/pages/login_page.dart';
 import 'package:client_app/features/auth/presentation/pages/otp_page.dart';
 import 'package:client_app/features/auth/presentation/pages/personal_details_page.dart';
 import 'package:client_app/features/auth/presentation/pages/register_page.dart';
+import 'package:client_app/features/auth/domain/entities/pending_registration_data.dart';
 import 'package:client_app/features/base/presentation/pages/base_page.dart';
 import 'package:client_app/features/bookings/presentation/pages/my_bookings_page.dart';
+import 'package:client_app/features/bookings/presentation/pages/order_details_page.dart';
 import 'package:client_app/features/companies/presentation/pages/companies_page.dart';
 import 'package:client_app/features/companies/presentation/pages/company_details_page.dart';
+import 'package:client_app/features/favorites/presentation/pages/favorites_page.dart';
+import 'package:client_app/features/reviews/presentation/pages/my_reviews_page.dart';
 import 'package:client_app/features/home/presentation/pages/home_page.dart';
+import 'package:client_app/features/notification/presentation/pages/notifications_page.dart';
 import 'package:client_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:client_app/features/profile/presentation/pages/contact_us_page.dart';
+import 'package:client_app/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:client_app/features/profile/presentation/pages/help_center_page.dart';
 import 'package:client_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:client_app/features/search/presentation/pages/search_page.dart';
+import 'package:client_app/features/services/presentation/pages/offers_page.dart';
 import 'package:client_app/features/services/presentation/pages/service_details_page.dart';
 import 'package:client_app/features/services/presentation/pages/services_page.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +32,9 @@ import 'package:go_router/go_router.dart';
 import '../../core/storage/shared_storage.dart';
 import '../../core/storage/storage_data.dart';
 import '../../features/categories/presentation/pages/categories_page.dart';
+import '../../features/categories/presentation/pages/category_details_page.dart';
+import '../../features/regions/presentation/pages/region_page.dart';
+import '../../features/regions/presentation/pages/regions_page.dart';
 import '../../features/track_service/presentation/pages/track_service_page.dart';
 
 class AppRouter {
@@ -39,10 +49,14 @@ class AppRouter {
   static const kRegister = '/register';
   static const kPersonalDetails = '/personal_details';
   static const kOtp = '/otp';
+  static const kFavorites = '/favorites';
+  static const kMyReviews = '/my-reviews';
+  static const kNotifications = '/notifications';
   static const kResetPassword = '/reset_password';
   static const kChangePassword = '/change_password';
   static const kContactUs = '/contact_us';
   static const kHelpCenter = '/help_center';
+  static const kEditProfile = '/profile/edit';
   static const kTrackService = '/track_service';
 
   static const kAppContentPage = '/content';
@@ -64,6 +78,8 @@ class AppRouter {
   static const kHome = '/home';
   static const kSearch = '/search';
   static const kBookings = '/bookings';
+  static const kOrderDetails = '/orders/:orderId';
+  static String orderDetailsPath(int orderId) => '/orders/$orderId';
   static const kProfile = '/profile';
 
   /// ===============================
@@ -92,7 +108,7 @@ class AppRouter {
     routes: [
       /// ================= SPLASH =================
       GoRoute(
-        path: '/',
+        path: kRoot,
         pageBuilder: (context, state) {
           isSplashDone = true;
           return const MaterialPage(child: OnboardingPage());
@@ -138,9 +154,13 @@ class AppRouter {
       ),
       GoRoute(
         path: kOtp,
+        redirect: (context, state) =>
+            state.extra is PendingRegistrationData ? null : kRegister,
         pageBuilder: (context, state) {
-          final phone = (state.extra as String?) ?? '';
-          return slideTransitionHorizontal(OtpPage(phone: phone));
+          final pending = state.extra! as PendingRegistrationData;
+          return slideTransitionHorizontal(
+            OtpPage(pendingRegistration: pending),
+          );
         },
       ),
       GoRoute(
@@ -157,6 +177,26 @@ class AppRouter {
         path: kHelpCenter,
         pageBuilder: (context, state) =>
             slideTransitionHorizontal(const HelpCenterPage()),
+      ),
+      GoRoute(
+        path: kEditProfile,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const EditProfilePage()),
+      ),
+      GoRoute(
+        path: kFavorites,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const FavoritesPage()),
+      ),
+      GoRoute(
+        path: kMyReviews,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const MyReviewsPage()),
+      ),
+      GoRoute(
+        path: kNotifications,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const NotificationsPage()),
       ),
       GoRoute(
         path: kCategories,
@@ -176,7 +216,12 @@ class AppRouter {
       GoRoute(
         path: kRegions,
         pageBuilder: (context, state) =>
-            slideTransitionHorizontal(const CategoriesPage()),
+            slideTransitionHorizontal(const RegionsPage()),
+      ),
+      GoRoute(
+        path: kRegionDetails,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(RegionPage(regionId: state.extra as int)),
       ),
       GoRoute(
         path: kProviders,
@@ -186,7 +231,7 @@ class AppRouter {
       GoRoute(
         path: kOffers,
         pageBuilder: (context, state) =>
-            slideTransitionHorizontal(const ServicesPage()),
+            slideTransitionHorizontal(const OffersPage()),
       ),
       GoRoute(
         path: kCompanyDetails,
@@ -201,6 +246,12 @@ class AppRouter {
         ),
       ),
       GoRoute(
+        path: kCategoryDetails,
+        pageBuilder: (context, state) => slideTransitionHorizontal(
+          CategoryDetailsPage(categoryId: state.extra as int),
+        ),
+      ),
+      GoRoute(
         path: kTrackService,
         pageBuilder: (context, state) {
           final bookingId = state.extra is int ? state.extra as int : 1001;
@@ -208,6 +259,14 @@ class AppRouter {
             TrackServicePage(bookingId: bookingId),
           );
         },
+      ),
+      GoRoute(
+        path: kOrderDetails,
+        pageBuilder: (context, state) => slideTransitionHorizontal(
+          OrderDetailsPage(
+            orderId: int.parse(state.pathParameters['orderId']!),
+          ),
+        ),
       ),
 
       /// ================= SHELL NAV =================
@@ -315,6 +374,18 @@ Auth: $authenticated
 
   static String returnFullPath() {
     return router.state.fullPath ?? kRoot;
+  }
+
+  static Future<void> openOrderDetailsFromExternalNotification(
+    int orderId,
+  ) async {
+    for (var attempt = 0; attempt < 10; attempt++) {
+      if (rootNavigatorKey.currentContext != null) break;
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+    }
+    router.go(kHome);
+    await Future<void>.delayed(Duration.zero);
+    router.push(orderDetailsPath(orderId));
   }
 }
 

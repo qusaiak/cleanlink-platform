@@ -288,13 +288,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get auth_otp_title => 'أدخل رمز التحقق';
 
   @override
-  String auth_otp_subtitle(String phone) {
-    return 'أرسلنا رمزاً مكوناً من 6 أرقام إلى $phone';
+  String auth_otp_subtitle(String email) {
+    return 'أرسلنا رمز تحقق مكوناً من 6 أرقام إلى $email';
   }
 
   @override
-  String auth_otp_resend_in(int seconds) {
-    return 'إعادة إرسال الرمز خلال $seconds ث';
+  String auth_otp_resend_in(String time) {
+    return 'إعادة إرسال الرمز خلال $time';
   }
 
   @override
@@ -304,6 +304,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get auth_otp_verify => 'تحقق';
 
   @override
+  String get auth_otp_incomplete => 'أدخل رمز التحقق الكامل المكون من 6 أرقام';
+
+  @override
+  String get auth_otp_code_sent => 'تم إرسال رمز جديد';
+
+  @override
+  String get auth_error_generic => 'حدث خطأ ما. يرجى المحاولة مرة أخرى.';
+
+  @override
   String get yes => 'نعم';
 
   @override
@@ -311,6 +320,49 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ok => 'حسناً';
+
+  @override
+  String get success => 'نجاح';
+
+  @override
+  String get error => 'خطأ';
+
+  @override
+  String get warning => 'تنبيه';
+
+  @override
+  String get info => 'معلومة';
+
+  @override
+  String get session_expired_title => 'انتهت الجلسة';
+
+  @override
+  String get session_expired_message =>
+      'انتهت صلاحية الجلسة الخاصة بك. يرجى تسجيل الدخول مرة أخرى للمتابعة.';
+
+  @override
+  String get no_data_found => 'لا توجد بيانات';
+
+  @override
+  String get try_again_later => 'يرجى المحاولة مرة أخرى لاحقاً.';
+
+  @override
+  String get no_bookings => 'لا توجد حجوزات بعد';
+
+  @override
+  String get no_bookings_message => 'ستظهر حجوزاتك هنا';
+
+  @override
+  String get no_categories_found => 'لا توجد تصنيفات';
+
+  @override
+  String get no_offers_found => 'لا توجد عروض';
+
+  @override
+  String get no_favorite_services => 'لا توجد خدمات مفضلة';
+
+  @override
+  String get no_favorite_companies => 'لا توجد شركات مفضلة';
 
   @override
   String get support => 'الدعم';
@@ -357,6 +409,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notification_setting => 'الإشعارات';
+
+  @override
+  String get notifications => 'الإشعارات';
+
+  @override
+  String get no_notifications => 'لا توجد إشعارات';
+
+  @override
+  String get no_notifications_message => 'ستظهر تحديثاتك هنا.';
+
+  @override
+  String get unread => 'غير مقروء';
+
+  @override
+  String get read => 'مقروء';
+
+  @override
+  String get notification_marked_as_read => 'تم تعليم الإشعار كمقروء';
+
+  @override
+  String get notification_open_failed =>
+      'لا يحتوي هذا الإشعار على تفاصيل طلب حالياً.';
 
   @override
   String get my_profile => 'الملف الشخصي';
@@ -447,7 +521,46 @@ class AppLocalizationsAr extends AppLocalizations {
   String get all_providers => 'جميع المزودين';
 
   @override
-  String get all_offers => 'All Offers';
+  String get all_offers => 'جميع الباقات';
+
+  @override
+  String get services_title => 'الخدمات';
+
+  @override
+  String get no_services_available => 'لا توجد خدمات متاحة';
+
+  @override
+  String get regions_title => 'المناطق';
+
+  @override
+  String get search_regions => 'المناطق';
+
+  @override
+  String get no_regions_found => 'لا توجد مناطق';
+
+  @override
+  String get companies_title => 'الشركات';
+
+  @override
+  String get no_companies_found => 'لا توجد شركات';
+
+  @override
+  String get total_companies => 'إجمالي الشركات';
+
+  @override
+  String get open_companies => 'المفتوحة الآن';
+
+  @override
+  String get open_label => 'مفتوح';
+
+  @override
+  String get closed_label => 'مغلق';
+
+  @override
+  String get manager_label => 'المدير';
+
+  @override
+  String get working_hours_label => 'ساعات العمل';
 
   @override
   String get activity => 'النشاط';
@@ -466,6 +579,42 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get edit => 'تعديل';
+
+  @override
+  String get edit_profile => 'تعديل الملف الشخصي';
+
+  @override
+  String get update_profile => 'تحديث الملف الشخصي';
+
+  @override
+  String get profile_updated_successfully => 'تم تحديث الملف الشخصي بنجاح';
+
+  @override
+  String get password_changed_successfully => 'تم تغيير كلمة المرور بنجاح';
+
+  @override
+  String get logout_confirmation => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+
+  @override
+  String get logout_successfully => 'تم تسجيل الخروج بنجاح';
+
+  @override
+  String get change_photo => 'تغيير الصورة';
+
+  @override
+  String get update => 'تحديث';
+
+  @override
+  String get failed_to_pick_image => 'فشل اختيار الصورة';
+
+  @override
+  String get failed_to_update_profile => 'فشل تحديث الملف الشخصي';
+
+  @override
+  String get failed_to_logout => 'فشل تسجيل الخروج';
+
+  @override
+  String get fill_required_fields => 'يرجى تعبئة جميع الحقول المطلوبة';
 
   @override
   String get reviews => 'التقييمات';
@@ -541,9 +690,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get search_services => 'الخدمات';
-
-  @override
-  String get search_regions => 'المناطق';
 
   @override
   String get search_providers => 'المزودين';
@@ -627,10 +773,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String get upcoming => 'قادم';
 
   @override
+  String get pending => 'قيد الانتظار';
+
+  @override
+  String get assigned => 'تم التعيين';
+
+  @override
+  String get in_process => 'قيد التنفيذ';
+
+  @override
   String get completed => 'مكتمل';
 
   @override
-  String get cancelled => 'ملغى';
+  String get canceled => 'ملغى';
+
+  @override
+  String get unknown_status => 'غير معروف';
+
+  @override
+  String get team_leader => 'قائد الفريق';
+
+  @override
+  String get call => 'اتصال';
+
+  @override
+  String get phone_number => 'رقم الهاتف';
+
+  @override
+  String get could_not_open_phone => 'تعذر فتح تطبيق الهاتف';
 
   @override
   String get track_service_title => 'تتبع الخدمة';
@@ -797,4 +967,149 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get view_details => 'عرض التفاصيل';
+
+  @override
+  String get meet_our_workers => 'تعرّف على فريق عملنا';
+
+  @override
+  String get years_of_experience => 'سنوات الخبرة';
+
+  @override
+  String get close => 'إغلاق';
+
+  @override
+  String get no_available_dates => 'لا توجد مواعيد متاحة';
+
+  @override
+  String get no_available_dates_message =>
+      'لا توجد حاليًا مواعيد متاحة لهذه الباقة. يُرجى المحاولة لاحقًا أو اختيار باقة أخرى.';
+
+  @override
+  String get no_available_times => 'لا توجد أوقات متاحة';
+
+  @override
+  String get no_available_times_message =>
+      'لا توجد حاليًا أوقات متاحة لهذا التاريخ. يُرجى المحاولة لاحقًا أو اختيار تاريخ آخر.';
+
+  @override
+  String get order_details => 'تفاصيل الطلب';
+
+  @override
+  String get order_not_found => 'لم يتم العثور على الطلب';
+
+  @override
+  String get cancel_order => 'إلغاء الطلب';
+
+  @override
+  String get cancel_order_confirmation =>
+      'هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟';
+
+  @override
+  String get order_canceled_successfully => 'تم إلغاء الطلب بنجاح';
+
+  @override
+  String get location => 'الموقع';
+
+  @override
+  String get note => 'الملاحظة';
+
+  @override
+  String get duration => 'المدة';
+
+  @override
+  String get minutes => 'دقيقة';
+
+  @override
+  String get total_price => 'السعر الإجمالي';
+
+  @override
+  String get start_time => 'وقت البدء';
+
+  @override
+  String get end_time => 'وقت الانتهاء';
+
+  @override
+  String get company_location => 'موقع الشركة';
+
+  @override
+  String get package_details => 'تفاصيل الباقة';
+
+  @override
+  String get attributes => 'الخصائص';
+
+  @override
+  String get booking_in_progress => 'جارٍ الحجز...';
+
+  @override
+  String get before_and_after => 'قبل وبعد';
+
+  @override
+  String get add_review => 'إضافة تقييم';
+
+  @override
+  String get write_review => 'اكتب تقييماً';
+
+  @override
+  String get rating_required => 'يرجى اختيار التقييم';
+
+  @override
+  String get review_comment_hint => 'شارك تجربتك (اختياري)';
+
+  @override
+  String get submit_review => 'إرسال التقييم';
+
+  @override
+  String get review_submitted => 'تم إرسال التقييم بنجاح';
+
+  @override
+  String get day_monday => 'الاثنين';
+
+  @override
+  String get day_tuesday => 'الثلاثاء';
+
+  @override
+  String get day_wednesday => 'الأربعاء';
+
+  @override
+  String get day_thursday => 'الخميس';
+
+  @override
+  String get day_friday => 'الجمعة';
+
+  @override
+  String get day_saturday => 'السبت';
+
+  @override
+  String get day_sunday => 'الأحد';
+
+  @override
+  String get no_service_reviews_yet => 'لا توجد تقييمات للخدمات بعد';
+
+  @override
+  String get service_reviews_will_appear_here => 'ستظهر تقييماتك للخدمات هنا.';
+
+  @override
+  String get no_company_reviews_yet => 'لا توجد تقييمات للشركات بعد';
+
+  @override
+  String get company_reviews_will_appear_here => 'ستظهر تقييماتك للشركات هنا.';
+
+  @override
+  String get no_comment => 'لا يوجد تعليق';
+
+  @override
+  String get your_rating => 'تقييمك';
+
+  @override
+  String get reviewed_on => 'تم التقييم في';
+
+  @override
+  String get could_not_load_your_reviews => 'تعذر تحميل تقييماتك';
+
+  @override
+  String get could_not_load_profile_summary => 'تعذر تحميل ملخص الملف الشخصي';
+
+  @override
+  String get failed_to_delete_account =>
+      'تعذر حذف حسابك. يرجى المحاولة مرة أخرى.';
 }

@@ -27,6 +27,8 @@ class AppTextField extends StatelessWidget {
     this.onTap,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.autofocus = false,
+    this.labelStyle,
+    this.maxLines = 1,
   });
 
   final TextEditingController? controller;
@@ -47,6 +49,8 @@ class AppTextField extends StatelessWidget {
   final VoidCallback? onTap;
   final AutovalidateMode autovalidateMode;
   final bool autofocus;
+  final TextStyle? labelStyle;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +62,12 @@ class AppTextField extends StatelessWidget {
           padding: EdgeInsets.only(left: 4.w, right: 4.w, bottom: 8.h),
           child: Text(
             label,
-            style: Styles.textStyle12.copyWith(
-              color: theme.onSurface.withValues(alpha: 0.75),
-              fontWeight: FontWeight.w500,
-            ),
+            style:
+                labelStyle ??
+                Styles.textStyle12.copyWith(
+                  color: theme.onSurface.withValues(alpha: 0.5),
+                  fontWeight: FontWeight.w500,
+                ),
           ),
         ),
         TextFormField(
@@ -72,6 +78,7 @@ class AppTextField extends StatelessWidget {
           textInputAction: textInputAction,
           obscureText: obscureText,
           maxLength: maxLength,
+          maxLines: maxLines,
           inputFormatters: inputFormatters,
           validator: validator,
           onFieldSubmitted: onFieldSubmitted,
@@ -93,11 +100,11 @@ class AppTextField extends StatelessWidget {
             ),
             prefixIcon: prefix == null
                 ? null
-                : Center(widthFactor: 1, heightFactor: 1, child: prefix),
+                : Center(widthFactor: 1.5, heightFactor: 1.5, child: prefix),
 
             suffixIcon: suffix == null
                 ? null
-                : Center(widthFactor: 1, heightFactor: 1, child: suffix),
+                : Center(widthFactor: 1.5, heightFactor: 1.5, child: suffix),
             isDense: true,
             filled: true,
             fillColor: theme.onSurface.withValues(alpha: 0.04),

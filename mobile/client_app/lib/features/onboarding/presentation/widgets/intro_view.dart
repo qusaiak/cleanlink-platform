@@ -22,10 +22,7 @@ class IntroView extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(24.r),
-                child: Image.asset(
-                  imageUrl,
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset(imageUrl, fit: BoxFit.contain),
               ),
             ),
           ),

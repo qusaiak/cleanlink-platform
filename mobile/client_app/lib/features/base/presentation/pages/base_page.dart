@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/constants/constants.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../profile/presentation/bloc/profile_bloc.dart';
 import '../bloc/base_bloc.dart';
 
 class BasePage extends StatefulWidget {
@@ -117,12 +118,13 @@ class _BasePageState extends State<BasePage> with WidgetsBindingObserver {
           }
         },
         builder: (context, state) {
+          final currentIndex = widget.navigationShell.currentIndex;
           return Scaffold(
             extendBody: true,
             backgroundColor: AppColor.transparent,
             resizeToAvoidBottomInset: false,
             body: PopScope(
-              canPop: state.currentIndex == 0,
+              canPop: currentIndex == 0,
               onPopInvokedWithResult: (val, object) {
                 BlocProvider.of<BaseBloc>(
                   context,
@@ -158,9 +160,13 @@ class _BasePageState extends State<BasePage> with WidgetsBindingObserver {
                   backgroundColor: Colors.transparent,
                   type: BottomNavigationBarType.fixed,
                   elevation: 0.0,
-                  currentIndex: state.currentIndex!,
+                  currentIndex: currentIndex,
                   onTap: (newIndex) {
-                    final currentIndex = state.currentIndex!;
+                    if (newIndex == 3) {
+                      context.read<ProfileBloc>().add(
+                        GetDashboardSummaryEvent(),
+                      );
+                    }
                     if (currentIndex == newIndex) {
                       widget.navigationShell.goBranch(
                         newIndex,

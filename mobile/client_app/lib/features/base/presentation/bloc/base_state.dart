@@ -1,6 +1,5 @@
 part of 'base_bloc.dart';
 
-
 enum BaseStatus { initial, changeBottomNavBarIndex, controlBottomNavBar }
 
 class BaseState extends Equatable {

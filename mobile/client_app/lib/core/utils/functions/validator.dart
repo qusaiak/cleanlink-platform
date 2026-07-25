@@ -25,8 +25,7 @@ class AppValidators {
       return l.validation_email_required;
     }
 
-    const pattern =
-        r'^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$';
+    const pattern = r'^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$';
 
     if (!RegExp(pattern).hasMatch(value.trim())) {
       return l.validation_email_invalid;
@@ -104,8 +103,9 @@ class PasswordStrength {
     if (RegExp(r'[A-Z]').hasMatch(password)) s += 0.2;
     if (RegExp(r'[a-z]').hasMatch(password)) s += 0.1;
     if (RegExp(r'\d').hasMatch(password)) s += 0.15;
-    if (RegExp(r'[!@#\$%\^&\*\(\)_\-\+=\[\]\{\};:,\.<>\?/\\|`~"]')
-        .hasMatch(password)) {
+    if (RegExp(
+      r'[!@#\$%\^&\*\(\)_\-\+=\[\]\{\};:,\.<>\?/\\|`~"]',
+    ).hasMatch(password)) {
       s += 0.15;
     }
     return s.clamp(0, 1).toDouble();

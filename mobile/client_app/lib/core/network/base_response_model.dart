@@ -20,8 +20,7 @@ class BaseResponseModel<T> {
   factory BaseResponseModel.fromJson(
     Map<String, dynamic> json,
     T Function(Object? json) fromJsonT,
-  ) =>
-      _$BaseResponseModelFromJson(json, fromJsonT);
+  ) => _$BaseResponseModelFromJson(json, fromJsonT);
 
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
       _$BaseResponseModelToJson(this, toJsonT);

@@ -74,8 +74,7 @@ AppBarTheme appBarLightTheme() {
     titleTextStyle: Styles.textStyle18.copyWith(
       color: AppColor.primaryColor,
       fontWeight: FontWeight.bold,
-      fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily
-          .cairo,
+      fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily.cairo,
     ),
   );
 }
@@ -90,8 +89,7 @@ AppBarTheme appBarDarkTheme() {
     titleTextStyle: Styles.textStyle18.copyWith(
       color: AppColor.onSurfaceDark,
       fontWeight: FontWeight.bold,
-      fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily
-          .cairo,
+      fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily.cairo,
     ),
   );
 }

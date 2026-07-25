@@ -1,5 +1,6 @@
 import 'package:client_app/config/constants/config_keys.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,6 +43,8 @@ abstract class Bindings {
     await clearAllUserData();
     await initializeDependencies();
     await sl<UserSession>().load();
+    await sl<FirebaseApi>().initNotifications();
+    await sl<FirebaseApi>().syncFcmTokenWithBackend();
     _configureErrorHandling();
     AppLifecycleTracker();
   }
@@ -53,7 +56,6 @@ abstract class Bindings {
 
       const secureStorage = FlutterSecureStorage();
       await secureStorage.deleteAll();
-
     }
   }
 
@@ -61,13 +63,12 @@ abstract class Bindings {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    await FirebaseApi().initNotifications();
+    FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
   }
 
   static Future<void> _initializeEnvironment() async {
     await dotenv.load(fileName: ConfigKeys.fileName);
   }
-
 
   static Future<void> _initializeBlocObserver() async {
     Bloc.observer = MyBlocObserver();

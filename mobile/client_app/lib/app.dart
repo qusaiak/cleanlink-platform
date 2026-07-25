@@ -5,13 +5,19 @@ import 'package:client_app/features/base/presentation/bloc/base_bloc.dart';
 import 'package:client_app/features/bookings/presentation/bloc/bookings_bloc.dart';
 import 'package:client_app/features/categories/presentation/bloc/categories_bloc.dart';
 import 'package:client_app/features/companies/presentation/bloc/companies_bloc.dart';
+import 'package:client_app/features/favorites/presentation/bloc/favorites_bloc.dart';
+import 'package:client_app/features/notification/presentation/bloc/notification_bloc.dart';
 import 'package:client_app/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:client_app/features/regions/presentation/bloc/regions_bloc.dart';
+import 'package:client_app/features/reviews/presentation/bloc/review_bloc.dart';
+import 'package:client_app/features/search/presentation/bloc/search_bloc.dart';
 import 'package:client_app/features/services/presentation/bloc/services_bloc.dart';
 import 'package:client_app/injection_container.dart';
 import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'core/widgets/custom_toast.dart';
 import 'config/theme/app_theme_info.dart';
 import 'features/home/presentation/bloc/home_bloc.dart';
 import 'l10n/l10n.dart';
@@ -31,6 +37,11 @@ class MyApp extends StatelessWidget {
         BlocProvider<CompaniesBloc>(create: (BuildContext context) => sl()),
         BlocProvider<CategoriesBloc>(create: (BuildContext context) => sl()),
         BlocProvider<ServicesBloc>(create: (BuildContext context) => sl()),
+        BlocProvider<RegionsBloc>(create: (BuildContext context) => sl()),
+        BlocProvider<ReviewBloc>(create: (BuildContext context) => sl()),
+        BlocProvider<FavoritesBloc>(create: (BuildContext context) => sl()),
+        BlocProvider<SearchBloc>(create: (BuildContext context) => sl()),
+        BlocProvider<NotificationsBloc>.value(value: sl()),
       ],
       child: ScreenUtilInit(
         minTextAdapt: true,
@@ -40,6 +51,7 @@ class MyApp extends StatelessWidget {
             builder: (context, state) {
               return MaterialApp.router(
                 debugShowCheckedModeBanner: false,
+                scaffoldMessengerKey: AppSnackBar.scaffoldMessengerKey,
                 title: 'CleanLink',
                 theme: lightTheme(),
                 darkTheme: darkTheme(),

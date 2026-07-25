@@ -12,23 +12,18 @@ class AppConfig {
       int.parse(dotenv.env[ConfigKeys.timeout] ?? '30000');
 
   // Maps
-  static String get googleMapsKey =>
-      dotenv.env[ConfigKeys.mapsKey] ?? '';
+  static String get googleMapsKey => dotenv.env[ConfigKeys.mapsKey] ?? '';
 
   // Notifications
-  static String get fcmTopic =>
-      dotenv.env[ConfigKeys.fcmTopic] ?? '';
+  static String get fcmTopic => dotenv.env[ConfigKeys.fcmTopic] ?? '';
 
   // App behavior
-  static bool get isDebug =>
-      dotenv.env[ConfigKeys.debug] == 'true';
+  static bool get isDebug => dotenv.env[ConfigKeys.debug] == 'true';
 
-  static bool get enableLogs =>
-      dotenv.env[ConfigKeys.enableLogs] == 'true';
+  static bool get enableLogs => dotenv.env[ConfigKeys.enableLogs] == 'true';
 
   // Feature flags
-  static bool get enableChat =>
-      dotenv.env[ConfigKeys.enableChat] == 'true';
+  static bool get enableChat => dotenv.env[ConfigKeys.enableChat] == 'true';
 
   static bool get enableRatings =>
       dotenv.env[ConfigKeys.enableRatings] == 'true';

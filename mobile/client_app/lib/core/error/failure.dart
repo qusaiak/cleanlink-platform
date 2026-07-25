@@ -15,8 +15,13 @@ class ErrorCode {
 abstract class Failure extends Equatable {
   final String message;
   final String errorCode;
+  final Map<String, String> fieldErrors;
 
-  const Failure(this.message, this.errorCode);
+  const Failure(
+    this.message,
+    this.errorCode, {
+    this.fieldErrors = const <String, String>{},
+  });
 
   bool get isConnectionTimeout => errorCode == ErrorCode.connectionTimeout;
   bool get isSendTimeout => errorCode == ErrorCode.sendTimeout;
@@ -25,17 +30,17 @@ abstract class Failure extends Equatable {
       isConnectionTimeout || isSendTimeout || isReceiveTimeout;
 
   @override
-  List<Object> get props => [message, errorCode];
+  List<Object> get props => [message, errorCode, fieldErrors];
 }
 
 class ServerFailure extends Failure {
-  const ServerFailure(super.message, super.errorCode);
+  const ServerFailure(super.message, super.errorCode, {super.fieldErrors});
 
   factory ServerFailure.fromDioError(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
         BuildContext context =
-        AppRouter.router.configuration.navigatorKey.currentContext!;
+            AppRouter.router.configuration.navigatorKey.currentContext!;
         final router = GoRouter.of(context);
         router.pushReplacement(AppRouter.kConnectionTimeout);
         return const ServerFailure(

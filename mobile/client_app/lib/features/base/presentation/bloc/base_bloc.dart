@@ -15,7 +15,6 @@ class BaseBloc extends Bloc<BaseEvent, BaseState> {
         ),
       ) {
     on<ChangeBottomNavBarIndex>(onChangeBottomNavBarIndex);
-    on<UpdateOfferStatus>(onUpdateOfferStatus);
     on<ControlBottomNavbarVisibility>(onControlBottomNavbarVisibility);
   }
 
@@ -23,23 +22,12 @@ class BaseBloc extends Bloc<BaseEvent, BaseState> {
     ChangeBottomNavBarIndex event,
     Emitter<BaseState> emit,
   ) async {
-    if (event.newIndex == 3) {
-      emit(state.copyWith(isOfferBadgeShown: false));
-    }
     emit(
       state.copyWith(
         baseStatus: BaseStatus.changeBottomNavBarIndex,
         currentIndex: event.newIndex,
       ),
     );
-  }
-
-  void onUpdateOfferStatus(
-    UpdateOfferStatus event,
-    Emitter<BaseState> emit,
-  ) async {
-    bool isOfferBadgeShown = event.offerState == "1" ? true : false;
-    emit(state.copyWith(isOfferBadgeShown: isOfferBadgeShown));
   }
 
   void onControlBottomNavbarVisibility(

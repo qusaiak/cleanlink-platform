@@ -5,7 +5,6 @@ sealed class BaseEvent extends Equatable {
 }
 
 class ChangeBottomNavBarIndex extends BaseEvent {
-
   final int newIndex;
 
   const ChangeBottomNavBarIndex(this.newIndex);
@@ -13,17 +12,7 @@ class ChangeBottomNavBarIndex extends BaseEvent {
   List<Object> get props => [newIndex];
 }
 
-class UpdateOfferStatus extends BaseEvent {
-
-  final String offerState;
-
-  const UpdateOfferStatus(this.offerState);
-  @override
-  List<Object> get props => [offerState];
-}
-
 class ControlBottomNavbarVisibility extends BaseEvent {
-
   final bool isShown;
 
   const ControlBottomNavbarVisibility(this.isShown);

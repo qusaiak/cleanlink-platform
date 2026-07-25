@@ -12,8 +12,7 @@ class Country {
   });
 
   @override
-  bool operator ==(Object other) =>
-      other is Country && other.code == code;
+  bool operator ==(Object other) => other is Country && other.code == code;
 
   @override
   int get hashCode => code.hashCode;

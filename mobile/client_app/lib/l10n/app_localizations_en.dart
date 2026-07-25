@@ -293,13 +293,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_otp_title => 'Enter verification code';
 
   @override
-  String auth_otp_subtitle(String phone) {
-    return 'We sent a 6-digit code to $phone';
+  String auth_otp_subtitle(String email) {
+    return 'We sent a 6-digit code to $email';
   }
 
   @override
-  String auth_otp_resend_in(int seconds) {
-    return 'Resend code in ${seconds}s';
+  String auth_otp_resend_in(String time) {
+    return 'Resend code in $time';
   }
 
   @override
@@ -309,6 +309,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_otp_verify => 'Verify';
 
   @override
+  String get auth_otp_incomplete =>
+      'Enter the complete 6-digit verification code';
+
+  @override
+  String get auth_otp_code_sent => 'A new code was sent';
+
+  @override
+  String get auth_error_generic => 'Something went wrong. Please try again.';
+
+  @override
   String get yes => 'Yes';
 
   @override
@@ -316,6 +326,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get success => 'Success';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get warning => 'Warning';
+
+  @override
+  String get info => 'Info';
+
+  @override
+  String get session_expired_title => 'Session expired';
+
+  @override
+  String get session_expired_message =>
+      'Your session has expired. Please log in again to continue.';
+
+  @override
+  String get no_data_found => 'No data found';
+
+  @override
+  String get try_again_later => 'Please try again later.';
+
+  @override
+  String get no_bookings => 'No bookings yet';
+
+  @override
+  String get no_bookings_message => 'Your reservations will appear here';
+
+  @override
+  String get no_categories_found => 'No categories found';
+
+  @override
+  String get no_offers_found => 'No offers found';
+
+  @override
+  String get no_favorite_services => 'No favorite services';
+
+  @override
+  String get no_favorite_companies => 'No favorite companies';
 
   @override
   String get support => 'Support';
@@ -362,6 +415,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notification_setting => 'Push Notifications';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get no_notifications => 'No notifications';
+
+  @override
+  String get no_notifications_message => 'Your updates will appear here.';
+
+  @override
+  String get unread => 'Unread';
+
+  @override
+  String get read => 'Read';
+
+  @override
+  String get notification_marked_as_read => 'Notification marked as read';
+
+  @override
+  String get notification_open_failed =>
+      'This notification has no order details yet.';
 
   @override
   String get my_profile => 'My Profile';
@@ -456,6 +531,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get all_offers => 'All Offers';
 
   @override
+  String get services_title => 'Services';
+
+  @override
+  String get no_services_available => 'No services available';
+
+  @override
+  String get regions_title => 'Regions';
+
+  @override
+  String get search_regions => 'Regions';
+
+  @override
+  String get no_regions_found => 'No regions found';
+
+  @override
+  String get companies_title => 'Companies';
+
+  @override
+  String get no_companies_found => 'No companies found';
+
+  @override
+  String get total_companies => 'Total Companies';
+
+  @override
+  String get open_companies => 'Open Now';
+
+  @override
+  String get open_label => 'Open';
+
+  @override
+  String get closed_label => 'Closed';
+
+  @override
+  String get manager_label => 'Manager';
+
+  @override
+  String get working_hours_label => 'Working hours';
+
+  @override
   String get activity => 'Activity';
 
   @override
@@ -472,6 +586,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get edit => 'Edit';
+
+  @override
+  String get edit_profile => 'Edit Profile';
+
+  @override
+  String get update_profile => 'Update Profile';
+
+  @override
+  String get profile_updated_successfully => 'Profile updated successfully';
+
+  @override
+  String get password_changed_successfully => 'Password changed successfully';
+
+  @override
+  String get logout_confirmation => 'Are you sure you want to logout?';
+
+  @override
+  String get logout_successfully => 'Logged out successfully';
+
+  @override
+  String get change_photo => 'Change photo';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get failed_to_pick_image => 'Failed to pick image';
+
+  @override
+  String get failed_to_update_profile => 'Failed to update profile';
+
+  @override
+  String get failed_to_logout => 'Failed to logout';
+
+  @override
+  String get fill_required_fields => 'Please fill all required fields';
 
   @override
   String get reviews => 'Reviews';
@@ -548,9 +698,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get search_services => 'Services';
-
-  @override
-  String get search_regions => 'Regions';
 
   @override
   String get search_providers => 'Providers';
@@ -635,10 +782,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get upcoming => 'Upcoming';
 
   @override
+  String get pending => 'Pending';
+
+  @override
+  String get assigned => 'Assigned';
+
+  @override
+  String get in_process => 'In Process';
+
+  @override
   String get completed => 'Completed';
 
   @override
-  String get cancelled => 'Cancelled';
+  String get canceled => 'Canceled';
+
+  @override
+  String get unknown_status => 'Unknown';
+
+  @override
+  String get team_leader => 'Team Leader';
+
+  @override
+  String get call => 'Call';
+
+  @override
+  String get phone_number => 'Phone Number';
+
+  @override
+  String get could_not_open_phone => 'Could not open phone dialer';
 
   @override
   String get track_service_title => 'Track Service';
@@ -806,4 +977,151 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get view_details => 'View Details';
+
+  @override
+  String get meet_our_workers => 'Meet Our Workers';
+
+  @override
+  String get years_of_experience => 'Years of experience';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get no_available_dates => 'No Available Appointments';
+
+  @override
+  String get no_available_dates_message =>
+      'There are currently no available dates for this package. Please try again later or choose another package.';
+
+  @override
+  String get no_available_times => 'No Available Times';
+
+  @override
+  String get no_available_times_message =>
+      'There are currently no available times for this date. Please try again later or choose another date.';
+
+  @override
+  String get order_details => 'Order Details';
+
+  @override
+  String get order_not_found => 'Order not found';
+
+  @override
+  String get cancel_order => 'Cancel Order';
+
+  @override
+  String get cancel_order_confirmation =>
+      'Are you sure you want to cancel this order?';
+
+  @override
+  String get order_canceled_successfully => 'Order canceled successfully';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get note => 'Note';
+
+  @override
+  String get duration => 'Duration';
+
+  @override
+  String get minutes => 'minutes';
+
+  @override
+  String get total_price => 'Total Price';
+
+  @override
+  String get start_time => 'Start Time';
+
+  @override
+  String get end_time => 'End Time';
+
+  @override
+  String get company_location => 'Company Location';
+
+  @override
+  String get package_details => 'Package Details';
+
+  @override
+  String get attributes => 'Attributes';
+
+  @override
+  String get booking_in_progress => 'Booking...';
+
+  @override
+  String get before_and_after => 'Before & After';
+
+  @override
+  String get add_review => 'Add Review';
+
+  @override
+  String get write_review => 'Write a Review';
+
+  @override
+  String get rating_required => 'Please select a rating';
+
+  @override
+  String get review_comment_hint => 'Share your experience (optional)';
+
+  @override
+  String get submit_review => 'Submit Review';
+
+  @override
+  String get review_submitted => 'Review submitted successfully';
+
+  @override
+  String get day_monday => 'Monday';
+
+  @override
+  String get day_tuesday => 'Tuesday';
+
+  @override
+  String get day_wednesday => 'Wednesday';
+
+  @override
+  String get day_thursday => 'Thursday';
+
+  @override
+  String get day_friday => 'Friday';
+
+  @override
+  String get day_saturday => 'Saturday';
+
+  @override
+  String get day_sunday => 'Sunday';
+
+  @override
+  String get no_service_reviews_yet => 'No service reviews yet';
+
+  @override
+  String get service_reviews_will_appear_here =>
+      'Your reviews for services will appear here.';
+
+  @override
+  String get no_company_reviews_yet => 'No company reviews yet';
+
+  @override
+  String get company_reviews_will_appear_here =>
+      'Your reviews for companies will appear here.';
+
+  @override
+  String get no_comment => 'No comment';
+
+  @override
+  String get your_rating => 'Your rating';
+
+  @override
+  String get reviewed_on => 'Reviewed on';
+
+  @override
+  String get could_not_load_your_reviews => 'Could not load your reviews';
+
+  @override
+  String get could_not_load_profile_summary => 'Could not load profile summary';
+
+  @override
+  String get failed_to_delete_account =>
+      'Could not delete your account. Please try again.';
 }

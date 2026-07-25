@@ -7,7 +7,8 @@ class AppPreferences {
 
   static Future<void> initialize() async {
     _deviceToken = await SharedStorage.get(StorageData.fcmToken) ?? '';
-    _notificationState = await SharedStorage.get(StorageData.pushNotifications) ?? '';
+    _notificationState =
+        await SharedStorage.get(StorageData.pushNotifications) ?? '';
   }
 
   static String get deviceToken {
