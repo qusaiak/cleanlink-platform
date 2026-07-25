@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/functions/spinkit.dart';
+import '../../../reviews/domain/entities/reviewable_type.dart';
+import '../../../reviews/presentation/widgets/review_dialog.dart';
 import '../bloc/companies_bloc.dart';
 import '../widgets/about_company_section.dart';
 import '../widgets/company_header_section.dart';
@@ -30,7 +32,7 @@ class _CompanyDetailsBodyState extends State<CompanyDetailsBody> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context)!.colorScheme;
+    final theme = Theme.of(context).colorScheme;
     return Scaffold(
       body: BlocBuilder<CompaniesBloc, CompaniesState>(
         builder: (context, state) {
@@ -55,7 +57,9 @@ class _CompanyDetailsBodyState extends State<CompanyDetailsBody> {
 
                     ElevatedButton(
                       onPressed: () {
-                        context.read<CompaniesBloc>().add(GetCompaniesEvent());
+                        context.read<CompaniesBloc>().add(
+                          GetCompanyDetailsEvent(widget.id),
+                        );
                       },
                       child: Text(AppLocalizations.of(context)!.retry),
                     ),
@@ -74,7 +78,17 @@ class _CompanyDetailsBodyState extends State<CompanyDetailsBody> {
                 SliverToBoxAdapter(
                   child: Column(
                     children: [
-                      CompanyStatsSection(company: company),
+                      CompanyStatsSection(
+                        company: company,
+                        onAddReview: () => showReviewDialog(
+                          context: context,
+                          type: ReviewableType.company,
+                          id: company.id,
+                          onSuccess: () => context.read<CompaniesBloc>().add(
+                            RefreshCompanyDetailsEvent(company.id),
+                          ),
+                        ),
+                      ),
 
                       SizedBox(height: 20.h),
 

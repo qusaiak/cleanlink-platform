@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../config/routes/app_router.dart';
 import '../../../../core/utils/functions/spinkit.dart';
+import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../home/presentation/widgets/category_item.dart';
 
@@ -61,7 +62,12 @@ class _CategoriesBodyState extends State<CategoriesBody> {
           final categories = state.categories;
 
           if (categories.isEmpty) {
-            return const Center(child: Text('No categories found'));
+            return Center(
+              child: AppEmptyState(
+                icon: Icons.category_outlined,
+                title: AppLocalizations.of(context)!.no_categories_found,
+              ),
+            );
           }
 
           return Padding(

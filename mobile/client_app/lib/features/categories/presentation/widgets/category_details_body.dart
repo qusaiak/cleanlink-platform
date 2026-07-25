@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:client_app/config/routes/app_router.dart';
 import 'package:client_app/core/widgets/custom_image_view.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +11,11 @@ import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../core/utils/functions/spinkit.dart';
 import '../../../../core/utils/gen/assets.gen.dart';
+import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/row_title.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../services/domain/entities/service_entity.dart';
 import '../../domain/entities/category_entity.dart';
-import '../../domain/entities/category_service_entity.dart';
 import '../bloc/categories_bloc.dart';
 import 'category_service_card.dart';
 
@@ -41,7 +40,7 @@ class _CategoryDetailsBodyState extends State<CategoryDetailsBody> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context)!.colorScheme;
+    final theme = Theme.of(context).colorScheme;
     return BlocBuilder<CategoriesBloc, CategoriesState>(
       buildWhen: (_, current) =>
           current is CategoryLoading ||
@@ -55,7 +54,7 @@ class _CategoryDetailsBodyState extends State<CategoryDetailsBody> {
         final isLoading = state is! CategoryLoaded;
         final category = state is CategoryLoaded ? state.category : _skeleton;
         if (isLoading) {
-          return Center(child: spinKitApp(theme.primary),);
+          return Center(child: spinKitApp(theme.primary));
         }
 
         return Skeletonizer(
@@ -128,10 +127,7 @@ class _CategoryContent extends StatelessWidget {
             background: Stack(
               fit: StackFit.expand,
               children: [
-                CustomImageView(
-                  imagePath: category.image,
-                  fit: BoxFit.cover,
-                ),
+                CustomImageView(imagePath: category.image, fit: BoxFit.cover),
                 const DecoratedBox(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -207,19 +203,11 @@ class _CategoryContent extends StatelessWidget {
         if (category.services.isEmpty)
           SliverFillRemaining(
             hasScrollBody: false,
-            child: Padding(
-              padding: EdgeInsets.all(24.w),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.inbox_outlined,
-                    size: 48.sp,
-                    color: theme.onSurfaceVariant,
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(l.no_services_available, textAlign: TextAlign.center),
-                ],
+            child: Center(
+              child: AppEmptyState(
+                icon: Icons.inbox_outlined,
+                title: l.no_services_available,
+                iconColor: theme.onSurfaceVariant,
               ),
             ),
           )
@@ -228,7 +216,7 @@ class _CategoryContent extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 24.h),
             sliver: SliverList.separated(
               itemCount: category.services.length,
-              separatorBuilder: (_, __) => SizedBox(height: 12.h),
+              separatorBuilder: (_, _) => SizedBox(height: 12.h),
               itemBuilder: (_, index) => CategoryServiceCard(
                 service: category.services[index],
                 onTap: () {

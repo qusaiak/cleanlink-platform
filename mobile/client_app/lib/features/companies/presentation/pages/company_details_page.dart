@@ -8,6 +8,6 @@ class CompanyDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: CompanyDetailsBody(id: id,));
+    return Scaffold(body: CompanyDetailsBody(id: id));
   }
 }

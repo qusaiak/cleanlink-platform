@@ -16,17 +16,12 @@ class ServicesResponseModel {
     required this.data,
   });
 
-  factory ServicesResponseModel.fromJson(
-      Map<String, dynamic> json,
-      ) =>
+  factory ServicesResponseModel.fromJson(Map<String, dynamic> json) =>
       _$ServicesResponseModelFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$ServicesResponseModelToJson(this);
+  Map<String, dynamic> toJson() => _$ServicesResponseModelToJson(this);
 
   List<ServiceEntity> toEntity() {
-    return data
-        .map((e)=>e.toEntity())
-        .toList();
+    return data.map((e) => e.toEntity()).toList();
   }
 }

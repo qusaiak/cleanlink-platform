@@ -24,7 +24,10 @@ class _AboutCompanySectionState extends State<AboutCompanySection> {
     var theme = Theme.of(context)!.colorScheme;
     return Column(
       children: [
-        RowTitle(iconData: Icons.info_outline, title: AppLocalizations.of(context)!.about_us),
+        RowTitle(
+          iconData: Icons.info_outline,
+          title: AppLocalizations.of(context)!.about_us,
+        ),
 
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.w),
@@ -99,7 +102,7 @@ class _AboutCompanySectionState extends State<AboutCompanySection> {
                               ),
                               SizedBox(
                                 height:
-                                Constants.bottomNavigationBarHeight +
+                                    Constants.bottomNavigationBarHeight +
                                     Constants.kMiniPlayerHeight.w +
                                     16.w,
                               ),

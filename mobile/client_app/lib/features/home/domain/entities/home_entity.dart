@@ -3,7 +3,6 @@ import '../../../companies/domain/entities/company_entity.dart';
 import '../../../categories/domain/entities/category_entity.dart';
 
 class HomeEntity {
-
   final List<ServiceEntity> offers;
 
   final List<ServiceEntity> services;
@@ -18,5 +17,4 @@ class HomeEntity {
     required this.categories,
     required this.companies,
   });
-
 }

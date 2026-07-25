@@ -1,11 +1,13 @@
+import 'package:equatable/equatable.dart';
 import 'package:client_app/features/companies/domain/entities/review_entity.dart';
 import 'package:client_app/features/companies/domain/entities/worker_entity.dart';
 import 'package:client_app/features/services/domain/entities/service_entity.dart';
 
 import 'manager_entity.dart';
 import 'region_entity.dart';
+import 'company_work_time_entity.dart';
 
-class CompanyEntity {
+class CompanyEntity extends Equatable {
   final int id;
 
   final int managerId;
@@ -20,14 +22,9 @@ class CompanyEntity {
 
   final String location;
 
-  final int rating;
-
-  final bool isOpen;
+  final double rating;
 
   final bool isFavorite;
-
-  final String startHour;
-  final String closeHour;
 
   final ManagerEntity manager;
 
@@ -38,6 +35,8 @@ class CompanyEntity {
   final List<WorkerEntity> workers;
 
   final List<ReviewEntity> reviews;
+
+  final List<CompanyWorkTimeEntity> workTimes;
 
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -51,15 +50,13 @@ class CompanyEntity {
     required this.image,
     required this.location,
     required this.rating,
-    required this.isOpen,
     required this.isFavorite,
-    required this.startHour,
-    required this.closeHour,
     required this.manager,
     required this.region,
     required this.services,
     required this.workers,
     required this.reviews,
+    this.workTimes = const [],
     required this.createdAt,
     required this.updatedAt,
   });
@@ -72,16 +69,14 @@ class CompanyEntity {
     String? description,
     String? image,
     String? location,
-    int? rating,
-    bool? isOpen,
+    double? rating,
     bool? isFavorite,
-    String? startHour,
-    String? closeHour,
     ManagerEntity? manager,
     RegionEntity? region,
     List<ServiceEntity>? services,
     List<WorkerEntity>? workers,
     List<ReviewEntity>? reviews,
+    List<CompanyWorkTimeEntity>? workTimes,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -94,17 +89,36 @@ class CompanyEntity {
       image: image ?? this.image,
       location: location ?? this.location,
       rating: rating ?? this.rating,
-      isOpen: isOpen ?? this.isOpen,
       isFavorite: isFavorite ?? this.isFavorite,
-      startHour: startHour ?? this.startHour,
-      closeHour: closeHour ?? this.closeHour,
       manager: manager ?? this.manager,
       region: region ?? this.region,
       services: services ?? this.services,
       workers: workers ?? this.workers,
       reviews: reviews ?? this.reviews,
+      workTimes: workTimes ?? this.workTimes,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    managerId,
+    regionId,
+    name,
+    description,
+    image,
+    location,
+    rating,
+    isFavorite,
+    manager,
+    region,
+    services,
+    workers,
+    reviews,
+    workTimes,
+    createdAt,
+    updatedAt,
+  ];
 }

@@ -42,6 +42,7 @@ class _CompanyServicesSectionState extends State<CompanyServicesSection> {
         ),
 
         SizedBox(height: 12.h),
+
         // CarouselSlider.builder(
         //   itemCount: widget.services.length,
         //   itemBuilder: (_, index, __) {
@@ -79,7 +80,6 @@ class _CompanyServicesSectionState extends State<CompanyServicesSection> {
         //     },
         //   ),
         // ),
-
         SizedBox(
           height: 100.h,
           child: ListView.separated(
@@ -90,13 +90,13 @@ class _CompanyServicesSectionState extends State<CompanyServicesSection> {
             itemBuilder: (_, index) {
               return SizedBox(
                 width: 320.w,
-                child:
-                CategoryServiceCard(
+                child: CategoryServiceCard(
                   service: widget.services[index],
                   onTap: () {
-                    GoRouter.of(
-                      context,
-                    ).push(AppRouter.kServiceDetails, extra: widget.services[index].id);
+                    GoRouter.of(context).push(
+                      AppRouter.kServiceDetails,
+                      extra: widget.services[index].id,
+                    );
                   },
                 ),
                 // ServiceTile(

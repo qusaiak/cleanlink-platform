@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/service_details_body.dart';
 
-
 class ServiceDetailsPage extends StatelessWidget {
   final int id;
 
@@ -9,6 +8,6 @@ class ServiceDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: ServiceDetailsBody(id: id,));
+    return Scaffold(body: ServiceDetailsBody(id: id));
   }
 }

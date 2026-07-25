@@ -1,12 +1,13 @@
-import 'dart:io';
-
 import 'package:client_app/config/theme/styles.dart';
 import 'package:client_app/core/session/user_session.dart';
+import 'package:client_app/features/notification/presentation/bloc/notification_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_router.dart';
 import '../../../../core/utils/functions/helper_functions.dart';
-import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../../injection_container.dart';
 import '../../../../l10n/app_localizations.dart';
 
@@ -23,8 +24,6 @@ class HomeAppBar extends StatelessWidget {
         final displayName = session.fullname ?? 'Guest';
         final address = session.address;
         final image = session.image;
-        print("image12222");
-        print(image);
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -85,32 +84,46 @@ class HomeAppBar extends StatelessWidget {
                     ),
                     child: IconButton(
                       padding: EdgeInsets.zero,
-                      icon: Icon(Icons.notifications, color: theme.primary),
-                      onPressed: () {},
+                      icon: Icon(
+                        Icons.notifications_none_outlined,
+                        color: theme.primary,
+                      ),
+                      onPressed: () {
+                        GoRouter.of(context).push(AppRouter.kNotifications);
+                      },
                     ),
                   ),
-                  Positioned(
-                    right: -2,
-                    top: -2,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 5,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.redAccent,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.white, width: 1),
-                      ),
-                      child: const Text(
-                        "3",
-                        style: TextStyle(
-                          fontSize: 8,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
+                  BlocBuilder<NotificationsBloc, NotificationsState>(
+                    buildWhen: (previous, current) =>
+                        previous.unreadCount != current.unreadCount,
+                    builder: (context, state) {
+                      final count = state.unreadCount;
+                      if (count <= 0) return const SizedBox.shrink();
+                      return Positioned(
+                        right: -2,
+                        top: -2,
+                        child: Container(
+                          constraints: BoxConstraints(minWidth: 18.w),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.redAccent,
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(color: theme.surface, width: 1),
+                          ),
+                          child: Text(
+                            count > 99 ? '99+' : count.toString(),
+                            textAlign: TextAlign.center,
+                            style: Styles.textStyle8.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ],
               ),

@@ -13,8 +13,11 @@ abstract class ServicesApiService {
   @GET(ApiEndpoints.servicesEndpoint)
   Future<HttpResponse<ServicesResponseModel>> getServices();
 
+  @GET(ApiEndpoints.offersEndpoint)
+  Future<HttpResponse<ServicesResponseModel>> getOffers();
+
   @GET("${ApiEndpoints.servicesEndpoint}/{id}")
   Future<HttpResponse<ServiceDetailsResponseModel>> getServiceDetails(
-      @Path("id") int id,
-      );
+    @Path("id") int id,
+  );
 }

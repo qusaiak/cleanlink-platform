@@ -14,9 +14,7 @@ class CategoryDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<CategoriesBloc>(
       create: (_) => sl<CategoriesBloc>(),
-      child: Scaffold(
-        body: CategoryDetailsBody(id: categoryId),
-      ),
+      child: Scaffold(body: CategoryDetailsBody(id: categoryId)),
     );
   }
 }

@@ -1,67 +1,31 @@
-import 'package:client_app/features/services/domain/entities/service_entity.dart';
-import 'package:client_app/features/services/presentation/widgets/service_overview_section.dart';
-import 'package:client_app/features/services/presentation/widgets/service_packages_section.dart';
-import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../companies/presentation/widgets/reviews_section.dart';
+import '../../../favorites/presentation/bloc/favorites_bloc.dart';
+import '../../domain/entities/service_entity.dart';
 import 'before_after_gallery.dart';
+import 'service_overview_section.dart';
+import 'service_packages_section.dart';
 
 class ServiceSummaryCard extends StatelessWidget {
   final ServiceEntity service;
-  const ServiceSummaryCard({super.key, required this.service});
-  // final List<ServicePackage> packages = [
-  //   ServicePackage(
-  //     name: "Studio",
-  //     price: 75,
-  //     duration: "2 hours",
-  //     features: [
-  //       "Dusting all surfaces",
-  //       "Vacuuming floors",
-  //       "Mopping",
-  //       "Bathroom cleaning",
-  //       "Kitchen wipe-down",
-  //     ],
-  //   ),
-  //   ServicePackage(
-  //     name: "2 Bedroom",
-  //     price: 95,
-  //     duration: "2.5 hours",
-  //     features: [
-  //       "Everything in Studio",
-  //       "All bedrooms included",
-  //       "Closet organization",
-  //       "Window sill cleaning",
-  //     ],
-  //   ),
-  //   ServicePackage(
-  //     name: "3 Bedroom",
-  //     price: 115,
-  //     duration: "3 hours",
-  //     features: [
-  //       "Everything in 2BR",
-  //       "Deep bathroom scrub",
-  //       "Appliance exterior",
-  //       "Baseboard dusting",
-  //     ],
-  //   ),
-  //   ServicePackage(
-  //     name: "Villa",
-  //     price: 150,
-  //     duration: "4+ hours",
-  //     features: [
-  //       "Full house cleaning",
-  //       "Outdoor patio sweep",
-  //       "Garage floor clean",
-  //       "Premium eco‑products",
-  //     ],
-  //   ),
-  // ];
+  final VoidCallback onAddReview;
+
+  const ServiceSummaryCard({
+    super.key,
+    required this.service,
+    required this.onAddReview,
+  });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context)!;
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -69,7 +33,7 @@ class ServiceSummaryCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
-            color: AppColor.primaryColor.withOpacity(0.3),
+            color: AppColor.primaryColor.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -83,7 +47,7 @@ class ServiceSummaryCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  service.nameEn,
+                  service.name,
                   maxLines: 2,
                   style: Styles.textStyle18.copyWith(
                     fontWeight: FontWeight.bold,
@@ -91,80 +55,115 @@ class ServiceSummaryCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: theme.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: Text(
-                  "Top rated",
-                  style: Styles.textStyle11.copyWith(color: theme.primary),
-                ),
+              InkWell(
+                onTap: onAddReview,
+                child: Icon(Icons.rate_review_rounded),
+              ),
+              BlocBuilder<FavoritesBloc, FavoritesState>(
+                builder: (context, state) {
+                  var isFavorite = service.isFavorite;
+                  if (state is FavoritesLoaded) {
+                    isFavorite = state.data.services.any(
+                      (item) => item.id == service.id,
+                    );
+                  }
+                  return IconButton(
+                    onPressed: () => context.read<FavoritesBloc>().add(
+                      ToggleFavoriteEvent(type: 'service', id: service.id),
+                    ),
+                    icon: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      child: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_outline,
+                        key: ValueKey(isFavorite),
+                        color: isFavorite ? Colors.red : theme.primary,
+                        size: isFavorite ? 30.sp : 25.sp,
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           ),
           SizedBox(height: 8.h),
-          Row(
-            children: [
-              Icon(Icons.business, size: 14.sp, color: theme.primary),
-              SizedBox(width: 4.w),
-              Text(
-                service.company!.nameEn,
-                style: Styles.textStyle12.copyWith(color: theme.primary),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Icon(
-                Icons.location_on_rounded,
-                size: 14,
-                color: theme.onSurfaceVariant,
-              ),
-              const SizedBox(width: 4),
-              Text(
-                service.company!.locationEn,
-                style: Styles.textStyle11.copyWith(
+          if (service.company != null) ...[
+            Row(
+              children: [
+                Icon(Icons.business, size: 14.sp, color: theme.primary),
+                SizedBox(width: 4.w),
+                Expanded(
+                  child: Text(
+                    service.company!.name,
+                    overflow: TextOverflow.ellipsis,
+                    style: Styles.textStyle12.copyWith(color: theme.primary),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Icon(
+                  Icons.location_on_rounded,
+                  size: 14.sp,
                   color: theme.onSurfaceVariant,
                 ),
-              ),
-            ],
+                SizedBox(width: 4.w),
+                Expanded(
+                  child: Text(
+                    service.company!.location,
+                    overflow: TextOverflow.ellipsis,
+                    style: Styles.textStyle11.copyWith(
+                      color: theme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+          SizedBox(height: 16.h),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = 3;
+              final tileWidth = constraints.maxWidth / columns;
+              return Wrap(
+                runSpacing: 12.h,
+                children: [
+                  SizedBox(
+                    width: tileWidth,
+                    child: _InfoTile(
+                      icon: Icons.star_rounded,
+                      value: service.rating.toString(),
+                      label: l.search_rating,
+                    ),
+                  ),
+                  SizedBox(
+                    width: tileWidth,
+                    child: _InfoTile(
+                      icon: Icons.reviews_rounded,
+                      value: (service.reviews?.length ?? 0).toString(),
+                      label: l.reviews,
+                    ),
+                  ),
+                  SizedBox(
+                    width: tileWidth,
+                    child: _InfoTile(
+                      icon: Icons.schedule_rounded,
+                      value: '${service.minDuration} - ${service.maxDuration}',
+                      label: l.duration,
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
           SizedBox(height: 16.h),
-          Row(
-            children: [
-              Expanded(
-                child: _InfoTile(
-                  icon: Icons.star_rounded,
-                  value: service.rating,
-                  label: "Rating",
-                ),
-              ),
-              Expanded(
-                child: _InfoTile(
-                  icon: Icons.reviews_rounded,
-                  value: service.reviews!.length.toString(),
-                  label: "Reviews",
-                ),
-              ),
-              Expanded(
-                child: _InfoTile(
-                  icon: Icons.schedule_rounded,
-                  value: "${service.minDuration} - ${service.maxDuration}",
-                  label: "Duration",
-                ),
-              ),
-            ],
-          ),
+          ServiceOverviewSection(overview: service.description),
           SizedBox(height: 16.h),
-          ServiceOverviewSection(overview: service.descriptionEn),
+          ServicePackagesSection(packages: service.packages ?? const []),
           SizedBox(height: 16.h),
-          ServicePackagesSection(packages: service.packages!),
+          BeforeAfterGallery(images: service.images ?? const []),
           SizedBox(height: 16.h),
-          BeforeAfterGallery(),
-          SizedBox(height: 16.h),
-          ReviewsSection(company: service.company!),
+          ReviewsSection(reviews: service.reviews ?? const []),
         ],
       ),
     );
@@ -173,32 +172,49 @@ class ServiceSummaryCard extends StatelessWidget {
 
 class _InfoTile extends StatelessWidget {
   final IconData icon;
-  final String value;
+  final String? value;
   final String label;
+  final VoidCallback? onTap;
+
   const _InfoTile({
     required this.icon,
-    required this.value,
+    this.value,
     required this.label,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
-    return Column(
+    final child = Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: 20.sp, color: theme.primary),
         SizedBox(height: 6.h),
-        Text(
-          value,
-          style: Styles.textStyle12.copyWith(fontWeight: FontWeight.bold),
-        ),
+        if (value != null)
+          Text(
+            value!,
+            style: Styles.textStyle12.copyWith(fontWeight: FontWeight.bold),
+          ),
         Text(
           label,
+          maxLines: 2,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
           style: Styles.textStyle11.copyWith(
-            color: theme.onSurface.withOpacity(0.6),
+            color: theme.onSurface.withValues(alpha: 0.6),
           ),
         ),
       ],
+    );
+    if (onTap == null) return child;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12.r),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 4.h),
+        child: child,
+      ),
     );
   }
 }

@@ -18,6 +18,20 @@ class ServicesError extends ServicesState {
   ServicesError(this.message);
 }
 
+class OffersLoading extends ServicesState {}
+
+class OffersLoaded extends ServicesState {
+  final List<ServiceEntity> offers;
+
+  OffersLoaded(this.offers);
+}
+
+class OffersError extends ServicesState {
+  final String message;
+
+  OffersError(this.message);
+}
+
 class ServiceDetailsInitial extends ServicesState {}
 
 class ServiceDetailsLoading extends ServicesState {}

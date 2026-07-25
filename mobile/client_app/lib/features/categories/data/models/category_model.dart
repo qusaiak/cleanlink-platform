@@ -52,10 +52,10 @@ class CategoryModel {
   }
 
   CategoryEntity toEntity() => CategoryEntity(
-        id: id ?? 0,
-        name: name ?? "",
-        description: description ?? "",
-        image: image ?? "",
-        services: services?.map((e) => e.toEntity()).toList() ?? const [],
-      );
+    id: id ?? 0,
+    name: name ?? "",
+    description: description ?? "",
+    image: image ?? "",
+    services: services?.map((e) => e.toEntity()).toList() ?? const [],
+  );
 }

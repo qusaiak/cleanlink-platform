@@ -38,16 +38,16 @@ class CategoryServiceEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        companyId,
-        categoryId,
-        name,
-        description,
-        rating,
-        minDuration,
-        maxDuration,
-        price,
-        image,
-        discount,
-      ];
+    id,
+    companyId,
+    categoryId,
+    name,
+    description,
+    rating,
+    minDuration,
+    maxDuration,
+    price,
+    image,
+    discount,
+  ];
 }

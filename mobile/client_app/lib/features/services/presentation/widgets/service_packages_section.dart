@@ -71,7 +71,7 @@ class _ServicePackagesSectionState extends State<ServicePackagesSection> {
                       ),
                     ),
                     child: Text(
-                      package.nameEn,
+                      package.name,
                       maxLines: 2,
                       style: Styles.textStyle12.copyWith(
                         color: isSelected ? Colors.white : theme.onSurface,
@@ -99,7 +99,7 @@ class _ServicePackagesSectionState extends State<ServicePackagesSection> {
                     children: [
                       Expanded(
                         child: Text(
-                          selectedPackage.nameEn,
+                          selectedPackage.name,
                           maxLines: 2,
                           style: Styles.textStyle14.copyWith(
                             fontWeight: FontWeight.bold,
@@ -152,13 +152,13 @@ class _ServicePackagesSectionState extends State<ServicePackagesSection> {
                     ),
                   ),
                   SizedBox(height: 12.h),
-                  ...selectedPackage.detailsEn.map(
+                  ...selectedPackage.details.map(
                     (feature) => Padding(
                       padding: EdgeInsets.only(bottom: 8.h),
                       child: Row(
                         children: [
                           Icon(
-                            Icons.check_circle_rounded,
+                            Icons.check_circle_outline,
                             size: 16.sp,
                             color: theme.primary,
                           ),
@@ -166,7 +166,7 @@ class _ServicePackagesSectionState extends State<ServicePackagesSection> {
                           Expanded(
                             child: Text(
                               feature,
-                              maxLines: 2,
+                              maxLines: 5,
                               style: Styles.textStyle12,
                             ),
                           ),

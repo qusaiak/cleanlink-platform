@@ -11,7 +11,7 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
   final GetCategoryUseCase getCategoryUseCase;
 
   CategoriesBloc(this.useCase, this.getCategoryUseCase)
-      : super(const CategoriesInitial()) {
+    : super(const CategoriesInitial()) {
     on<GetCategoriesEvent>(_onGetCategories);
     on<GetCategoryEvent>(_onGetCategory);
   }

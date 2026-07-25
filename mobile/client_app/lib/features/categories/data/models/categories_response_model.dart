@@ -3,7 +3,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'category_model.dart';
 import '../../domain/entities/category_entity.dart';
 
-
 part 'categories_response_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
@@ -20,17 +19,12 @@ class CategoriesResponseModel {
     required this.data,
   });
 
-  factory CategoriesResponseModel.fromJson(
-      Map<String, dynamic> json,
-      ) =>
+  factory CategoriesResponseModel.fromJson(Map<String, dynamic> json) =>
       _$CategoriesResponseModelFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$CategoriesResponseModelToJson(this);
+  Map<String, dynamic> toJson() => _$CategoriesResponseModelToJson(this);
 
   List<CategoryEntity> toEntity() {
-    return data
-        .map((e) => e.toEntity())
-        .toList();
+    return data.map((e) => e.toEntity()).toList();
   }
 }

@@ -7,18 +7,15 @@ part of 'company_model.dart';
 // **************************************************************************
 
 CompanyModel _$CompanyModelFromJson(Map<String, dynamic> json) => CompanyModel(
-  id: (json['id'] as num?)?.toInt(),
-  managerId: (json['manager_id'] as num?)?.toInt(),
-  regionId: (json['region_id'] as num?)?.toInt(),
+  id: _intFromJson(json['id']),
+  managerId: _intFromJson(json['manager_id']),
+  regionId: _intFromJson(json['region_id']),
   name: json['name'] as String?,
   description: json['description'] as String?,
   image: json['image'] as String?,
   location: json['location'] as String?,
-  rating: (json['rating'] as num?)?.toInt(),
-  isOpen: json['is_open'] as bool?,
-  isFavorite: json['is_favorite'] as bool?,
-  startHour: json['start_hour'] as String?,
-  closeHour: json['close_hour'] as String?,
+  rating: _doubleFromJson(json['rating']),
+  isFavorite: _boolFromJson(json['is_favorite']),
   manager: json['manager'] == null
       ? null
       : ManagerModel.fromJson(json['manager'] as Map<String, dynamic>),
@@ -34,6 +31,9 @@ CompanyModel _$CompanyModelFromJson(Map<String, dynamic> json) => CompanyModel(
   reviews: (json['reviews'] as List<dynamic>?)
       ?.map((e) => ReviewModel.fromJson(e as Map<String, dynamic>))
       .toList(),
+  workTimes: json['workTimes'] == null
+      ? const []
+      : _workTimesFromJson(json['workTimes']),
   createdAt: json['created_at'] == null
       ? null
       : DateTime.parse(json['created_at'] as String),
@@ -52,15 +52,13 @@ Map<String, dynamic> _$CompanyModelToJson(CompanyModel instance) =>
       'image': instance.image,
       'location': instance.location,
       'rating': instance.rating,
-      'is_open': instance.isOpen,
       'is_favorite': instance.isFavorite,
-      'start_hour': instance.startHour,
-      'close_hour': instance.closeHour,
       'manager': instance.manager,
       'region': instance.region,
       'services': instance.services,
       'workers': instance.workers,
       'reviews': instance.reviews,
+      'workTimes': instance.workTimes,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
     };

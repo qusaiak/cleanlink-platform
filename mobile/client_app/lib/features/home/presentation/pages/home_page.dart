@@ -9,7 +9,3 @@ class HomePage extends StatelessWidget {
     return HomeBody();
   }
 }
-
-
-
-

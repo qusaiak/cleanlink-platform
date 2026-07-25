@@ -13,8 +13,16 @@ class ServicesRepoImpl implements ServicesRepo {
   Future<List<ServiceEntity>> getServices() async {
     try {
       final response = await api.getServices();
-      print("RAW RESPONSE");
-      print(response.data.data);
+      return response.data.toEntity();
+    } on DioException catch (e) {
+      throw NetworkExceptions.fromDio(e);
+    }
+  }
+
+  @override
+  Future<List<ServiceEntity>> getOffers() async {
+    try {
+      final response = await api.getOffers();
       return response.data.toEntity();
     } on DioException catch (e) {
       throw NetworkExceptions.fromDio(e);

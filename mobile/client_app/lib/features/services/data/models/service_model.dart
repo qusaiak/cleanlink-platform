@@ -1,5 +1,7 @@
+import 'package:client_app/features/companies/data/models/review_model.dart';
 import 'package:client_app/features/companies/domain/entities/company_entity.dart';
 import 'package:client_app/features/services/data/models/package_model.dart';
+import 'package:client_app/features/services/data/models/service_gallery_image_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../../../companies/domain/entities/manager_entity.dart';
 import '../../../companies/domain/entities/region_entity.dart';
@@ -17,25 +19,23 @@ class ServiceModel {
 
   final int? categoryId;
 
-  final String? nameAr;
+  final String? name;
 
-  final String? nameEn;
+  final String? description;
 
-  final String? descriptionAr;
-
-  final String? descriptionEn;
-
-  final String? rating;
+  final double? rating;
 
   final int? minDuration;
 
   final int? maxDuration;
 
-  final String? price;
+  final int? price;
 
   final String? image;
 
-  final String? discount;
+  final int? discount;
+
+  final bool? isFavorite;
 
   final DateTime? createdAt;
 
@@ -47,24 +47,23 @@ class ServiceModel {
 
   final List<AttributeModel>? attributes;
 
-  final List<dynamic>? reviews;
+  final List<ReviewModel>? reviews;
 
-  final List<dynamic>? images;
+  final List<ServiceGalleryImageModel>? images;
 
   const ServiceModel({
     required this.id,
     required this.companyId,
     required this.categoryId,
-    required this.nameAr,
-    required this.nameEn,
-    required this.descriptionAr,
-    required this.descriptionEn,
+    required this.name,
+    required this.description,
     required this.rating,
     required this.minDuration,
     required this.maxDuration,
     required this.price,
     required this.image,
     required this.discount,
+    required this.isFavorite,
     required this.createdAt,
     required this.updatedAt,
     this.company,
@@ -83,16 +82,15 @@ class ServiceModel {
     id: id ?? 0,
     companyId: companyId ?? 0,
     categoryId: categoryId ?? 0,
-    nameAr: nameAr ?? "",
-    nameEn: nameEn ?? "",
-    descriptionAr: descriptionAr ?? "",
-    descriptionEn: descriptionEn ?? "",
-    rating: (rating ?? "0"),
+    name: name ?? "",
+    description: description ?? "",
+    rating: rating ?? 0.0,
     minDuration: minDuration ?? 0,
     maxDuration: maxDuration ?? 0,
-    price: price ?? "0",
+    price: price ?? 0,
     image: image ?? "",
-    discount: discount ?? "0",
+    discount: discount ?? 0,
+    isFavorite: isFavorite ?? false,
     createdAt: createdAt ?? DateTime.now(),
     updatedAt: updatedAt ?? DateTime.now(),
     company:
@@ -101,26 +99,23 @@ class ServiceModel {
           id: 0,
           managerId: 0,
           regionId: 0,
-          nameAr: "",
-          nameEn: "",
-          descriptionAr: "",
-          descriptionEn: "",
+          name: "",
+          description: "",
           image: "",
-          locationAr: "",
-          locationEn: "",
-          rating: "0",
-          isOpen: 1,
-          startHour: "",
-          closeHour: "",
+          location: "",
+          rating: 0,
+          isFavorite: false,
           manager: ManagerEntity(id: 0, fullname: '', email: '', role: ''),
           region: RegionEntity(
             id: 0,
-            nameAr: '',
-            nameEn: '',
+            name: '',
+            image: '',
             managerId: 0,
             manager: ManagerEntity(id: 0, fullname: '', email: '', role: ''),
           ),
           services: [],
+          workers: [],
+          reviews: [],
           createdAt: createdAt ?? DateTime.now(),
           updatedAt: updatedAt ?? DateTime.now(),
         ),
@@ -129,8 +124,8 @@ class ServiceModel {
 
     attributes: attributes?.map((e) => e.toEntity()).toList() ?? [],
 
-    reviews: reviews ?? [],
+    reviews: reviews?.map((e) => e.toEntity()).toList() ?? [],
 
-    images: images ?? [],
+    images: images?.map((e) => e.toEntity()).toList() ?? [],
   );
 }

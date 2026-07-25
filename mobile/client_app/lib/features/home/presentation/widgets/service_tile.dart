@@ -55,21 +55,13 @@ class ServiceTile extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              service.nameEn!,
+                              service.name!,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: Styles.textStyle14.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
-
-                          SizedBox(width: 8.w),
-
-                          Icon(
-                            Icons.favorite_border,
-                            size: 20.sp,
-                            color: theme.primary,
                           ),
                         ],
                       ),
