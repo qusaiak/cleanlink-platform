@@ -13,20 +13,14 @@ import '../widgets/otp_resend_timer.dart';
 import 'otp_pin_field.dart';
 
 class OtpBody extends StatelessWidget {
-  const OtpBody({
-    super.key,
-    required this.state,
-    required this.phoneLabel,
-  });
+  const OtpBody({super.key, required this.state, required this.email});
 
   final AuthState state;
-  final String phoneLabel;
+  final String email;
 
-  Future<void> _handleResend(BuildContext context) async {
+  void _handleResend(BuildContext context) {
     HapticFeedback.lightImpact();
-    await Future<void>.delayed(const Duration(milliseconds: 400));
-    if (!context.mounted) return;
-    // context.read<AuthBloc>().clearOtpAfterResend();
+    context.read<AuthBloc>().add(const RequestResendVerificationCode());
   }
 
   @override
@@ -44,29 +38,35 @@ class OtpBody extends StatelessWidget {
           SizedBox(height: 28.h),
           AuthHeader(
             title: l.auth_otp_title,
-            subtitle: l.auth_otp_subtitle(phoneLabel),
+            subtitle: l.auth_otp_subtitle(email),
           ),
           SizedBox(height: 36.h),
           Center(
             child: OtpPinField(
               controller: f.otpCode,
               focusNode: f.otpFocus,
-              forceErrorState: false,
-              onChanged: (_) {
-                // if (state.otpHasError) bloc.clearOtpError();
-              },
-              // onCompleted: (_) => bloc.verifyOtpFromController(),
-              onCompleted: (_){},
+              forceErrorState:
+                  state.status == AuthStatus.errorVerifyAccount &&
+                  state.error != null,
+              onChanged: (code) => bloc.add(OtpChanged(code)),
+              onCompleted: (_) {},
             ),
           ),
           SizedBox(height: 20.h),
-          Center(child: OtpResendTimer(onResend: () => _handleResend(context))),
+          Center(
+            child: OtpResendTimer(
+              secondsRemaining: state.resendSecondsRemaining,
+              isLoading: state.isRequestResendVerificationCodeLoading == true,
+              onResend: () => _handleResend(context),
+            ),
+          ),
           SizedBox(height: 20.h),
           AppPrimaryButton(
             label: l.auth_otp_verify,
-            // loading: state.isLoading,
-            // onPressed: bloc.verifyOtpFromController,
-            onPressed: (){},
+            loading: state.isVerifyAccountLoading == true,
+            onPressed: state.isVerifyAccountLoading == true
+                ? null
+                : () => bloc.add(VerifyAccount(f.otpCode.text)),
           ),
           SizedBox(height: 24.h),
         ],

@@ -49,7 +49,11 @@ class OtpPinField extends StatelessWidget {
         length: length,
         autofocus: true,
         keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        enableInteractiveSelection: false,
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+          const _ManualOtpEntryFormatter(),
+        ],
         defaultPinTheme: defaultPin,
         focusedPinTheme: defaultPin.copyDecorationWith(
           border: Border.all(color: AppColor.primaryColor, width: 1.4),
@@ -73,5 +77,18 @@ class OtpPinField extends StatelessWidget {
         onCompleted: onCompleted,
       ),
     );
+  }
+}
+
+class _ManualOtpEntryFormatter extends TextInputFormatter {
+  const _ManualOtpEntryFormatter();
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final insertedCharacters = newValue.text.length - oldValue.text.length;
+    return insertedCharacters > 1 ? oldValue : newValue;
   }
 }
