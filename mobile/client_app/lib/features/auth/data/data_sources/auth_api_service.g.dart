@@ -57,8 +57,48 @@ class _AuthApiService implements AuthApiService {
   }
 
   @override
-  Future<HttpResponse<BaseResponseModel<AuthResponseModel>>> register(
+  Future<HttpResponse<BaseResponseModel<OtpDispatchResponseModel>>> register(
     RegisterRequestModel body,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _options =
+        _setStreamType<
+          HttpResponse<BaseResponseModel<OtpDispatchResponseModel>>
+        >(
+          Options(method: 'POST', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                'auth/register',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BaseResponseModel<OtpDispatchResponseModel> _value;
+    try {
+      _value = BaseResponseModel<OtpDispatchResponseModel>.fromJson(
+        _result.data!,
+        (json) =>
+            OtpDispatchResponseModel.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<BaseResponseModel<AuthResponseModel>>> verifyOtp(
+    VerifyOtpRequestModel body,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -70,7 +110,7 @@ class _AuthApiService implements AuthApiService {
           Options(method: 'POST', headers: _headers, extra: _extra)
               .compose(
                 _dio.options,
-                'auth/register',
+                'auth/verify-otp',
                 queryParameters: queryParameters,
                 data: _data,
               )
@@ -94,19 +134,110 @@ class _AuthApiService implements AuthApiService {
   }
 
   @override
-  Future<HttpResponse<BaseResponseModel<UserProfileResponseModel>>>
-  updateProfile(String token, UserProfileRequestModel body) async {
+  Future<HttpResponse<BaseResponseModel<OtpDispatchResponseModel>>> resendOtp(
+    ResendOtpRequestModel body,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
-    _headers.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body.toJson());
     final _options =
         _setStreamType<
+          HttpResponse<BaseResponseModel<OtpDispatchResponseModel>>
+        >(
+          Options(method: 'POST', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                'auth/resend-otp',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BaseResponseModel<OtpDispatchResponseModel> _value;
+    try {
+      _value = BaseResponseModel<OtpDispatchResponseModel>.fromJson(
+        _result.data!,
+        (json) =>
+            OtpDispatchResponseModel.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<BaseResponseModel<dynamic>>> changePassword(
+    ChangePasswordRequestModel body,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _options = _setStreamType<HttpResponse<BaseResponseModel<dynamic>>>(
+      Options(method: 'PUT', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'auth/change-password',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BaseResponseModel<dynamic> _value;
+    try {
+      _value = BaseResponseModel<dynamic>.fromJson(
+        _result.data!,
+        (json) => json as dynamic,
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<BaseResponseModel<UserProfileResponseModel>>>
+  updateProfile(File? image, String address, String phone) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = FormData();
+    if (image != null) {
+      _data.files.add(
+        MapEntry(
+          'image',
+          MultipartFile.fromFileSync(
+            image.path,
+            filename: image.path.split(Platform.pathSeparator).last,
+          ),
+        ),
+      );
+    }
+    _data.fields.add(MapEntry('address', address));
+    _data.fields.add(MapEntry('phone', phone));
+    final _options =
+        _setStreamType<
           HttpResponse<BaseResponseModel<UserProfileResponseModel>>
         >(
-          Options(method: 'PUT', headers: _headers, extra: _extra)
+          Options(
+                method: 'POST',
+                headers: _headers,
+                extra: _extra,
+                contentType: 'multipart/form-data',
+              )
               .compose(
                 _dio.options,
                 'profile',

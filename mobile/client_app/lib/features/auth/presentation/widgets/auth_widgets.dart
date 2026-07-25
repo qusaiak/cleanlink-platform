@@ -5,8 +5,11 @@ import '../../../../config/theme/app_decoration.dart';
 import '../../../../core/utils/functions/validator.dart';
 
 class CustomPinPut extends StatelessWidget {
-  const CustomPinPut(this._pinCodeController, this._pinCodeFocusNode,
-      {super.key});
+  const CustomPinPut(
+    this._pinCodeController,
+    this._pinCodeFocusNode, {
+    super.key,
+  });
 
   final TextEditingController _pinCodeController;
 

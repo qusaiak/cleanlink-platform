@@ -11,9 +11,15 @@ enum AuthStatus {
   loadingVerifyAccount,
   successVerifyAccount,
   errorVerifyAccount,
+  loadingResendVerificationCode,
+  successResendVerificationCode,
+  errorResendVerificationCode,
   noInternet,
   loggedOut,
   changePassword,
+  loadingChangePassword,
+  successChangePassword,
+  errorChangePassword,
 }
 
 class AuthState extends Equatable {
@@ -28,6 +34,11 @@ class AuthState extends Equatable {
   final bool? isOldPasswordVis;
   final bool? isNewPasswordVis;
   final bool? isConfirmPasswordVis;
+  final bool isChangingPassword;
+  final String? changePasswordMessage;
+  final String? successMessage;
+  final PendingRegistrationData? pendingRegistration;
+  final int resendSecondsRemaining;
   final Failure? error;
 
   const AuthState({
@@ -42,8 +53,17 @@ class AuthState extends Equatable {
     this.isOldPasswordVis,
     this.isNewPasswordVis,
     this.isConfirmPasswordVis,
+    this.isChangingPassword = false,
+    this.changePasswordMessage,
+    this.successMessage,
+    this.pendingRegistration,
+    this.resendSecondsRemaining = 0,
     this.error,
   });
+
+  bool get canResendOtp =>
+      resendSecondsRemaining == 0 &&
+      isRequestResendVerificationCodeLoading != true;
 
   AuthState copyWith({
     AuthStatus? status,
@@ -57,12 +77,23 @@ class AuthState extends Equatable {
     bool? isOldPasswordVis,
     bool? isNewPasswordVis,
     bool? isConfirmPasswordVis,
+    bool? isChangingPassword,
+    String? changePasswordMessage,
+    String? successMessage,
+    PendingRegistrationData? pendingRegistration,
+    int? resendSecondsRemaining,
     Failure? error,
+    bool clearError = false,
+    bool clearChangePasswordMessage = false,
+    bool clearSuccessMessage = false,
+    bool clearPendingRegistration = false,
+    bool clearToken = false,
+    bool clearUser = false,
   }) {
     return AuthState(
       status: status ?? this.status,
-      token: token ?? this.token,
-      user: user ?? this.user,
+      token: clearToken ? null : token ?? this.token,
+      user: clearUser ? null : user ?? this.user,
       isLoadingLogin: isLoadingLogin ?? this.isLoadingLogin,
       isLoadingRegister: isLoadingRegister ?? this.isLoadingRegister,
       isVerifyAccountLoading:
@@ -74,7 +105,19 @@ class AuthState extends Equatable {
       isOldPasswordVis: isOldPasswordVis ?? this.isOldPasswordVis,
       isNewPasswordVis: isNewPasswordVis ?? this.isNewPasswordVis,
       isConfirmPasswordVis: isConfirmPasswordVis ?? this.isConfirmPasswordVis,
-      error: error ?? this.error,
+      isChangingPassword: isChangingPassword ?? this.isChangingPassword,
+      changePasswordMessage: clearChangePasswordMessage
+          ? null
+          : changePasswordMessage ?? this.changePasswordMessage,
+      successMessage: clearSuccessMessage
+          ? null
+          : successMessage ?? this.successMessage,
+      pendingRegistration: clearPendingRegistration
+          ? null
+          : pendingRegistration ?? this.pendingRegistration,
+      resendSecondsRemaining:
+          resendSecondsRemaining ?? this.resendSecondsRemaining,
+      error: clearError ? null : error ?? this.error,
     );
   }
 
@@ -91,6 +134,11 @@ class AuthState extends Equatable {
     isOldPasswordVis,
     isNewPasswordVis,
     isConfirmPasswordVis,
+    isChangingPassword,
+    changePasswordMessage,
+    successMessage,
+    pendingRegistration,
+    resendSecondsRemaining,
     error,
   ];
 }

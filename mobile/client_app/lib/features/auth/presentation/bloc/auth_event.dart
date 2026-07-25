@@ -26,22 +26,72 @@ class Register extends AuthEvent {
 }
 
 class RequestResendVerificationCode extends AuthEvent {
-  final String gsm;
-
-  const RequestResendVerificationCode(this.gsm);
+  const RequestResendVerificationCode();
 
   @override
-  List<Object> get props => [gsm];
+  List<Object> get props => [];
 }
 
 class VerifyAccount extends AuthEvent {
-  final String gsm;
   final String verificationCode;
 
-  const VerifyAccount(this.gsm, this.verificationCode);
+  const VerifyAccount(this.verificationCode);
 
   @override
-  List<Object> get props => [gsm, verificationCode];
+  List<Object> get props => [verificationCode];
+}
+
+class OtpChanged extends AuthEvent {
+  final String code;
+
+  const OtpChanged(this.code);
+
+  @override
+  List<Object> get props => [code];
+}
+
+class OtpCountdownStarted extends AuthEvent {
+  final int seconds;
+
+  const OtpCountdownStarted({this.seconds = 60});
+
+  @override
+  List<Object> get props => [seconds];
+}
+
+class OtpCountdownTicked extends AuthEvent {
+  const OtpCountdownTicked();
+
+  @override
+  List<Object> get props => [];
+}
+
+class OtpFlowCancelled extends AuthEvent {
+  const OtpFlowCancelled();
+
+  @override
+  List<Object> get props => [];
+}
+
+class AuthMessagesCleared extends AuthEvent {
+  const AuthMessagesCleared();
+
+  @override
+  List<Object> get props => [];
+}
+
+class AuthStatusHandled extends AuthEvent {
+  const AuthStatusHandled();
+
+  @override
+  List<Object> get props => [];
+}
+
+class AuthSessionCleared extends AuthEvent {
+  const AuthSessionCleared();
+
+  @override
+  List<Object> get props => [];
 }
 
 class ChangePasswordView extends AuthEvent {
@@ -49,4 +99,19 @@ class ChangePasswordView extends AuthEvent {
   const ChangePasswordView(this.currentTextFormField);
   @override
   List<Object> get props => [currentTextFormField];
+}
+
+class SubmitChangePassword extends AuthEvent {
+  final String oldPassword;
+  final String newPassword;
+  final String newPasswordConfirmation;
+
+  const SubmitChangePassword({
+    required this.oldPassword,
+    required this.newPassword,
+    required this.newPasswordConfirmation,
+  });
+
+  @override
+  List<Object> get props => [oldPassword, newPassword, newPasswordConfirmation];
 }

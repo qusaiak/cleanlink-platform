@@ -18,9 +18,10 @@ class AuthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context)!.colorScheme;
-    final textAlign =
-        alignment == CrossAxisAlignment.start ? TextAlign.start : TextAlign.center;
+    var theme = Theme.of(context).colorScheme;
+    final textAlign = alignment == CrossAxisAlignment.start
+        ? TextAlign.start
+        : TextAlign.center;
     return Column(
       crossAxisAlignment: alignment,
       children: [

@@ -10,18 +10,13 @@ class AuthResponseModel {
   final UserModel user;
   final String accessToken;
 
-  const AuthResponseModel({
-    required this.user,
-    required this.accessToken,
-  });
+  const AuthResponseModel({required this.user, required this.accessToken});
 
   factory AuthResponseModel.fromJson(Map<String, dynamic> json) =>
       _$AuthResponseModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthResponseModelToJson(this);
 
-  AuthEntity toEntity() => AuthEntity(
-        user: user.toEntity(),
-        accessToken: accessToken,
-      );
+  AuthEntity toEntity() =>
+      AuthEntity(user: user.toEntity(), accessToken: accessToken);
 }

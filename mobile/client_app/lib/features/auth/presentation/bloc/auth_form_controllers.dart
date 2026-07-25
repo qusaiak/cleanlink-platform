@@ -16,7 +16,8 @@ class AuthFormControllers {
   final TextEditingController registerEmail = TextEditingController();
   final TextEditingController registerPassword = TextEditingController();
   final TextEditingController registerConfirmPassword = TextEditingController();
-  final TextEditingController registerBirthDateDisplay = TextEditingController();
+  final TextEditingController registerBirthDateDisplay =
+      TextEditingController();
   final FocusNode registerNameFocus = FocusNode();
   final FocusNode registerEmailFocus = FocusNode();
   final FocusNode registerPasswordFocus = FocusNode();
@@ -34,6 +35,12 @@ class AuthFormControllers {
   final FocusNode changeOldFocus = FocusNode();
   final FocusNode changeNewFocus = FocusNode();
   final FocusNode changeConfirmFocus = FocusNode();
+
+  void clearSensitiveRegistrationData() {
+    registerPassword.clear();
+    registerConfirmPassword.clear();
+    otpCode.clear();
+  }
 
   void dispose() {
     loginEmail.dispose();

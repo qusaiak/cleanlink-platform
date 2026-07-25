@@ -49,31 +49,25 @@ class AuthPhoneField extends StatelessWidget {
         _PhoneNumberFormatter(),
       ],
       validator: (v) => AppValidators.phone(v, context),
-      prefix: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomImageView(
-              imagePath: Assets.icons.syria.path,
-              width: 25.w,
+      prefix: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomImageView(imagePath: Assets.icons.syria.path, width: 25.w),
+          SizedBox(width: 6.w),
+          Text(
+            initialCountry.dialCode,
+            style: Styles.textStyle14.copyWith(
+              color: theme.onSurface,
+              fontWeight: FontWeight.w600,
             ),
-            SizedBox(width: 6.w),
-            Text(
-              initialCountry.dialCode,
-              style: Styles.textStyle14.copyWith(
-                color: theme.onSurface,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            Container(
-              width: 1,
-              height: 22.h,
-              margin: EdgeInsetsDirectional.only(start: 15.w),
-              color: theme.onSurface.withValues(alpha: 0.3),
-            ),
-          ],
-        ),
+          ),
+          Container(
+            width: 1,
+            height: 22.h,
+            margin: EdgeInsetsDirectional.only(start: 15.w),
+            color: theme.onSurface.withValues(alpha: 0.3),
+          ),
+        ],
       ),
     );
   }

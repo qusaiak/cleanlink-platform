@@ -1,4 +1,3 @@
-
 import 'package:client_app/config/theme/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,9 +18,7 @@ class TitleAuthWidget extends StatelessWidget {
           pageTitle,
           style: Styles.textStyle22.copyWith(color: theme.onSurface),
         ),
-        SizedBox(
-          height: 20.h,
-        ),
+        SizedBox(height: 20.h),
       ],
     );
   }

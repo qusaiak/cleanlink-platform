@@ -12,6 +12,8 @@ class AuthEmailField extends StatelessWidget {
     this.focusNode,
     this.textInputAction,
     this.onFieldSubmitted,
+    this.onChanged,
+    this.validator,
   });
 
   final TextEditingController controller;
@@ -20,6 +22,8 @@ class AuthEmailField extends StatelessWidget {
   final FocusNode? focusNode;
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onFieldSubmitted;
+  final ValueChanged<String>? onChanged;
+  final FormFieldValidator<String>? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +37,9 @@ class AuthEmailField extends StatelessWidget {
       textInputAction: textInputAction ?? TextInputAction.next,
       focusNode: focusNode,
       onFieldSubmitted: onFieldSubmitted,
+      onChanged: onChanged,
 
-      validator: (v) => AppValidators.email(v, context),
+      validator: validator ?? (v) => AppValidators.email(v, context),
 
       prefix: Icon(
         Icons.alternate_email,

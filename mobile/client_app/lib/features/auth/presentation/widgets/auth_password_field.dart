@@ -53,7 +53,8 @@ class _AuthPasswordFieldState extends State<AuthPasswordField> {
       focusNode: widget.focusNode,
       onFieldSubmitted: widget.onFieldSubmitted,
       onChanged: widget.onChanged,
-      validator: widget.validator ??
+      validator:
+          widget.validator ??
           (widget.useStrongValidator
               ? (v) => AppValidators.password(v, context)
               : (v) => AppValidators.required(v, context)),
@@ -66,9 +67,7 @@ class _AuthPasswordFieldState extends State<AuthPasswordField> {
         splashRadius: 20.r,
         onPressed: () => setState(() => _obscure = !_obscure),
         icon: Icon(
-          _obscure
-              ? Icons.visibility_off_outlined
-              : Icons.visibility_outlined,
+          _obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
           color: theme.onSurface.withValues(alpha: 0.55),
           size: 20.r,
         ),

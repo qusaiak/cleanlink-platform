@@ -23,9 +23,7 @@ class AuthLogo extends StatelessWidget {
         child: SizedBox(
           width: dimension,
           height: dimension,
-          child: Assets.images.logo.appLogo.image(
-            fit: BoxFit.contain,
-          ),
+          child: Assets.images.logo.appLogo.image(fit: BoxFit.contain),
         ),
       ),
     );
