@@ -14,19 +14,19 @@ class BookingCard extends StatelessWidget {
   final OrderEntity booking;
   const BookingCard({super.key, required this.booking});
   Color _statusColor() {
-    switch (booking.status.toLowerCase()) {
-      case 'pending':
+    switch (booking.statusType) {
+      case OrderStatus.pending:
+        return Colors.orange;
+      case OrderStatus.assignedToWorker:
         return AppColor.primaryColor;
-      case 'assigned':
-      case 'assigned_to_worker':
-        return AppColor.secondaryColor;
-      case 'completed':
+      case OrderStatus.inProgress:
+        return Colors.purple;
+      case OrderStatus.completed:
         return AppColor.success;
-      case 'canceled':
-      case 'cancelled':
+      case OrderStatus.canceled:
         return AppColor.error;
-      default:
-        return AppColor.secondaryColor;
+      case OrderStatus.unknown:
+        return Colors.grey;
     }
   }
 
@@ -71,8 +71,8 @@ class BookingCard extends StatelessWidget {
                               AppLocalizations.of(context)!.service_details,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: Styles.textStyle16.copyWith(
-                            fontWeight: FontWeight.w700,
+                          style: Styles.textStyle14.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         if (package?.name.isNotEmpty == true)
@@ -82,13 +82,21 @@ class BookingCard extends StatelessWidget {
                               color: theme.onSurfaceVariant,
                             ),
                           ),
-                        if (company?.name.isNotEmpty == true)
-                          Text(
-                            company!.name,
-                            style: Styles.textStyle12.copyWith(
-                              color: theme.onSurfaceVariant,
-                            ),
-                          ),
+                        // if (company?.name.isNotEmpty == true)
+                        //   Text(
+                        //     company!.name,
+                        //     style: Styles.textStyle12.copyWith(
+                        //       color: theme.onSurfaceVariant,
+                        //     ),
+                        //   ),
+                        // if (booking.leader?.fullname.isNotEmpty == true &&
+                        //     (booking.isAssigned || booking.isInProgress))
+                        //   Text(
+                        //     '${AppLocalizations.of(context)!.team_leader}: ${booking.leader!.fullname}',
+                        //     style: Styles.textStyle12.copyWith(
+                        //       color: theme.onSurfaceVariant,
+                        //     ),
+                        //   ),
                       ],
                     ),
                   ),

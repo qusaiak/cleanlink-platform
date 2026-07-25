@@ -32,6 +32,9 @@ BookingModel _$BookingModelFromJson(Map<String, dynamic> json) => BookingModel(
   client: json['client'] == null
       ? null
       : OrderClientModel.fromJson(json['client'] as Map<String, dynamic>),
+  leader: json['leader'] == null
+      ? null
+      : OrderLeaderModel.fromJson(json['leader'] as Map<String, dynamic>),
   package: json['package'] == null
       ? null
       : OrderPackageModel.fromJson(json['package'] as Map<String, dynamic>),
@@ -53,6 +56,7 @@ Map<String, dynamic> _$BookingModelToJson(BookingModel instance) =>
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
       'client': instance.client,
+      'leader': instance.leader,
       'package': instance.package,
       'attributes': instance.attributes,
     };
@@ -97,6 +101,52 @@ Map<String, dynamic> _$OrderClientProfileModelToJson(
   'image': instance.image,
   'address': instance.address,
   'phone': instance.phone,
+};
+
+OrderLeaderModel _$OrderLeaderModelFromJson(Map<String, dynamic> json) =>
+    OrderLeaderModel(
+      id: (json['id'] as num?)?.toInt(),
+      fullname: json['fullname'] as String?,
+      email: json['email'] as String?,
+      role: json['role'] as String?,
+      profile: json['profile'] == null
+          ? null
+          : OrderLeaderProfileModel.fromJson(
+              json['profile'] as Map<String, dynamic>,
+            ),
+    );
+
+Map<String, dynamic> _$OrderLeaderModelToJson(OrderLeaderModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'fullname': instance.fullname,
+      'email': instance.email,
+      'role': instance.role,
+      'profile': instance.profile,
+    };
+
+OrderLeaderProfileModel _$OrderLeaderProfileModelFromJson(
+  Map<String, dynamic> json,
+) => OrderLeaderProfileModel(
+  id: (json['id'] as num?)?.toInt(),
+  userId: (json['user_id'] as num?)?.toInt(),
+  image: json['image'] as String?,
+  address: json['address'] as String?,
+  phone: json['phone'] as String?,
+  createdAt: json['created_at'] as String?,
+  updatedAt: json['updated_at'] as String?,
+);
+
+Map<String, dynamic> _$OrderLeaderProfileModelToJson(
+  OrderLeaderProfileModel instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'user_id': instance.userId,
+  'image': instance.image,
+  'address': instance.address,
+  'phone': instance.phone,
+  'created_at': instance.createdAt,
+  'updated_at': instance.updatedAt,
 };
 
 OrderPackageModel _$OrderPackageModelFromJson(Map<String, dynamic> json) =>

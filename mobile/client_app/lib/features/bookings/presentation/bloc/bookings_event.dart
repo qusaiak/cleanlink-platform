@@ -37,11 +37,12 @@ class BookOrderEvent extends BookingsEvent {
   final String location;
   final DateTime startTime;
   final String? note;
-  const BookOrderEvent(
-      {required this.packageId,
-      required this.location,
-      required this.startTime,
-      this.note});
+  const BookOrderEvent({
+    required this.packageId,
+    required this.location,
+    required this.startTime,
+    this.note,
+  });
   @override
   List<Object?> get props => [packageId, location, startTime, note];
 }

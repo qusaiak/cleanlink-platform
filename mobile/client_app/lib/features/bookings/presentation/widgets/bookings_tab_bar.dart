@@ -18,8 +18,9 @@ class BookingsTabBar extends StatelessWidget {
       BookingTab.all: l10n.all,
       BookingTab.pending: l10n.pending,
       BookingTab.assigned: l10n.assigned,
+      BookingTab.inProcess: l10n.in_process,
       BookingTab.completed: l10n.completed,
-      BookingTab.cancelled: l10n.canceled,
+      BookingTab.canceled: l10n.canceled,
     };
 
     return BlocBuilder<BookingsBloc, BookingsState>(
@@ -31,7 +32,7 @@ class BookingsTabBar extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             itemCount: tabs.length,
-            separatorBuilder: (_, __) => SizedBox(width: 8.w),
+            separatorBuilder: (_, _) => SizedBox(width: 8.w),
             itemBuilder: (context, index) {
               final entry = tabs.entries.elementAt(index);
               final isSelected = state.selectedTab == entry.key;

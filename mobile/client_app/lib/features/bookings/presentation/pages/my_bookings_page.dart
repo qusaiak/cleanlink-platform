@@ -6,6 +6,7 @@ import '../../../../config/language/app_language_info.dart';
 import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/custom_appbar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../domain/entities/booking_entity.dart';
 import '../bloc/bookings_bloc.dart';
 import '../widgets/booking_card.dart';
 import '../widgets/bookings_tab_bar.dart';
@@ -18,20 +19,20 @@ class MyBookingsPage extends StatefulWidget {
 
 class _MyBookingsPageState extends State<MyBookingsPage> {
   String? _lastLanguageCode;
-  bool _matchesTab(BookingTab tab, String status) {
+  bool _matchesTab(BookingTab tab, OrderEntity order) {
     switch (tab) {
       case BookingTab.all:
         return true;
       case BookingTab.pending:
-        return status == 'pending' || status == 'upcoming';
+        return order.statusType == OrderStatus.pending;
       case BookingTab.assigned:
-        return status == 'ongoing' ||
-            status == 'accepted' ||
-            status == 'approved';
+        return order.statusType == OrderStatus.assignedToWorker;
+      case BookingTab.inProcess:
+        return order.statusType == OrderStatus.inProgress;
       case BookingTab.completed:
-        return status == 'completed';
-      case BookingTab.cancelled:
-        return status == 'canceled' || status == 'cancelled';
+        return order.statusType == OrderStatus.completed;
+      case BookingTab.canceled:
+        return order.statusType == OrderStatus.canceled;
     }
   }
 
@@ -107,12 +108,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                   }
 
                   final orders = state.orders
-                      .where(
-                        (order) => _matchesTab(
-                          state.selectedTab,
-                          order.status.toLowerCase(),
-                        ),
-                      )
+                      .where((order) => _matchesTab(state.selectedTab, order))
                       .toList();
 
                   if (orders.isEmpty) {

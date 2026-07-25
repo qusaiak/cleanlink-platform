@@ -8,15 +8,14 @@ class OrderResult {
 }
 
 abstract class BookingsRepo {
-  Future<List<AvailableDayEntity>> getAvailableSlots(
-    int packageId,
-  );
+  Future<List<AvailableDayEntity>> getAvailableSlots(int packageId);
   Future<List<OrderEntity>> getOrders();
-  Future<OrderResult> bookOrder(
-      {required int packageId,
-      required String location,
-      required DateTime startTime,
-      String? note});
+  Future<OrderResult> bookOrder({
+    required int packageId,
+    required String location,
+    required DateTime startTime,
+    String? note,
+  });
   Future<OrderEntity> showOrder(int orderId);
   Future<OrderResult> cancelOrder(int orderId);
 }

@@ -10,10 +10,7 @@ part 'bookings_api_service.g.dart';
 
 @RestApi()
 abstract class BookingsApiService {
-  factory BookingsApiService(
-    Dio dio, {
-    String baseUrl,
-  }) = _BookingsApiService;
+  factory BookingsApiService(Dio dio, {String baseUrl}) = _BookingsApiService;
 
   @GET(ApiEndpoints.packageAvailableSlotsEndpoint)
   Future<HttpResponse<AvailableSlotsResponseModel>> getAvailableSlots(

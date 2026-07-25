@@ -1,6 +1,6 @@
 part of 'bookings_bloc.dart';
 
-enum BookingTab { all, pending, assigned, completed, cancelled }
+enum BookingTab { all, pending, assigned, inProcess, completed, canceled }
 
 class BookingsState extends Equatable {
   final List<OrderEntity> orders;
@@ -96,21 +96,23 @@ class BookingsState extends Equatable {
   }) {
     return BookingsState(
       orders: orders ?? this.orders,
-      selectedOrder:
-      clearSelectedOrder ? null : selectedOrder ?? this.selectedOrder,
+      selectedOrder: clearSelectedOrder
+          ? null
+          : selectedOrder ?? this.selectedOrder,
 
       isLoadingOrders: isLoadingOrders ?? this.isLoadingOrders,
       hasLoadedOrders: hasLoadedOrders ?? this.hasLoadedOrders,
 
       isBookingOrder: isBookingOrder ?? this.isBookingOrder,
       isLoadingOrderDetails:
-      isLoadingOrderDetails ?? this.isLoadingOrderDetails,
+          isLoadingOrderDetails ?? this.isLoadingOrderDetails,
       isCancelingOrder: isCancelingOrder ?? this.isCancelingOrder,
       isLoadingSlots: isLoadingSlots ?? this.isLoadingSlots,
 
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
-      successMessage:
-      clearSuccessMessage ? null : successMessage ?? this.successMessage,
+      successMessage: clearSuccessMessage
+          ? null
+          : successMessage ?? this.successMessage,
 
       bookingSuccess: bookingSuccess ?? this.bookingSuccess,
       cancelSuccess: cancelSuccess ?? this.cancelSuccess,
@@ -119,8 +121,9 @@ class BookingsState extends Equatable {
 
       availableDays: availableDays ?? this.availableDays,
       selectedDay: clearSelectedDay ? null : selectedDay ?? this.selectedDay,
-      selectedTime:
-      clearSelectedTime ? null : selectedTime ?? this.selectedTime,
+      selectedTime: clearSelectedTime
+          ? null
+          : selectedTime ?? this.selectedTime,
     );
   }
 
