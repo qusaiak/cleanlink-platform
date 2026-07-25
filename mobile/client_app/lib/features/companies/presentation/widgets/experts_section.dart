@@ -1,13 +1,16 @@
-
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:client_app/core/widgets/custom_image_view.dart';
+import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/colors.dart';
 import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../../core/widgets/row_title.dart';
 import '../../domain/entities/company_entity.dart';
+import '../bloc/companies_bloc.dart';
 
 class ExpertsSection extends StatefulWidget {
   final CompanyEntity company;
@@ -21,35 +24,32 @@ class ExpertsSection extends StatefulWidget {
 class _ExpertsSectionState extends State<ExpertsSection> {
   final ValueNotifier<int> _currentIndex = ValueNotifier(0);
 
-  static final experts = [
-    {
-      "name": "Ahmed",
-      "exp": "5 yrs exp",
-      "image": Assets.images.test.worker.path,
-    },
-    {
-      "name": "Omar",
-      "exp": "8 yrs exp",
-      "image": Assets.images.test.worker.path,
-    },
-    {
-      "name": "Sara",
-      "exp": "3 yrs exp",
-      "image": Assets.images.test.worker.path,
-    },
-  ];
+  // static final experts = [
+  //   {
+  //     "name": "Ahmed",
+  //     "exp": "5 yrs exp",
+  //     "image": Assets.images.test.worker.path,
+  //   },
+  //   {
+  //     "name": "Omar",
+  //     "exp": "8 yrs exp",
+  //     "image": Assets.images.test.worker.path,
+  //   },
+  //   {
+  //     "name": "Sara",
+  //     "exp": "3 yrs exp",
+  //     "image": Assets.images.test.worker.path,
+  //   },
+  // ];
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    for (final expert in experts) {
-      precacheImage(
-        AssetImage(expert["image"]!),
-        context,
-      );
-    }
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //
+  //   for (final expert in widget.company.workers) {
+  //     precacheImage(AssetImage(Assets.images.test.worker.path), context);
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -59,69 +59,75 @@ class _ExpertsSectionState extends State<ExpertsSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const RowTitle(
-          iconData: Icons.people_alt_outlined,
-          title: "Meet Our Experts",
-        ),
+    return BlocBuilder<CompaniesBloc, CompaniesState>(
+      builder: (context, state) {
+        return Column(
+          children: [
+            RowTitle(
+              iconData: Icons.people_alt_outlined,
+              title: AppLocalizations.of(context)!.meet_our_workers,
+            ),
 
-        SizedBox(height: 12.h),
+            SizedBox(height: 12.h),
 
-        CarouselSlider.builder(
-          itemCount: experts.length,
-          itemBuilder: (context, index, realIndex) {
-            final expert = experts[index];
+            CarouselSlider.builder(
+              itemCount: widget.company.workers.length,
+              itemBuilder: (context, index, realIndex) {
+                final worker = widget.company.workers[index];
 
-            return ValueListenableBuilder<int>(
-              valueListenable: _currentIndex,
-              builder: (context, currentIndex, _) {
-                return _ExpertCard(
-                  image: expert["image"]!,
-                  name: expert["name"]!,
-                  exp: expert["exp"]!,
-                  isActive: index == currentIndex,
+                return ValueListenableBuilder<int>(
+                  valueListenable: _currentIndex,
+                  builder: (context, currentIndex, _) {
+                    return _WorkerCard(
+                      image:
+                          worker.user.profile!.image ??
+                          Assets.images.test.test.path,
+                      name: worker.user.fullname!,
+                      exp: worker.experienceYears!.toString(),
+                      isActive: index == currentIndex,
+                    );
+                  },
                 );
               },
-            );
-          },
-          options: CarouselOptions(
-            height: 220.h,
-            viewportFraction: 0.6,
-            enlargeCenterPage: true,
+              options: CarouselOptions(
+                height: 220.h,
+                viewportFraction: 0.6,
+                enlargeCenterPage: true,
 
-            autoPlay: true,
-            autoPlayInterval: const Duration(seconds: 4),
-            autoPlayAnimationDuration: const Duration(milliseconds: 1200),
-            autoPlayCurve: Curves.fastOutSlowIn,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 4),
+                autoPlayAnimationDuration: const Duration(milliseconds: 1200),
+                autoPlayCurve: Curves.fastOutSlowIn,
 
-            pauseAutoPlayOnTouch: true,
-            pauseAutoPlayOnManualNavigate: true,
+                pauseAutoPlayOnTouch: true,
+                pauseAutoPlayOnManualNavigate: true,
 
-            onPageChanged: (index, reason) {
-              _currentIndex.value = index;
-            },
-          ),
-        ),
+                onPageChanged: (index, reason) {
+                  _currentIndex.value = index;
+                },
+              ),
+            ),
 
-        SizedBox(height: 14.h),
+            SizedBox(height: 14.h),
 
-        ValueListenableBuilder<int>(
-          valueListenable: _currentIndex,
-          builder: (context, currentIndex, _) {
-            return _DotsIndicator(
-              count: experts.length,
-              index: currentIndex,
-            );
-          },
-        ),
-      ],
+            ValueListenableBuilder<int>(
+              valueListenable: _currentIndex,
+              builder: (context, currentIndex, _) {
+                return _DotsIndicator(
+                  count: widget.company.workers.length,
+                  index: currentIndex,
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
 
-class _ExpertCard extends StatelessWidget {
-  const _ExpertCard({
+class _WorkerCard extends StatelessWidget {
+  const _WorkerCard({
     required this.image,
     required this.name,
     required this.exp,
@@ -137,16 +143,12 @@ class _ExpertCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      margin: EdgeInsets.symmetric(
-        vertical: isActive ? 0 : 10.h,
-      ),
+      margin: EdgeInsets.symmetric(vertical: isActive ? 0 : 10.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(
-              isActive ? 0.25 : 0.1,
-            ),
+            color: Colors.black.withOpacity(isActive ? 0.25 : 0.1),
             blurRadius: isActive ? 15 : 8,
             offset: const Offset(0, 6),
           ),
@@ -157,21 +159,14 @@ class _ExpertCard extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset(
-              image,
-              fit: BoxFit.cover,
-              gaplessPlayback: true,
-            ),
+            CustomImageView(imagePath: image, fit: BoxFit.cover),
 
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [
-                    Colors.black.withOpacity(0.75),
-                    Colors.transparent,
-                  ],
+                  colors: [Colors.black.withOpacity(0.75), Colors.transparent],
                 ),
               ),
             ),
@@ -194,7 +189,7 @@ class _ExpertCard extends StatelessWidget {
                   SizedBox(height: 4.h),
 
                   Text(
-                    exp,
+                    "${AppLocalizations.of(context)!.years_of_experience}: $exp",
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.85),
                       fontSize: 13.sp,
@@ -210,12 +205,8 @@ class _ExpertCard extends StatelessWidget {
   }
 }
 
-
 class _DotsIndicator extends StatelessWidget {
-  const _DotsIndicator({
-    required this.count,
-    required this.index,
-  });
+  const _DotsIndicator({required this.count, required this.index});
 
   final int count;
   final int index;

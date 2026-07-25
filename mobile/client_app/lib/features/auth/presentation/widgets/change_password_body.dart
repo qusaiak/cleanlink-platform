@@ -22,6 +22,9 @@ class ChangePasswordBody extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
     final bloc = context.read<AuthBloc>();
     final f = bloc.forms;
+    final isLoading =
+        state.status == AuthStatus.loadingChangePassword ||
+        state.isChangingPassword;
 
     return AuthScaffold(
       child: Form(
@@ -70,19 +73,34 @@ class ChangePasswordBody extends StatelessWidget {
                 f.changeNewPassword.text,
                 context,
               ),
-              // onFieldSubmitted: (_) => bloc.submitChangePassword(),
-              onFieldSubmitted: (_) {},
+              onFieldSubmitted: (_) => _submit(bloc),
             ),
             SizedBox(height: 28.h),
             AppPrimaryButton(
               label: l.auth_update_password,
-              // loading: state.isLoading,
-              // onPressed: bloc.submitChangePassword,
-              onPressed: () {},
+              loading: isLoading,
+              enabled: !isLoading,
+              onPressed: () {
+                final isValid =
+                    f.changeFormKey.currentState?.validate() ?? false;
+                if (!isValid) return;
+                _submit(bloc);
+              },
             ),
             SizedBox(height: 24.h),
           ],
         ),
+      ),
+    );
+  }
+
+  void _submit(AuthBloc bloc) {
+    final f = bloc.forms;
+    bloc.add(
+      SubmitChangePassword(
+        oldPassword: f.changeOldPassword.text.trim(),
+        newPassword: f.changeNewPassword.text.trim(),
+        newPasswordConfirmation: f.changeConfirmPassword.text.trim(),
       ),
     );
   }

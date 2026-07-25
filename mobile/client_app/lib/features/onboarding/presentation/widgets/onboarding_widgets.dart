@@ -14,7 +14,6 @@ class SkipButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final router = GoRouter.of(context);
     return Positioned(
       top: 30.0.h,

@@ -89,10 +89,7 @@ class GlassButton extends StatelessWidget {
       icon: Icon(icon, color: Colors.white, size: 18),
       label: Text(label!, style: const TextStyle(color: Colors.white)),
       style: OutlinedButton.styleFrom(
-        side: BorderSide(
-          color: Colors.white.withValues(alpha: 0.5),
-          width: 1,
-        ),
+        side: BorderSide(color: Colors.white.withValues(alpha: 0.5), width: 1),
         backgroundColor: Colors.white.withValues(alpha: 0.1),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),

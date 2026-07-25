@@ -12,7 +12,10 @@ class GlassChip extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
     this.iconSize = 16,
     this.fontSize = 12,
-  }) : assert(icon != null || label != null, 'Either icon or label must be provided');
+  }) : assert(
+         icon != null || label != null,
+         'Either icon or label must be provided',
+       );
 
   final IconData? icon;
   final String? label;

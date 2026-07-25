@@ -4,6 +4,8 @@ import '../storage/shared_storage.dart';
 import '../storage/storage_data.dart';
 
 class UserSession extends ChangeNotifier {
+  int? id;
+  String? role;
   String? fullname;
   String? email;
   String? token;
@@ -14,6 +16,8 @@ class UserSession extends ChangeNotifier {
   bool get isAuthenticated => token != null && token!.isNotEmpty;
 
   Future<void> load() async {
+    id = await SharedStorage.get<int>(StorageData.userId);
+    role = await SharedStorage.get<String>(StorageData.role);
     fullname = await SharedStorage.get<String>(StorageData.fullName);
     email = await SharedStorage.get<String>(StorageData.email);
     token = await SharedStorage.get<String>(StorageData.token);
@@ -23,20 +27,26 @@ class UserSession extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateAuthLogin({
+  Future<void> updateAuthenticatedUser({
+    required int id,
+    required String role,
     required String fullname,
     required String email,
     required String token,
-    required String phone,
-    required String address,
-    required String image,
+    String phone = '',
+    String address = '',
+    String image = '',
   }) async {
+    this.id = id;
+    this.role = role;
     this.fullname = fullname;
     this.email = email;
     this.token = token;
     this.phone = phone;
     this.address = address;
     this.image = image;
+    await SharedStorage.set(StorageData.userId, id);
+    await SharedStorage.set(StorageData.role, role);
     await SharedStorage.set(StorageData.fullName, fullname);
     await SharedStorage.set(StorageData.email, email);
     await SharedStorage.set(StorageData.token, token);
@@ -46,25 +56,21 @@ class UserSession extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateAuthRegister({
-    required String fullname,
-    required String email,
-    required String token,
-  }) async {
-    this.fullname = fullname;
-    this.email = email;
-    this.token = token;
-    await SharedStorage.set(StorageData.fullName, fullname);
-    await SharedStorage.set(StorageData.email, email);
-    await SharedStorage.set(StorageData.token, token);
-    notifyListeners();
-  }
-
   Future<void> updateProfile({
+    String? fullname,
+    String? email,
     required String phone,
     required String address,
     required String image,
   }) async {
+    if (fullname != null) {
+      this.fullname = fullname;
+      await SharedStorage.set(StorageData.fullName, fullname);
+    }
+    if (email != null) {
+      this.email = email;
+      await SharedStorage.set(StorageData.email, email);
+    }
     this.phone = phone;
     this.address = address;
     this.image = image;
@@ -75,6 +81,8 @@ class UserSession extends ChangeNotifier {
   }
 
   Future<void> clear() async {
+    id = null;
+    role = null;
     fullname = null;
     email = null;
     token = null;

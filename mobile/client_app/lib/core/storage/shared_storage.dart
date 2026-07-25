@@ -135,7 +135,7 @@ abstract class SharedStorage {
 
   static Future<void> clear() async {
     final storageDataValues = StorageData.values.where(
-          (element) => element.clearOnLogout,
+      (element) => element.clearOnLogout,
     );
 
     for (StorageData storageData in storageDataValues) {

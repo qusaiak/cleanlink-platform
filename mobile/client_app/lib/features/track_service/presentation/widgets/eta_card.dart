@@ -10,11 +10,7 @@ class EtaCard extends StatelessWidget {
   final ServiceStatus status;
   final int etaMinutes;
 
-  const EtaCard({
-    super.key,
-    required this.status,
-    required this.etaMinutes,
-  });
+  const EtaCard({super.key, required this.status, required this.etaMinutes});
 
   @override
   Widget build(BuildContext context) {

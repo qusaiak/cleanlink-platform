@@ -21,7 +21,9 @@ class CircularGlassButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isActive ? activeColor : AppColor.white.withValues(alpha: 0.7);
+    final color = isActive
+        ? activeColor
+        : AppColor.white.withValues(alpha: 0.7);
     final size = 36.r;
 
     return ClipRRect(

@@ -23,10 +23,7 @@ class ListItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 8,
-        ),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         height: 220,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
@@ -48,27 +45,21 @@ class ListItem extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
-              colors: [
-                Colors.black.withValues(alpha: .8),
-                Colors.transparent,
-              ],
+              colors: [Colors.black.withValues(alpha: .8), Colors.transparent],
             ),
           ),
           child: Padding(
             padding: const EdgeInsets.all(14),
             child: Column(
-              mainAxisAlignment:
-              MainAxisAlignment.end,
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
-                    fontWeight:
-                    FontWeight.bold,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
 
@@ -77,10 +68,7 @@ class ListItem extends StatelessWidget {
 
                   Text(
                     subtitle!,
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 13,
-                    ),
+                    style: const TextStyle(color: Colors.white70, fontSize: 13),
                   ),
                 ],
 
@@ -99,11 +87,7 @@ class ListItem extends StatelessWidget {
 
                       Text(
                         trailingText!,
-                        style:
-                        const TextStyle(
-                          color:
-                          Colors.white70,
-                        ),
+                        style: const TextStyle(color: Colors.white70),
                       ),
                     ],
                   ),

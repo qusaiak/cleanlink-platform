@@ -8,11 +8,12 @@ class BookOrderRequestModel {
   final String location;
   final String startTime;
   final String? note;
-  const BookOrderRequestModel(
-      {required this.packageId,
-      required this.location,
-      required this.startTime,
-      this.note});
+  const BookOrderRequestModel({
+    required this.packageId,
+    required this.location,
+    required this.startTime,
+    this.note,
+  });
   factory BookOrderRequestModel.fromJson(Map<String, dynamic> json) =>
       _$BookOrderRequestModelFromJson(json);
   Map<String, dynamic> toJson() => _$BookOrderRequestModelToJson(this);

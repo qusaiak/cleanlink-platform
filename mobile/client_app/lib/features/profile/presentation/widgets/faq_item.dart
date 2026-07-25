@@ -4,13 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
 
-
 class FaqItem extends StatelessWidget {
-  const FaqItem({
-    super.key,
-    required this.question,
-    required this.answer,
-  });
+  const FaqItem({super.key, required this.question, required this.answer});
 
   final String question;
   final String answer;
@@ -32,10 +27,8 @@ class FaqItem extends StatelessWidget {
           highlightColor: Colors.transparent,
         ),
         child: ExpansionTile(
-          tilePadding:
-          EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
-          childrenPadding:
-          EdgeInsets.fromLTRB(14.w, 0, 14.w, 12.h),
+          tilePadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+          childrenPadding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 12.h),
 
           iconColor: AppColor.primaryColor,
           collapsedIconColor: Colors.grey,

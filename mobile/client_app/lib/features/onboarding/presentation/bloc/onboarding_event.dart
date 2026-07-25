@@ -18,5 +18,4 @@ class SkipEvent extends OnboardingEvent {
 
   @override
   List<Object?> get props => throw UnimplementedError();
-
 }

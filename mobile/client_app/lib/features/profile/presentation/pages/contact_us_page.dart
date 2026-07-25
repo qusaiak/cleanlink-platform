@@ -15,11 +15,10 @@ class ContactUsPage extends StatelessWidget {
         AppLocalizations.of(context)!.contact_us,
         null,
         [],
-            () {},
+        () {},
         theme.onSurface,
       ),
       body: const ContactUsBody(),
     );
   }
 }
-

@@ -6,7 +6,6 @@ part 'manager_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class ManagerModel {
-
   final int? id;
 
   final String? fullname;
@@ -15,20 +14,12 @@ class ManagerModel {
 
   final String? role;
 
-  const ManagerModel({
-    this.id,
-    this.fullname,
-    this.email,
-    this.role,
-  });
+  const ManagerModel({this.id, this.fullname, this.email, this.role});
 
-  factory ManagerModel.fromJson(
-      Map<String,dynamic> json,
-      )=>
+  factory ManagerModel.fromJson(Map<String, dynamic> json) =>
       _$ManagerModelFromJson(json);
 
-  Map<String,dynamic> toJson()=>
-      _$ManagerModelToJson(this);
+  Map<String, dynamic> toJson() => _$ManagerModelToJson(this);
 
   ManagerEntity toEntity() {
     return ManagerEntity(

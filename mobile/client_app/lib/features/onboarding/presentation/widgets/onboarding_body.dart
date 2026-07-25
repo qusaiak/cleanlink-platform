@@ -89,10 +89,7 @@ class _OnboardingBodyState extends State<OnboardingBody> {
               MoveNextPage(
                 onTap: () async {
                   if (state.current == 2) {
-                    await SharedStorage.set(
-                      StorageData.isOnboarding,
-                      "true",
-                    );
+                    await SharedStorage.set(StorageData.isOnboarding, "true");
                     router.go(AppRouter.kLogin);
                   } else {
                     state.pageController!.nextPage(

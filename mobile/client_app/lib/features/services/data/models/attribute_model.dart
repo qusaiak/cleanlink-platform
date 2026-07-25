@@ -10,9 +10,7 @@ part 'attribute_model.g.dart';
 class AttributeModel {
   final int? id;
 
-  final String? nameAr;
-
-  final String? nameEn;
+  final String? name;
 
   final String? type;
 
@@ -24,45 +22,32 @@ class AttributeModel {
 
   const AttributeModel({
     this.id,
-    this.nameAr,
-    this.nameEn,
+    this.name,
     this.type,
     this.createdAt,
     this.updatedAt,
     this.pivot,
   });
 
-  factory AttributeModel.fromJson(
-      Map<String, dynamic> json,
-      ) =>
+  factory AttributeModel.fromJson(Map<String, dynamic> json) =>
       _$AttributeModelFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$AttributeModelToJson(this);
+  Map<String, dynamic> toJson() => _$AttributeModelToJson(this);
 
   AttributeEntity toEntity() {
     return AttributeEntity(
       id: id ?? 0,
 
-      nameAr:
-      nameAr ?? "",
+      name: name ?? "",
 
-      nameEn:
-      nameEn ?? "",
+      type: type ?? "",
 
-      type:
-      type ?? "",
+      createdAt: createdAt ?? DateTime.now(),
 
-      createdAt:
-      createdAt ??
-          DateTime.now(),
-
-      updatedAt:
-      updatedAt ??
-          DateTime.now(),
+      updatedAt: updatedAt ?? DateTime.now(),
 
       pivot:
-      pivot?.toEntity() ??
+          pivot?.toEntity() ??
           PivotEntity(
             serviceId: 0,
             attributeId: 0,

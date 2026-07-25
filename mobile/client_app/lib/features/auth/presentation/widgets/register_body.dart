@@ -19,7 +19,7 @@ class RegisterBody extends StatelessWidget {
   final AuthState state;
 
   void _submit(BuildContext context, AuthBloc bloc) {
-    if (state.status == AuthStatus.loadingRegister) return;
+    if (state.isLoadingRegister == true) return;
     FocusScope.of(context).unfocus();
     final f = bloc.forms;
     if (f.registerFormKey.currentState?.validate() ?? false) {
@@ -58,7 +58,7 @@ class RegisterBody extends StatelessWidget {
             SizedBox(height: 18.h),
             AppPrimaryButton(
               label: l.auth_register_button,
-              loading: state.status == AuthStatus.loadingRegister,
+              loading: state.isLoadingRegister == true,
               onPressed: () => _submit(context, bloc),
             ),
             SizedBox(height: 14.h),

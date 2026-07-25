@@ -1,5 +1,6 @@
 import 'package:client_app/config/routes/app_router.dart';
 import 'package:client_app/core/widgets/app_primary_button.dart';
+import 'package:client_app/core/widgets/custom_toast.dart';
 import 'package:client_app/features/auth/presentation/bloc/personal_details_bloc.dart';
 import 'package:client_app/features/auth/presentation/widgets/address_field.dart';
 import 'package:client_app/features/auth/presentation/widgets/profile_image_picker.dart';
@@ -26,12 +27,16 @@ class PersonalDetailsPage extends StatelessWidget {
             context.go(AppRouter.kHome);
           } else if (state.status == PersonalDetailsStatus.failure &&
               state.error != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error!.message)),
+            AppSnackBar.showError(
+              context: context,
+              title: AppLocalizations.of(context)!.error,
+              message: state.error!.message,
             );
           } else if (state.status == PersonalDetailsStatus.validationError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error?.message ?? '')),
+            AppSnackBar.showWarning(
+              context: context,
+              title: AppLocalizations.of(context)!.warning,
+              message: state.error?.message ?? '',
             );
           }
         },

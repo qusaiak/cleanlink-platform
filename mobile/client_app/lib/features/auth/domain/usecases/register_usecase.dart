@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../entities/auth_entity.dart';
+import '../entities/otp_dispatch_entity.dart';
 import '../repositories/auth_repo.dart';
 
 class RegisterUseCase {
@@ -8,7 +8,7 @@ class RegisterUseCase {
 
   const RegisterUseCase(this.repo);
 
-  Future<AuthEntity> call(RegisterParams params) {
+  Future<OtpDispatchEntity> call(RegisterParams params) {
     return repo.register(
       fullname: params.fullname,
       email: params.email,

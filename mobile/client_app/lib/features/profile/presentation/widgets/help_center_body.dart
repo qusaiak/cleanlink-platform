@@ -26,9 +26,7 @@ class HelpCenterBody extends StatelessWidget {
 
             Text(
               AppLocalizations.of(context)!.help_center_title,
-              style: Styles.textStyle18.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Styles.textStyle18.copyWith(fontWeight: FontWeight.bold),
             ),
 
             SizedBox(height: 6.h),
@@ -44,12 +42,12 @@ class HelpCenterBody extends StatelessWidget {
             const FaqItem(
               question: "How do I book a service?",
               answer:
-              "Go to services, choose what you need, and confirm booking.",
+                  "Go to services, choose what you need, and confirm booking.",
             ),
             const FaqItem(
               question: "How can I cancel my booking?",
               answer:
-              "You can cancel from your bookings screen before the scheduled time.",
+                  "You can cancel from your bookings screen before the scheduled time.",
             ),
             const FaqItem(
               question: "How do I change my password?",
@@ -57,8 +55,7 @@ class HelpCenterBody extends StatelessWidget {
             ),
             const FaqItem(
               question: "What payment methods are supported?",
-              answer:
-              "We support cash and online payments (coming soon).",
+              answer: "We support cash and online payments (coming soon).",
             ),
           ],
         ),

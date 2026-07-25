@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'profile_entity.dart';
+import '../../../profile/domain/entities/profile_entity.dart';
 
 class UserEntity extends Equatable {
   final int id;
@@ -23,12 +23,12 @@ class UserEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        fullname,
-        email,
-        role,
-        createdAt,
-        updatedAt,
-        profile,
-      ];
+    id,
+    fullname,
+    email,
+    role,
+    createdAt,
+    updatedAt,
+    profile,
+  ];
 }

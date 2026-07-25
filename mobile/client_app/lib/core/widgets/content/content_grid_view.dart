@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../l10n/app_localizations.dart';
+import '../app_empty_state.dart';
 import 'content_item_factory.dart';
 import 'content_navigator.dart';
 import 'content_section_type.dart';
@@ -15,7 +17,12 @@ class ContentGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) {
-      return const Center(child: Text('No results found'));
+      return Center(
+        child: AppEmptyState(
+          icon: Icons.search_off_rounded,
+          title: AppLocalizations.of(context)!.search_no_results,
+        ),
+      );
     }
     return Padding(
       padding: EdgeInsets.only(

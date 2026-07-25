@@ -1,7 +1,6 @@
 import 'storable.dart';
 
 enum StorageData<T> implements Storable {
-
   // General app settings
   isOnboarding,
   languageCode,
@@ -12,6 +11,7 @@ enum StorageData<T> implements Storable {
 
   // User data
   userId(clearOnLogout: true),
+  role(clearOnLogout: true),
   accountId(clearOnLogout: true),
   mobile(clearOnLogout: true),
   fullName(clearOnLogout: true),
@@ -40,5 +40,4 @@ enum StorageData<T> implements Storable {
 
   @override
   final bool clearOnLogout;
-
 }

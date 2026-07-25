@@ -6,8 +6,14 @@ import '../../../../config/theme/styles.dart';
 class Statistic extends StatelessWidget {
   final String title;
   final String value;
+  final bool isLoading;
 
-  const Statistic({super.key, required this.title, required this.value});
+  const Statistic({
+    super.key,
+    required this.title,
+    required this.value,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +21,19 @@ class Statistic extends StatelessWidget {
 
     return Column(
       children: [
-        Text(
-          value,
-          style: Styles.textStyle14.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.primary,
-          ),
-        ),
+        isLoading
+            ? SizedBox(
+                width: 16.w,
+                height: 16.w,
+                child: const CircularProgressIndicator.adaptive(strokeWidth: 2),
+              )
+            : Text(
+                value,
+                style: Styles.textStyle14.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: theme.primary,
+                ),
+              ),
         SizedBox(height: 2.h),
         Text(
           title,

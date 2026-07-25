@@ -1,4 +1,3 @@
-
 import 'content_section_type.dart';
 
 class ContentSection {

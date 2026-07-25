@@ -8,7 +8,6 @@ import '../../../../core/utils/functions/validator.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../widgets/auth_password_field.dart';
-import '../widgets/auth_phone_field.dart';
 
 class RegisterAccountFields extends StatelessWidget {
   const RegisterAccountFields({super.key, required this.state});
@@ -32,7 +31,10 @@ class RegisterAccountFields extends StatelessWidget {
           keyboardType: TextInputType.name,
           textInputAction: TextInputAction.next,
           autofocus: true,
-          validator: (v) => AppValidators.name(v, context),
+          validator: (v) =>
+              AppValidators.name(v, context) ??
+              state.error?.fieldErrors['fullname'],
+          onChanged: (_) => bloc.add(const AuthMessagesCleared()),
           onFieldSubmitted: (_) => f.registerEmailFocus.requestFocus(),
           prefix: Icon(
             Icons.person_outline_rounded,
@@ -47,6 +49,10 @@ class RegisterAccountFields extends StatelessWidget {
           label: l.auth_email_label,
           hint: l.auth_email_hint,
           textInputAction: TextInputAction.next,
+          validator: (v) =>
+              AppValidators.email(v, context) ??
+              state.error?.fieldErrors['email'],
+          onChanged: (_) => bloc.add(const AuthMessagesCleared()),
           onFieldSubmitted: (_) => f.registerPasswordFocus.requestFocus(),
         ),
         SizedBox(height: 16.h),
@@ -56,6 +62,10 @@ class RegisterAccountFields extends StatelessWidget {
           label: l.auth_password_label,
           hint: l.auth_password_hint,
           useStrongValidator: true,
+          validator: (v) =>
+              AppValidators.password(v, context) ??
+              state.error?.fieldErrors['password'],
+          onChanged: (_) => bloc.add(const AuthMessagesCleared()),
           textInputAction: TextInputAction.next,
           onFieldSubmitted: (_) => f.registerConfirmFocus.requestFocus(),
         ),
@@ -71,6 +81,7 @@ class RegisterAccountFields extends StatelessWidget {
             f.registerPassword.text,
             context,
           ),
+          onChanged: (_) => bloc.add(const AuthMessagesCleared()),
         ),
       ],
     );

@@ -3,9 +3,7 @@ import 'pivot_entity.dart';
 class AttributeEntity {
   final int id;
 
-  final String nameAr;
-
-  final String nameEn;
+  final String name;
 
   final String type;
 
@@ -17,8 +15,7 @@ class AttributeEntity {
 
   const AttributeEntity({
     required this.id,
-    required this.nameAr,
-    required this.nameEn,
+    required this.name,
     required this.type,
     required this.createdAt,
     required this.updatedAt,

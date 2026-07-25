@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../../domain/entities/user_entity.dart';
-import 'profile_model.dart';
+import '../../../../profile/data/models/profile_model.dart';
 
 part 'user_model.g.dart';
 
@@ -31,12 +31,12 @@ class UserModel {
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
 
   UserEntity toEntity() => UserEntity(
-        id: id,
-        fullname: fullname,
-        email: email,
-        role: role,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        profile: profile?.toEntity(),
-      );
+    id: id,
+    fullname: fullname,
+    email: email,
+    role: role,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+    profile: profile?.toEntity(),
+  );
 }

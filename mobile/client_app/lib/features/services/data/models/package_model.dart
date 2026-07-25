@@ -10,19 +10,15 @@ class PackageModel {
 
   final int? serviceId;
 
-  final String? nameAr;
-
-  final String? nameEn;
+  final String? name;
 
   final int? duration;
 
-  final String? price;
+  final int? price;
 
-  final String? priceAfterDiscount;
+  final int? priceAfterDiscount;
 
-  final List<String>? detailsAr;
-
-  final List<String>? detailsEn;
+  final List<String>? details;
 
   final DateTime? createdAt;
 
@@ -31,54 +27,38 @@ class PackageModel {
   const PackageModel({
     this.id,
     this.serviceId,
-    this.nameAr,
-    this.nameEn,
+    this.name,
     this.duration,
     this.price,
     this.priceAfterDiscount,
-    this.detailsAr,
-    this.detailsEn,
+    this.details,
     this.createdAt,
     this.updatedAt,
   });
 
-  factory PackageModel.fromJson(
-      Map<String, dynamic> json,
-      ) =>
+  factory PackageModel.fromJson(Map<String, dynamic> json) =>
       _$PackageModelFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$PackageModelToJson(this);
+  Map<String, dynamic> toJson() => _$PackageModelToJson(this);
 
   PackageEntity toEntity() {
     return PackageEntity(
       id: id ?? 0,
       serviceId: serviceId ?? 0,
 
-      nameAr: nameAr ?? "",
-      nameEn: nameEn ?? "",
+      name: name ?? "",
 
       duration: duration ?? 0,
 
-      price: price ?? "0",
+      price: price ?? 0,
 
-      priceAfterDiscount:
-      priceAfterDiscount ??
-          "0",
+      priceAfterDiscount: priceAfterDiscount ?? 0,
 
-      detailsAr:
-      detailsAr ?? [],
+      details: details ?? [],
 
-      detailsEn:
-      detailsEn ?? [],
+      createdAt: createdAt ?? DateTime.now(),
 
-      createdAt:
-      createdAt ??
-          DateTime.now(),
-
-      updatedAt:
-      updatedAt ??
-          DateTime.now(),
+      updatedAt: updatedAt ?? DateTime.now(),
     );
   }
 }

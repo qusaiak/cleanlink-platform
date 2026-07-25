@@ -1,4 +1,3 @@
-
 import 'package:client_app/config/theme/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -23,15 +22,19 @@ class RowWidget extends StatelessWidget {
       children: [
         Text(
           text,
-          style: Styles.textStyle12
-              .copyWith(color: theme.onSurface, fontWeight: FontWeight.w400),
+          style: Styles.textStyle12.copyWith(
+            color: theme.onSurface,
+            fontWeight: FontWeight.w400,
+          ),
         ),
         TextButton(
           onPressed: onTap,
           child: Text(
             textButton,
-            style: Styles.textStyle14
-                .copyWith(color: theme.primary, fontWeight: FontWeight.bold),
+            style: Styles.textStyle14.copyWith(
+              color: theme.primary,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],

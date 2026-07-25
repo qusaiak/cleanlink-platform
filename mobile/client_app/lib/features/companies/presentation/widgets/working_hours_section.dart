@@ -1,10 +1,12 @@
-import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/styles.dart';
 import '../../../../core/widgets/row_title.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/company_entity.dart';
+import '../../domain/entities/company_work_time_entity.dart';
+import '../../domain/utils/company_working_hours.dart';
 
 class WorkingHoursSection extends StatelessWidget {
   final CompanyEntity company;
@@ -14,28 +16,24 @@ class WorkingHoursSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context)!;
+    final isOpen = isCompanyCurrentlyOpen(company.workTimes);
+    final today = getTodayCompanyWorkTime(company.workTimes);
 
     return Column(
       children: [
-        RowTitle(
-          iconData: Icons.access_time_rounded,
-          title: AppLocalizations.of(context)!.working_hours,
-        ),
-
+        RowTitle(iconData: Icons.access_time_rounded, title: l.working_hours),
         SizedBox(height: 12.h),
-
         Container(
           margin: EdgeInsets.symmetric(horizontal: 20.w),
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
             color: theme.surface,
             borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(
-              color: theme.outline.withOpacity(.08),
-            ),
+            border: Border.all(color: theme.outline.withValues(alpha: .08)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(.03),
+                color: Colors.black.withValues(alpha: .03),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -48,55 +46,48 @@ class WorkingHoursSection extends StatelessWidget {
                   Container(
                     width: 7.w,
                     height: 7.w,
-                    decoration: const BoxDecoration(
-                      color: Colors.green,
+                    decoration: BoxDecoration(
+                      color: isOpen ? Colors.green : Colors.red,
                       shape: BoxShape.circle,
                     ),
                   ),
-
                   SizedBox(width: 8.w),
-
                   Text(
-                    AppLocalizations.of(context)!.open_now,
+                    isOpen ? l.open_label : l.closed_label,
                     style: Styles.textStyle12.copyWith(
-                      color: Colors.green,
+                      color: isOpen ? Colors.green : Colors.red,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-
                   const Spacer(),
-
-                  Text(
-                    "Closes 8:00 PM",
-                    style: Styles.textStyle12.copyWith(
-                      color: theme.onSurface,
-                      fontWeight: FontWeight.bold
+                  Flexible(
+                    child: Text(
+                      _formatWorkTime(context, today, l),
+                      textAlign: TextAlign.end,
+                      overflow: TextOverflow.ellipsis,
+                      style: Styles.textStyle12.copyWith(
+                        color: theme.onSurface,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
               ),
-
               SizedBox(height: 16.h),
-
-              _WorkingHourItem(
-                day: "Monday - Friday",
-                time: "08:00 AM - 08:00 PM",
-              ),
-
-              SizedBox(height: 8.h),
-
-              const _WorkingHourItem(
-                day: "Saturday",
-                time: "09:00 AM - 05:00 PM",
-              ),
-
-              SizedBox(height: 8.h),
-
-              const _WorkingHourItem(
-                day: "Sunday",
-                time: "Closed",
-                isClosed: true,
-              ),
+              for (final day in _orderedDays) ...[
+                _WorkingHourItem(
+                  day: _localizedDay(l, day),
+                  time: _formatWorkTime(
+                    context,
+                    getCompanyWorkTimeForDay(company.workTimes, day),
+                    l,
+                  ),
+                  isClosed: _isClosed(
+                    getCompanyWorkTimeForDay(company.workTimes, day),
+                  ),
+                ),
+                if (day != _orderedDays.last) SizedBox(height: 8.h),
+              ],
             ],
           ),
         ),
@@ -105,11 +96,51 @@ class WorkingHoursSection extends StatelessWidget {
   }
 }
 
+const _orderedDays = [1, 2, 3, 4, 5, 6, 0];
+
+String _localizedDay(AppLocalizations l, int day) => switch (day) {
+  0 => l.day_sunday,
+  1 => l.day_monday,
+  2 => l.day_tuesday,
+  3 => l.day_wednesday,
+  4 => l.day_thursday,
+  5 => l.day_friday,
+  6 => l.day_saturday,
+  _ => '',
+};
+
+bool _isClosed(CompanyWorkTimeEntity? workTime) =>
+    workTime == null ||
+    workTime.isHoliday ||
+    parseCompanyTime(workTime.openAt) == null ||
+    parseCompanyTime(workTime.closeAt) == null;
+
+String _formatWorkTime(
+  BuildContext context,
+  CompanyWorkTimeEntity? workTime,
+  AppLocalizations l,
+) {
+  if (_isClosed(workTime)) return l.closed_label;
+  final opening = parseCompanyTime(workTime!.openAt)!;
+  final closing = parseCompanyTime(workTime.closeAt)!;
+  final materialLocalizations = MaterialLocalizations.of(context);
+  final use24Hour = MediaQuery.alwaysUse24HourFormatOf(context);
+  final openingText = materialLocalizations.formatTimeOfDay(
+    TimeOfDay(hour: opening.hour, minute: opening.minute),
+    alwaysUse24HourFormat: use24Hour,
+  );
+  final closingText = materialLocalizations.formatTimeOfDay(
+    TimeOfDay(hour: closing.hour, minute: closing.minute),
+    alwaysUse24HourFormat: use24Hour,
+  );
+  return '$openingText – $closingText';
+}
+
 class _WorkingHourItem extends StatelessWidget {
   const _WorkingHourItem({
     required this.day,
     required this.time,
-    this.isClosed = false,
+    required this.isClosed,
   });
 
   final String day;
@@ -119,40 +150,29 @@ class _WorkingHourItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
-
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 12.w,
-        vertical: 10.h,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
       decoration: BoxDecoration(
-        color:  Colors.transparent,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
         children: [
           Expanded(
-            child: Row(
-              children: [
-                Text(
-                  day,
-                  style: Styles.textStyle12.copyWith(
-                    color: theme.onSurface,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-
-              ],
+            child: Text(
+              day,
+              style: Styles.textStyle12.copyWith(
+                color: theme.onSurface,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
-
           Text(
             time,
+            textAlign: TextAlign.end,
             style: Styles.textStyle12.copyWith(
               fontWeight: FontWeight.w500,
-              color: isClosed
-                  ? Colors.redAccent
-                  : theme.onSurface,
+              color: isClosed ? Colors.redAccent : theme.onSurface,
             ),
           ),
         ],
@@ -160,4 +180,3 @@ class _WorkingHourItem extends StatelessWidget {
     );
   }
 }
-
