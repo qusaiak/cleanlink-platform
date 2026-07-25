@@ -1,8 +1,7 @@
-import 'dart:io';
 import 'dart:ui';
 
 class AppLanguageInfo {
-  static String _languageCode = "ar";
+  static String _languageCode = "en";
 
   static Future<void> initialize() async {
     // if (!await SharedStorage.hasData(StorageData.languageCode)) {

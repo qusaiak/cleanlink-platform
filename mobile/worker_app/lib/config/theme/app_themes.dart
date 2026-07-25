@@ -1,11 +1,13 @@
+
 import 'package:flutter/material.dart';
 import 'package:worker_app/config/theme/styles.dart';
 import '../../config/language/app_language_info.dart';
+import '../../core/utils/gen/fonts.gen.dart';
 import 'colors.dart';
 
 ThemeData lightTheme() {
   return ThemeData(
-    // fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily.cairo,
+    fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily.cairo,
     navigationBarTheme: const NavigationBarThemeData(
       backgroundColor: AppColor.bottomNavigationBarLight,
     ),
@@ -33,7 +35,7 @@ ThemeData lightTheme() {
 
 ThemeData darkTheme() {
   return ThemeData(
-    // fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily.cairo,
+    fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily.cairo,
     navigationBarTheme: const NavigationBarThemeData(
       backgroundColor: AppColor.bottomNavigationBarLight,
     ),
@@ -70,8 +72,8 @@ AppBarTheme appBarLightTheme() {
     titleTextStyle: Styles.textStyle18.copyWith(
       color: AppColor.primaryColor,
       fontWeight: FontWeight.bold,
-      // fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily
-      //     .cairo,
+      fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily
+          .cairo,
     ),
   );
 }
@@ -86,8 +88,8 @@ AppBarTheme appBarDarkTheme() {
     titleTextStyle: Styles.textStyle18.copyWith(
       color: AppColor.onSurfaceDark,
       fontWeight: FontWeight.bold,
-      // fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily
-      //     .cairo,
+      fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily
+          .cairo,
     ),
   );
 }
