@@ -9,6 +9,7 @@ import '../../../../core/widgets/custom_dialog.dart';
 import '../../../../core/widgets/custom_toast.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../bloc/profile_bloc.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../widgets/profile_body.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -23,14 +24,53 @@ class ProfilePage extends StatelessWidget {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: BlocConsumer<ProfileBloc, ProfileState>(
+        listenWhen: (previous, current) =>
+            previous.status != current.status ||
+            (previous.dashboardSummaryError != current.dashboardSummaryError &&
+                current.dashboardSummaryError != null) ||
+            (previous.deleteAccountError != current.deleteAccountError &&
+                current.deleteAccountError != null) ||
+            (previous.deleteAccountSuccessMessage !=
+                    current.deleteAccountSuccessMessage &&
+                current.deleteAccountSuccessMessage != null),
         listener: (context, state) {
-          if (state.status == ProfileStatus.logoutSuccess) {
+          if (state.deleteAccountSuccessMessage != null) {
+            final message = state.deleteAccountSuccessMessage!;
+            context.read<AuthBloc>().add(const AuthSessionCleared());
+            context.read<ProfileBloc>().add(ClearDeleteAccountResultEvent());
+            final navigator = Navigator.of(context, rootNavigator: true);
+            if (navigator.canPop()) navigator.pop();
+            context.go(AppRouter.kLogin);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              final rootContext = AppRouter.rootNavigatorKey.currentContext;
+              if (rootContext != null) {
+                AppSnackBar.showSuccess(
+                  context: rootContext,
+                  title: AppLocalizations.of(rootContext)!.success,
+                  message: message,
+                );
+              }
+            });
+          } else if (state.deleteAccountError != null) {
+            AppSnackBar.showError(
+              context: context,
+              title: l.error,
+              message: _localizedProfileMessage(state.deleteAccountError, l),
+            );
+          } else if (state.status == ProfileStatus.logoutSuccess) {
             AppSnackBar.showSuccess(
               context: context,
               title: l.success,
               message: l.logout_successfully,
             );
             context.go(AppRouter.kLogin);
+          } else if (state.dashboardSummaryError != null &&
+              state.dashboardSummary != null) {
+            AppSnackBar.showError(
+              context: context,
+              title: l.error,
+              message: _localizedProfileMessage(state.dashboardSummaryError, l),
+            );
           } else if (state.status == ProfileStatus.failure &&
               state.errorMessage != null) {
             AppSnackBar.showError(
@@ -108,6 +148,8 @@ class ProfilePage extends StatelessWidget {
   String _localizedProfileMessage(String? message, AppLocalizations l) {
     return switch (message) {
       'failed_to_logout' => l.failed_to_logout,
+      'failed_to_delete_account' => l.failed_to_delete_account,
+      'could_not_load_profile_summary' => l.could_not_load_profile_summary,
       _ => message ?? l.failed_to_logout,
     };
   }

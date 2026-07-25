@@ -51,11 +51,7 @@ class ProfileImagePicker extends StatelessWidget {
               color: AppColor.primaryColor,
               border: Border.all(color: theme.surface, width: 2),
             ),
-            child: Icon(
-              Icons.camera_alt,
-              color: Colors.white,
-              size: 18.r,
-            ),
+            child: Icon(Icons.camera_alt, color: Colors.white, size: 18.r),
           ),
         ],
       ),

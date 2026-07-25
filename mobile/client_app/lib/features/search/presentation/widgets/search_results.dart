@@ -14,7 +14,6 @@ import 'search_tabs.dart';
 class SearchResults extends StatelessWidget {
   const SearchResults({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).colorScheme;

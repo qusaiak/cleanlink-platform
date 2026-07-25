@@ -5,6 +5,7 @@ import 'package:retrofit/retrofit.dart';
 
 import '../../../../../config/constants/api_endpoints.dart';
 import '../../models/logout_response_model.dart';
+import '../../models/dashboard_summary_model.dart';
 import '../../models/update_profile_response_model.dart';
 
 part 'profile_api_service.g.dart';
@@ -25,4 +26,10 @@ abstract class ProfileApiService {
 
   @POST(ApiEndpoints.logoutEndpoint)
   Future<HttpResponse<LogoutResponseModel>> logout();
+
+  @GET(ApiEndpoints.dashboardSummaryEndpoint)
+  Future<HttpResponse<DashboardSummaryResponseModel>> getDashboardSummary();
+
+  @DELETE(ApiEndpoints.deleteAccountEndpoint)
+  Future<HttpResponse<LogoutResponseModel>> deleteAccount();
 }

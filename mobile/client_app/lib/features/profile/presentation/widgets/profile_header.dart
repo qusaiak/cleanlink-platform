@@ -4,12 +4,14 @@ import 'package:client_app/core/session/user_session.dart';
 import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/theme/styles.dart';
 import '../../../../core/utils/functions/helper_functions.dart';
 import '../../../../injection_container.dart';
 import 'edit_button.dart';
 import 'statistic.dart';
+import '../bloc/profile_bloc.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key});
@@ -73,22 +75,48 @@ class ProfileHeader extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 16.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Statistic(
-                        title: AppLocalizations.of(context)!.bookings,
-                        value: "12",
-                      ),
-                      Statistic(
-                        title: AppLocalizations.of(context)!.favorites,
-                        value: "5",
-                      ),
-                      Statistic(
-                        title: AppLocalizations.of(context)!.reviews,
-                        value: "8",
-                      ),
-                    ],
+                  BlocBuilder<ProfileBloc, ProfileState>(
+                    buildWhen: (previous, current) =>
+                        previous.dashboardSummary != current.dashboardSummary ||
+                        previous.isLoadingDashboardSummary !=
+                            current.isLoadingDashboardSummary ||
+                        previous.dashboardSummaryError !=
+                            current.dashboardSummaryError,
+                    builder: (context, state) {
+                      final summary = state.dashboardSummary;
+                      final loading =
+                          state.isLoadingDashboardSummary && summary == null;
+                      if (state.dashboardSummaryError != null &&
+                          summary == null) {
+                        return TextButton.icon(
+                          onPressed: () => context.read<ProfileBloc>().add(
+                            GetDashboardSummaryEvent(),
+                          ),
+                          icon: const Icon(Icons.refresh, size: 18),
+                          label: Text(AppLocalizations.of(context)!.retry),
+                        );
+                      }
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Statistic(
+                            title: AppLocalizations.of(context)!.bookings,
+                            value: '${summary?.totalBookings ?? 0}',
+                            isLoading: loading,
+                          ),
+                          Statistic(
+                            title: AppLocalizations.of(context)!.favorites,
+                            value: '${summary?.totalFavorites ?? 0}',
+                            isLoading: loading,
+                          ),
+                          Statistic(
+                            title: AppLocalizations.of(context)!.reviews,
+                            value: '${summary?.totalReviews ?? 0}',
+                            isLoading: loading,
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),

@@ -33,3 +33,11 @@ class UpdateProfileEvent extends ProfileEvent {
 }
 
 class LogoutEvent extends ProfileEvent {}
+
+class GetDashboardSummaryEvent extends ProfileEvent {}
+
+class RefreshProfileEvent extends ProfileEvent {}
+
+class DeleteAccountEvent extends ProfileEvent {}
+
+class ClearDeleteAccountResultEvent extends ProfileEvent {}

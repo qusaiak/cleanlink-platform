@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import '../../../auth/domain/entities/user_entity.dart';
+import '../entities/dashboard_summary_entity.dart';
 
 abstract class ProfileRepository {
   Future<UserEntity> updateProfile({
@@ -12,4 +13,8 @@ abstract class ProfileRepository {
   });
 
   Future<String> logout();
+
+  Future<DashboardSummaryEntity> getDashboardSummary();
+
+  Future<String> deleteAccount();
 }

@@ -4,7 +4,6 @@ import '../../../regions/domain/entities/region_entity.dart';
 import '../../../services/domain/entities/service_entity.dart';
 
 class SearchEntity {
-
   final List<RegionEntity> regions;
 
   final List<CategoryEntity> categories;
@@ -16,7 +15,6 @@ class SearchEntity {
   final List<ServiceEntity> offers;
 
   const SearchEntity({
-
     required this.regions,
 
     required this.categories,

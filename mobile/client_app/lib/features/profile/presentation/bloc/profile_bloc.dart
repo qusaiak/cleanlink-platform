@@ -13,6 +13,7 @@ import '../../../../core/error/failure.dart';
 import '../../../../core/session/user_session.dart';
 import '../../../auth/domain/entities/user_entity.dart';
 import '../../domain/usecases/profile_usecase.dart';
+import '../../domain/entities/dashboard_summary_entity.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
@@ -20,12 +21,16 @@ part 'profile_state.dart';
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final UpdateClientProfileUseCase _updateProfileUseCase;
   final LogoutUseCase _logoutUseCase;
+  final GetDashboardSummaryUseCase _getDashboardSummaryUseCase;
+  final DeleteAccountUseCase _deleteAccountUseCase;
   final UserSession _session;
   final ImagePicker _imagePicker;
 
   ProfileBloc(
     this._updateProfileUseCase,
     this._logoutUseCase,
+    this._getDashboardSummaryUseCase,
+    this._deleteAccountUseCase,
     this._session,
     this._imagePicker,
   ) : super(
@@ -41,6 +46,17 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<PickProfileImageEvent>(_onPickProfileImage);
     on<UpdateProfileEvent>(_onUpdateProfile);
     on<LogoutEvent>(_onLogout);
+    on<GetDashboardSummaryEvent>(_onGetDashboardSummary);
+    on<RefreshProfileEvent>(_onRefreshProfile);
+    on<DeleteAccountEvent>(_onDeleteAccount);
+    on<ClearDeleteAccountResultEvent>((event, emit) {
+      emit(
+        state.copyWith(
+          clearDeleteAccountError: true,
+          clearDeleteAccountSuccessMessage: true,
+        ),
+      );
+    });
   }
 
   Future<void> _onChangeTheme(
@@ -245,6 +261,115 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         state.copyWith(
           status: ProfileStatus.failure,
           errorMessage: 'failed_to_logout',
+        ),
+      );
+    }
+  }
+
+  Future<void> _onGetDashboardSummary(
+    GetDashboardSummaryEvent event,
+    Emitter<ProfileState> emit,
+  ) async {
+    if (state.isLoadingDashboardSummary) return;
+    emit(
+      state.copyWith(
+        isLoadingDashboardSummary: true,
+        clearDashboardError: true,
+      ),
+    );
+    try {
+      final summary = await _getDashboardSummaryUseCase();
+      emit(
+        state.copyWith(
+          dashboardSummary: summary,
+          isLoadingDashboardSummary: false,
+          clearDashboardError: true,
+        ),
+      );
+    } on Failure catch (failure) {
+      emit(
+        state.copyWith(
+          isLoadingDashboardSummary: false,
+          dashboardSummaryError: failure.message,
+        ),
+      );
+    } catch (_) {
+      emit(
+        state.copyWith(
+          isLoadingDashboardSummary: false,
+          dashboardSummaryError: 'could_not_load_profile_summary',
+        ),
+      );
+    }
+  }
+
+  Future<void> _onRefreshProfile(
+    RefreshProfileEvent event,
+    Emitter<ProfileState> emit,
+  ) async {
+    if (state.isRefreshingProfile) return;
+    emit(state.copyWith(isRefreshingProfile: true, clearDashboardError: true));
+    await _session.load();
+    try {
+      final summary = await _getDashboardSummaryUseCase();
+      emit(
+        state.copyWith(
+          dashboardSummary: summary,
+          isRefreshingProfile: false,
+          fullname: _session.fullname ?? '',
+          email: _session.email ?? '',
+          phone: _session.phone ?? '',
+          address: _session.address ?? '',
+          image: _session.image ?? '',
+          clearDashboardError: true,
+        ),
+      );
+    } on Failure catch (failure) {
+      emit(
+        state.copyWith(
+          isRefreshingProfile: false,
+          dashboardSummaryError: failure.message,
+        ),
+      );
+    } catch (_) {
+      emit(
+        state.copyWith(
+          isRefreshingProfile: false,
+          dashboardSummaryError: 'could_not_load_profile_summary',
+        ),
+      );
+    }
+  }
+
+  Future<void> _onDeleteAccount(
+    DeleteAccountEvent event,
+    Emitter<ProfileState> emit,
+  ) async {
+    if (state.isDeletingAccount) return;
+    emit(
+      state.copyWith(isDeletingAccount: true, clearDeleteAccountError: true),
+    );
+    try {
+      final message = await _deleteAccountUseCase();
+      emit(
+        state.copyWith(
+          isDeletingAccount: false,
+          deleteAccountSuccessMessage: message,
+          clearDeleteAccountError: true,
+        ),
+      );
+    } on Failure catch (failure) {
+      emit(
+        state.copyWith(
+          isDeletingAccount: false,
+          deleteAccountError: failure.message,
+        ),
+      );
+    } catch (_) {
+      emit(
+        state.copyWith(
+          isDeletingAccount: false,
+          deleteAccountError: 'failed_to_delete_account',
         ),
       );
     }

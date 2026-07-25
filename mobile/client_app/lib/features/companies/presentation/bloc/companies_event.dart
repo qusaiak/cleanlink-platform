@@ -9,3 +9,9 @@ class GetCompanyDetailsEvent extends CompaniesEvent {
 
   GetCompanyDetailsEvent(this.id);
 }
+
+class RefreshCompanyDetailsEvent extends CompaniesEvent {
+  final int id;
+
+  RefreshCompanyDetailsEvent(this.id);
+}

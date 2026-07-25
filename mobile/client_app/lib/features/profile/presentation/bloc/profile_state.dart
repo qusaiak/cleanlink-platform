@@ -29,6 +29,13 @@ class ProfileState extends Equatable {
   final UserEntity? user;
   final String? errorMessage;
   final String? successMessage;
+  final DashboardSummaryEntity? dashboardSummary;
+  final bool isLoadingDashboardSummary;
+  final bool isRefreshingProfile;
+  final String? dashboardSummaryError;
+  final bool isDeletingAccount;
+  final String? deleteAccountError;
+  final String? deleteAccountSuccessMessage;
 
   bool get isLoadingProfile => status == ProfileStatus.loadingProfile;
   bool get isUpdatingProfile => status == ProfileStatus.updatingProfile;
@@ -47,6 +54,13 @@ class ProfileState extends Equatable {
     this.user,
     this.errorMessage,
     this.successMessage,
+    this.dashboardSummary,
+    this.isLoadingDashboardSummary = false,
+    this.isRefreshingProfile = false,
+    this.dashboardSummaryError,
+    this.isDeletingAccount = false,
+    this.deleteAccountError,
+    this.deleteAccountSuccessMessage,
   });
 
   ProfileState copyWith({
@@ -63,6 +77,16 @@ class ProfileState extends Equatable {
     UserEntity? user,
     String? errorMessage,
     String? successMessage,
+    DashboardSummaryEntity? dashboardSummary,
+    bool? isLoadingDashboardSummary,
+    bool? isRefreshingProfile,
+    String? dashboardSummaryError,
+    bool clearDashboardError = false,
+    bool? isDeletingAccount,
+    String? deleteAccountError,
+    bool clearDeleteAccountError = false,
+    String? deleteAccountSuccessMessage,
+    bool clearDeleteAccountSuccessMessage = false,
   }) {
     return ProfileState(
       status: status ?? this.status,
@@ -77,6 +101,20 @@ class ProfileState extends Equatable {
       user: user ?? this.user,
       errorMessage: errorMessage,
       successMessage: successMessage,
+      dashboardSummary: dashboardSummary ?? this.dashboardSummary,
+      isLoadingDashboardSummary:
+          isLoadingDashboardSummary ?? this.isLoadingDashboardSummary,
+      isRefreshingProfile: isRefreshingProfile ?? this.isRefreshingProfile,
+      dashboardSummaryError: clearDashboardError
+          ? null
+          : dashboardSummaryError ?? this.dashboardSummaryError,
+      isDeletingAccount: isDeletingAccount ?? this.isDeletingAccount,
+      deleteAccountError: clearDeleteAccountError
+          ? null
+          : deleteAccountError ?? this.deleteAccountError,
+      deleteAccountSuccessMessage: clearDeleteAccountSuccessMessage
+          ? null
+          : deleteAccountSuccessMessage ?? this.deleteAccountSuccessMessage,
     );
   }
 
@@ -94,5 +132,12 @@ class ProfileState extends Equatable {
     user,
     errorMessage,
     successMessage,
+    dashboardSummary,
+    isLoadingDashboardSummary,
+    isRefreshingProfile,
+    dashboardSummaryError,
+    isDeletingAccount,
+    deleteAccountError,
+    deleteAccountSuccessMessage,
   ];
 }

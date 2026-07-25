@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../auth/domain/entities/user_entity.dart';
 import '../repository/profile_repo.dart';
+import '../entities/dashboard_summary_entity.dart';
 
 class UpdateClientProfileUseCase {
   final ProfileRepository repo;
@@ -48,4 +49,20 @@ class LogoutUseCase {
   Future<String> call() {
     return repo.logout();
   }
+}
+
+class GetDashboardSummaryUseCase {
+  final ProfileRepository repo;
+
+  const GetDashboardSummaryUseCase(this.repo);
+
+  Future<DashboardSummaryEntity> call() => repo.getDashboardSummary();
+}
+
+class DeleteAccountUseCase {
+  final ProfileRepository repo;
+
+  const DeleteAccountUseCase(this.repo);
+
+  Future<String> call() => repo.deleteAccount();
 }

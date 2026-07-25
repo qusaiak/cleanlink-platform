@@ -6,25 +6,14 @@ part 'search_response_model.g.dart';
 
 @JsonSerializable()
 class SearchResponseModel {
-
   final int? status;
 
   final String? message;
 
   final SearchDataModel? data;
 
-  const SearchResponseModel({
+  const SearchResponseModel({this.status, this.message, this.data});
 
-    this.status,
-
-    this.message,
-
-    this.data,
-  });
-
-  factory SearchResponseModel.fromJson(
-      Map<String,dynamic> json,
-      )=>
-      _$SearchResponseModelFromJson(
-          json);
+  factory SearchResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$SearchResponseModelFromJson(json);
 }

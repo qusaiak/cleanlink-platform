@@ -1,20 +1,31 @@
-import 'package:client_app/core/session/user_session.dart';
 import 'package:client_app/features/profile/presentation/widgets/profile_content.dart';
 import 'package:client_app/features/profile/presentation/widgets/profile_header.dart';
-import 'package:client_app/injection_container.dart';
-import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../bloc/profile_bloc.dart';
 
-class ProfileBody extends StatelessWidget {
+class ProfileBody extends StatefulWidget {
   const ProfileBody({super.key});
+
+  @override
+  State<ProfileBody> createState() => _ProfileBodyState();
+}
+
+class _ProfileBodyState extends State<ProfileBody> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProfileBloc>().add(GetDashboardSummaryEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: () async {
-          sl<UserSession>().load();
+          final bloc = context.read<ProfileBloc>()..add(RefreshProfileEvent());
+          await bloc.stream.firstWhere((state) => !state.isRefreshingProfile);
         },
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),

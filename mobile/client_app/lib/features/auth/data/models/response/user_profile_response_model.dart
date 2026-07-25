@@ -30,12 +30,12 @@ class UserProfileResponseModel {
   Map<String, dynamic> toJson() => _$UserProfileResponseModelToJson(this);
 
   UserProfileEntity toEntity() => UserProfileEntity(
-        id: id,
-        userId: userId,
-        image: image,
-        address: address,
-        phone: phone,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-      );
+    id: id,
+    userId: userId,
+    image: image,
+    address: address,
+    phone: phone,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+  );
 }

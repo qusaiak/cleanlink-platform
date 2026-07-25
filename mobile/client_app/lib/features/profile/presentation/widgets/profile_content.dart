@@ -69,7 +69,7 @@ class _ProfileContentState extends State<ProfileContent> {
             CustomTile(
               icon: Icons.star_border,
               title: AppLocalizations.of(context)!.my_reviews,
-              onTap: () {},
+              onTap: () => GoRouter.of(context).push(AppRouter.kMyReviews),
             ),
             CustomTile(
               icon: Icons.payment,
@@ -187,23 +187,27 @@ class _ProfileContentState extends State<ProfileContent> {
                 showAdaptiveDialog(
                   context: context,
                   barrierDismissible: true,
-                  builder: (BuildContext context) => CustomDialog(
-                    title: AppLocalizations.of(
-                      context,
-                    )!.dialog_delete_account_title,
-                    body: AppLocalizations.of(
-                      context,
-                    )!.dialog_delete_account_body,
-                    onTap: () {
-                      GoRouter.of(context).pop();
-                      // BlocProvider.of<AuthBloc>(context).add(DeleteAccount());
-                    },
-                    onCancel: () {
-                      GoRouter.of(context).pop();
-                    },
-                    cancelButtonText: AppLocalizations.of(context)!.cancel,
-                    doneButtonText: AppLocalizations.of(context)!.ok,
-                  ),
+                  builder: (dialogContext) =>
+                      BlocBuilder<ProfileBloc, ProfileState>(
+                        builder: (context, state) => CustomDialog(
+                          title: AppLocalizations.of(
+                            context,
+                          )!.dialog_delete_account_title,
+                          body: AppLocalizations.of(
+                            context,
+                          )!.dialog_delete_account_body,
+                          isBackButtonDismiss: !state.isDeletingAccount,
+                          isLoading: state.isDeletingAccount,
+                          onTap: () => context.read<ProfileBloc>().add(
+                            DeleteAccountEvent(),
+                          ),
+                          onCancel: () => Navigator.of(dialogContext).pop(),
+                          cancelButtonText: AppLocalizations.of(
+                            context,
+                          )!.cancel,
+                          doneButtonText: AppLocalizations.of(context)!.ok,
+                        ),
+                      ),
                 );
               },
             ),

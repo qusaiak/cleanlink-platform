@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -26,19 +25,19 @@ class SearchSectionCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(22.r),
           border: Border.all(
-            color: AppColor.surfaceDark.withValues(alpha: 0.2),
+            color: AppColor.primaryColor.withValues(alpha: 0.5),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
+              color: AppColor.primaryColor.withValues(alpha: 0.2),
               blurRadius: 8.r,
-              offset: Offset(0, 4.h),
+              offset: Offset(0, 2.h),
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(22.r),
+          borderRadius: BorderRadius.circular(21.r),
           child: Stack(
             fit: StackFit.expand,
             children: [
@@ -51,13 +50,13 @@ class SearchSectionCard extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                     colors: [
-                      AppColor.surfaceDark.withValues(alpha: 0.6),
                       Colors.transparent,
+                      Colors.black.withValues(alpha: .18),
+                      Colors.black.withValues(alpha: .65),
                     ],
-                    stops: const [0.25, 1],
                   ),
                 ),
               ),

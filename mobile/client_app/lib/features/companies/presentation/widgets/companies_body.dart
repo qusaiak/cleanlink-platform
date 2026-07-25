@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_router.dart';
+import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/custom_list_section.dart';
 import '../../../../l10n/app_localizations.dart';
 
@@ -69,7 +70,12 @@ class _CompaniesBodyState extends State<CompaniesBody> {
           final companies = state.companies;
 
           if (companies.isEmpty) {
-            return const Center(child: Text('No companies found'));
+            return Center(
+              child: AppEmptyState(
+                icon: Icons.business_outlined,
+                title: AppLocalizations.of(context)!.no_companies_found,
+              ),
+            );
           }
 
           return CustomListSection(
