@@ -35,7 +35,6 @@ import '../../features/categories/presentation/pages/categories_page.dart';
 import '../../features/categories/presentation/pages/category_details_page.dart';
 import '../../features/regions/presentation/pages/region_page.dart';
 import '../../features/regions/presentation/pages/regions_page.dart';
-import '../../features/track_service/presentation/pages/track_service_page.dart';
 
 class AppRouter {
   /// ===============================
@@ -57,7 +56,6 @@ class AppRouter {
   static const kContactUs = '/contact_us';
   static const kHelpCenter = '/help_center';
   static const kEditProfile = '/profile/edit';
-  static const kTrackService = '/track_service';
 
   static const kAppContentPage = '/content';
 
@@ -250,15 +248,6 @@ class AppRouter {
         pageBuilder: (context, state) => slideTransitionHorizontal(
           CategoryDetailsPage(categoryId: state.extra as int),
         ),
-      ),
-      GoRoute(
-        path: kTrackService,
-        pageBuilder: (context, state) {
-          final bookingId = state.extra is int ? state.extra as int : 1001;
-          return slideTransitionHorizontal(
-            TrackServicePage(bookingId: bookingId),
-          );
-        },
       ),
       GoRoute(
         path: kOrderDetails,

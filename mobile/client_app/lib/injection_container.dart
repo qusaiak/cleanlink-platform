@@ -88,12 +88,6 @@ import 'features/reviews/domain/usecases/get_my_reviews_use_case.dart';
 import 'features/reviews/presentation/bloc/review_bloc.dart';
 import 'features/reviews/presentation/bloc/my_reviews_bloc.dart';
 import 'features/services/domain/usecases/get_offers_usecase.dart';
-import 'features/track_service/data/data_sources/track_service_api_service.dart';
-import 'features/track_service/data/repositories/track_service_repo_impl.dart';
-import 'features/track_service/domain/repositories/track_service_repo.dart';
-import 'features/track_service/domain/usecases/cancel_service_usecase.dart';
-import 'features/track_service/domain/usecases/track_service_usecase.dart';
-import 'features/track_service/presentation/bloc/track_service_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -127,9 +121,6 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<NotificationsApiService>(
     () => NotificationsApiService(sl()),
   );
-  sl.registerLazySingleton<TrackServiceApiService>(
-    () => TrackServiceApiService(sl()),
-  );
   sl.registerLazySingleton<ProfileApiService>(() => ProfileApiService(sl()));
 
   // Repositories
@@ -146,7 +137,6 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<NotificationsRepository>(
     () => NotificationsRepositoryImpl(sl()),
   );
-  sl.registerLazySingleton<TrackServiceRepo>(() => TrackServiceRepoImpl(sl()));
   sl.registerLazySingleton<ProfileRepository>(
     () => ProfileRepositoryImpl(sl(), sl()),
   );
@@ -213,12 +203,6 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<MarkNotificationAsReadUseCase>(
     () => MarkNotificationAsReadUseCase(sl()),
   );
-  sl.registerLazySingleton<TrackServiceUseCase>(
-    () => TrackServiceUseCase(sl()),
-  );
-  sl.registerLazySingleton<CancelServiceUseCase>(
-    () => CancelServiceUseCase(sl()),
-  );
   sl.registerLazySingleton<UpdateClientProfileUseCase>(
     () => UpdateClientProfileUseCase(sl()),
   );
@@ -247,5 +231,4 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton(() => NotificationsBloc(sl(), sl(), sl(), sl()));
 
   sl.registerFactory(() => BookingsBloc(sl(), sl(), sl(), sl(), sl()));
-  sl.registerFactory(() => TrackServiceBloc(sl(), sl()));
 }
