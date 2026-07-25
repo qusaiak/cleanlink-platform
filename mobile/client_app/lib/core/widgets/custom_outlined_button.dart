@@ -42,7 +42,8 @@ class BaseButton extends StatelessWidget {
 }
 
 class CustomOutlinedButton extends BaseButton {
-  const CustomOutlinedButton({super.key,
+  const CustomOutlinedButton({
+    super.key,
     this.decoration,
     this.leftIcon,
     this.rightIcon,
@@ -70,40 +71,40 @@ class CustomOutlinedButton extends BaseButton {
   Widget build(BuildContext context) {
     return alignment != null
         ? Align(
-      alignment: alignment ?? Alignment.center,
-      child: buildOutlinedButtonWidget,
-    )
+            alignment: alignment ?? Alignment.center,
+            child: buildOutlinedButtonWidget,
+          )
         : buildOutlinedButtonWidget;
   }
 
-  Widget get buildOutlinedButtonWidget =>
-      Container(
-        height: height ?? 56.h,
-        width: width ?? double.maxFinite,
-        margin: margin,
-        decoration: decoration,
-        child: OutlinedButton(
-          style: buttonStyle,
-          onPressed: isDisabled ?? false ? null : onPressed ?? () {},
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              leftIcon ?? const SizedBox.shrink(),
-              const SizedBox(
-                width: 4,
-              ),
-              Flexible(
-                child: Text(
-                  text,
-                  style: buttonTextStyle ??
-                      Styles.textStyle16.copyWith(
-                          color: Colors.black, fontWeight: FontWeight.w500),
-                ),
-              ),
-              rightIcon ?? const SizedBox.shrink(),
-            ],
+  Widget get buildOutlinedButtonWidget => Container(
+    height: height ?? 56.h,
+    width: width ?? double.maxFinite,
+    margin: margin,
+    decoration: decoration,
+    child: OutlinedButton(
+      style: buttonStyle,
+      onPressed: isDisabled ?? false ? null : onPressed ?? () {},
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          leftIcon ?? const SizedBox.shrink(),
+          const SizedBox(width: 4),
+          Flexible(
+            child: Text(
+              text,
+              style:
+                  buttonTextStyle ??
+                  Styles.textStyle16.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+            ),
           ),
-        ),
-      );
+          rightIcon ?? const SizedBox.shrink(),
+        ],
+      ),
+    ),
+  );
 }

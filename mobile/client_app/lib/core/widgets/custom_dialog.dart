@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../config/theme/styles.dart';
@@ -10,7 +9,7 @@ import 'custom_image_view.dart';
 import 'custom_outlined_button.dart';
 
 class CustomDialog extends StatelessWidget {
-  CustomDialog({
+  const CustomDialog({
     super.key,
     required this.title,
     required this.body,
@@ -20,26 +19,23 @@ class CustomDialog extends StatelessWidget {
     this.isBackButtonDismiss = true,
     this.cancelButtonText,
     this.doneButtonText,
+    this.isLoading = false,
   });
 
-  String? title;
-  String? body;
-  VoidCallback? onTap;
-  VoidCallback? onCancel;
+  final String? title;
+  final String? body;
+  final VoidCallback? onTap;
+  final VoidCallback? onCancel;
   final bool isTwoButtons;
   final bool isBackButtonDismiss;
-  String? cancelButtonText;
-  String? doneButtonText;
+  final String? cancelButtonText;
+  final String? doneButtonText;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).colorScheme;
     return PopScope(
-      onPopInvokedWithResult: (didPop, dynamic) async {
-        if (!isBackButtonDismiss) {
-          SystemNavigator.pop();
-        }
-      },
       canPop: isBackButtonDismiss,
       child: AlertDialog(
         shadowColor: theme.surface,
@@ -63,17 +59,19 @@ class CustomDialog extends StatelessWidget {
                   imagePath: Assets.images.logo.appLogo.path,
                   width: 40.w,
                 ),
-                title!.isNotEmpty ? Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.h),
-                  child: Text(
-                    title ?? '',
-                    style: Styles.textStyle12.copyWith(
-                      color: theme.onSurface,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    maxLines: 100,
-                  ),
-                ) : SizedBox.shrink(),
+                title!.isNotEmpty
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10.h),
+                        child: Text(
+                          title ?? '',
+                          style: Styles.textStyle12.copyWith(
+                            color: theme.onSurface,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 100,
+                        ),
+                      )
+                    : SizedBox.shrink(),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 5.h),
                   child: Text(
@@ -112,7 +110,7 @@ class CustomDialog extends StatelessWidget {
                         ),
                         padding: EdgeInsets.zero,
                       ),
-                      onPressed: onCancel,
+                      onPressed: isLoading ? null : onCancel,
                     ),
                     CustomElevatedButton(
                       text: doneButtonText ?? AppLocalizations.of(context)!.yes,
@@ -129,7 +127,20 @@ class CustomDialog extends StatelessWidget {
                         ),
                         shadowColor: Colors.white,
                       ),
-                      onPressed: onTap,
+                      isDisabled: isLoading,
+                      rightIcon: isLoading
+                          ? SizedBox(
+                              width: 14.w,
+                              height: 14.w,
+                              child: CircularProgressIndicator.adaptive(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  theme.onPrimary,
+                                ),
+                              ),
+                            )
+                          : null,
+                      onPressed: isLoading ? null : onTap,
                     ),
                   ],
                 )

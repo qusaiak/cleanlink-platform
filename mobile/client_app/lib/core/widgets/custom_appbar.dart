@@ -27,7 +27,9 @@ PreferredSizeWidget customAppBar(
           )
         : null,
     centerTitle: false,
-    backgroundColor: AppThemeInfo.isLight ? AppColor.backgroundColorLight : AppColor.backgroundColorDark,
+    backgroundColor: AppThemeInfo.isLight
+        ? AppColor.backgroundColorLight
+        : AppColor.backgroundColorDark,
     scrolledUnderElevation: 0,
     shadowColor: AppColor.transparent,
     foregroundColor: AppColor.transparent,

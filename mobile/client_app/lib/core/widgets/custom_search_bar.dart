@@ -6,7 +6,6 @@ import '../../config/theme/colors.dart';
 import '../../config/theme/styles.dart';
 import '../../l10n/app_localizations.dart';
 
-
 class CustomSearchBar extends StatelessWidget {
   const CustomSearchBar({
     super.key,

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -52,12 +51,14 @@ class CustomTile extends StatelessWidget {
               ),
             ),
 
-            trailing ??
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 12,
-                  color: AppColor.primaryColor,
-                ),
+            ?onTap != null
+                ? trailing ??
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 12,
+                        color: AppColor.primaryColor,
+                      )
+                : null,
           ],
         ),
       ),

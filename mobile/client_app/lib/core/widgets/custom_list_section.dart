@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:client_app/core/widgets/row_title.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'section_header.dart';
 
 class CustomListSection extends StatelessWidget {
@@ -65,6 +66,7 @@ class CustomListSection extends StatelessWidget {
                       iconData: iconData!,
                       title: title!,
                       onTap: onTitleTap,
+                      padding: EdgeInsets.all(8.h),
                     )
                   : SectionHeader(title: title!, onTap: onTitleTap),
 
