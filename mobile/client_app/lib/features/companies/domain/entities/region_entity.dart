@@ -3,7 +3,6 @@ import 'manager_entity.dart';
 class RegionEntity {
   final int id;
 
-
   final String name;
 
   final String image;

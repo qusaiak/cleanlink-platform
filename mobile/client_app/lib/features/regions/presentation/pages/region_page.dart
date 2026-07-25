@@ -14,9 +14,7 @@ class RegionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<RegionsBloc>(
       create: (_) => sl<RegionsBloc>(),
-      child: Scaffold(
-        body: RegionBody(id: regionId),
-      ),
+      child: Scaffold(body: RegionBody(id: regionId)),
     );
   }
 }

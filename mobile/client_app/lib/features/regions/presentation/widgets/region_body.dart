@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:client_app/core/utils/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,17 +10,15 @@ import '../../../../config/theme/app_theme_info.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../core/utils/functions/spinkit.dart';
+import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/custom_image_view.dart';
-import '../../../../core/widgets/row_title.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../companies/domain/entities/company_entity.dart';
 import '../../../companies/domain/entities/manager_entity.dart';
 import '../../../companies/domain/entities/region_entity.dart';
 import '../../../home/presentation/widgets/company_card.dart';
-import '../../domain/entities/region_company_entity.dart';
 import '../../domain/entities/region_details_entity.dart';
 import '../bloc/regions_bloc.dart';
-import 'region_company_card.dart';
 
 class RegionBody extends StatefulWidget {
   const RegionBody({super.key, required this.id});
@@ -43,7 +40,7 @@ class _RegionBodyState extends State<RegionBody> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context)!.colorScheme;
+    final theme = Theme.of(context).colorScheme;
     return BlocBuilder<RegionsBloc, RegionsState>(
       buildWhen: (_, current) =>
           current is RegionLoading ||
@@ -90,10 +87,7 @@ final _skeleton = RegionDetailsEntity(
       image: Assets.images.test.test.path,
       location: "Homs",
       rating: 4,
-      isOpen: true,
       isFavorite: false,
-      startHour: "10:00:00",
-      closeHour: "20:00:00",
       manager: ManagerEntity(
         id: 3,
         fullname: "Sara Region Manager",
@@ -161,10 +155,7 @@ class _RegionContent extends StatelessWidget {
             background: Stack(
               fit: StackFit.expand,
               children: [
-                CustomImageView(
-                  imagePath: region.image!,
-                  fit: BoxFit.cover,
-                ),
+                CustomImageView(imagePath: region.image!, fit: BoxFit.cover),
                 const DecoratedBox(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -213,19 +204,10 @@ class _RegionContent extends StatelessWidget {
         ),
         if (region.companies.isEmpty)
           SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.all(24.w),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.business_outlined,
-                    size: 48.sp,
-                    color: theme.onSurfaceVariant,
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(l.no_companies_found, textAlign: TextAlign.center),
-                ],
-              ),
+            child: AppEmptyState(
+              icon: Icons.business_outlined,
+              title: l.no_companies_found,
+              iconColor: theme.onSurfaceVariant,
             ),
           )
         else
@@ -233,7 +215,7 @@ class _RegionContent extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 16.h),
             sliver: SliverList.separated(
               itemCount: region.companies.length,
-              separatorBuilder: (_, __) => SizedBox(height: 14.h),
+              separatorBuilder: (_, _) => SizedBox(height: 14.h),
               itemBuilder: (_, index) {
                 final company = region.companies[index];
                 return SizedBox(

@@ -3,8 +3,6 @@ import 'package:json_annotation/json_annotation.dart';
 import '../../../companies/data/models/company_model.dart';
 import '../../../companies/data/models/manager_model.dart';
 import '../../domain/entities/region_details_entity.dart';
-import 'manager_model.dart';
-import 'region_company_model.dart';
 
 part 'region_details_model.g.dart';
 

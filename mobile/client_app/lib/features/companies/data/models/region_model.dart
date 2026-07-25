@@ -10,7 +10,6 @@ part 'region_model.g.dart';
 class RegionModel {
   final int? id;
 
-
   final String? name;
 
   final String? image;

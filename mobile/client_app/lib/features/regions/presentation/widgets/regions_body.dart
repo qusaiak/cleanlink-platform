@@ -7,9 +7,9 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../config/routes/app_router.dart';
+import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../companies/domain/entities/manager_entity.dart';
-import '../../domain/entities/manager_entity.dart';
 import '../../domain/entities/region_entity.dart';
 import '../bloc/regions_bloc.dart';
 import 'region_card.dart';
@@ -38,7 +38,7 @@ class _RegionsBodyState extends State<RegionsBody> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    final theme = Theme.of(context)!.colorScheme;
+    final theme = Theme.of(context).colorScheme;
 
     return BlocBuilder<RegionsBloc, RegionsState>(
       buildWhen: (_, current) =>
@@ -69,7 +69,7 @@ class _RegionsBodyState extends State<RegionsBody> {
               physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 16.h),
               itemCount: regions.length,
-              separatorBuilder: (_, __) => SizedBox(height: 12.h),
+              separatorBuilder: (_, _) => SizedBox(height: 12.h),
               itemBuilder: (_, index) {
                 final region = regions[index];
                 return RegionCard(
@@ -142,19 +142,12 @@ class _EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
     return RefreshIndicator(
       onRefresh: () async => onRefresh(),
       child: ListView(
         children: [
           SizedBox(height: 120.h),
-          Icon(
-            Icons.location_off_outlined,
-            size: 56.sp,
-            color: theme.onSurfaceVariant,
-          ),
-          SizedBox(height: 12.h),
-          Text(message, textAlign: TextAlign.center),
+          AppEmptyState(icon: Icons.location_off_outlined, title: message),
         ],
       ),
     );

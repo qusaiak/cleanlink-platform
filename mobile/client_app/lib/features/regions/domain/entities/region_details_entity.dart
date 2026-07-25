@@ -2,8 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../companies/domain/entities/company_entity.dart';
 import '../../../companies/domain/entities/manager_entity.dart';
-import 'manager_entity.dart';
-import 'region_company_entity.dart';
+import '../../../companies/domain/utils/company_working_hours.dart';
 
 class RegionDetailsEntity extends Equatable {
   final int id;
@@ -22,7 +21,9 @@ class RegionDetailsEntity extends Equatable {
 
   int get totalCompanies => companies.length;
 
-  int get openCompanies => companies.where((c) => c.isOpen).length;
+  int get openCompanies => companies
+      .where((company) => isCompanyCurrentlyOpen(company.workTimes))
+      .length;
 
   @override
   List<Object?> get props => [id, name, manager, companies];
