@@ -50,5 +50,6 @@ firebase.json
 /docs
 /.github/
 /.devin/
+/.agents/
 /.codex/
 /.appdata/
