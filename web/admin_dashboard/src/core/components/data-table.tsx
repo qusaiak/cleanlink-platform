@@ -49,7 +49,12 @@ export function DataTable<T>({
 
   if (error) return <ErrorState error={error} onRetry={onRetry} />
   if (!loading && data.length === 0 && total === 0) {
-    return <EmptyState title={emptyTitle} description={emptyDescription} />
+    return (
+      <section className="table-shell">
+        {toolbar ? <div className="table-toolbar">{toolbar}</div> : null}
+        <EmptyState title={emptyTitle} description={emptyDescription} />
+      </section>
+    )
   }
 
   return (

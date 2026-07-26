@@ -9,7 +9,7 @@ class AppConfig {
   static String get fullApiUrl => baseUrl + apiVersion;
 
   static int get timeout =>
-      int.parse(dotenv.env[ConfigKeys.timeout] ?? '30000');
+      int.parse(dotenv.env[ConfigKeys.timeout] ?? '100000');
 
   // Maps
   static String get googleMapsKey => dotenv.env[ConfigKeys.mapsKey] ?? '';

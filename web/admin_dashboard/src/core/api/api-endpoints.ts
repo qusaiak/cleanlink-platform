@@ -11,6 +11,7 @@ export const apiEndpoints = {
   },
   categories: {
     list: '/categories',
+    detail: (id: number) => `/categories/${id}`,
     create: '/categories',
     delete: (id: number) => `/categories/${id}`,
   },
@@ -20,6 +21,21 @@ export const apiEndpoints = {
     create: '/regions',
     update: (id: number) => `/regions/${id}`,
     delete: (id: number) => `/regions/${id}`,
+  },
+  companies: {
+    list: '/companies',
+    detail: (id: number) => `/companies/${id}`,
+    delete: (id: number) => `/companies/${id}`,
+    managers: '/company/managers',
+  },
+  services: {
+    list: '/services',
+    detail: (id: number) => `/services/${id}`,
+  },
+  skills: {
+    list: '/skills',
+    create: '/skills',
+    delete: (id: number) => `/skills/${id}`,
   },
   profile: {
     show: '/profile',

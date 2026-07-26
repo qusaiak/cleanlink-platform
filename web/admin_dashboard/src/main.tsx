@@ -4,6 +4,7 @@ import { App } from './app/App'
 import { AppProviders } from './app/providers/app-providers'
 import './core/theme/global.css'
 import './core/components/ui.css'
+import './core/components/details.css'
 import './app/layouts/layouts.css'
 import './features/errors/pages/error-page.css'
 

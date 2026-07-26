@@ -14,7 +14,9 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token
-  config.headers.set('Accept-Language', i18n.language.startsWith('ar') ? 'ar' : 'en')
+  if (!config.headers.has('Accept-Language')) {
+    config.headers.set('Accept-Language', i18n.language.startsWith('ar') ? 'ar' : 'en')
+  }
   config.headers.set('Accept', 'application/json')
 
   if (token) config.headers.set('Authorization', `Bearer ${token}`)

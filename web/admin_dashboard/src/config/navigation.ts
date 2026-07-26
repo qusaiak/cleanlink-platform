@@ -1,6 +1,9 @@
 import {
   LayoutDashboard,
   Map,
+  Building2,
+  BriefcaseBusiness,
+  Sparkles,
   Shapes,
   UserCog,
   UserRound,
@@ -26,14 +29,29 @@ export const navigationItems: NavigationItem[] = [
     icon: UserCog,
   },
   {
+    path: routePaths.regions,
+    labelKey: 'nav.regions',
+    icon: Map,
+  },
+  {
+    path: routePaths.companies,
+    labelKey: 'nav.companies',
+    icon: Building2,
+  },
+  {
     path: routePaths.categories,
     labelKey: 'nav.categories',
     icon: Shapes,
   },
   {
-    path: routePaths.regions,
-    labelKey: 'nav.regions',
-    icon: Map,
+    path: routePaths.services,
+    labelKey: 'nav.services',
+    icon: BriefcaseBusiness,
+  },
+  {
+    path: routePaths.skills,
+    labelKey: 'nav.skills',
+    icon: Sparkles,
   },
   {
     path: routePaths.profile,

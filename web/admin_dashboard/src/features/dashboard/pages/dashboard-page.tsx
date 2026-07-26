@@ -1,9 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import {
   ArrowUpRight,
+  BriefcaseBusiness,
+  Building2,
   Map,
   Plus,
   Shapes,
+  Sparkles,
   UserCog,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -16,8 +19,11 @@ import { ErrorState, PageSkeleton } from '../../../core/components/feedback'
 import { PageHeader } from '../../../core/components/page-header'
 import { formatNumber } from '../../../core/utils/formatters'
 import { categoriesApi } from '../../categories/api/categories-api'
+import { companiesApi } from '../../companies/api/companies-api'
 import { regionManagersApi } from '../../region-managers/api/region-managers-api'
 import { regionsApi } from '../../regions/api/regions-api'
+import { servicesApi } from '../../services/api/services-api'
+import { skillsApi } from '../../skills/api/skills-api'
 import './dashboard-page.css'
 
 interface SummaryCardProps {
@@ -49,15 +55,21 @@ export default function DashboardPage() {
   const query = useQuery({
     queryKey: ['dashboard', 'admin-summary', language],
     queryFn: async ({ signal }) => {
-      const [managers, categories, regions] = await Promise.all([
+      const [managers, categories, regions, companies, services, skills] = await Promise.all([
         regionManagersApi.list(signal),
         categoriesApi.list(signal),
         regionsApi.list(signal),
+        companiesApi.list(signal),
+        servicesApi.list(signal),
+        skillsApi.list(signal),
       ])
       return {
         managers: managers.length,
         categories: categories.length,
         regions: regions.length,
+        companies: companies.length,
+        services: services.length,
+        skills: skills.length,
       }
     },
   })
@@ -72,7 +84,7 @@ export default function DashboardPage() {
     )
   }
 
-  const summary = query.data ?? { managers: 0, categories: 0, regions: 0 }
+  const summary = query.data ?? { managers: 0, categories: 0, regions: 0, companies: 0, services: 0, skills: 0 }
 
   return (
     <>
@@ -115,6 +127,24 @@ export default function DashboardPage() {
             value={summary.regions}
             icon={Map}
             path={routePaths.regions}
+          />
+          <SummaryCard
+            label={t('dashboard.totalCompanies')}
+            value={summary.companies}
+            icon={Building2}
+            path={routePaths.companies}
+          />
+          <SummaryCard
+            label={t('dashboard.totalServices')}
+            value={summary.services}
+            icon={BriefcaseBusiness}
+            path={routePaths.services}
+          />
+          <SummaryCard
+            label={t('dashboard.totalSkills')}
+            value={summary.skills}
+            icon={Sparkles}
+            path={routePaths.skills}
           />
         </div>
       </section>

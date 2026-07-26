@@ -1,7 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Plus, Shapes, Trash2 } from 'lucide-react'
+import { Eye, Plus, Shapes, Trash2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
+import { routePaths } from '../../../app/router/route-paths'
 import { appConfig } from '../../../config/app-config'
 import { normalizeApiError } from '../../../core/api/api-error'
 import { Button } from '../../../core/components/button'
@@ -111,6 +113,13 @@ export default function CategoriesPage() {
       align: 'end',
       render: (category) => (
         <div className="table-actions">
+          <Link
+            className="button button--ghost button--icon"
+            to={routePaths.categoryDetail(category.id)}
+            aria-label={`${t('actions.view')} ${category.name}`}
+          >
+            <Eye size={17} />
+          </Link>
           <Button
             variant="ghost"
             iconOnly

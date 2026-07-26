@@ -27,6 +27,13 @@ export const regionsApi = {
     )
     return response.data.data
   },
+  async detail(id: number, signal?: AbortSignal) {
+    const response = await apiClient.get<ApiResponse<Region>>(
+      apiEndpoints.regions.detail(id),
+      { signal },
+    )
+    return response.data.data
+  },
   async update(id: number, values: RegionFormValues) {
     const data = toFormData(values, false)
     data.append('_method', 'PUT')
@@ -44,4 +51,6 @@ export const regionsApi = {
 export const regionKeys = {
   all: ['regions'] as const,
   list: () => [...regionKeys.all, 'list'] as const,
+  details: () => [...regionKeys.all, 'detail'] as const,
+  detail: (id: number) => [...regionKeys.details(), id] as const,
 }

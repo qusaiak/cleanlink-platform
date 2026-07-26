@@ -1,4 +1,5 @@
 import type { RegionManager } from '../../region-managers/types/region-manager'
+import type { CompanyListItem } from '../../companies/types/company'
 
 export interface Region {
   id: number
@@ -9,6 +10,7 @@ export interface Region {
   manager?: RegionManager | null
   created_at: string
   updated_at: string
+  companies?: CompanyListItem[]
 }
 
 export interface RegionFormValues {

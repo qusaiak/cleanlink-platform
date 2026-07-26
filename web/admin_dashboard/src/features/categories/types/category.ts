@@ -7,6 +7,18 @@ export interface Category {
   updated_at: string
 }
 
+export interface CategoryDetails {
+  id: number
+  name_ar: string
+  name_en: string
+  description_ar: string | null
+  description_en: string | null
+  image: string | null
+  services: import('../../services/types/service').ServiceListItem[]
+  created_at: string
+  updated_at: string
+}
+
 export interface CategoryFormValues {
   name_ar: string
   name_en: string
