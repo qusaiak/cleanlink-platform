@@ -1,0 +1,21 @@
+.standalone-error {
+  display: grid;
+  min-height: 100vh;
+  padding: 28px;
+  place-content: center;
+  justify-items: center;
+  text-align: center;
+  background: var(--background);
+}
+
+.standalone-error h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.standalone-error > p:not(.page-header__eyebrow) {
+  max-width: 480px;
+  margin: 10px 0 22px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}

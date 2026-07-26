@@ -1,0 +1,55 @@
+.login-card {
+  width: min(100%, 430px);
+}
+
+.login-card__icon {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 26px;
+  place-items: center;
+  color: var(--primary-dark);
+  background: color-mix(in srgb, var(--primary) 12%, var(--surface));
+  border-radius: 14px;
+}
+
+.login-card__eyebrow {
+  margin: 0 0 7px;
+  color: var(--primary-dark);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.login-card h1 {
+  margin: 0;
+  font-size: clamp(29px, 4vw, 38px);
+  letter-spacing: -0.035em;
+}
+
+:root[dir='rtl'] .login-card h1 {
+  letter-spacing: 0;
+}
+
+.login-card__subtitle {
+  margin: 10px 0 28px;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.login-form {
+  display: grid;
+  gap: 17px;
+}
+
+.login-form > .button {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 3px;
+}
+
+.icon--rtl {
+  transform: rotate(180deg);
+}

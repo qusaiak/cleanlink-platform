@@ -1,0 +1,111 @@
+.profile-card {
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
+}
+
+.profile-card__identity {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 26px;
+  background:
+    radial-gradient(circle at 85% 10%, rgb(79 209 197 / 15%), transparent 35%),
+    var(--surface-subtle);
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-card__avatar {
+  display: grid;
+  width: 72px;
+  height: 72px;
+  place-items: center;
+  overflow: hidden;
+  color: #ffffff;
+  background: var(--primary);
+  border: 4px solid var(--surface);
+  border-radius: 22px;
+  box-shadow: var(--shadow-sm);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.profile-card__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-card__identity h2 {
+  margin: 0;
+  font-size: 21px;
+}
+
+.profile-card__identity p {
+  margin: 5px 0 0;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.profile-card__details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--border);
+}
+
+.profile-detail {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 21px 24px;
+  background: var(--surface);
+}
+
+.profile-detail > span {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  color: var(--primary-dark);
+  background: color-mix(in srgb, var(--primary) 10%, var(--surface));
+  border-radius: 11px;
+}
+
+.profile-detail small,
+.profile-detail strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-detail small {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.profile-detail strong {
+  margin-top: 4px;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.profile-card__note {
+  margin: 0;
+  padding: 16px 24px;
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--info) 6%, var(--surface));
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+@media (max-width: 720px) {
+  .profile-card__details {
+    grid-template-columns: 1fr;
+  }
+}
