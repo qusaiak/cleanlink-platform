@@ -15,3 +15,7 @@ export interface CreateRegionManagerInput {
   email: string
   password: string
 }
+
+export interface RegionManagerFilters {
+  search?: string
+}

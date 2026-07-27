@@ -4,13 +4,28 @@ import type { ApiResponse } from '../../../core/api/api-types'
 import type {
   CreateRegionManagerInput,
   RegionManager,
+  RegionManagerFilters,
 } from '../types/region-manager'
+import { compactQueryParams } from '../../../core/api/list-query'
+
+function toRegionManagerQueryParams(filters: RegionManagerFilters) {
+  return compactQueryParams({
+    query: filters.search?.trim() || undefined,
+  })
+}
 
 export const regionManagersApi = {
   async list(signal?: AbortSignal) {
     const response = await apiClient.get<ApiResponse<RegionManager[]>>(
       apiEndpoints.regionManagers.list,
       { signal },
+    )
+    return response.data.data
+  },
+  async search(filters: RegionManagerFilters, signal?: AbortSignal) {
+    const response = await apiClient.get<ApiResponse<RegionManager[]>>(
+      apiEndpoints.regionManagers.adminList,
+      { params: toRegionManagerQueryParams(filters), signal },
     )
     return response.data.data
   },
@@ -28,5 +43,7 @@ export const regionManagersApi = {
 
 export const regionManagerKeys = {
   all: ['region-managers'] as const,
-  list: () => [...regionManagerKeys.all, 'list'] as const,
+  lists: () => [...regionManagerKeys.all, 'list'] as const,
+  list: (filters: RegionManagerFilters = {}) =>
+    [...regionManagerKeys.lists(), filters] as const,
 }

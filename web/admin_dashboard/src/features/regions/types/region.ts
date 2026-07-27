@@ -19,3 +19,7 @@ export interface RegionFormValues {
   manager_id: string
   image: File | null
 }
+
+export interface RegionFilters {
+  search?: string
+}

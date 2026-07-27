@@ -106,21 +106,28 @@ export function DashboardLayout() {
         </div>
 
         <nav className="sidebar__nav">
-          {navigationItems.map((item) => {
+          {navigationItems.map((item, index) => {
             const Icon = item.icon
+            const previousSection = navigationItems[index - 1]?.sectionKey
             return (
-              <NavLink
-                className={({ isActive }) =>
-                  `sidebar__link ${isActive ? 'sidebar__link--active' : ''}`
-                }
-                key={item.path}
-                to={item.path}
-                title={collapsed ? t(item.labelKey) : undefined}
-                onClick={() => setMobileOpen(false)}
-              >
-                <Icon size={20} aria-hidden="true" />
-                <span>{t(item.labelKey)}</span>
-              </NavLink>
+              <div className="sidebar__nav-item" key={item.path}>
+                {item.sectionKey !== previousSection ? (
+                  <span className="sidebar__section-label">
+                    {t(item.sectionKey)}
+                  </span>
+                ) : null}
+                <NavLink
+                  className={({ isActive }) =>
+                    `sidebar__link ${isActive ? 'sidebar__link--active' : ''}`
+                  }
+                  to={item.path}
+                  title={collapsed ? t(item.labelKey) : undefined}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <Icon size={19} aria-hidden="true" />
+                  <span>{t(item.labelKey)}</span>
+                </NavLink>
+              </div>
             )
           })}
         </nav>

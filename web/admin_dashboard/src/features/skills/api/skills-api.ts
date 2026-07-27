@@ -1,13 +1,27 @@
 import { apiClient } from '../../../core/api/api-client'
 import { apiEndpoints } from '../../../core/api/api-endpoints'
 import type { ApiResponse } from '../../../core/api/api-types'
-import type { Skill, SkillFormValues } from '../types/skill'
+import type { Skill, SkillFilters, SkillFormValues } from '../types/skill'
+import { compactQueryParams } from '../../../core/api/list-query'
+
+function toSkillQueryParams(filters: SkillFilters) {
+  return compactQueryParams({
+    query: filters.search?.trim() || undefined,
+  })
+}
 
 export const skillsApi = {
   async list(signal?: AbortSignal) {
     const response = await apiClient.get<ApiResponse<Skill[]>>(
       apiEndpoints.skills.list,
       { signal },
+    )
+    return response.data.data
+  },
+  async search(filters: SkillFilters, signal?: AbortSignal) {
+    const response = await apiClient.get<ApiResponse<Skill[]>>(
+      apiEndpoints.skills.adminList,
+      { params: toSkillQueryParams(filters), signal },
     )
     return response.data.data
   },
@@ -25,5 +39,7 @@ export const skillsApi = {
 
 export const skillKeys = {
   all: ['skills'] as const,
-  list: () => [...skillKeys.all, 'list'] as const,
+  lists: () => [...skillKeys.all, 'list'] as const,
+  list: (filters: SkillFilters = {}) =>
+    [...skillKeys.lists(), filters] as const,
 }

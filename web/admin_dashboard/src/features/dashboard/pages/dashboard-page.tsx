@@ -31,11 +31,18 @@ interface SummaryCardProps {
   value: number
   icon: LucideIcon
   path: string
+  tone: 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'neutral'
 }
 
-function SummaryCard({ label, value, icon: Icon, path }: SummaryCardProps) {
+function SummaryCard({
+  label,
+  value,
+  icon: Icon,
+  path,
+  tone,
+}: SummaryCardProps) {
   return (
-    <Link className="summary-card" to={path}>
+    <Link className={`summary-card summary-card--${tone}`} to={path}>
       <div className="summary-card__top">
         <span className="summary-card__icon">
           <Icon size={21} />
@@ -56,12 +63,12 @@ export default function DashboardPage() {
     queryKey: ['dashboard', 'admin-summary', language],
     queryFn: async ({ signal }) => {
       const [managers, categories, regions, companies, services, skills] = await Promise.all([
-        regionManagersApi.list(signal),
-        categoriesApi.list(signal),
-        regionsApi.list(signal),
-        companiesApi.list(signal),
-        servicesApi.list(signal),
-        skillsApi.list(signal),
+        regionManagersApi.search({}, signal),
+        categoriesApi.search({}, signal),
+        regionsApi.search({}, signal),
+        companiesApi.search({}, signal),
+        servicesApi.search({}, signal),
+        skillsApi.search({}, signal),
       ])
       return {
         managers: managers.length,
@@ -115,36 +122,42 @@ export default function DashboardPage() {
             value={summary.managers}
             icon={UserCog}
             path={routePaths.regionManagers}
+            tone="neutral"
           />
           <SummaryCard
             label={t('dashboard.totalCategories')}
             value={summary.categories}
             icon={Shapes}
             path={routePaths.categories}
+            tone="warning"
           />
           <SummaryCard
             label={t('dashboard.totalRegions')}
             value={summary.regions}
             icon={Map}
             path={routePaths.regions}
+            tone="info"
           />
           <SummaryCard
             label={t('dashboard.totalCompanies')}
             value={summary.companies}
             icon={Building2}
             path={routePaths.companies}
+            tone="primary"
           />
           <SummaryCard
             label={t('dashboard.totalServices')}
             value={summary.services}
             icon={BriefcaseBusiness}
             path={routePaths.services}
+            tone="success"
           />
           <SummaryCard
             label={t('dashboard.totalSkills')}
             value={summary.skills}
             icon={Sparkles}
             path={routePaths.skills}
+            tone="secondary"
           />
         </div>
       </section>

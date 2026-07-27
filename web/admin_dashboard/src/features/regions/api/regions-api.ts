@@ -1,7 +1,14 @@
 import { apiClient } from '../../../core/api/api-client'
 import { apiEndpoints } from '../../../core/api/api-endpoints'
 import type { ApiResponse } from '../../../core/api/api-types'
-import type { Region, RegionFormValues } from '../types/region'
+import type { Region, RegionFilters, RegionFormValues } from '../types/region'
+import { compactQueryParams } from '../../../core/api/list-query'
+
+function toRegionQueryParams(filters: RegionFilters) {
+  return compactQueryParams({
+    query: filters.search?.trim() || undefined,
+  })
+}
 
 const toFormData = (values: RegionFormValues, includeManager: boolean) => {
   const data = new FormData()
@@ -17,6 +24,13 @@ export const regionsApi = {
     const response = await apiClient.get<ApiResponse<Region[]>>(
       apiEndpoints.regions.list,
       { signal },
+    )
+    return response.data.data
+  },
+  async search(filters: RegionFilters, signal?: AbortSignal) {
+    const response = await apiClient.get<ApiResponse<Region[]>>(
+      apiEndpoints.regions.adminList,
+      { params: toRegionQueryParams(filters), signal },
     )
     return response.data.data
   },
@@ -50,7 +64,9 @@ export const regionsApi = {
 
 export const regionKeys = {
   all: ['regions'] as const,
-  list: () => [...regionKeys.all, 'list'] as const,
+  lists: () => [...regionKeys.all, 'list'] as const,
+  list: (filters: RegionFilters = {}) =>
+    [...regionKeys.lists(), filters] as const,
   details: () => [...regionKeys.all, 'detail'] as const,
   detail: (id: number) => [...regionKeys.details(), id] as const,
 }

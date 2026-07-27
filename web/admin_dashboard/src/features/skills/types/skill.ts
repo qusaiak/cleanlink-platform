@@ -10,3 +10,7 @@ export interface SkillFormValues {
   name_ar: string
   name_en: string
 }
+
+export interface SkillFilters {
+  search?: string
+}

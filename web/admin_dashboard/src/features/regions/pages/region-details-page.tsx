@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { routePaths } from '../../../app/router/route-paths'
 import { normalizeApiError } from '../../../core/api/api-error'
 import { Breadcrumbs, DefinitionGrid, DetailSection, EntityImage } from '../../../core/components/details'
@@ -11,6 +11,7 @@ import { regionKeys, regionsApi } from '../api/regions-api'
 export default function RegionDetailsPage() {
   const { t, i18n } = useTranslation()
   const { regionId } = useParams()
+  const [searchParams] = useSearchParams()
   const id = Number(regionId)
   const isArabic = i18n.language.startsWith('ar')
   const query = useQuery({
@@ -29,7 +30,10 @@ export default function RegionDetailsPage() {
     <div className="detail-stack">
       <Breadcrumbs items={[
         { label: t('nav.dashboard'), to: routePaths.dashboard },
-        { label: t('nav.regions'), to: routePaths.regions },
+        {
+          label: t('nav.regions'),
+          to: `${routePaths.regions}?${searchParams}`,
+        },
         { label: name },
       ]} />
       <header className="detail-hero">

@@ -1,41 +1,39 @@
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { routePaths } from '../../../app/router/route-paths'
 import { normalizeApiError } from '../../../core/api/api-error'
 import { Breadcrumbs, DefinitionGrid, DetailSection, EntityImage } from '../../../core/components/details'
 import { ErrorState, PageSkeleton } from '../../../core/components/feedback'
 import { formatDate, formatDecimal } from '../../../core/utils/formatters'
-import { categoriesApi, categoryKeys } from '../../categories/api/categories-api'
 import { serviceKeys, servicesApi } from '../api/services-api'
 
 export default function ServiceDetailsPage() {
   const { t, i18n } = useTranslation()
   const { serviceId } = useParams()
+  const [searchParams] = useSearchParams()
   const id = Number(serviceId)
   const isArabic = i18n.language.startsWith('ar')
-  const language = isArabic ? 'ar' : 'en'
   const query = useQuery({
     queryKey: serviceKeys.detail(id),
     queryFn: ({ signal }) => servicesApi.detail(id, signal),
     enabled: Number.isInteger(id) && id > 0,
-  })
-  const categories = useQuery({
-    queryKey: categoryKeys.list(language),
-    queryFn: ({ signal }) => categoriesApi.list(signal),
   })
   if (query.isLoading) return <PageSkeleton />
   if (query.error) return <ErrorState error={normalizeApiError(query.error)} onRetry={() => void query.refetch()} />
   if (!query.data) return null
   const service = query.data
   const name = isArabic ? service.name_ar : service.name_en
-  const category = categories.data?.find((item) => item.id === service.category_id)
+  const category = service.category
   const skills = service.required_skills ?? service.requiredskills ?? []
   return (
     <div className="detail-stack">
       <Breadcrumbs items={[
         { label: t('nav.dashboard'), to: routePaths.dashboard },
-        { label: t('nav.services'), to: routePaths.services },
+        {
+          label: t('nav.services'),
+          to: `${routePaths.services}?${searchParams}`,
+        },
         { label: name },
       ]} />
       <header className="detail-hero">
@@ -45,7 +43,7 @@ export default function ServiceDetailsPage() {
       <DetailSection title={t('serviceDetails.overview')}>
         <DefinitionGrid items={[
           { label: t('services.company'), value: service.company ? <Link to={routePaths.companyDetail(service.company.id)}>{isArabic ? service.company.name_ar : service.company.name_en}</Link> : '—' },
-          { label: t('services.category'), value: category ? <Link to={routePaths.categoryDetail(category.id)}>{category.name}</Link> : `#${service.category_id}` },
+          { label: t('services.category'), value: category ? <Link to={routePaths.categoryDetail(category.id)}>{isArabic ? category.name_ar : category.name_en}</Link> : `#${service.category_id}` },
           { label: t('services.price'), value: formatDecimal(service.price) },
           { label: t('services.discount'), value: formatDecimal(service.discount) },
           { label: t('services.rating'), value: formatDecimal(service.rating) },

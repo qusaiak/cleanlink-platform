@@ -2,6 +2,7 @@ import {
   Eye,
   EyeOff,
   ImagePlus,
+  LoaderCircle,
   Search,
   Trash2,
   Upload,
@@ -170,22 +171,33 @@ interface SearchInputProps {
   value: string
   onChange: (value: string) => void
   placeholder: string
+  loading?: boolean
+  onSearch?: (value: string) => void
 }
 
 export function SearchInput({
   value,
   onChange,
   placeholder,
+  loading = false,
+  onSearch,
 }: SearchInputProps) {
   const { t } = useTranslation()
   return (
     <div className="search">
-      <Search size={18} aria-hidden="true" />
+      {loading ? (
+        <LoaderCircle className="search__spinner" size={18} aria-hidden="true" />
+      ) : (
+        <Search size={18} aria-hidden="true" />
+      )}
       <input
         className="field__control"
         type="search"
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') onSearch?.(value)
+        }}
         placeholder={placeholder}
         aria-label={t('actions.search')}
       />
@@ -194,7 +206,10 @@ export function SearchInput({
           className="search__clear"
           type="button"
           aria-label={t('actions.clear')}
-          onClick={() => onChange('')}
+          onClick={() => {
+            onChange('')
+            onSearch?.('')
+          }}
         >
           <X size={17} />
         </button>

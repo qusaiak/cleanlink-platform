@@ -5,6 +5,9 @@
     "skipToContent": "الانتقال إلى المحتوى"
   },
   "nav": {
+    "overview": "نظرة عامة",
+    "management": "الإدارة",
+    "account": "الحساب",
     "dashboard": "لوحة التحكم",
     "regionManagers": "مديرو المناطق",
     "categories": "الفئات",
@@ -33,6 +36,7 @@
     "next": "التالي",
     "search": "بحث",
     "clear": "مسح البحث",
+    "clearFilters": "مسح عوامل التصفية",
     "showPassword": "إظهار كلمة المرور",
     "hidePassword": "إخفاء كلمة المرور",
     "changeImage": "تغيير الصورة",

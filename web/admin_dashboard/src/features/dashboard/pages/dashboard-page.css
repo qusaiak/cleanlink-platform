@@ -36,6 +36,8 @@
 }
 
 .summary-card {
+  --metric-accent: var(--text-secondary);
+  --metric-subtle: var(--surface-muted);
   display: grid;
   min-height: 154px;
   padding: 19px;
@@ -67,9 +69,34 @@
   width: 42px;
   height: 42px;
   place-items: center;
-  color: var(--primary-dark);
-  background: color-mix(in srgb, var(--primary) 11%, var(--surface));
+  color: var(--metric-accent);
+  background: var(--metric-subtle);
   border-radius: 12px;
+}
+
+.summary-card--primary {
+  --metric-accent: var(--primary-dark);
+  --metric-subtle: var(--primary-subtle);
+}
+
+.summary-card--secondary {
+  --metric-accent: var(--secondary-dark);
+  --metric-subtle: var(--secondary-subtle);
+}
+
+.summary-card--info {
+  --metric-accent: var(--info);
+  --metric-subtle: var(--info-subtle);
+}
+
+.summary-card--success {
+  --metric-accent: var(--success);
+  --metric-subtle: var(--success-subtle);
+}
+
+.summary-card--warning {
+  --metric-accent: #a96500;
+  --metric-subtle: var(--warning-subtle);
 }
 
 .summary-card > strong {

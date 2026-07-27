@@ -33,6 +33,11 @@ export interface ServiceListItem {
   image: string | null
   discount: number | string
   company?: CompanyListItem | null
+  category?: {
+    id: number
+    name_ar: string
+    name_en: string
+  } | null
   created_at: string
   updated_at: string
 }
@@ -49,4 +54,10 @@ export interface ServiceDetails extends ServiceListItem {
     name_en: string
     pivot?: { price?: number | string; duration?: number }
   }>
+}
+
+export interface ServiceFilters {
+  search?: string
+  companyId?: number
+  categoryId?: number
 }

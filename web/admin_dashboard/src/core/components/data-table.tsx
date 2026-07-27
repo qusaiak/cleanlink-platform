@@ -16,11 +16,12 @@ interface DataTableProps<T> {
   data: T[]
   columns: DataColumn<T>[]
   getRowKey: (item: T) => string | number
-  page: number
-  pageCount: number
+  page?: number
+  pageCount?: number
   total: number
-  onPageChange: (page: number) => void
+  onPageChange?: (page: number) => void
   loading?: boolean
+  fetching?: boolean
   error?: ApiError | null
   onRetry?: () => void
   emptyTitle: string
@@ -32,11 +33,12 @@ export function DataTable<T>({
   data,
   columns,
   getRowKey,
-  page,
-  pageCount,
+  page = 1,
+  pageCount = 1,
   total,
   onPageChange,
   loading,
+  fetching,
   error,
   onRetry,
   emptyTitle,
@@ -58,8 +60,14 @@ export function DataTable<T>({
   }
 
   return (
-    <section className="table-shell" aria-busy={loading}>
+    <section className="table-shell" aria-busy={loading || fetching}>
       {toolbar ? <div className="table-toolbar">{toolbar}</div> : null}
+      {fetching && !loading ? (
+        <div className="table-fetching" role="status">
+          <span className="inline-spinner" />
+          <span>{t('feedback.refreshing')}</span>
+        </div>
+      ) : null}
       <div className="table-scroll">
         <table className="data-table">
           <thead>
@@ -101,7 +109,7 @@ export function DataTable<T>({
           </tbody>
         </table>
       </div>
-      <footer className="table-pagination">
+      {onPageChange && pageCount > 1 ? <footer className="table-pagination">
         <p>
           {t('table.page', {
             current: Math.min(page, Math.max(pageCount, 1)),
@@ -127,7 +135,7 @@ export function DataTable<T>({
             <NextIcon size={16} />
           </Button>
         </div>
-      </footer>
+      </footer> : null}
     </section>
   )
 }

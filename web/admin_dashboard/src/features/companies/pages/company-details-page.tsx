@@ -19,7 +19,7 @@ export default function CompanyDetailsPage() {
   const { companyId } = useParams()
   const id = Number(companyId)
   const [searchParams] = useSearchParams()
-  const from = searchParams.get('from') ?? ''
+  const from = searchParams.toString()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { showToast } = useToast()
@@ -41,7 +41,7 @@ export default function CompanyDetailsPage() {
   )
   const name = company ? (isArabic ? company.name_ar : company.name_en) : ''
   const otherName = company ? (isArabic ? company.name_en : company.name_ar) : ''
-  const backToCompanies = `${routePaths.companies}${from}`
+  const backToCompanies = `${routePaths.companies}${from ? `?${from}` : ''}`
 
   const deleteMutation = useMutation({
     mutationFn: companiesApi.delete,

@@ -76,3 +76,8 @@ export interface CompanyDetails extends CompanyListItem {
   workers: CompanyWorker[]
   reviews: CompanyReview[]
 }
+
+export interface CompanyFilters {
+  search?: string
+  regionId?: number
+}

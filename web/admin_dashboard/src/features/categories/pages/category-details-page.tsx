@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { routePaths } from '../../../app/router/route-paths'
 import { normalizeApiError } from '../../../core/api/api-error'
 import { Breadcrumbs, DefinitionGrid, DetailSection, EntityImage } from '../../../core/components/details'
@@ -11,6 +11,7 @@ import { categoriesApi, categoryKeys } from '../api/categories-api'
 export default function CategoryDetailsPage() {
   const { t, i18n } = useTranslation()
   const { categoryId } = useParams()
+  const [searchParams] = useSearchParams()
   const id = Number(categoryId)
   const isArabic = i18n.language.startsWith('ar')
   const query = useQuery({
@@ -27,7 +28,10 @@ export default function CategoryDetailsPage() {
     <div className="detail-stack">
       <Breadcrumbs items={[
         { label: t('nav.dashboard'), to: routePaths.dashboard },
-        { label: t('nav.categories'), to: routePaths.categories },
+        {
+          label: t('nav.categories'),
+          to: `${routePaths.categories}?${searchParams}`,
+        },
         { label: name },
       ]} />
       <header className="detail-hero">

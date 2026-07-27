@@ -5,6 +5,9 @@
     "skipToContent": "Skip to content"
   },
   "nav": {
+    "overview": "Overview",
+    "management": "Management",
+    "account": "Account",
     "dashboard": "Dashboard",
     "regionManagers": "Region managers",
     "categories": "Categories",
@@ -33,6 +36,7 @@
     "next": "Next",
     "search": "Search",
     "clear": "Clear search",
+    "clearFilters": "Clear filters",
     "showPassword": "Show password",
     "hidePassword": "Hide password",
     "changeImage": "Change image",

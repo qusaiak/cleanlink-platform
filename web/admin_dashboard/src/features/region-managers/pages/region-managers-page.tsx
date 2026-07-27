@@ -1,22 +1,22 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Plus, Trash2, UserCog } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
+import { Plus, Trash2 } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { appConfig } from '../../../config/app-config'
 import { normalizeApiError } from '../../../core/api/api-error'
 import { Button } from '../../../core/components/button'
-import {
-  DataTable,
-  type DataColumn,
-} from '../../../core/components/data-table'
+import { DataTable, type DataColumn } from '../../../core/components/data-table'
+import { FilterToolbar } from '../../../core/components/filter-toolbar'
 import { SearchInput } from '../../../core/components/form-controls'
 import { ConfirmationDialog } from '../../../core/components/modal'
 import { PageHeader } from '../../../core/components/page-header'
 import { useToast } from '../../../core/components/toast'
-import {
-  formatDate,
-  getInitials,
-} from '../../../core/utils/formatters'
+import { formatDate, getInitials } from '../../../core/utils/formatters'
+import { useListQueryState } from '../../../core/utils/use-list-query-state'
 import {
   regionManagerKeys,
   regionManagersApi,
@@ -28,33 +28,16 @@ export default function RegionManagersPage() {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { showToast } = useToast()
-  const [search, setSearch] = useState('')
-  const [page, setPage] = useState(1)
+  const listState = useListQueryState()
   const [formOpen, setFormOpen] = useState(false)
   const [deleting, setDeleting] = useState<RegionManager | null>(null)
+  const filters = { search: listState.search || undefined }
   const query = useQuery({
-    queryKey: regionManagerKeys.list(),
-    queryFn: ({ signal }) => regionManagersApi.list(signal),
+    queryKey: regionManagerKeys.list(filters),
+    queryFn: ({ signal }) => regionManagersApi.search(filters, signal),
+    placeholderData: keepPreviousData,
   })
-
-  const filtered = useMemo(() => {
-    const term = search.trim().toLocaleLowerCase()
-    if (!term) return query.data ?? []
-    return (query.data ?? []).filter((manager) =>
-      `${manager.fullname} ${manager.email}`
-        .toLocaleLowerCase()
-        .includes(term),
-    )
-  }, [query.data, search])
-  const pageCount = Math.max(
-    1,
-    Math.ceil(filtered.length / appConfig.defaultPageSize),
-  )
-  const activePage = Math.min(page, pageCount)
-  const rows = filtered.slice(
-    (activePage - 1) * appConfig.defaultPageSize,
-    activePage * appConfig.defaultPageSize,
-  )
+  const rows = query.data ?? []
 
   const deleteMutation = useMutation({
     mutationFn: regionManagersApi.delete,
@@ -79,9 +62,7 @@ export default function RegionManagersPage() {
       header: t('managers.name'),
       render: (manager) => (
         <div className="entity">
-          <span className="entity__avatar">
-            {getInitials(manager.fullname)}
-          </span>
+          <span className="entity__avatar">{getInitials(manager.fullname)}</span>
           <div className="entity__details">
             <strong>{manager.fullname}</strong>
             <span>#{manager.id}</span>
@@ -89,39 +70,25 @@ export default function RegionManagersPage() {
         </div>
       ),
     },
-    {
-      key: 'email',
-      header: t('managers.email'),
-      render: (manager) => manager.email,
-    },
-    {
-      key: 'phone',
-      header: t('managers.phone'),
-      render: (manager) => manager.profile?.phone || '—',
-    },
+    { key: 'email', header: t('managers.email'), render: (item) => item.email },
     {
       key: 'created',
       header: t('managers.created'),
-      render: (manager) => formatDate(manager.created_at),
+      render: (item) => formatDate(item.created_at),
     },
     {
       key: 'actions',
       header: t('managers.actions'),
       align: 'end',
       render: (manager) => (
-        <div className="table-actions">
-          <Button
-            variant="ghost"
-            iconOnly
-            aria-label={`${t('actions.delete')} ${manager.fullname}`}
-            disabled={
-              deleteMutation.isPending && deleting?.id === manager.id
-            }
-            onClick={() => setDeleting(manager)}
-          >
-            <Trash2 size={17} />
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          iconOnly
+          aria-label={`${t('actions.delete')} ${manager.fullname}`}
+          onClick={() => setDeleting(manager)}
+        >
+          <Trash2 size={17} />
+        </Button>
       ),
     },
   ]
@@ -142,42 +109,43 @@ export default function RegionManagersPage() {
         data={rows}
         columns={columns}
         getRowKey={(manager) => manager.id}
-        page={activePage}
-        pageCount={pageCount}
-        total={filtered.length}
-        onPageChange={setPage}
+        total={rows.length}
         loading={query.isLoading}
+        fetching={query.isFetching}
         error={query.error ? normalizeApiError(query.error) : null}
         onRetry={() => void query.refetch()}
         emptyTitle={
-          search ? t('managers.noResultsTitle') : t('managers.emptyTitle')
+          listState.search
+            ? t('managers.noResultsTitle')
+            : t('managers.emptyTitle')
         }
         emptyDescription={
-          search
+          listState.search
             ? t('managers.noResultsDescription')
             : t('managers.emptyDescription')
         }
         toolbar={
-          <>
+          <FilterToolbar
+            resultCount={rows.length}
+            fetching={query.isFetching}
+            hasFilters={Boolean(listState.search)}
+            onClear={() => {
+              listState.setSearchInput('')
+              listState.commitSearch('')
+            }}
+            onRefresh={() => void query.refetch()}
+          >
             <SearchInput
-              value={search}
-              onChange={(value) => {
-                setSearch(value)
-                setPage(1)
-              }}
+              value={listState.searchInput}
+              onChange={listState.setSearchInput}
+              onSearch={listState.commitSearch}
+              loading={query.isFetching && !query.isLoading}
               placeholder={t('managers.searchPlaceholder')}
             />
-            <span className="table-toolbar__meta">
-              <UserCog size={15} aria-hidden="true" />{' '}
-              {t('table.results', { count: filtered.length })}
-            </span>
-          </>
+          </FilterToolbar>
         }
       />
-      <RegionManagerForm
-        open={formOpen}
-        onClose={() => setFormOpen(false)}
-      />
+      <RegionManagerForm open={formOpen} onClose={() => setFormOpen(false)} />
       <ConfirmationDialog
         open={Boolean(deleting)}
         title={t('managers.deleteTitle')}
@@ -186,9 +154,7 @@ export default function RegionManagersPage() {
         })}
         loading={deleteMutation.isPending}
         onCancel={() => setDeleting(null)}
-        onConfirm={() => {
-          if (deleting) deleteMutation.mutate(deleting.id)
-        }}
+        onConfirm={() => deleting && deleteMutation.mutate(deleting.id)}
       />
     </>
   )
