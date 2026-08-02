@@ -13,6 +13,11 @@ import 'package:client_app/features/favorites/domain/repositories/favorites_repo
 import 'package:client_app/features/favorites/domain/usecases/get_favorites_usecase.dart';
 import 'package:client_app/features/favorites/domain/usecases/toggle_favorite_usecase.dart';
 import 'package:client_app/features/favorites/presentation/bloc/favorites_bloc.dart';
+import 'package:client_app/features/complaints/data/data_sources/complaints_api_service.dart';
+import 'package:client_app/features/complaints/data/repositories/complaints_repository_impl.dart';
+import 'package:client_app/features/complaints/domain/repositories/complaints_repository.dart';
+import 'package:client_app/features/complaints/domain/usecases/complaints_usecases.dart';
+import 'package:client_app/features/complaints/presentation/bloc/complaints_bloc.dart';
 import 'package:client_app/features/regions/data/data_sources/regions_api_service.dart';
 import 'package:client_app/features/regions/data/repositories/regions_repo_impl.dart';
 import 'package:client_app/features/regions/domain/repositories/regions_repo.dart';
@@ -114,6 +119,9 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<FavoritesApiService>(
     () => FavoritesApiService(sl()),
   );
+  sl.registerLazySingleton<ComplaintsApiService>(
+    () => ComplaintsApiService(sl()),
+  );
   sl.registerLazySingleton<SearchApiService>(() => SearchApiService(sl()));
   sl.registerLazySingleton<ServicesApiService>(() => ServicesApiService(sl()));
   sl.registerLazySingleton<ReviewsApiService>(() => ReviewsApiService(sl()));
@@ -130,6 +138,9 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<CategoriesRepo>(() => CategoriesRepoImpl(sl()));
   sl.registerLazySingleton<RegionsRepo>(() => RegionsRepoImpl(sl()));
   sl.registerLazySingleton<FavoritesRepo>(() => FavoritesRepoImpl(sl()));
+  sl.registerLazySingleton<ComplaintsRepository>(
+    () => ComplaintsRepositoryImpl(sl()),
+  );
   sl.registerLazySingleton<SearchRepo>(() => SearchRepoImpl(sl()));
   sl.registerLazySingleton<ServicesRepo>(() => ServicesRepoImpl(sl()));
   sl.registerLazySingleton<ReviewsRepo>(() => ReviewsRepoImpl(sl()));
@@ -183,6 +194,21 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<GetFavoritesUseCase>(
     () => GetFavoritesUseCase(sl()),
   );
+  sl.registerLazySingleton<GetComplaintsUseCase>(
+    () => GetComplaintsUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetComplaintDetailsUseCase>(
+    () => GetComplaintDetailsUseCase(sl()),
+  );
+  sl.registerLazySingleton<CreateComplaintUseCase>(
+    () => CreateComplaintUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetComplaintUnreadCountUseCase>(
+    () => GetComplaintUnreadCountUseCase(sl()),
+  );
+  sl.registerLazySingleton<MarkComplaintAsReadUseCase>(
+    () => MarkComplaintAsReadUseCase(sl()),
+  );
   sl.registerLazySingleton<SearchUseCase>(() => SearchUseCase(sl()));
   sl.registerLazySingleton<GetAvailableSlotsUseCase>(
     () => GetAvailableSlotsUseCase(sl()),
@@ -229,6 +255,7 @@ Future<void> initializeDependencies() async {
   sl.registerFactory(() => FavoritesBloc(sl(), sl()));
   sl.registerFactory(() => SearchBloc(sl()));
   sl.registerLazySingleton(() => NotificationsBloc(sl(), sl(), sl(), sl()));
+  sl.registerLazySingleton(() => ComplaintsBloc(sl(), sl(), sl(), sl(), sl()));
 
   sl.registerFactory(() => BookingsBloc(sl(), sl(), sl(), sl(), sl()));
 }

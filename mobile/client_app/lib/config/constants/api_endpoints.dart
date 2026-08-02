@@ -30,7 +30,13 @@ class ApiEndpoints {
   static const String myReviewsEndpoint = 'my-reviews';
   static const String dashboardSummaryEndpoint = 'dashboard-summary';
   static const String deleteAccountEndpoint = 'auth/delete-account';
+  static const String complaintsEndpoint = 'complaints';
+  static const String complaintUnreadCountEndpoint = 'complaints/unread-count';
 
   static String markNotificationAsReadEndpoint(int notificationId) =>
       'notifications/$notificationId/mark-as-read';
+  static String complaintDetailsEndpoint(int complaintId) =>
+      'complaints/$complaintId';
+  static String markComplaintAsReadEndpoint(int complaintId) =>
+      'complaints/$complaintId/mark-read';
 }

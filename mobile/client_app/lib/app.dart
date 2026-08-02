@@ -5,6 +5,7 @@ import 'package:client_app/features/base/presentation/bloc/base_bloc.dart';
 import 'package:client_app/features/bookings/presentation/bloc/bookings_bloc.dart';
 import 'package:client_app/features/categories/presentation/bloc/categories_bloc.dart';
 import 'package:client_app/features/companies/presentation/bloc/companies_bloc.dart';
+import 'package:client_app/features/complaints/presentation/bloc/complaints_bloc.dart';
 import 'package:client_app/features/favorites/presentation/bloc/favorites_bloc.dart';
 import 'package:client_app/features/notification/presentation/bloc/notification_bloc.dart';
 import 'package:client_app/features/profile/presentation/bloc/profile_bloc.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<FavoritesBloc>(create: (BuildContext context) => sl()),
         BlocProvider<SearchBloc>(create: (BuildContext context) => sl()),
         BlocProvider<NotificationsBloc>.value(value: sl()),
+        BlocProvider<ComplaintsBloc>.value(value: sl()),
       ],
       child: ScreenUtilInit(
         minTextAdapt: true,

@@ -53,3 +53,4 @@ firebase.json
 /.agents/
 /.codex/
 /.appdata/
+/test/

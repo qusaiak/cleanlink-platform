@@ -13,6 +13,8 @@ import 'package:client_app/features/bookings/presentation/pages/my_bookings_page
 import 'package:client_app/features/bookings/presentation/pages/order_details_page.dart';
 import 'package:client_app/features/companies/presentation/pages/companies_page.dart';
 import 'package:client_app/features/companies/presentation/pages/company_details_page.dart';
+import 'package:client_app/features/complaints/presentation/pages/complaint_details_page.dart';
+import 'package:client_app/features/complaints/presentation/pages/complaints_page.dart';
 import 'package:client_app/features/favorites/presentation/pages/favorites_page.dart';
 import 'package:client_app/features/reviews/presentation/pages/my_reviews_page.dart';
 import 'package:client_app/features/home/presentation/pages/home_page.dart';
@@ -51,6 +53,10 @@ class AppRouter {
   static const kFavorites = '/favorites';
   static const kMyReviews = '/my-reviews';
   static const kNotifications = '/notifications';
+  static const kComplaints = '/complaints';
+  static const kComplaintDetails = '/complaints/:complaintId';
+  static String complaintDetailsPath(int complaintId) =>
+      '/complaints/$complaintId';
   static const kResetPassword = '/reset_password';
   static const kChangePassword = '/change_password';
   static const kContactUs = '/contact_us';
@@ -195,6 +201,19 @@ class AppRouter {
         path: kNotifications,
         pageBuilder: (context, state) =>
             slideTransitionHorizontal(const NotificationsPage()),
+      ),
+      GoRoute(
+        path: kComplaints,
+        pageBuilder: (context, state) =>
+            slideTransitionHorizontal(const ComplaintsPage()),
+      ),
+      GoRoute(
+        path: kComplaintDetails,
+        pageBuilder: (context, state) => slideTransitionHorizontal(
+          ComplaintDetailsPage(
+            complaintId: int.parse(state.pathParameters['complaintId']!),
+          ),
+        ),
       ),
       GoRoute(
         path: kCategories,
@@ -375,6 +394,18 @@ Auth: $authenticated
     router.go(kHome);
     await Future<void>.delayed(Duration.zero);
     router.push(orderDetailsPath(orderId));
+  }
+
+  static Future<void> openComplaintDetailsFromExternalNotification(
+    int complaintId,
+  ) async {
+    for (var attempt = 0; attempt < 10; attempt++) {
+      if (rootNavigatorKey.currentContext != null) break;
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+    }
+    router.go(kHome);
+    await Future<void>.delayed(Duration.zero);
+    router.push(complaintDetailsPath(complaintId));
   }
 }
 
