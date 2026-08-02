@@ -1,5 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import '../../../features/services/domain/entities/service_entity.dart';
+import '../../../l10n/app_localizations.dart';
 import '../gen/assets.gen.dart';
 
 ImageProvider? resolveImage(String? image) {
@@ -26,4 +29,25 @@ class DateHelper {
 
     return '$year-$month-$day';
   }
+}
+
+String formatServicePriceRange(BuildContext context, ServiceEntity service) {
+  final l = AppLocalizations.of(context)!;
+  final locale = Localizations.localeOf(context).toLanguageTag();
+
+  String price(double value) {
+    final number = NumberFormat('#,##0.##', locale).format(value);
+    return number;
+  }
+
+  final min = service.minPrice;
+  final max = service.maxPrice;
+
+  if (min == null && max == null) return l.price_unavailable;
+  if (min != null && max != null) {
+    if (min == max) return price(min);
+    return '${price(min)}-${price(max)} ${l.sp}';
+  }
+  if (min != null) return '${l.from_price} ${price(min)}';
+  return '${l.up_to_price} ${price(max!)}';
 }
