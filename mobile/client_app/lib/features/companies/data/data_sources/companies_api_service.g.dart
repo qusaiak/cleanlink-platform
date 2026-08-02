@@ -20,9 +20,15 @@ class _CompaniesApiService implements CompaniesApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<CompanyResponseModel>> getCompanies() async {
+  Future<HttpResponse<CompanyResponseModel>> getCompanies({
+    required int page,
+    required int perPage,
+  }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'page': page,
+      r'per_page': perPage,
+    };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<HttpResponse<CompanyResponseModel>>(

@@ -11,10 +11,16 @@ abstract class ServicesApiService {
   factory ServicesApiService(Dio dio, {String baseUrl}) = _ServicesApiService;
 
   @GET(ApiEndpoints.servicesEndpoint)
-  Future<HttpResponse<ServicesResponseModel>> getServices();
+  Future<HttpResponse<ServicesResponseModel>> getServices({
+    @Query('page') required int page,
+    @Query('per_page') required int perPage,
+  });
 
   @GET(ApiEndpoints.offersEndpoint)
-  Future<HttpResponse<ServicesResponseModel>> getOffers();
+  Future<HttpResponse<ServicesResponseModel>> getOffers({
+    @Query('page') required int page,
+    @Query('per_page') required int perPage,
+  });
 
   @GET("${ApiEndpoints.servicesEndpoint}/{id}")
   Future<HttpResponse<ServiceDetailsResponseModel>> getServiceDetails(

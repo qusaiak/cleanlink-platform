@@ -38,7 +38,8 @@ void main() {
               'name_en': 'Deep Care',
               'name_ar': 'تنظيف عميق',
               'rating': '3.6',
-              'price': '120.9',
+              'minimum_price': '120.9',
+              'maximum_price': 250,
             },
           },
         ],
@@ -54,7 +55,8 @@ void main() {
     expect(english.companies.single.createdAt, isNull);
     expect(english.services.single.comment, isNull);
     expect(english.services.single.service!.rating, 3.6);
-    expect(english.services.single.service!.price, 120);
+    expect(english.services.single.service!.minPrice, 120.9);
+    expect(english.services.single.service!.maxPrice, 250);
   });
 
   test('keeps multiple reviews for the same reviewable id', () {

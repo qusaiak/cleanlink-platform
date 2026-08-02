@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../../../core/pagination/paginated_result.dart';
+import '../../../../core/pagination/pagination_model.dart';
 import '../../domain/entities/app_notification_entity.dart';
 
 part 'notification_models.g.dart';
@@ -44,21 +46,59 @@ class FcmTokenDataModel {
   Map<String, dynamic> toJson() => _$FcmTokenDataModelToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class GetNotificationsResponseModel {
   final int? status;
   final String? message;
-  final List<NotificationItemModel>? data;
+  final List<NotificationItemModel> notifications;
+  final PaginationModel pagination;
 
-  const GetNotificationsResponseModel({this.status, this.message, this.data});
+  const GetNotificationsResponseModel({
+    this.status,
+    this.message,
+    required this.notifications,
+    required this.pagination,
+  });
 
-  factory GetNotificationsResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$GetNotificationsResponseModelFromJson(json);
+  factory GetNotificationsResponseModel.fromJson(Map<String, dynamic> json) {
+    final data = _requiredMap(json['data'], 'data');
+    final items = data['data'];
+    if (items is! List) {
+      throw const FormatException('Expected data.data to be a list');
+    }
+    return GetNotificationsResponseModel(
+      status: _nullableIntFromJson(json['status']),
+      message: json['message']?.toString(),
+      notifications: items
+          .whereType<Map>()
+          .map(
+            (item) =>
+                NotificationItemModel.fromJson(Map<String, dynamic>.from(item)),
+          )
+          .toList(growable: false),
+      pagination: PaginationModel.fromJson(
+        _requiredMap(data['pagination'], 'data.pagination'),
+      ),
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$GetNotificationsResponseModelToJson(this);
+  Map<String, dynamic> toJson() => {
+    'status': status,
+    'message': message,
+    'data': {
+      'data': notifications.map((item) => item.toJson()).toList(),
+      'pagination': pagination.toJson(),
+    },
+  };
 
-  List<AppNotificationEntity> toEntity() =>
-      (data ?? const []).map((item) => item.toEntity()).toList();
+  PaginatedResult<AppNotificationEntity> toEntity() => PaginatedResult(
+    items: notifications.map((item) => item.toEntity()).toList(),
+    pagination: pagination,
+  );
+
+  static Map<String, dynamic> _requiredMap(Object? value, String field) {
+    if (value is Map) return Map<String, dynamic>.from(value);
+    throw FormatException('Expected $field to be an object');
+  }
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
@@ -129,6 +169,8 @@ class NotificationItemModel {
   final String? createdAt;
   @JsonKey(fromJson: _nullableIntFromJson)
   final int? orderId;
+  @JsonKey(fromJson: _nullableIntFromJson)
+  final int? complaintId;
   final String? type;
   final String? status;
   final NotificationDataModel? data;
@@ -140,6 +182,7 @@ class NotificationItemModel {
     this.isRead = false,
     this.createdAt,
     this.orderId,
+    this.complaintId,
     this.type,
     this.status,
     this.data,
@@ -158,6 +201,7 @@ class NotificationItemModel {
       isRead: isRead,
       createdAt: createdAt == null ? null : DateTime.tryParse(createdAt!),
       orderId: data?.orderId ?? orderId,
+      complaintId: data?.complaintId ?? complaintId,
       type: data?.type ?? type,
       status: data?.status ?? status,
     );
@@ -169,9 +213,16 @@ class NotificationDataModel {
   final String? type;
   @JsonKey(fromJson: _nullableIntFromJson)
   final int? orderId;
+  @JsonKey(fromJson: _nullableIntFromJson)
+  final int? complaintId;
   final String? status;
 
-  const NotificationDataModel({this.type, this.orderId, this.status});
+  const NotificationDataModel({
+    this.type,
+    this.orderId,
+    this.complaintId,
+    this.status,
+  });
 
   factory NotificationDataModel.fromJson(Map<String, dynamic> json) =>
       _$NotificationDataModelFromJson(json);

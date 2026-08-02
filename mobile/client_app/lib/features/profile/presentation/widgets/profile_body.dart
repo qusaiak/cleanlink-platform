@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../bloc/profile_bloc.dart';
+import '../../../complaints/presentation/bloc/complaints_bloc.dart';
 
 class ProfileBody extends StatefulWidget {
   const ProfileBody({super.key});
@@ -17,6 +18,7 @@ class _ProfileBodyState extends State<ProfileBody> {
   void initState() {
     super.initState();
     context.read<ProfileBloc>().add(GetDashboardSummaryEvent());
+    context.read<ComplaintsBloc>().add(const LoadComplaintUnreadCountEvent());
   }
 
   @override
@@ -25,6 +27,9 @@ class _ProfileBodyState extends State<ProfileBody> {
       child: RefreshIndicator(
         onRefresh: () async {
           final bloc = context.read<ProfileBloc>()..add(RefreshProfileEvent());
+          context.read<ComplaintsBloc>().add(
+            const LoadComplaintUnreadCountEvent(),
+          );
           await bloc.stream.firstWhere((state) => !state.isRefreshingProfile);
         },
         child: CustomScrollView(

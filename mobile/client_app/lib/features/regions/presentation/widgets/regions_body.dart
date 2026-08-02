@@ -1,16 +1,16 @@
-import 'package:client_app/core/utils/functions/spinkit.dart';
-import 'package:client_app/core/utils/gen/assets.gen.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../config/routes/app_router.dart';
+import '../../../../core/utils/functions/spinkit.dart';
 import '../../../../core/widgets/app_empty_state.dart';
+import '../../../../core/widgets/custom_toast.dart';
+import '../../../../core/widgets/pagination_footer.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../companies/domain/entities/manager_entity.dart';
-import '../../domain/entities/region_entity.dart';
 import '../bloc/regions_bloc.dart';
 import 'region_card.dart';
 
@@ -22,88 +22,135 @@ class RegionsBody extends StatefulWidget {
 }
 
 class _RegionsBodyState extends State<RegionsBody> {
+  static const double _loadMoreThreshold = 250;
+
+  late final ScrollController _scrollController;
+
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController()..addListener(_onScroll);
+    context.read<RegionsBloc>().add(const GetRegionsEvent());
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final position = _scrollController.position;
+    if (position.pixels >= position.maxScrollExtent - _loadMoreThreshold) {
+      context.read<RegionsBloc>().add(const GetMoreRegionsEvent());
+    }
+  }
+
+  Future<void> _onRefresh() {
+    final completer = Completer<void>();
+    context.read<RegionsBloc>().add(
+      GetRegionsEvent(refresh: true, completer: completer),
+    );
+    return completer.future;
+  }
+
+  void _retryInitial() {
     context.read<RegionsBloc>().add(const GetRegionsEvent());
   }
 
   @override
   void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
     super.dispose();
   }
-
-  void _load() => context.read<RegionsBloc>().add(const GetRegionsEvent());
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final theme = Theme.of(context).colorScheme;
 
-    return BlocBuilder<RegionsBloc, RegionsState>(
+    return BlocConsumer<RegionsBloc, RegionsState>(
       buildWhen: (_, current) =>
           current is RegionsLoading ||
           current is RegionsLoaded ||
           current is RegionsError,
-      builder: (context, state) {
-        if (state is RegionsError) {
-          return _ErrorView(message: state.message, onRetry: _load);
+      listenWhen: (previous, current) {
+        if (current is! RegionsLoaded || current.loadMoreError == null) {
+          return false;
         }
-
-        final isLoading = state is! RegionsLoaded;
-        final regions = state is RegionsLoaded ? state.regions : _skeleton;
-
-        if (isLoading) {
+        return previous is! RegionsLoaded ||
+            previous.loadMoreError != current.loadMoreError;
+      },
+      listener: (context, state) {
+        AppSnackBar.showError(
+          context: context,
+          title: l.error,
+          message: (state as RegionsLoaded).loadMoreError!,
+        );
+      },
+      builder: (context, state) {
+        if (state is RegionsLoading) {
           return Center(child: spinKitApp(theme.primary));
         }
-
-        if (!isLoading && regions.isEmpty) {
-          return _EmptyView(message: l.no_regions_found, onRefresh: _load);
+        if (state is RegionsError) {
+          return _ErrorView(message: state.message, onRetry: _retryInitial);
         }
+        if (state is! RegionsLoaded) return const SizedBox.shrink();
 
         return RefreshIndicator(
-          onRefresh: () async => _load(),
-          child: Skeletonizer(
-            enabled: isLoading,
-            child: ListView.separated(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 16.h),
-              itemCount: regions.length,
-              separatorBuilder: (_, _) => SizedBox(height: 12.h),
-              itemBuilder: (_, index) {
-                final region = regions[index];
-                return RegionCard(
-                  region: region,
-                  onTap: isLoading
-                      ? null
-                      : () => GoRouter.of(
-                          context,
-                        ).push(AppRouter.kRegionDetails, extra: region.id),
-                );
-              },
+          onRefresh: _onRefresh,
+          child: CustomScrollView(
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
             ),
+            slivers: [
+              if (state.regions.isEmpty)
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
+                    child: AppEmptyState(
+                      icon: Icons.location_off_outlined,
+                      title: l.no_regions_found,
+                    ),
+                  ),
+                )
+              else
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.w,
+                    vertical: 16.h,
+                  ),
+                  sliver: SliverList.builder(
+                    itemCount: state.regions.length,
+                    itemBuilder: (context, index) => Padding(
+                      padding: EdgeInsets.only(bottom: 12.h),
+                      child: RegionCard(
+                        region: state.regions[index],
+                        onTap: () => GoRouter.of(context).push(
+                          AppRouter.kRegionDetails,
+                          extra: state.regions[index].id,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              if (state.regions.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: PaginationFooter(
+                    isLoading: state.isLoadingMore,
+                    errorMessage: state.loadMoreError == null
+                        ? null
+                        : l.could_not_load_more_regions,
+                    onRetry: () => context.read<RegionsBloc>().add(
+                      const GetMoreRegionsEvent(retry: true),
+                    ),
+                  ),
+                ),
+            ],
           ),
         );
       },
     );
   }
 }
-
-final _skeleton = List.generate(
-  6,
-  (i) => RegionEntity(
-    id: 0,
-    name: 'Region name',
-    image: Assets.images.test.test.path,
-    managerId: 0,
-    manager: ManagerEntity(
-      id: 0,
-      fullname: 'Manager fullname',
-      email: 'manager@email.com',
-      role: 'manager',
-    ),
-  ),
-);
 
 class _ErrorView extends StatelessWidget {
   const _ErrorView({required this.message, required this.onRetry});
@@ -129,26 +176,6 @@ class _ErrorView extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _EmptyView extends StatelessWidget {
-  const _EmptyView({required this.message, required this.onRefresh});
-
-  final String message;
-  final VoidCallback onRefresh;
-
-  @override
-  Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async => onRefresh(),
-      child: ListView(
-        children: [
-          SizedBox(height: 120.h),
-          AppEmptyState(icon: Icons.location_off_outlined, title: message),
-        ],
       ),
     );
   }

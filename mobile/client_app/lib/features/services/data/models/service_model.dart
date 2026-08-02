@@ -29,11 +29,15 @@ class ServiceModel {
 
   final int? maxDuration;
 
-  final int? price;
+  @JsonKey(name: 'minimum_price', fromJson: _nullableDoubleFromJson)
+  final double? minPrice;
+
+  @JsonKey(name: 'maximum_price', fromJson: _nullableDoubleFromJson)
+  final double? maxPrice;
 
   final String? image;
 
-  final int? discount;
+  final double? discount;
 
   final bool? isFavorite;
 
@@ -60,7 +64,8 @@ class ServiceModel {
     required this.rating,
     required this.minDuration,
     required this.maxDuration,
-    required this.price,
+    required this.minPrice,
+    required this.maxPrice,
     required this.image,
     required this.discount,
     required this.isFavorite,
@@ -87,7 +92,8 @@ class ServiceModel {
     rating: rating ?? 0.0,
     minDuration: minDuration ?? 0,
     maxDuration: maxDuration ?? 0,
-    price: price ?? 0,
+    minPrice: minPrice,
+    maxPrice: maxPrice,
     image: image ?? "",
     discount: discount ?? 0,
     isFavorite: isFavorite ?? false,
@@ -128,4 +134,10 @@ class ServiceModel {
 
     images: images?.map((e) => e.toEntity()).toList() ?? [],
   );
+}
+
+double? _nullableDoubleFromJson(Object? value) {
+  if (value == null) return null;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value.toString());
 }

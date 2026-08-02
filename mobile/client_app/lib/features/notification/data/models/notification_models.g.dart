@@ -46,24 +46,6 @@ Map<String, dynamic> _$FcmTokenDataModelToJson(FcmTokenDataModel instance) =>
       'updated_at': instance.updatedAt,
     };
 
-GetNotificationsResponseModel _$GetNotificationsResponseModelFromJson(
-  Map<String, dynamic> json,
-) => GetNotificationsResponseModel(
-  status: (json['status'] as num?)?.toInt(),
-  message: json['message'] as String?,
-  data: (json['data'] as List<dynamic>?)
-      ?.map((e) => NotificationItemModel.fromJson(e as Map<String, dynamic>))
-      .toList(),
-);
-
-Map<String, dynamic> _$GetNotificationsResponseModelToJson(
-  GetNotificationsResponseModel instance,
-) => <String, dynamic>{
-  'status': instance.status,
-  'message': instance.message,
-  'data': instance.data,
-};
-
 MarkNotificationAsReadResponseModel
 _$MarkNotificationAsReadResponseModelFromJson(Map<String, dynamic> json) =>
     MarkNotificationAsReadResponseModel(
@@ -125,6 +107,7 @@ NotificationItemModel _$NotificationItemModelFromJson(
   isRead: json['is_read'] == null ? false : _boolFromJson(json['is_read']),
   createdAt: json['created_at'] as String?,
   orderId: _nullableIntFromJson(json['order_id']),
+  complaintId: _nullableIntFromJson(json['complaint_id']),
   type: json['type'] as String?,
   status: json['status'] as String?,
   data: json['data'] == null
@@ -141,6 +124,7 @@ Map<String, dynamic> _$NotificationItemModelToJson(
   'is_read': instance.isRead,
   'created_at': instance.createdAt,
   'order_id': instance.orderId,
+  'complaint_id': instance.complaintId,
   'type': instance.type,
   'status': instance.status,
   'data': instance.data,
@@ -151,6 +135,7 @@ NotificationDataModel _$NotificationDataModelFromJson(
 ) => NotificationDataModel(
   type: json['type'] as String?,
   orderId: _nullableIntFromJson(json['order_id']),
+  complaintId: _nullableIntFromJson(json['complaint_id']),
   status: json['status'] as String?,
 );
 
@@ -159,5 +144,6 @@ Map<String, dynamic> _$NotificationDataModelToJson(
 ) => <String, dynamic>{
   'type': instance.type,
   'order_id': instance.orderId,
+  'complaint_id': instance.complaintId,
   'status': instance.status,
 };

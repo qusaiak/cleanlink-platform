@@ -193,7 +193,8 @@ OrderServiceModel _$OrderServiceModelFromJson(Map<String, dynamic> json) =>
       maxDuration: json['max_duration'] == null
           ? 0
           : _intFromJson(json['max_duration']),
-      price: json['price'] == null ? 0 : _doubleFromJson(json['price']),
+      minPrice: _nullableDoubleFromJson(json['minimum_price']),
+      maxPrice: _nullableDoubleFromJson(json['maximum_price']),
       image: json['image'] as String?,
       discount: json['discount'] == null
           ? 0
@@ -214,7 +215,8 @@ Map<String, dynamic> _$OrderServiceModelToJson(OrderServiceModel instance) =>
       'rating': instance.rating,
       'min_duration': instance.minDuration,
       'max_duration': instance.maxDuration,
-      'price': instance.price,
+      'minimum_price': instance.minPrice,
+      'maximum_price': instance.maxPrice,
       'image': instance.image,
       'discount': instance.discount,
       'is_favorite': instance.isFavorite,

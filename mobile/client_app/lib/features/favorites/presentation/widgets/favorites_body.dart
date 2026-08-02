@@ -43,9 +43,19 @@ class FavoritesBody extends StatelessWidget {
 
             children: [
               services.isEmpty
-                  ? AppEmptyState(
-                      icon: Icons.favorite_border,
-                      title: AppLocalizations.of(context)!.no_favorite_services,
+                  ? ListView(
+                      children: [
+                        SizedBox(height: 120.h),
+                        AppEmptyState(
+                          icon: Icons.favorite_border,
+                          title: AppLocalizations.of(
+                            context,
+                          )!.no_favorite_services,
+                          body: AppLocalizations.of(
+                            context,
+                          )!.service_favorites_will_appear_here,
+                        ),
+                      ],
                     )
                   : ListView.separated(
                       padding: EdgeInsets.symmetric(
@@ -75,11 +85,19 @@ class FavoritesBody extends StatelessWidget {
                     ),
 
               companies.isEmpty
-                  ? AppEmptyState(
-                      icon: Icons.business_outlined,
-                      title: AppLocalizations.of(
-                        context,
-                      )!.no_favorite_companies,
+                  ? ListView(
+                      children: [
+                        SizedBox(height: 120.h),
+                        AppEmptyState(
+                          icon: Icons.business_outlined,
+                          title: AppLocalizations.of(
+                            context,
+                          )!.no_favorite_companies,
+                          body: AppLocalizations.of(
+                            context,
+                          )!.company_favorites_will_appear_here,
+                        ),
+                      ],
                     )
                   : ListView.separated(
                       padding: EdgeInsets.symmetric(

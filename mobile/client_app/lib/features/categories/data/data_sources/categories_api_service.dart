@@ -13,7 +13,10 @@ abstract class CategoriesApiService {
       _CategoriesApiService;
 
   @GET(ApiEndpoints.categoriesEndpoint)
-  Future<HttpResponse<CategoriesResponseModel>> getCategories();
+  Future<HttpResponse<CategoriesResponseModel>> getCategories({
+    @Query('page') required int page,
+    @Query('per_page') required int perPage,
+  });
 
   @GET("${ApiEndpoints.categoriesEndpoint}/{id}")
   Future<HttpResponse<CategoryDetailsResponseModel>> getCategory(

@@ -48,7 +48,7 @@ void main() {
 
         await tester.tap(find.text('Open review'));
         await tester.pumpAndSettle();
-        await tester.tap(find.byIcon(Icons.star_border_rounded).first);
+        await tester.tap(find.byIcon(Icons.star_outline_rounded).first);
         await tester.tap(find.text('Submit Review'));
         await tester.pumpAndSettle();
 

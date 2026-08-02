@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/functions/spinkit.dart';
 import '../../../reviews/domain/entities/reviewable_type.dart';
 import '../../../reviews/presentation/widgets/review_dialog.dart';
+import '../../../complaints/domain/entities/complaint_entity.dart';
+import '../../../complaints/presentation/widgets/complaint_form_sheet.dart';
 import '../bloc/companies_bloc.dart';
 import '../widgets/about_company_section.dart';
 import '../widgets/company_header_section.dart';
@@ -80,12 +82,18 @@ class _CompanyDetailsBodyState extends State<CompanyDetailsBody> {
                     children: [
                       CompanyStatsSection(
                         company: company,
-                        onAddReview: () => showReviewDialog(
+                        onAddReview: () => showFeedbackActions(
                           context: context,
-                          type: ReviewableType.company,
-                          id: company.id,
-                          onSuccess: () => context.read<CompaniesBloc>().add(
-                            RefreshCompanyDetailsEvent(company.id),
+                          complaintType: ComplaintType.company,
+                          targetId: company.id,
+                          targetName: company.name,
+                          onReview: () => showReviewDialog(
+                            context: context,
+                            type: ReviewableType.company,
+                            id: company.id,
+                            onSuccess: () => context.read<CompaniesBloc>().add(
+                              RefreshCompanyDetailsEvent(company.id),
+                            ),
                           ),
                         ),
                       ),

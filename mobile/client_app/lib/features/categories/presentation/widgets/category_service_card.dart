@@ -1,12 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/styles.dart';
+import '../../../../core/utils/functions/helper_functions.dart';
 import '../../../../core/widgets/custom_image_view.dart';
 import '../../../services/domain/entities/service_entity.dart';
-import '../../domain/entities/category_service_entity.dart';
 
 class CategoryServiceCard extends StatelessWidget {
   const CategoryServiceCard({super.key, required this.service, this.onTap});
@@ -61,7 +59,7 @@ class CategoryServiceCard extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        if (service.discount != null && service.discount != 0.00)
+        if (service.discount != 0.00)
           Positioned(
             top: 6.h,
             left: 6.w,
@@ -72,7 +70,7 @@ class CategoryServiceCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.r),
               ),
               child: Text(
-                "-${service.discount}%",
+                "-${service.discount.toInt()}%",
                 style: Styles.textStyle8.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
@@ -124,8 +122,8 @@ class CategoryServiceCard extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              "${service.price} ${AppLocalizations.of(context)!.sp}",
-              style: Styles.textStyle14.copyWith(
+              formatServicePriceRange(context, service),
+              style: Styles.textStyle12.copyWith(
                 color: theme.primary,
                 fontWeight: FontWeight.bold,
               ),

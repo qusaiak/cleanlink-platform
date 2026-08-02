@@ -15,9 +15,10 @@ ServiceModel _$ServiceModelFromJson(Map<String, dynamic> json) => ServiceModel(
   rating: (json['rating'] as num?)?.toDouble(),
   minDuration: (json['min_duration'] as num?)?.toInt(),
   maxDuration: (json['max_duration'] as num?)?.toInt(),
-  price: (json['price'] as num?)?.toInt(),
+  minPrice: _nullableDoubleFromJson(json['minimum_price']),
+  maxPrice: _nullableDoubleFromJson(json['maximum_price']),
   image: json['image'] as String?,
-  discount: (json['discount'] as num?)?.toInt(),
+  discount: (json['discount'] as num?)?.toDouble(),
   isFavorite: json['is_favorite'] as bool?,
   createdAt: json['created_at'] == null
       ? null
@@ -52,7 +53,8 @@ Map<String, dynamic> _$ServiceModelToJson(ServiceModel instance) =>
       'rating': instance.rating,
       'min_duration': instance.minDuration,
       'max_duration': instance.maxDuration,
-      'price': instance.price,
+      'minimum_price': instance.minPrice,
+      'maximum_price': instance.maxPrice,
       'image': instance.image,
       'discount': instance.discount,
       'is_favorite': instance.isFavorite,

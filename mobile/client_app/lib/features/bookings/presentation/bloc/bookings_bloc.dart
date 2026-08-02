@@ -1,6 +1,10 @@
+import 'dart:async';
+
+import 'package:client_app/config/constants/pagination_constants.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/error/failure.dart';
+import '../../../../core/pagination/pagination_utils.dart';
 import '../../domain/entities/available_day_entity.dart';
 import '../../domain/entities/booking_entity.dart';
 import '../../domain/usecases/book_order_usecase.dart';
@@ -26,6 +30,7 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
     this.cancelOrderUseCase,
   ) : super(BookingsState.initial()) {
     on<GetOrdersEvent>(_getOrders);
+    on<GetMoreOrdersEvent>(_getMoreOrders);
     on<BookOrderEvent>(_bookOrder);
     on<ShowOrderEvent>(_showOrder);
     on<CancelOrderEvent>(_cancelOrder);
@@ -59,31 +64,104 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
     GetOrdersEvent event,
     Emitter<BookingsState> emit,
   ) async {
+    if (state.isLoadingOrders || state.isLoadingMoreOrders) {
+      event.completer?.complete();
+      return;
+    }
+
     emit(
       state.copyWith(
         isLoadingOrders: true,
+        isRefreshingOrders: event.isRefresh,
+        isLoadingMoreOrders: false,
         hasLoadedOrders: false,
         orders: const [],
+        currentPage: 0,
+        perPage: PaginationConstants.ordersPageSize,
+        total: 0,
+        lastPage: 1,
+        hasMorePages: true,
+        clearOrdersErrorMessage: true,
+        clearLoadMoreOrdersError: true,
         clearError: true,
       ),
     );
 
     try {
-      final orders = await getOrdersUseCase();
+      final result = await getOrdersUseCase(
+        page: 1,
+        perPage: PaginationConstants.ordersPageSize,
+      );
 
       emit(
         state.copyWith(
-          orders: orders,
+          orders: result.items,
           isLoadingOrders: false,
+          isRefreshingOrders: false,
           hasLoadedOrders: true,
+          currentPage: result.pagination.currentPage,
+          perPage: result.pagination.perPage,
+          total: result.pagination.total,
+          lastPage: result.pagination.lastPage,
+          hasMorePages: result.pagination.hasMorePages,
+        ),
+      );
+    } catch (e) {
+      final message = _message(e);
+      emit(
+        state.copyWith(
+          isLoadingOrders: false,
+          isRefreshingOrders: false,
+          hasLoadedOrders: true,
+          ordersErrorMessage: message,
+        ),
+      );
+    } finally {
+      event.completer?.complete();
+    }
+  }
+
+  Future<void> _getMoreOrders(
+    GetMoreOrdersEvent event,
+    Emitter<BookingsState> emit,
+  ) async {
+    if (state.isLoadingOrders ||
+        state.isRefreshingOrders ||
+        state.isLoadingMoreOrders ||
+        !state.hasMorePages) {
+      return;
+    }
+
+    final nextPage = state.currentPage + 1;
+    emit(
+      state.copyWith(isLoadingMoreOrders: true, clearLoadMoreOrdersError: true),
+    );
+
+    try {
+      final result = await getOrdersUseCase(
+        page: nextPage,
+        perPage: PaginationConstants.ordersPageSize,
+      );
+      emit(
+        state.copyWith(
+          orders: mergeWithoutDuplicates(
+            state.orders,
+            result.items,
+            (order) => order.id,
+          ),
+          isLoadingMoreOrders: false,
+          currentPage: result.pagination.currentPage,
+          perPage: result.pagination.perPage,
+          total: result.pagination.total,
+          lastPage: result.pagination.lastPage,
+          hasMorePages: result.pagination.hasMorePages,
         ),
       );
     } catch (e) {
       emit(
         state.copyWith(
-          isLoadingOrders: false,
-          hasLoadedOrders: true,
-          errorMessage: _message(e),
+          isLoadingMoreOrders: false,
+          loadMoreOrdersError: _message(e),
         ),
       );
     }
@@ -117,6 +195,7 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
             result.order,
             ...state.orders.where((item) => item.id != result.order.id),
           ],
+          total: state.total + 1,
           selectedOrder: result.order,
         ),
       );

@@ -18,7 +18,10 @@ abstract class NotificationsApiService {
   );
 
   @GET(ApiEndpoints.notificationsEndpoint)
-  Future<HttpResponse<GetNotificationsResponseModel>> getNotifications();
+  Future<HttpResponse<GetNotificationsResponseModel>> getNotifications({
+    @Query('page') required int page,
+    @Query('per_page') required int perPage,
+  });
 
   @GET(ApiEndpoints.unreadNotificationsCountEndpoint)
   Future<HttpResponse<UnreadNotificationsCountResponseModel>>

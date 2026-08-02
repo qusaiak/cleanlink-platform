@@ -1,20 +1,42 @@
 import 'package:json_annotation/json_annotation.dart';
+import '../../../../core/pagination/paginated_result.dart';
+import '../../../../core/pagination/pagination_model.dart';
 import '../../domain/entities/booking_entity.dart';
 import 'booking_model.dart';
 
 part 'order_response_models.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class GetOrdersResponseModel {
   final int? status;
   final String? message;
-  final List<BookingModel>? data;
-  const GetOrdersResponseModel({this.status, this.message, this.data});
-  factory GetOrdersResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$GetOrdersResponseModelFromJson(json);
-  Map<String, dynamic> toJson() => _$GetOrdersResponseModelToJson(this);
-  List<OrderEntity> toEntity() =>
-      (data ?? const []).map((item) => item.toEntity()).toList();
+  final PaginatedResult<OrderEntity> data;
+  const GetOrdersResponseModel({this.status, this.message, required this.data});
+
+  factory GetOrdersResponseModel.fromJson(Map<String, dynamic> json) {
+    final envelope = json['data'];
+    if (envelope is! Map<String, dynamic>) {
+      throw const FormatException('Invalid orders response data');
+    }
+
+    final rawItems = envelope['data'];
+    final rawPagination = envelope['pagination'];
+    if (rawItems is! List || rawPagination is! Map<String, dynamic>) {
+      throw const FormatException('Invalid orders pagination response');
+    }
+
+    return GetOrdersResponseModel(
+      status: int.tryParse(json['status']?.toString() ?? ''),
+      message: json['message']?.toString(),
+      data: PaginatedResult(
+        items: rawItems
+            .whereType<Map<String, dynamic>>()
+            .map(BookingModel.fromJson)
+            .map((item) => item.toEntity())
+            .toList(growable: false),
+        pagination: PaginationModel.fromJson(rawPagination),
+      ),
+    );
+  }
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)

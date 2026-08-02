@@ -1,6 +1,7 @@
-import 'package:client_app/features/categories/domain/entities/category_entity.dart';
 import 'package:dio/dio.dart';
 import '../../../../core/network/network_exceptions.dart';
+import '../../../../core/pagination/paginated_result.dart';
+import '../../domain/entities/category_entity.dart';
 import '../../domain/repositories/categories_repo.dart';
 import '../data_sources/categories_api_service.dart';
 
@@ -10,9 +11,12 @@ class CategoriesRepoImpl implements CategoriesRepo {
   CategoriesRepoImpl(this.api);
 
   @override
-  Future<List<CategoryEntity>> getCategories() async {
+  Future<PaginatedResult<CategoryEntity>> getCategories({
+    required int page,
+    required int perPage,
+  }) async {
     try {
-      final response = await api.getCategories();
+      final response = await api.getCategories(page: page, perPage: perPage);
       return response.data.toEntity();
     } on DioException catch (e) {
       throw NetworkExceptions.fromDio(e);

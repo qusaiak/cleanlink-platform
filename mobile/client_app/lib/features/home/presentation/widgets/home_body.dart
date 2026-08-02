@@ -6,6 +6,7 @@ import 'package:client_app/features/home/presentation/widgets/services_section.d
 import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../complaints/presentation/bloc/complaints_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../config/language/app_language_info.dart';
@@ -33,6 +34,7 @@ class _HomeBodyState extends State<HomeBody> {
     context.read<NotificationsBloc>().add(
       const GetUnreadNotificationsCountEvent(),
     );
+    context.read<ComplaintsBloc>().add(const LoadComplaintUnreadCountEvent());
   }
 
   @override
@@ -48,6 +50,7 @@ class _HomeBodyState extends State<HomeBody> {
       context.read<NotificationsBloc>().add(
         const GetUnreadNotificationsCountEvent(),
       );
+      context.read<ComplaintsBloc>().add(const LoadComplaintUnreadCountEvent());
     }
   }
 

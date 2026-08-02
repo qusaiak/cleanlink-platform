@@ -6,24 +6,6 @@ part of 'order_response_models.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-GetOrdersResponseModel _$GetOrdersResponseModelFromJson(
-  Map<String, dynamic> json,
-) => GetOrdersResponseModel(
-  status: (json['status'] as num?)?.toInt(),
-  message: json['message'] as String?,
-  data: (json['data'] as List<dynamic>?)
-      ?.map((e) => BookingModel.fromJson(e as Map<String, dynamic>))
-      .toList(),
-);
-
-Map<String, dynamic> _$GetOrdersResponseModelToJson(
-  GetOrdersResponseModel instance,
-) => <String, dynamic>{
-  'status': instance.status,
-  'message': instance.message,
-  'data': instance.data,
-};
-
 BookOrderResponseModel _$BookOrderResponseModelFromJson(
   Map<String, dynamic> json,
 ) => BookOrderResponseModel(

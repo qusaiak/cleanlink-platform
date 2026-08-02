@@ -1,30 +1,59 @@
-import 'package:json_annotation/json_annotation.dart';
-
-import 'category_model.dart';
+import '../../../../core/pagination/paginated_result.dart';
+import '../../../../core/pagination/pagination_model.dart';
 import '../../domain/entities/category_entity.dart';
+import 'category_model.dart';
 
-part 'categories_response_model.g.dart';
-
-@JsonSerializable(fieldRename: FieldRename.snake)
 class CategoriesResponseModel {
-  final int status;
-
-  final String message;
-
-  final List<CategoryModel> data;
-
   const CategoriesResponseModel({
     required this.status,
     required this.message,
-    required this.data,
+    required this.categories,
+    required this.pagination,
   });
 
-  factory CategoriesResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$CategoriesResponseModelFromJson(json);
+  final int status;
+  final String message;
+  final List<CategoryModel> categories;
+  final PaginationModel pagination;
 
-  Map<String, dynamic> toJson() => _$CategoriesResponseModelToJson(this);
+  factory CategoriesResponseModel.fromJson(Map<String, dynamic> json) {
+    final outerData = _requiredMap(json['data'], 'data');
+    final rawCategories = outerData['data'];
+    if (rawCategories is! List) {
+      throw const FormatException('Expected data.data to be a list');
+    }
 
-  List<CategoryEntity> toEntity() {
-    return data.map((e) => e.toEntity()).toList();
+    return CategoriesResponseModel(
+      status: int.tryParse(json['status']?.toString() ?? '') ?? 0,
+      message: json['message']?.toString() ?? '',
+      categories: rawCategories
+          .whereType<Map>()
+          .map(
+            (item) => CategoryModel.fromJson(Map<String, dynamic>.from(item)),
+          )
+          .toList(growable: false),
+      pagination: PaginationModel.fromJson(
+        _requiredMap(outerData['pagination'], 'data.pagination'),
+      ),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'status': status,
+    'message': message,
+    'data': {
+      'data': categories.map((category) => category.toJson()).toList(),
+      'pagination': pagination.toJson(),
+    },
+  };
+
+  PaginatedResult<CategoryEntity> toEntity() => PaginatedResult(
+    items: categories.map((category) => category.toEntity()).toList(),
+    pagination: pagination,
+  );
+
+  static Map<String, dynamic> _requiredMap(Object? value, String field) {
+    if (value is Map) return Map<String, dynamic>.from(value);
+    throw FormatException('Expected $field to be an object');
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/styles.dart';
+import '../../../../core/utils/functions/helper_functions.dart';
 import '../../../../core/widgets/custom_image_view.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/my_review_entity.dart';
@@ -20,7 +21,7 @@ class MyReviewCard extends StatelessWidget {
     final name = review.service?.name ?? review.company?.name ?? '';
     final image = review.service?.image ?? review.company?.image ?? '';
     final detail = review.service != null
-        ? (review.service!.price > 0 ? review.service!.price.toString() : '')
+        ? formatServicePriceRange(context, review.service!)
         : review.company?.location ?? '';
     final date = review.createdAt == null
         ? ''

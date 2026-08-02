@@ -51,9 +51,15 @@ class _NotificationsApiService implements NotificationsApiService {
   }
 
   @override
-  Future<HttpResponse<GetNotificationsResponseModel>> getNotifications() async {
+  Future<HttpResponse<GetNotificationsResponseModel>> getNotifications({
+    required int page,
+    required int perPage,
+  }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'page': page,
+      r'per_page': perPage,
+    };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options =

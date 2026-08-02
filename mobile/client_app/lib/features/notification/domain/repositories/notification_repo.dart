@@ -1,4 +1,5 @@
 import '../entities/app_notification_entity.dart';
+import '../../../../core/pagination/paginated_result.dart';
 
 abstract class NotificationsRepository {
   Future<void> updateFcmToken({
@@ -7,7 +8,10 @@ abstract class NotificationsRepository {
     required String lang,
   });
 
-  Future<List<AppNotificationEntity>> getNotifications();
+  Future<PaginatedResult<AppNotificationEntity>> getNotifications({
+    required int page,
+    required int perPage,
+  });
 
   Future<int> getUnreadNotificationsCount();
 

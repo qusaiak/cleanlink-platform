@@ -10,6 +10,8 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../bookings/presentation/pages/booking_details_page.dart';
 import '../../../reviews/domain/entities/reviewable_type.dart';
 import '../../../reviews/presentation/widgets/review_dialog.dart';
+import '../../../complaints/domain/entities/complaint_entity.dart';
+import '../../../complaints/presentation/widgets/complaint_form_sheet.dart';
 
 class ServiceDetailsBody extends StatefulWidget {
   final int id;
@@ -118,12 +120,19 @@ class _ServiceDetailsBodyState extends State<ServiceDetailsBody> {
                           padding: EdgeInsets.symmetric(horizontal: 8.w),
                           child: ServiceSummaryCard(
                             service: service,
-                            onAddReview: () => showReviewDialog(
+                            onAddReview: () => showFeedbackActions(
                               context: context,
-                              type: ReviewableType.service,
-                              id: service.id,
-                              onSuccess: () => context.read<ServicesBloc>().add(
-                                RefreshServiceDetailsEvent(service.id),
+                              complaintType: ComplaintType.service,
+                              targetId: service.id,
+                              targetName: service.name,
+                              onReview: () => showReviewDialog(
+                                context: context,
+                                type: ReviewableType.service,
+                                id: service.id,
+                                onSuccess: () =>
+                                    context.read<ServicesBloc>().add(
+                                      RefreshServiceDetailsEvent(service.id),
+                                    ),
                               ),
                             ),
                           ),

@@ -17,11 +17,17 @@ import 'package:vector_graphics/vector_graphics.dart' as _vg;
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/app_icon.png
+  AssetGenImage get appIcon => const AssetGenImage('assets/icons/app_icon.png');
+
+  /// File path: assets/icons/app_icon_foreground.png
+  AssetGenImage get appIconForeground => const AssetGenImage('assets/icons/app_icon_foreground.png');
+
   /// File path: assets/icons/syria.svg
   SvgGenImage get syria => const SvgGenImage('assets/icons/syria.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [syria];
+  List<dynamic> get values => [appIcon, appIconForeground, syria];
 }
 
 class $AssetsImagesGen {
@@ -46,8 +52,8 @@ class $AssetsImagesGen {
 class $AssetsImagesLogoGen {
   const $AssetsImagesLogoGen();
 
-  /// File path: assets/images/logo/app_logo.jpg
-  AssetGenImage get appLogo => const AssetGenImage('assets/images/logo/app_logo.jpg');
+  /// File path: assets/images/logo/app_logo.png
+  AssetGenImage get appLogo => const AssetGenImage('assets/images/logo/app_logo.png');
 
   /// List of all assets
   List<AssetGenImage> get values => [appLogo];

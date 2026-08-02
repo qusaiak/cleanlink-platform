@@ -20,9 +20,15 @@ class _ServicesApiService implements ServicesApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<ServicesResponseModel>> getServices() async {
+  Future<HttpResponse<ServicesResponseModel>> getServices({
+    required int page,
+    required int perPage,
+  }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'page': page,
+      r'per_page': perPage,
+    };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<HttpResponse<ServicesResponseModel>>(
@@ -48,9 +54,15 @@ class _ServicesApiService implements ServicesApiService {
   }
 
   @override
-  Future<HttpResponse<ServicesResponseModel>> getOffers() async {
+  Future<HttpResponse<ServicesResponseModel>> getOffers({
+    required int page,
+    required int perPage,
+  }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'page': page,
+      r'per_page': perPage,
+    };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<HttpResponse<ServicesResponseModel>>(

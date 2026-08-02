@@ -6,6 +6,12 @@ part 'booking_model.g.dart';
 double _doubleFromJson(Object? value) => value is num
     ? value.toDouble()
     : double.tryParse(value?.toString() ?? '') ?? 0;
+double? _nullableDoubleFromJson(Object? value) {
+  if (value == null) return null;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value.toString());
+}
+
 int _intFromJson(Object? value) =>
     value is num ? value.toInt() : int.tryParse(value?.toString() ?? '') ?? 0;
 
@@ -229,8 +235,10 @@ class OrderServiceModel {
   final int minDuration;
   @JsonKey(fromJson: _intFromJson)
   final int maxDuration;
-  @JsonKey(fromJson: _doubleFromJson)
-  final double price;
+  @JsonKey(name: 'minimum_price', fromJson: _nullableDoubleFromJson)
+  final double? minPrice;
+  @JsonKey(name: 'maximum_price', fromJson: _nullableDoubleFromJson)
+  final double? maxPrice;
   final String? image;
   @JsonKey(fromJson: _doubleFromJson)
   final double discount;
@@ -245,7 +253,8 @@ class OrderServiceModel {
     this.rating = 0,
     this.minDuration = 0,
     this.maxDuration = 0,
-    this.price = 0,
+    this.minPrice,
+    this.maxPrice,
     this.image,
     this.discount = 0,
     this.isFavorite,
@@ -263,7 +272,8 @@ class OrderServiceModel {
     rating: rating,
     minDuration: minDuration,
     maxDuration: maxDuration,
-    price: price,
+    minPrice: minPrice,
+    maxPrice: maxPrice,
     image: image,
     discount: discount,
     isFavorite: isFavorite ?? false,

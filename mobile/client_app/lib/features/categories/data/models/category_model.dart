@@ -2,7 +2,6 @@ import 'package:client_app/features/services/data/models/service_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../domain/entities/category_entity.dart';
-import 'category_service_model.dart';
 
 part 'category_model.g.dart';
 

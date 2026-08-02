@@ -6,4 +6,5 @@ abstract final class PaginationConstants {
   static const int notificationsPageSize = 8;
   static const int ordersPageSize = 4;
   static const int offersPageSize = 4;
+  static const int complaintsPageSize = 8;
 }

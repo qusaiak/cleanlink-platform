@@ -7,7 +7,13 @@ abstract class BookingsEvent extends Equatable {
 }
 
 class GetOrdersEvent extends BookingsEvent {
-  const GetOrdersEvent();
+  final bool isRefresh;
+  final Completer<void>? completer;
+
+  const GetOrdersEvent({this.isRefresh = false, this.completer});
+
+  @override
+  List<Object?> get props => [isRefresh, completer];
 }
 
 class GetBookings extends GetOrdersEvent {
@@ -15,7 +21,11 @@ class GetBookings extends GetOrdersEvent {
 }
 
 class RefreshBookings extends GetOrdersEvent {
-  const RefreshBookings();
+  const RefreshBookings({super.completer}) : super(isRefresh: true);
+}
+
+class GetMoreOrdersEvent extends BookingsEvent {
+  const GetMoreOrdersEvent();
 }
 
 class ShowOrderEvent extends BookingsEvent {

@@ -1,9 +1,9 @@
 import 'dart:ui';
-import 'package:client_app/core/utils/gen/assets.gen.dart';
 import 'package:client_app/features/services/domain/entities/service_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/theme/styles.dart';
+import '../../../../core/utils/functions/helper_functions.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/custom_image_view.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -26,7 +26,10 @@ class ServiceTile extends StatelessWidget {
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: theme.primary.withOpacity(0.5), width: 1),
+            border: Border.all(
+              color: theme.primary.withValues(alpha: 0.5),
+              width: 1,
+            ),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +58,7 @@ class ServiceTile extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              service.name!,
+                              service.name,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: Styles.textStyle14.copyWith(
@@ -88,7 +91,7 @@ class ServiceTile extends StatelessWidget {
                           SizedBox(width: 12.w),
 
                           Text(
-                            "${service.price.toString()} ${AppLocalizations.of(context)!.sp}",
+                            formatServicePriceRange(context, service),
                             style: Styles.textStyle11.copyWith(
                               color: theme.primary,
                             ),

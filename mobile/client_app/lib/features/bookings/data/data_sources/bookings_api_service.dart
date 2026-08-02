@@ -18,7 +18,10 @@ abstract class BookingsApiService {
   );
 
   @GET(ApiEndpoints.ordersEndpoint)
-  Future<HttpResponse<GetOrdersResponseModel>> getOrders();
+  Future<HttpResponse<GetOrdersResponseModel>> getOrders({
+    @Query('page') required int page,
+    @Query('per_page') required int perPage,
+  });
 
   @POST(ApiEndpoints.ordersEndpoint)
   Future<HttpResponse<BookOrderResponseModel>> bookOrder(

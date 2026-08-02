@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:client_app/config/constants/pagination_constants.dart';
 import 'package:client_app/config/routes/app_router.dart';
 import 'package:client_app/core/error/failure.dart';
+import 'package:client_app/core/pagination/pagination_utils.dart';
 import 'package:client_app/features/notification/domain/entities/app_notification_entity.dart';
 import 'package:client_app/features/notification/domain/usecases/get_notifications_usecase.dart';
 import 'package:client_app/features/notification/domain/usecases/get_unread_notifications_count_usecase.dart';
@@ -25,6 +29,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   ) : super(const NotificationsState()) {
     on<SyncFcmTokenEvent>(_onSyncFcmToken);
     on<GetNotificationsEvent>(_onGetNotifications);
+    on<GetMoreNotificationsEvent>(_onGetMoreNotifications);
     on<GetUnreadNotificationsCountEvent>(_onGetUnreadNotificationsCount);
     on<MarkNotificationAsReadEvent>(_onMarkNotificationAsRead);
     on<NotificationClickedEvent>(_onNotificationClicked);
@@ -68,30 +73,103 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     GetNotificationsEvent event,
     Emitter<NotificationsState> emit,
   ) async {
+    if (state.isLoadingNotifications ||
+        (event.refresh && state.isLoadingMore)) {
+      _complete(event.completer);
+      return;
+    }
     emit(
       state.copyWith(
         isLoadingNotifications: true,
+        isRefreshing: event.refresh,
+        isLoadingMore: false,
         clearErrorMessage: true,
+        clearNotificationsError: true,
         clearSuccessMessage: true,
-        notifications: [],
+        clearLoadMoreError: true,
+        notifications: const [],
+        currentPage: 0,
+        total: 0,
+        lastPage: 1,
+        hasMorePages: true,
       ),
     );
 
     try {
-      final notifications = await _getNotificationsUseCase();
-      final unreadCount = notifications.where((item) => !item.isRead).length;
+      final result = await _getNotificationsUseCase(
+        page: 1,
+        perPage: PaginationConstants.notificationsPageSize,
+      );
       emit(
         state.copyWith(
-          notifications: notifications,
-          unreadCount: unreadCount,
+          notifications: result.items,
           isLoadingNotifications: false,
+          isRefreshing: false,
+          currentPage: result.pagination.currentPage,
+          perPage: result.pagination.perPage,
+          total: result.pagination.total,
+          lastPage: result.pagination.lastPage,
+          hasMorePages: result.pagination.hasMorePages,
+        ),
+      );
+      add(const GetUnreadNotificationsCountEvent(silent: true));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          isLoadingNotifications: false,
+          isRefreshing: false,
+          notificationsError: _messageFromError(e),
+        ),
+      );
+    } finally {
+      _complete(event.completer);
+    }
+  }
+
+  Future<void> _onGetMoreNotifications(
+    GetMoreNotificationsEvent event,
+    Emitter<NotificationsState> emit,
+  ) async {
+    final current = state;
+    if (current.isLoadingNotifications ||
+        current.isRefreshing ||
+        current.isLoadingMore ||
+        !current.hasMorePages ||
+        (current.loadMoreError != null && !event.retry)) {
+      return;
+    }
+
+    emit(current.copyWith(isLoadingMore: true, clearLoadMoreError: true));
+    try {
+      final result = await _getNotificationsUseCase(
+        page: current.currentPage + 1,
+        perPage: PaginationConstants.notificationsPageSize,
+      );
+      final latest = state;
+      emit(
+        latest.copyWith(
+          notifications: mergeWithoutDuplicates(
+            latest.notifications,
+            result.items,
+            (notification) => notification.id,
+            mergeExisting: (existing, incoming) =>
+                existing.isRead && !incoming.isRead
+                ? incoming.copyWith(isRead: true)
+                : incoming,
+          ),
+          isLoadingMore: false,
+          currentPage: result.pagination.currentPage,
+          perPage: result.pagination.perPage,
+          total: result.pagination.total,
+          lastPage: result.pagination.lastPage,
+          hasMorePages: result.pagination.hasMorePages,
         ),
       );
     } catch (e) {
       emit(
         state.copyWith(
-          isLoadingNotifications: false,
-          errorMessage: _messageFromError(e),
+          isLoadingMore: false,
+          loadMoreError: _messageFromError(e),
         ),
       );
     }
@@ -139,8 +217,12 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       add(MarkNotificationAsReadEvent(notificationId: event.notification.id));
     }
 
+    final complaintId = event.notification.complaintId;
     final orderId = event.notification.orderId;
-    if (orderId != null) {
+    if (event.notification.type == 'complaint_response' &&
+        complaintId != null) {
+      AppRouter.router.push(AppRouter.complaintDetailsPath(complaintId));
+    } else if (orderId != null) {
       AppRouter.router.push(AppRouter.orderDetailsPath(orderId));
     } else {
       emit(state.copyWith(successMessage: 'notification_open_failed'));
@@ -157,7 +239,11 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       add(const GetUnreadNotificationsCountEvent(silent: true));
     }
 
-    if (event.orderId != null) {
+    if (event.type == 'complaint_response' && event.complaintId != null) {
+      await AppRouter.openComplaintDetailsFromExternalNotification(
+        event.complaintId!,
+      );
+    } else if (event.orderId != null) {
       await AppRouter.openOrderDetailsFromExternalNotification(event.orderId!);
     }
   }
@@ -229,9 +315,16 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
         ),
       );
     } catch (e) {
+      final latestNotifications = [...state.notifications];
+      final latestIndex = latestNotifications.indexWhere(
+        (item) => item.id == notificationId,
+      );
+      if (latestIndex != -1 && existingNotification != null) {
+        latestNotifications[latestIndex] = existingNotification;
+      }
       emit(
         state.copyWith(
-          notifications: previousNotifications,
+          notifications: latestNotifications,
           unreadCount: previousUnreadCount,
           isMarkingAsRead: false,
           errorMessage: _messageFromError(e),
@@ -261,5 +354,9 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   String _messageFromError(Object error) {
     if (error is Failure) return error.message;
     return error.toString();
+  }
+
+  static void _complete(Completer<void>? completer) {
+    if (completer != null && !completer.isCompleted) completer.complete();
   }
 }

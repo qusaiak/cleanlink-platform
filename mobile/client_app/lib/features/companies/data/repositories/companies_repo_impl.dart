@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../../../../core/network/network_exceptions.dart';
+import '../../../../core/pagination/paginated_result.dart';
 import '../../domain/entities/company_entity.dart';
 import '../../domain/repositories/companies_repo.dart';
 import '../data_sources/companies_api_service.dart';
@@ -10,9 +11,12 @@ class CompaniesRepoImpl implements CompaniesRepo {
   CompaniesRepoImpl(this.api);
 
   @override
-  Future<List<CompanyEntity>> getCompanies() async {
+  Future<PaginatedResult<CompanyEntity>> getCompanies({
+    required int page,
+    required int perPage,
+  }) async {
     try {
-      final response = await api.getCompanies();
+      final response = await api.getCompanies(page: page, perPage: perPage);
       return response.data.toEntity();
     } on DioException catch (e) {
       throw NetworkExceptions.fromDio(e);

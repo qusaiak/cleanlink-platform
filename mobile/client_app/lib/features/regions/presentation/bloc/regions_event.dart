@@ -8,7 +8,22 @@ abstract class RegionsEvent extends Equatable {
 }
 
 class GetRegionsEvent extends RegionsEvent {
-  const GetRegionsEvent();
+  const GetRegionsEvent({this.refresh = false, this.completer});
+
+  final bool refresh;
+  final Completer<void>? completer;
+
+  @override
+  List<Object?> get props => [refresh];
+}
+
+class GetMoreRegionsEvent extends RegionsEvent {
+  const GetMoreRegionsEvent({this.retry = false});
+
+  final bool retry;
+
+  @override
+  List<Object?> get props => [retry];
 }
 
 class GetRegionNamesEvent extends RegionsEvent {

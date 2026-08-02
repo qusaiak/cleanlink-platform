@@ -1,47 +1,194 @@
 part of 'services_bloc.dart';
 
-abstract class ServicesState {}
+abstract class ServicesState extends Equatable {
+  const ServicesState();
+
+  @override
+  List<Object?> get props => const [];
+}
 
 class ServicesInitial extends ServicesState {}
 
-class ServicesLoading extends ServicesState {}
+class ServicesLoading extends ServicesState {
+  const ServicesLoading({this.isRefreshing = false});
+
+  final bool isRefreshing;
+
+  @override
+  List<Object?> get props => [isRefreshing];
+}
 
 class ServicesLoaded extends ServicesState {
-  final List<ServiceEntity> services;
+  const ServicesLoaded({
+    required this.services,
+    required this.currentPage,
+    required this.perPage,
+    required this.total,
+    required this.lastPage,
+    required this.hasMorePages,
+    this.isLoadingMore = false,
+    this.loadMoreError,
+  });
 
-  ServicesLoaded(this.services);
+  factory ServicesLoaded.fromResult(
+    PaginatedResult<ServiceEntity> result, {
+    List<ServiceEntity>? services,
+  }) => ServicesLoaded(
+    services: services ?? result.items,
+    currentPage: result.pagination.currentPage,
+    perPage: result.pagination.perPage,
+    total: result.pagination.total,
+    lastPage: result.pagination.lastPage,
+    hasMorePages: result.pagination.hasMorePages,
+  );
+
+  final List<ServiceEntity> services;
+  final int currentPage;
+  final int perPage;
+  final int total;
+  final int lastPage;
+  final bool hasMorePages;
+  final bool isLoadingMore;
+  final String? loadMoreError;
+
+  bool get canLoadMore => hasMorePages && !isLoadingMore;
+
+  ServicesLoaded copyWith({
+    bool? isLoadingMore,
+    String? loadMoreError,
+    bool clearLoadMoreError = false,
+  }) => ServicesLoaded(
+    services: services,
+    currentPage: currentPage,
+    perPage: perPage,
+    total: total,
+    lastPage: lastPage,
+    hasMorePages: hasMorePages,
+    isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+    loadMoreError: clearLoadMoreError
+        ? null
+        : loadMoreError ?? this.loadMoreError,
+  );
+
+  @override
+  List<Object?> get props => [
+    services,
+    currentPage,
+    perPage,
+    total,
+    lastPage,
+    hasMorePages,
+    isLoadingMore,
+    loadMoreError,
+  ];
 }
 
 class ServicesError extends ServicesState {
   final String message;
 
-  ServicesError(this.message);
+  const ServicesError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }
 
-class OffersLoading extends ServicesState {}
+class OffersLoading extends ServicesState {
+  const OffersLoading({this.isRefreshing = false});
+
+  final bool isRefreshing;
+
+  @override
+  List<Object?> get props => [isRefreshing];
+}
 
 class OffersLoaded extends ServicesState {
-  final List<ServiceEntity> offers;
+  const OffersLoaded({
+    required this.offers,
+    required this.currentPage,
+    required this.perPage,
+    required this.total,
+    required this.lastPage,
+    required this.hasMorePages,
+    this.isLoadingMore = false,
+    this.loadMoreError,
+  });
 
-  OffersLoaded(this.offers);
+  factory OffersLoaded.fromResult(
+    PaginatedResult<ServiceEntity> result, {
+    List<ServiceEntity>? offers,
+  }) => OffersLoaded(
+    offers: offers ?? result.items,
+    currentPage: result.pagination.currentPage,
+    perPage: result.pagination.perPage,
+    total: result.pagination.total,
+    lastPage: result.pagination.lastPage,
+    hasMorePages: result.pagination.hasMorePages,
+  );
+
+  final List<ServiceEntity> offers;
+  final int currentPage;
+  final int perPage;
+  final int total;
+  final int lastPage;
+  final bool hasMorePages;
+  final bool isLoadingMore;
+  final String? loadMoreError;
+
+  bool get canLoadMore => hasMorePages && !isLoadingMore;
+
+  OffersLoaded copyWith({
+    bool? isLoadingMore,
+    String? loadMoreError,
+    bool clearLoadMoreError = false,
+  }) => OffersLoaded(
+    offers: offers,
+    currentPage: currentPage,
+    perPage: perPage,
+    total: total,
+    lastPage: lastPage,
+    hasMorePages: hasMorePages,
+    isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+    loadMoreError: clearLoadMoreError
+        ? null
+        : loadMoreError ?? this.loadMoreError,
+  );
+
+  @override
+  List<Object?> get props => [
+    offers,
+    currentPage,
+    perPage,
+    total,
+    lastPage,
+    hasMorePages,
+    isLoadingMore,
+    loadMoreError,
+  ];
 }
 
 class OffersError extends ServicesState {
   final String message;
 
-  OffersError(this.message);
+  const OffersError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }
 
-class ServiceDetailsInitial extends ServicesState {}
+class ServiceDetailsInitial extends ServicesState {
+  const ServiceDetailsInitial();
+}
 
-class ServiceDetailsLoading extends ServicesState {}
+class ServiceDetailsLoading extends ServicesState {
+  const ServiceDetailsLoading();
+}
 
 class ServiceDetailsLoaded extends ServicesState {
   final ServiceEntity service;
 
   final PackageEntity? selectedPackage;
 
-  ServiceDetailsLoaded({required this.service, this.selectedPackage});
+  const ServiceDetailsLoaded({required this.service, this.selectedPackage});
 
   ServiceDetailsLoaded copyWith({
     ServiceEntity? service,
@@ -52,10 +199,16 @@ class ServiceDetailsLoaded extends ServicesState {
       selectedPackage: selectedPackage ?? this.selectedPackage,
     );
   }
+
+  @override
+  List<Object?> get props => [service, selectedPackage];
 }
 
 class ServiceDetailsError extends ServicesState {
   final String message;
 
-  ServiceDetailsError(this.message);
+  const ServiceDetailsError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

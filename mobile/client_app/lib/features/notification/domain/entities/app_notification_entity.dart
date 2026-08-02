@@ -7,6 +7,7 @@ class AppNotificationEntity extends Equatable {
   final bool isRead;
   final DateTime? createdAt;
   final int? orderId;
+  final int? complaintId;
   final String? type;
   final String? status;
 
@@ -17,6 +18,7 @@ class AppNotificationEntity extends Equatable {
     required this.isRead,
     this.createdAt,
     this.orderId,
+    this.complaintId,
     this.type,
     this.status,
   });
@@ -28,6 +30,7 @@ class AppNotificationEntity extends Equatable {
     bool? isRead,
     DateTime? createdAt,
     int? orderId,
+    int? complaintId,
     String? type,
     String? status,
   }) {
@@ -38,6 +41,7 @@ class AppNotificationEntity extends Equatable {
       isRead: isRead ?? this.isRead,
       createdAt: createdAt ?? this.createdAt,
       orderId: orderId ?? this.orderId,
+      complaintId: complaintId ?? this.complaintId,
       type: type ?? this.type,
       status: status ?? this.status,
     );
@@ -51,6 +55,7 @@ class AppNotificationEntity extends Equatable {
     isRead,
     createdAt,
     orderId,
+    complaintId,
     type,
     status,
   ];

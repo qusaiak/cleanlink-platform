@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/network/network_exceptions.dart';
+import '../../../../core/pagination/paginated_result.dart';
 import '../../domain/entities/app_notification_entity.dart';
 import '../../domain/repositories/notification_repo.dart';
 import '../data_sources/fcm_service.dart';
@@ -31,9 +32,12 @@ class NotificationsRepositoryImpl implements NotificationsRepository {
   }
 
   @override
-  Future<List<AppNotificationEntity>> getNotifications() async {
+  Future<PaginatedResult<AppNotificationEntity>> getNotifications({
+    required int page,
+    required int perPage,
+  }) async {
     try {
-      final response = await api.getNotifications();
+      final response = await api.getNotifications(page: page, perPage: perPage);
       return response.data.toEntity();
     } on DioException catch (e) {
       throw NetworkExceptions.fromDio(e);

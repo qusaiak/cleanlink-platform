@@ -12,7 +12,10 @@ abstract class RegionsApiService {
   factory RegionsApiService(Dio dio, {String baseUrl}) = _RegionsApiService;
 
   @GET(ApiEndpoints.regionsEndpoint)
-  Future<HttpResponse<RegionsResponseModel>> getRegions();
+  Future<HttpResponse<RegionsResponseModel>> getRegions({
+    @Query('page') required int page,
+    @Query('per_page') required int perPage,
+  });
 
   @GET(ApiEndpoints.regionNamesEndpoint)
   Future<HttpResponse<RegionsResponseModel>> getRegionNames();

@@ -23,7 +23,22 @@ final class SyncFcmTokenEvent extends NotificationsEvent {
 }
 
 final class GetNotificationsEvent extends NotificationsEvent {
-  const GetNotificationsEvent();
+  const GetNotificationsEvent({this.refresh = false, this.completer});
+
+  final bool refresh;
+  final Completer<void>? completer;
+
+  @override
+  List<Object?> get props => [refresh];
+}
+
+final class GetMoreNotificationsEvent extends NotificationsEvent {
+  const GetMoreNotificationsEvent({this.retry = false});
+
+  final bool retry;
+
+  @override
+  List<Object?> get props => [retry];
 }
 
 final class GetUnreadNotificationsCountEvent extends NotificationsEvent {
@@ -56,16 +71,18 @@ final class NotificationClickedEvent extends NotificationsEvent {
 final class NotificationTappedFromPushEvent extends NotificationsEvent {
   final int? notificationId;
   final int? orderId;
+  final int? complaintId;
   final String? type;
 
   const NotificationTappedFromPushEvent({
     this.notificationId,
     this.orderId,
+    this.complaintId,
     this.type,
   });
 
   @override
-  List<Object?> get props => [notificationId, orderId, type];
+  List<Object?> get props => [notificationId, orderId, complaintId, type];
 }
 
 final class NewNotificationReceivedEvent extends NotificationsEvent {

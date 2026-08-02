@@ -11,7 +11,10 @@ abstract class CompaniesApiService {
   factory CompaniesApiService(Dio dio, {String baseUrl}) = _CompaniesApiService;
 
   @GET(ApiEndpoints.companiesEndpoint)
-  Future<HttpResponse<CompanyResponseModel>> getCompanies();
+  Future<HttpResponse<CompanyResponseModel>> getCompanies({
+    @Query('page') required int page,
+    @Query('per_page') required int perPage,
+  });
 
   @GET("${ApiEndpoints.companiesEndpoint}/{id}")
   Future<HttpResponse<CompanyDetailsResponseModel>> getCompanyDetails(

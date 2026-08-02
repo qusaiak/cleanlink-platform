@@ -1,6 +1,7 @@
 import 'package:client_app/features/profile/presentation/widgets/section_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../complaints/presentation/bloc/complaints_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -70,6 +71,22 @@ class _ProfileContentState extends State<ProfileContent> {
               icon: Icons.star_border,
               title: AppLocalizations.of(context)!.my_reviews,
               onTap: () => GoRouter.of(context).push(AppRouter.kMyReviews),
+            ),
+            CustomTile(
+              icon: Icons.report_problem_outlined,
+              title: AppLocalizations.of(context)!.complaints,
+              onTap: () => GoRouter.of(context).push(AppRouter.kComplaints),
+              trailing: BlocBuilder<ComplaintsBloc, ComplaintsState>(
+                buildWhen: (previous, current) =>
+                    previous.unreadCount != current.unreadCount,
+                builder: (context, state) => state.unreadCount > 0
+                    ? Badge(label: Text('${state.unreadCount}'))
+                    : const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 12,
+                        color: AppColor.primaryColor,
+                      ),
+              ),
             ),
             CustomTile(
               icon: Icons.payment,

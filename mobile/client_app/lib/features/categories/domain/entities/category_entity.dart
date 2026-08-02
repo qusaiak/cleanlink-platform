@@ -1,8 +1,6 @@
 import 'package:client_app/features/services/domain/entities/service_entity.dart';
 import 'package:equatable/equatable.dart';
 
-import 'category_service_entity.dart';
-
 class CategoryEntity extends Equatable {
   final int id;
   final String name;

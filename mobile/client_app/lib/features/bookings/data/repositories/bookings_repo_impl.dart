@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/network/network_exceptions.dart';
+import '../../../../core/pagination/paginated_result.dart';
 import '../../domain/entities/available_day_entity.dart';
 import '../../domain/entities/booking_entity.dart';
 import '../../domain/repositories/bookings_repo.dart';
@@ -22,9 +23,12 @@ class BookingsRepoImpl implements BookingsRepo {
   }
 
   @override
-  Future<List<OrderEntity>> getOrders() async {
+  Future<PaginatedResult<OrderEntity>> getOrders({
+    required int page,
+    required int perPage,
+  }) async {
     try {
-      return (await api.getOrders()).data.toEntity();
+      return (await api.getOrders(page: page, perPage: perPage)).data.data;
     } on DioException catch (e) {
       throw NetworkExceptions.fromDio(e);
     }

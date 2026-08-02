@@ -19,11 +19,12 @@ class ServiceEntity {
   final int minDuration;
   final int maxDuration;
 
-  final int price;
+  final double? minPrice;
+  final double? maxPrice;
 
   final String image;
 
-  final int discount;
+  final double discount;
 
   final bool isFavorite;
 
@@ -49,7 +50,8 @@ class ServiceEntity {
     required this.rating,
     required this.minDuration,
     required this.maxDuration,
-    required this.price,
+    required this.minPrice,
+    required this.maxPrice,
     required this.image,
     required this.discount,
     required this.isFavorite,
@@ -71,9 +73,10 @@ class ServiceEntity {
     double? rating,
     int? minDuration,
     int? maxDuration,
-    int? price,
+    double? minPrice,
+    double? maxPrice,
     String? image,
-    int? discount,
+    double? discount,
     bool? isFavorite,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -92,7 +95,8 @@ class ServiceEntity {
       rating: rating ?? this.rating,
       minDuration: minDuration ?? this.minDuration,
       maxDuration: maxDuration ?? this.maxDuration,
-      price: price ?? this.price,
+      minPrice: minPrice ?? this.minPrice,
+      maxPrice: maxPrice ?? this.maxPrice,
       image: image ?? this.image,
       discount: discount ?? this.discount,
       isFavorite: isFavorite ?? this.isFavorite,

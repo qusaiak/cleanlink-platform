@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:client_app/core/utils/functions/spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/language/app_language_info.dart';
 import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/custom_appbar.dart';
+import '../../../../core/widgets/custom_toast.dart';
+import '../../../../core/widgets/pagination_footer.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/booking_entity.dart';
 import '../bloc/bookings_bloc.dart';
@@ -19,6 +23,21 @@ class MyBookingsPage extends StatefulWidget {
 
 class _MyBookingsPageState extends State<MyBookingsPage> {
   String? _lastLanguageCode;
+  late final ScrollController _scrollController;
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    if (_scrollController.position.extentAfter <= 250) {
+      context.read<BookingsBloc>().add(const GetMoreOrdersEvent());
+    }
+  }
+
+  Future<void> _refresh() {
+    final completer = Completer<void>();
+    context.read<BookingsBloc>().add(RefreshBookings(completer: completer));
+    return completer.future;
+  }
+
   bool _matchesTab(BookingTab tab, OrderEntity order) {
     switch (tab) {
       case BookingTab.all:
@@ -39,8 +58,17 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController()..addListener(_onScroll);
     _lastLanguageCode = AppLanguageInfo.languageCode;
     context.read<BookingsBloc>().add(const GetOrdersEvent());
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
   }
 
   @override
@@ -73,7 +101,19 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
             const BookingsTabBar(),
             SizedBox(height: 12.h),
             Expanded(
-              child: BlocBuilder<BookingsBloc, BookingsState>(
+              child: BlocConsumer<BookingsBloc, BookingsState>(
+                listenWhen: (previous, current) =>
+                    previous.loadMoreOrdersError !=
+                        current.loadMoreOrdersError &&
+                    current.loadMoreOrdersError != null,
+                listener: (context, state) {
+                  final l = AppLocalizations.of(context)!;
+                  AppSnackBar.showError(
+                    context: context,
+                    title: l.error,
+                    message: state.loadMoreOrdersError!,
+                  );
+                },
                 builder: (context, state) {
                   final colors = Theme.of(context).colorScheme;
 
@@ -81,7 +121,8 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                     return Center(child: spinKitApp(colors.primary));
                   }
 
-                  if (state.errorMessage != null && state.orders.isEmpty) {
+                  if (state.ordersErrorMessage != null &&
+                      state.orders.isEmpty) {
                     return Center(
                       child: Padding(
                         padding: EdgeInsets.all(24.w),
@@ -89,7 +130,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              state.errorMessage!,
+                              state.ordersErrorMessage!,
                               textAlign: TextAlign.center,
                             ),
                             SizedBox(height: 16.h),
@@ -111,52 +152,46 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                       .where((order) => _matchesTab(state.selectedTab, order))
                       .toList();
 
-                  if (orders.isEmpty) {
-                    return RefreshIndicator(
-                      onRefresh: () async {
-                        final bloc = context.read<BookingsBloc>();
-
-                        bloc.add(const GetOrdersEvent());
-
-                        await bloc.stream.firstWhere(
-                          (state) =>
-                              !state.isLoadingOrders && state.hasLoadedOrders,
-                        );
-                      },
-                      child: ListView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        children: [
-                          SizedBox(height: 100.h),
-                          AppEmptyState(
-                            icon: Icons.cleaning_services_outlined,
-                            title: AppLocalizations.of(context)!.no_bookings,
-                            body: AppLocalizations.of(
-                              context,
-                            )!.no_bookings_message,
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
                   return RefreshIndicator(
-                    onRefresh: () async {
-                      final bloc = context.read<BookingsBloc>();
-
-                      bloc.add(const GetOrdersEvent());
-
-                      await bloc.stream.firstWhere(
-                        (state) =>
-                            !state.isLoadingOrders && state.hasLoadedOrders,
-                      );
-                    },
-                    child: ListView.separated(
+                    onRefresh: _refresh,
+                    child: ListView.builder(
+                      controller: _scrollController,
                       physics: const AlwaysScrollableScrollPhysics(),
                       padding: EdgeInsets.only(bottom: 24.h),
-                      itemCount: orders.length,
-                      separatorBuilder: (_, _) => SizedBox(height: 14.h),
+                      itemCount: orders.isEmpty ? 2 : orders.length + 1,
                       itemBuilder: (_, index) {
-                        return BookingCard(booking: orders[index]);
+                        if (orders.isEmpty && index == 0) {
+                          return Padding(
+                            padding: EdgeInsets.only(top: 100.h),
+                            child: AppEmptyState(
+                              icon: Icons.cleaning_services_outlined,
+                              title: AppLocalizations.of(context)!.no_bookings,
+                              body: AppLocalizations.of(
+                                context,
+                              )!.no_bookings_message,
+                            ),
+                          );
+                        }
+
+                        final footerIndex = orders.isEmpty ? 1 : orders.length;
+                        if (index == footerIndex) {
+                          return PaginationFooter(
+                            isLoading: state.isLoadingMoreOrders,
+                            errorMessage: state.loadMoreOrdersError == null
+                                ? null
+                                : AppLocalizations.of(
+                                    context,
+                                  )!.could_not_load_more_orders,
+                            onRetry: () => context.read<BookingsBloc>().add(
+                              const GetMoreOrdersEvent(),
+                            ),
+                          );
+                        }
+
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 14.h),
+                          child: BookingCard(booking: orders[index]),
+                        );
                       },
                     ),
                   );

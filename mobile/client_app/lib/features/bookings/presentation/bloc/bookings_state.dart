@@ -7,7 +7,18 @@ class BookingsState extends Equatable {
   final OrderEntity? selectedOrder;
 
   final bool isLoadingOrders;
+  final bool isLoadingMoreOrders;
+  final bool isRefreshingOrders;
   final bool hasLoadedOrders;
+
+  final int currentPage;
+  final int perPage;
+  final int total;
+  final int lastPage;
+  final bool hasMorePages;
+
+  final String? ordersErrorMessage;
+  final String? loadMoreOrdersError;
 
   final bool isBookingOrder;
   final bool isLoadingOrderDetails;
@@ -30,7 +41,16 @@ class BookingsState extends Equatable {
     required this.orders,
     this.selectedOrder,
     required this.isLoadingOrders,
+    required this.isLoadingMoreOrders,
+    required this.isRefreshingOrders,
     required this.hasLoadedOrders,
+    required this.currentPage,
+    required this.perPage,
+    required this.total,
+    required this.lastPage,
+    required this.hasMorePages,
+    this.ordersErrorMessage,
+    this.loadMoreOrdersError,
     required this.isBookingOrder,
     required this.isLoadingOrderDetails,
     required this.isCancelingOrder,
@@ -48,7 +68,14 @@ class BookingsState extends Equatable {
   factory BookingsState.initial() => const BookingsState(
     orders: [],
     isLoadingOrders: false,
+    isLoadingMoreOrders: false,
+    isRefreshingOrders: false,
     hasLoadedOrders: false,
+    currentPage: 0,
+    perPage: PaginationConstants.ordersPageSize,
+    total: 0,
+    lastPage: 1,
+    hasMorePages: true,
     isBookingOrder: false,
     isLoadingOrderDetails: false,
     isCancelingOrder: false,
@@ -69,7 +96,20 @@ class BookingsState extends Equatable {
     bool clearSelectedOrder = false,
 
     bool? isLoadingOrders,
+    bool? isLoadingMoreOrders,
+    bool? isRefreshingOrders,
     bool? hasLoadedOrders,
+
+    int? currentPage,
+    int? perPage,
+    int? total,
+    int? lastPage,
+    bool? hasMorePages,
+
+    String? ordersErrorMessage,
+    bool clearOrdersErrorMessage = false,
+    String? loadMoreOrdersError,
+    bool clearLoadMoreOrdersError = false,
 
     bool? isBookingOrder,
     bool? isLoadingOrderDetails,
@@ -101,7 +141,20 @@ class BookingsState extends Equatable {
           : selectedOrder ?? this.selectedOrder,
 
       isLoadingOrders: isLoadingOrders ?? this.isLoadingOrders,
+      isLoadingMoreOrders: isLoadingMoreOrders ?? this.isLoadingMoreOrders,
+      isRefreshingOrders: isRefreshingOrders ?? this.isRefreshingOrders,
       hasLoadedOrders: hasLoadedOrders ?? this.hasLoadedOrders,
+      currentPage: currentPage ?? this.currentPage,
+      perPage: perPage ?? this.perPage,
+      total: total ?? this.total,
+      lastPage: lastPage ?? this.lastPage,
+      hasMorePages: hasMorePages ?? this.hasMorePages,
+      ordersErrorMessage: clearOrdersErrorMessage
+          ? null
+          : ordersErrorMessage ?? this.ordersErrorMessage,
+      loadMoreOrdersError: clearLoadMoreOrdersError
+          ? null
+          : loadMoreOrdersError ?? this.loadMoreOrdersError,
 
       isBookingOrder: isBookingOrder ?? this.isBookingOrder,
       isLoadingOrderDetails:
@@ -132,7 +185,16 @@ class BookingsState extends Equatable {
     orders,
     selectedOrder,
     isLoadingOrders,
+    isLoadingMoreOrders,
+    isRefreshingOrders,
     hasLoadedOrders,
+    currentPage,
+    perPage,
+    total,
+    lastPage,
+    hasMorePages,
+    ordersErrorMessage,
+    loadMoreOrdersError,
     isBookingOrder,
     isLoadingOrderDetails,
     isCancelingOrder,

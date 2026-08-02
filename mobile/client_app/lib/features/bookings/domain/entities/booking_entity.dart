@@ -213,7 +213,8 @@ class OrderServiceEntity extends Equatable {
   final double rating;
   final int minDuration;
   final int maxDuration;
-  final double price;
+  final double? minPrice;
+  final double? maxPrice;
   final String? image;
   final double discount;
   final bool isFavorite;
@@ -227,14 +228,15 @@ class OrderServiceEntity extends Equatable {
     required this.rating,
     required this.minDuration,
     required this.maxDuration,
-    required this.price,
+    required this.minPrice,
+    required this.maxPrice,
     this.image,
     required this.discount,
     required this.isFavorite,
     this.company,
   });
   @override
-  List<Object?> get props => [id, name, company];
+  List<Object?> get props => [id, name, minPrice, maxPrice, company];
 }
 
 class OrderCompanyEntity extends Equatable {
