@@ -56,7 +56,7 @@ class CustomDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 CustomImageView(
-                  imagePath: Assets.images.logo.appLogo.path,
+                  imagePath: Assets.icons.appIcon.path,
                   width: 40.w,
                 ),
                 title!.isNotEmpty
