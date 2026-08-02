@@ -14,6 +14,7 @@ import 'core/storage/storage_data.dart';
 import 'features/notification/domain/usecases/mark_notification_as_read_usecase.dart';
 import 'features/notification/domain/usecases/update_fcm_token_usecase.dart';
 import 'features/notification/presentation/bloc/notification_bloc.dart';
+import 'features/complaints/presentation/bloc/complaints_bloc.dart';
 import 'firebase_options.dart';
 
 @pragma('vm:entry-point')
@@ -47,12 +48,16 @@ class FirebaseApi {
       message.data['notification_id']?.toString() ?? '',
     );
     final orderId = int.tryParse(message.data['order_id']?.toString() ?? '');
+    final complaintId = int.tryParse(
+      message.data['complaint_id']?.toString() ?? '',
+    );
 
     if (GetIt.I.isRegistered<NotificationsBloc>()) {
       GetIt.I<NotificationsBloc>().add(
         NotificationTappedFromPushEvent(
           notificationId: notificationId,
           orderId: orderId,
+          complaintId: complaintId,
           type: type,
         ),
       );
@@ -64,7 +69,11 @@ class FirebaseApi {
       unawaited(_markPushNotificationAsRead(notificationId));
     }
 
-    if (orderId != null) {
+    if (type == 'complaint_response' && complaintId != null) {
+      unawaited(
+        AppRouter.openComplaintDetailsFromExternalNotification(complaintId),
+      );
+    } else if (orderId != null) {
       unawaited(AppRouter.openOrderDetailsFromExternalNotification(orderId));
     }
   }
@@ -124,6 +133,10 @@ class FirebaseApi {
       debugPrint("Foreground message received");
       if (GetIt.I.isRegistered<NotificationsBloc>()) {
         GetIt.I<NotificationsBloc>().add(const NewNotificationReceivedEvent());
+      }
+      if (message.data['type']?.toString() == 'complaint_response' &&
+          GetIt.I.isRegistered<ComplaintsBloc>()) {
+        GetIt.I<ComplaintsBloc>().add(const LoadComplaintUnreadCountEvent());
       }
       final notification = message.notification;
       final title =
