@@ -356,13 +356,47 @@ class AppLocalizationsAr extends AppLocalizations {
   String get no_categories_found => 'لا توجد تصنيفات';
 
   @override
+  String get could_not_load_more_categories => 'تعذر تحميل المزيد من التصنيفات';
+
+  @override
+  String get could_not_load_more_regions => 'تعذر تحميل المزيد من المناطق';
+
+  @override
+  String get could_not_load_more_companies => 'تعذر تحميل المزيد من الشركات';
+
+  @override
+  String get could_not_load_more_services => 'تعذر تحميل المزيد من الخدمات';
+
+  @override
+  String get could_not_load_more_notifications =>
+      'تعذر تحميل المزيد من الإشعارات';
+
+  @override
+  String get could_not_load_more_orders => 'تعذر تحميل المزيد من الطلبات';
+
+  @override
+  String get price_unavailable => 'السعر غير متاح';
+
+  @override
+  String get from_price => 'ابتداءً من';
+
+  @override
+  String get up_to_price => 'حتى';
+
+  @override
   String get no_offers_found => 'لا توجد عروض';
 
   @override
   String get no_favorite_services => 'لا توجد خدمات مفضلة';
 
   @override
+  String get service_favorites_will_appear_here => 'ستظهر خدماتك المفضلة هنا.';
+
+  @override
   String get no_favorite_companies => 'لا توجد شركات مفضلة';
+
+  @override
+  String get company_favorites_will_appear_here => 'ستظهر شركاتك المفضلة هنا.';
 
   @override
   String get support => 'الدعم';
@@ -960,7 +994,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get choose_package => 'اختر الباقة';
 
   @override
-  String get what_is_included => 'What\'s included';
+  String get what_is_included => 'ما الذي يشمله';
 
   @override
   String get customer_reviews => 'تقييمات العملاء';
@@ -1112,4 +1146,81 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get failed_to_delete_account =>
       'تعذر حذف حسابك. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get complaints => 'الشكاوى';
+
+  @override
+  String get service_complaints => 'الخدمات';
+
+  @override
+  String get company_complaints => 'الشركات';
+
+  @override
+  String get submit_complaint => 'تقديم شكوى';
+
+  @override
+  String get complaint_subject => 'عنوان الشكوى';
+
+  @override
+  String get complaint_message => 'تفاصيل الشكوى';
+
+  @override
+  String get complaint_details => 'تفاصيل الشكوى';
+
+  @override
+  String get complaint_replies => 'الردود';
+
+  @override
+  String get no_complaint_replies => 'لا توجد ردود بعد';
+
+  @override
+  String get no_complaints_found => 'لا توجد شكاوى';
+
+  @override
+  String get could_not_load_complaints => 'تعذر تحميل الشكاوى';
+
+  @override
+  String get could_not_load_more_complaints => 'تعذر تحميل المزيد من الشكاوى';
+
+  @override
+  String get complaint_submitted_successfully => 'تم تقديم الشكوى بنجاح';
+
+  @override
+  String get complaint_pending => 'قيد الانتظار';
+
+  @override
+  String get complaint_replied => 'تم الرد';
+
+  @override
+  String get complaint_reviewed => 'تمت المراجعة';
+
+  @override
+  String get company_manager_label => 'مدير الشركة';
+
+  @override
+  String get support_team_label => 'فريق دعم كلين لينك';
+
+  @override
+  String get complaint_message_too_short =>
+      'يجب ألا تقل تفاصيل الشكوى عن 10 أحرف';
+
+  @override
+  String get required_field => 'هذا الحقل مطلوب';
+
+  @override
+  String get submit => 'إرسال';
+
+  @override
+  String get minimum_price => 'الحد الأدنى للسعر';
+
+  @override
+  String get maximum_price => 'الحد الأعلى للسعر';
+
+  @override
+  String get invalid_price_range =>
+      'لا يمكن أن يكون الحد الأدنى للسعر أكبر من الحد الأعلى';
+
+  @override
+  String get could_not_load_more_offers => 'تعذر تحميل المزيد من العروض';
 }

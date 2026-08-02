@@ -362,13 +362,49 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_categories_found => 'No categories found';
 
   @override
+  String get could_not_load_more_categories => 'Could not load more categories';
+
+  @override
+  String get could_not_load_more_regions => 'Could not load more regions';
+
+  @override
+  String get could_not_load_more_companies => 'Could not load more companies';
+
+  @override
+  String get could_not_load_more_services => 'Could not load more services';
+
+  @override
+  String get could_not_load_more_notifications =>
+      'Could not load more notifications';
+
+  @override
+  String get could_not_load_more_orders => 'Could not load more orders';
+
+  @override
+  String get price_unavailable => 'Price unavailable';
+
+  @override
+  String get from_price => 'From';
+
+  @override
+  String get up_to_price => 'Up to';
+
+  @override
   String get no_offers_found => 'No offers found';
 
   @override
   String get no_favorite_services => 'No favorite services';
 
   @override
+  String get service_favorites_will_appear_here =>
+      'Your favorite services will appear here.';
+
+  @override
   String get no_favorite_companies => 'No favorite companies';
+
+  @override
+  String get company_favorites_will_appear_here =>
+      'Your favorite companies will appear here.';
 
   @override
   String get support => 'Support';
@@ -1124,4 +1160,81 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get failed_to_delete_account =>
       'Could not delete your account. Please try again.';
+
+  @override
+  String get complaints => 'Complaints';
+
+  @override
+  String get service_complaints => 'Services';
+
+  @override
+  String get company_complaints => 'Companies';
+
+  @override
+  String get submit_complaint => 'Submit a Complaint';
+
+  @override
+  String get complaint_subject => 'Complaint subject';
+
+  @override
+  String get complaint_message => 'Complaint details';
+
+  @override
+  String get complaint_details => 'Complaint Details';
+
+  @override
+  String get complaint_replies => 'Replies';
+
+  @override
+  String get no_complaint_replies => 'No replies yet';
+
+  @override
+  String get no_complaints_found => 'No complaints found';
+
+  @override
+  String get could_not_load_complaints => 'Could not load complaints';
+
+  @override
+  String get could_not_load_more_complaints => 'Could not load more complaints';
+
+  @override
+  String get complaint_submitted_successfully =>
+      'Complaint submitted successfully';
+
+  @override
+  String get complaint_pending => 'Pending';
+
+  @override
+  String get complaint_replied => 'Replied';
+
+  @override
+  String get complaint_reviewed => 'Reviewed';
+
+  @override
+  String get company_manager_label => 'Company Manager';
+
+  @override
+  String get support_team_label => 'CleanLink Support';
+
+  @override
+  String get complaint_message_too_short =>
+      'Complaint details must be at least 10 characters';
+
+  @override
+  String get required_field => 'This field is required';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String get minimum_price => 'Minimum price';
+
+  @override
+  String get maximum_price => 'Maximum price';
+
+  @override
+  String get invalid_price_range => 'Minimum price cannot exceed maximum price';
+
+  @override
+  String get could_not_load_more_offers => 'Could not load more offers';
 }

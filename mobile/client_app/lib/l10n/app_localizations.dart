@@ -758,6 +758,60 @@ abstract class AppLocalizations {
   /// **'No categories found'**
   String get no_categories_found;
 
+  /// No description provided for @could_not_load_more_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load more categories'**
+  String get could_not_load_more_categories;
+
+  /// No description provided for @could_not_load_more_regions.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load more regions'**
+  String get could_not_load_more_regions;
+
+  /// No description provided for @could_not_load_more_companies.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load more companies'**
+  String get could_not_load_more_companies;
+
+  /// No description provided for @could_not_load_more_services.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load more services'**
+  String get could_not_load_more_services;
+
+  /// No description provided for @could_not_load_more_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load more notifications'**
+  String get could_not_load_more_notifications;
+
+  /// No description provided for @could_not_load_more_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load more orders'**
+  String get could_not_load_more_orders;
+
+  /// No description provided for @price_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Price unavailable'**
+  String get price_unavailable;
+
+  /// No description provided for @from_price.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get from_price;
+
+  /// No description provided for @up_to_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to'**
+  String get up_to_price;
+
   /// No description provided for @no_offers_found.
   ///
   /// In en, this message translates to:
@@ -770,11 +824,23 @@ abstract class AppLocalizations {
   /// **'No favorite services'**
   String get no_favorite_services;
 
+  /// No description provided for @service_favorites_will_appear_here.
+  ///
+  /// In en, this message translates to:
+  /// **'Your favorite services will appear here.'**
+  String get service_favorites_will_appear_here;
+
   /// No description provided for @no_favorite_companies.
   ///
   /// In en, this message translates to:
   /// **'No favorite companies'**
   String get no_favorite_companies;
+
+  /// No description provided for @company_favorites_will_appear_here.
+  ///
+  /// In en, this message translates to:
+  /// **'Your favorite companies will appear here.'**
+  String get company_favorites_will_appear_here;
 
   /// No description provided for @support.
   ///
@@ -2257,6 +2323,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not delete your account. Please try again.'**
   String get failed_to_delete_account;
+
+  /// No description provided for @complaints.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaints'**
+  String get complaints;
+
+  /// No description provided for @service_complaints.
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get service_complaints;
+
+  /// No description provided for @company_complaints.
+  ///
+  /// In en, this message translates to:
+  /// **'Companies'**
+  String get company_complaints;
+
+  /// No description provided for @submit_complaint.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit a Complaint'**
+  String get submit_complaint;
+
+  /// No description provided for @complaint_subject.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaint subject'**
+  String get complaint_subject;
+
+  /// No description provided for @complaint_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaint details'**
+  String get complaint_message;
+
+  /// No description provided for @complaint_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaint Details'**
+  String get complaint_details;
+
+  /// No description provided for @complaint_replies.
+  ///
+  /// In en, this message translates to:
+  /// **'Replies'**
+  String get complaint_replies;
+
+  /// No description provided for @no_complaint_replies.
+  ///
+  /// In en, this message translates to:
+  /// **'No replies yet'**
+  String get no_complaint_replies;
+
+  /// No description provided for @no_complaints_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No complaints found'**
+  String get no_complaints_found;
+
+  /// No description provided for @could_not_load_complaints.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load complaints'**
+  String get could_not_load_complaints;
+
+  /// No description provided for @could_not_load_more_complaints.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load more complaints'**
+  String get could_not_load_more_complaints;
+
+  /// No description provided for @complaint_submitted_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaint submitted successfully'**
+  String get complaint_submitted_successfully;
+
+  /// No description provided for @complaint_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get complaint_pending;
+
+  /// No description provided for @complaint_replied.
+  ///
+  /// In en, this message translates to:
+  /// **'Replied'**
+  String get complaint_replied;
+
+  /// No description provided for @complaint_reviewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed'**
+  String get complaint_reviewed;
+
+  /// No description provided for @company_manager_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Company Manager'**
+  String get company_manager_label;
+
+  /// No description provided for @support_team_label.
+  ///
+  /// In en, this message translates to:
+  /// **'CleanLink Support'**
+  String get support_team_label;
+
+  /// No description provided for @complaint_message_too_short.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaint details must be at least 10 characters'**
+  String get complaint_message_too_short;
+
+  /// No description provided for @required_field.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get required_field;
+
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
+  /// No description provided for @minimum_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum price'**
+  String get minimum_price;
+
+  /// No description provided for @maximum_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum price'**
+  String get maximum_price;
+
+  /// No description provided for @invalid_price_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum price cannot exceed maximum price'**
+  String get invalid_price_range;
+
+  /// No description provided for @could_not_load_more_offers.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load more offers'**
+  String get could_not_load_more_offers;
 }
 
 class _AppLocalizationsDelegate
