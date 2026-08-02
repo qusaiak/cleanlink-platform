@@ -50,7 +50,7 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
 
     _priceRange = state.priceRange;
 
-    _minRate = state.minRate;
+    _minRate = state.rating;
 
     _regionId = state.regionId;
 
@@ -221,7 +221,7 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColor.primaryColor
-              : Colors.grey.withOpacity(0.1),
+              : Colors.grey.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(20.r),
         ),
         child: Text(
@@ -318,7 +318,7 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
                   decoration: BoxDecoration(
                     color: selected
                         ? theme.primary
-                        : Colors.grey.withOpacity(0.1),
+                        : Colors.grey.withValues(alpha: 0.1),
 
                     borderRadius: BorderRadius.circular(20.r),
                   ),
@@ -375,8 +375,6 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
           onChanged: (values) {
             setState(() {
               _priceRange = values;
-              print("values");
-              print(values);
             });
           },
         ),
@@ -426,15 +424,16 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
 
   void _resetFilters() {
     final bloc = context.read<SearchBloc>();
-    bloc.add(ResetFilters());
     setState(() {
       _availability = Availability.today;
       // _sortOrder = SortOrder.desc;
-      _regionId = 0;
+      _regionId = null;
       _priceRange = const RangeValues(10, 1000);
       // _distance = 1;
-      _minRate = 0;
+      _minRate = null;
     });
+    bloc.add(const ResetFilters());
+    Navigator.pop(context);
   }
 
   void _applyFilters() {

@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/error/failure.dart';
 import '../../domain/usecases/search_usecase.dart';
 import '../../domain/entities/search_entity.dart';
 
@@ -10,6 +11,7 @@ part 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final SearchUseCase searchUseCase;
+  int _requestVersion = 0;
 
   SearchBloc(this.searchUseCase) : super(const SearchState()) {
     on<UpdateSearchQuery>(_onUpdateSearchQuery);
@@ -41,38 +43,25 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     UpdateSearchQuery event,
     Emitter<SearchState> emit,
   ) {
+    _requestVersion++;
     emit(state.copyWith(searchQuery: event.query));
   }
 
   Future<void> _onSearch(Search event, Emitter<SearchState> emit) async {
-    if (state.searchQuery.trim().isEmpty) {
-      return;
-    }
-
-    emit(state.copyWith(isLoading: true));
-
-    try {
-      print("state.regionId");
-      print(state.regionId);
-      print(state.priceRange);
-      print(state.minRate);
-
-      final result = await searchUseCase(
-        state.searchQuery,
-        state.hasRegionFilter ? state.regionId : null,
-        state.hasPriceFilter
-            ? "${state.priceRange.start.toInt()}-${state.priceRange.end.toInt()}"
-            : null,
-        state.hasRateFilter ? state.minRate : null,
-      );
-
-      emit(state.copyWith(isLoading: false, hasSearched: true, data: result));
-    } catch (_) {
-      emit(state.copyWith(isLoading: false));
-    }
+    final query = state.searchQuery.trim();
+    if (query.isEmpty) return;
+    await _executeSearch(
+      emit,
+      query: query,
+      regionId: state.regionId,
+      minimumPrice: state.minimumPrice,
+      maximumPrice: state.maximumPrice,
+      rating: state.rating,
+    );
   }
 
   void _onClearSearch(ClearSearch event, Emitter<SearchState> emit) {
+    _requestVersion++;
     emit(const SearchState());
   }
 
@@ -92,7 +81,13 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   void _onUpdatePriceRange(UpdatePriceRange event, Emitter<SearchState> emit) {
-    emit(state.copyWith(priceRange: event.priceRange, hasPriceFilter: true));
+    emit(
+      state.copyWith(
+        priceRange: event.priceRange,
+        minimumPrice: event.priceRange.start,
+        maximumPrice: event.priceRange.end,
+      ),
+    );
   }
 
   void _onUpdateDistance(UpdateDistance event, Emitter<SearchState> emit) {
@@ -100,14 +95,18 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   void _onUpdateMinRate(UpdateMinRate event, Emitter<SearchState> emit) {
-    emit(state.copyWith(minRate: event.rate, hasRateFilter: true));
+    emit(state.copyWith(rating: event.rate, clearRating: event.rate == 0));
   }
 
   void _onUpdateRegion(UpdateRegion event, Emitter<SearchState> emit) {
-    emit(state.copyWith(regionId: event.regionId, hasRegionFilter: true));
+    emit(state.copyWith(regionId: event.regionId));
   }
 
-  void _onResetFilters(ResetFilters event, Emitter<SearchState> emit) {
+  Future<void> _onResetFilters(
+    ResetFilters event,
+    Emitter<SearchState> emit,
+  ) async {
+    final query = state.searchQuery.trim();
     emit(
       state.copyWith(
         availability: Availability.today,
@@ -116,16 +115,27 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
         priceRange: const RangeValues(10, 1000),
 
-        regionId: 0,
-
-        minRate: 0,
-
-        hasPriceFilter: false,
-
-        hasRateFilter: false,
-
-        hasRegionFilter: false,
+        clearRegion: true,
+        clearPrice: true,
+        clearRating: true,
+        isLoading: query.isNotEmpty,
+        hasSearched: query.isNotEmpty,
+        clearData: true,
+        clearErrorMessage: true,
       ),
+    );
+    if (query.isEmpty) {
+      _requestVersion++;
+      return;
+    }
+    await _executeSearch(
+      emit,
+      query: query,
+      regionId: null,
+      minimumPrice: null,
+      maximumPrice: null,
+      rating: null,
+      loadingAlreadyEmitted: true,
     );
   }
 
@@ -133,48 +143,104 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     ApplyFiltersAndSearch event,
     Emitter<SearchState> emit,
   ) async {
-    if (state.searchQuery.trim().isEmpty) {
-      state.copyWith(
-        regionId: event.regionId,
-        priceRange: event.priceRange,
-        minRate: event.rate,
-
-        hasRegionFilter: true,
-        hasPriceFilter: true,
-        hasRateFilter: true,
+    final query = state.searchQuery.trim();
+    final regionId = event.regionId == null || event.regionId == 0
+        ? null
+        : event.regionId;
+    final rate = event.rate == null || event.rate == 0 ? null : event.rate;
+    final hasPriceFilter = event.priceRange != const RangeValues(10, 1000);
+    final minimumPrice = hasPriceFilter ? event.priceRange.start : null;
+    final maximumPrice = hasPriceFilter ? event.priceRange.end : null;
+    if (query.isEmpty) {
+      emit(
+        state.copyWith(
+          regionId: regionId,
+          clearRegion: regionId == null,
+          priceRange: event.priceRange,
+          minimumPrice: minimumPrice,
+          maximumPrice: maximumPrice,
+          clearPrice: !hasPriceFilter,
+          rating: rate,
+          clearRating: rate == null,
+        ),
       );
     } else {
       emit(
         state.copyWith(
-          regionId: event.regionId,
+          regionId: regionId,
+          clearRegion: regionId == null,
           priceRange: event.priceRange,
-          minRate: event.rate,
-          hasRegionFilter: true,
-          hasPriceFilter: true,
-          hasRateFilter: true,
+          minimumPrice: minimumPrice,
+          maximumPrice: maximumPrice,
+          clearPrice: !hasPriceFilter,
+          rating: rate,
+          clearRating: rate == null,
           isLoading: true,
+          hasSearched: true,
+          clearData: true,
+          clearErrorMessage: true,
         ),
       );
-
-      final result = await searchUseCase(
-        state.searchQuery,
-        event.regionId,
-
-        "${event.priceRange.start.round()} - ${event.priceRange.end.round()}",
-        event.rate,
+      await _executeSearch(
+        emit,
+        query: query,
+        regionId: regionId,
+        minimumPrice: minimumPrice,
+        maximumPrice: maximumPrice,
+        rating: rate,
+        loadingAlreadyEmitted: true,
       );
+    }
+  }
 
+  Future<void> _executeSearch(
+    Emitter<SearchState> emit, {
+    required String query,
+    required int? regionId,
+    required double? minimumPrice,
+    required double? maximumPrice,
+    required double? rating,
+    bool loadingAlreadyEmitted = false,
+  }) async {
+    final requestVersion = ++_requestVersion;
+    if (!loadingAlreadyEmitted) {
       emit(
         state.copyWith(
-          regionId: event.regionId,
-          priceRange: event.priceRange,
-          minRate: event.rate,
-          hasRegionFilter: event.regionId != null,
-          hasPriceFilter: true,
-          hasRateFilter: event.rate != null,
+          isLoading: true,
+          hasSearched: true,
+          clearData: true,
+          clearErrorMessage: true,
+        ),
+      );
+    }
+
+    try {
+      final result = await searchUseCase(
+        query: query,
+        regionId: regionId,
+        minimumPrice: minimumPrice,
+        maximumPrice: maximumPrice,
+        rating: rating,
+      );
+      if (requestVersion != _requestVersion) return;
+      emit(
+        state.copyWith(
           isLoading: false,
           hasSearched: true,
           data: result,
+          clearErrorMessage: true,
+        ),
+      );
+    } catch (error) {
+      if (requestVersion != _requestVersion) return;
+      emit(
+        state.copyWith(
+          isLoading: false,
+          hasSearched: true,
+          clearData: true,
+          errorMessage: error is Failure
+              ? error.message
+              : error.toString().replaceFirst('Exception: ', ''),
         ),
       );
     }

@@ -19,19 +19,17 @@ class SearchState extends Equatable {
 
   final double distance;
 
-  final double minRate;
-
-  final int regionId;
+  final int? regionId;
+  final double? minimumPrice;
+  final double? maximumPrice;
+  final double? rating;
 
   final bool isLoading;
 
   final bool hasSearched;
 
   final SearchEntity? data;
-
-  final bool hasPriceFilter;
-  final bool hasRateFilter;
-  final bool hasRegionFilter;
+  final String? errorMessage;
 
   const SearchState({
     this.searchQuery = '',
@@ -46,20 +44,24 @@ class SearchState extends Equatable {
 
     this.distance = 1,
 
-    this.minRate = 0,
-
-    this.regionId = 0,
+    this.regionId,
+    this.minimumPrice,
+    this.maximumPrice,
+    this.rating,
 
     this.isLoading = false,
 
     this.hasSearched = false,
 
     this.data,
-
-    this.hasPriceFilter = false,
-    this.hasRateFilter = false,
-    this.hasRegionFilter = false,
+    this.errorMessage,
   });
+
+  bool get hasPriceFilter => minimumPrice != null || maximumPrice != null;
+  bool get hasRateFilter => rating != null;
+  bool get hasRegionFilter => regionId != null;
+  bool get hasActiveFilters =>
+      hasRegionFilter || hasPriceFilter || hasRateFilter;
 
   SearchState copyWith({
     String? searchQuery,
@@ -74,19 +76,22 @@ class SearchState extends Equatable {
 
     double? distance,
 
-    double? minRate,
-
     int? regionId,
+    double? minimumPrice,
+    double? maximumPrice,
+    double? rating,
+    bool clearRegion = false,
+    bool clearPrice = false,
+    bool clearRating = false,
 
     bool? isLoading,
 
     bool? hasSearched,
 
     SearchEntity? data,
-
-    bool? hasPriceFilter,
-    bool? hasRateFilter,
-    bool? hasRegionFilter,
+    bool clearData = false,
+    String? errorMessage,
+    bool clearErrorMessage = false,
   }) {
     return SearchState(
       searchQuery: searchQuery ?? this.searchQuery,
@@ -101,21 +106,19 @@ class SearchState extends Equatable {
 
       distance: distance ?? this.distance,
 
-      minRate: minRate ?? this.minRate,
-
-      regionId: regionId ?? this.regionId,
+      regionId: clearRegion ? null : regionId ?? this.regionId,
+      minimumPrice: clearPrice ? null : minimumPrice ?? this.minimumPrice,
+      maximumPrice: clearPrice ? null : maximumPrice ?? this.maximumPrice,
+      rating: clearRating ? null : rating ?? this.rating,
 
       isLoading: isLoading ?? this.isLoading,
 
       hasSearched: hasSearched ?? this.hasSearched,
 
-      data: data ?? this.data,
-
-      hasPriceFilter: hasPriceFilter ?? this.hasPriceFilter,
-
-      hasRateFilter: hasRateFilter ?? this.hasRateFilter,
-
-      hasRegionFilter: hasRegionFilter ?? this.hasRegionFilter,
+      data: clearData ? null : data ?? this.data,
+      errorMessage: clearErrorMessage
+          ? null
+          : errorMessage ?? this.errorMessage,
     );
   }
 
@@ -133,18 +136,16 @@ class SearchState extends Equatable {
 
     distance,
 
-    minRate,
-
     regionId,
+    minimumPrice,
+    maximumPrice,
+    rating,
 
     isLoading,
 
     hasSearched,
 
     data,
-
-    hasPriceFilter,
-    hasRateFilter,
-    hasRegionFilter,
+    errorMessage,
   ];
 }

@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/functions/spinkit.dart';
+import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/content/content_grid_view.dart';
 import '../../../../core/widgets/content/content_list_view.dart';
-import '../../../../core/widgets/content/content_mock_data.dart';
 import '../../../../core/widgets/content/content_section.dart';
 import '../../../../core/widgets/content/content_section_type.dart';
 import '../../../../core/widgets/content/content_view.dart';
 import '../bloc/search_bloc.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'search_tabs.dart';
 
 class SearchResults extends StatelessWidget {
@@ -29,7 +30,7 @@ class SearchResults extends StatelessWidget {
             Expanded(
               child: state.isLoading
                   ? Center(child: spinKitApp(theme.primary))
-                  : _buildTabContent(state, bottomInset),
+                  : _buildTabContent(context, state, bottomInset),
             ),
           ],
         );
@@ -37,11 +38,28 @@ class SearchResults extends StatelessWidget {
     );
   }
 
-  Widget _buildTabContent(SearchState state, double bottomInset) {
+  Widget _buildTabContent(
+    BuildContext context,
+    SearchState state,
+    double bottomInset,
+  ) {
     final data = state.data;
 
     if (data == null) {
       return const SizedBox();
+    }
+
+    if (data.regions.isEmpty &&
+        data.categories.isEmpty &&
+        data.companies.isEmpty &&
+        data.services.isEmpty &&
+        data.offers.isEmpty) {
+      return Center(
+        child: AppEmptyState(
+          icon: Icons.search_off_rounded,
+          title: AppLocalizations.of(context)!.search_no_results,
+        ),
+      );
     }
 
     switch (state.selectedTab) {

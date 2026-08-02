@@ -82,6 +82,29 @@ class _SearchViewState extends State<_SearchView> {
                   if (state.isLoading) {
                     return Center(child: spinKitApp(theme.primary));
                   }
+                  if (state.errorMessage != null) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(24.w),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              state.errorMessage!,
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 16.h),
+                            ElevatedButton(
+                              onPressed: () => context.read<SearchBloc>().add(
+                                const Search(),
+                              ),
+                              child: Text(l10n.retry),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
                   if (!state.hasSearched) {
                     return _buildSearchContent(l10n, theme);
                   }
@@ -246,21 +269,18 @@ class _SearchViewState extends State<_SearchView> {
 
           SizedBox(width: 8.w),
 
-          SizedBox(
-            height: 48.h,
-
-            width: 48.w,
-
-            child: CircularGlassButton(
-              icon: Icons.tune_rounded,
-
-              isActive: false,
-
-              activeColor: Colors.transparent,
-
-              onTap: () {
-                SearchFilterBottomSheet.show(context);
-              },
+          BlocBuilder<SearchBloc, SearchState>(
+            buildWhen: (previous, current) =>
+                previous.hasActiveFilters != current.hasActiveFilters,
+            builder: (context, state) => SizedBox(
+              height: 48.h,
+              width: 48.w,
+              child: CircularGlassButton(
+                icon: Icons.tune_rounded,
+                isActive: state.hasActiveFilters,
+                activeColor: theme.primary,
+                onTap: () => SearchFilterBottomSheet.show(context),
+              ),
             ),
           ),
         ],

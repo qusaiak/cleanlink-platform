@@ -12,6 +12,6 @@ abstract class SearchApiService {
 
   @GET(ApiEndpoints.searchEndpoint)
   Future<HttpResponse<SearchResponseModel>> search(
-    @Body() Map<String, dynamic> body,
+    @Queries() Map<String, dynamic> filters,
   );
 }

@@ -21,13 +21,13 @@ class _SearchApiService implements SearchApiService {
 
   @override
   Future<HttpResponse<SearchResponseModel>> search(
-    Map<String, dynamic> body,
+    Map<String, dynamic> filters,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.addAll(filters);
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body);
+    const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<HttpResponse<SearchResponseModel>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(

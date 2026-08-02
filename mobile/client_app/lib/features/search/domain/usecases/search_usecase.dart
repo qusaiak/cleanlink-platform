@@ -6,17 +6,19 @@ class SearchUseCase {
 
   SearchUseCase(this.repo);
 
-  Future<SearchEntity> call(
-    String query,
+  Future<SearchEntity> call({
+    required String query,
     int? regionId,
-    String? priceRange,
-    double? rate,
-  ) {
+    double? minimumPrice,
+    double? maximumPrice,
+    double? rating,
+  }) {
     return repo.search(
       query: query,
       regionId: regionId,
-      priceRange: priceRange,
-      rate: rate,
+      minimumPrice: minimumPrice,
+      maximumPrice: maximumPrice,
+      rating: rating,
     );
   }
 }
