@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/styles.dart';
 
 class CategoryItem extends StatelessWidget {
@@ -22,22 +23,23 @@ class CategoryItem extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.r),
-          color: theme.primary.withOpacity(0.08),
-          border: Border.all(color: theme.primary.withOpacity(0.15)),
+          borderRadius: AppRadius.card,
+          color: theme.primary.withValues(alpha: 0.08),
+          border: Border.all(color: theme.primary.withValues(alpha: 0.15)),
+          boxShadow: AppShadow.card(Theme.of(context).brightness),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(10.r),
               decoration: BoxDecoration(
-                color: theme.primary.withOpacity(0.12),
+                color: theme.primary.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
-              child: Icon(iconData, color: theme.primary, size: 26),
+              child: Icon(iconData, color: theme.primary, size: 26.r),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10.h),
             Text(
               title,
               textAlign: TextAlign.center,

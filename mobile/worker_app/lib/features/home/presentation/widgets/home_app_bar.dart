@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/styles.dart';
 
 class HomeAppBar extends StatelessWidget {
@@ -9,7 +10,7 @@ class HomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context)!.colorScheme;
+    var theme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -63,7 +64,7 @@ class HomeAppBar extends StatelessWidget {
                 width: 40.w,
                 height: 40.w,
                 decoration: BoxDecoration(
-                  color: theme.onSurface.withOpacity(0.1),
+                  color: theme.onSurface.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(
@@ -80,15 +81,15 @@ class HomeAppBar extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                   decoration: BoxDecoration(
-                    color: Colors.redAccent,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.white, width: 1),
+                    color: theme.error,
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
+                    border: Border.all(color: theme.surface, width: 1),
                   ),
-                  child: const Text(
+                  child: Text(
                     "3",
                     style: TextStyle(
                       fontSize: 8,
-                      color: Colors.white,
+                      color: theme.onError,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

@@ -2,17 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../../../config/routes/app_router.dart';
 import '../../../../core/widgets/app_primary_button.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../bloc/auth_bloc.dart';
 import '../widgets/auth_header.dart';
-import '../widgets/auth_link_button.dart';
 import '../widgets/auth_logo.dart';
+import '../widgets/auth_email_field.dart';
 import '../widgets/auth_password_field.dart';
-import '../widgets/auth_phone_field.dart';
 import '../widgets/auth_scaffold.dart';
 
 class LoginBody extends StatelessWidget {
@@ -40,11 +37,11 @@ class LoginBody extends StatelessWidget {
               subtitle: l.auth_login_subtitle,
             ),
             SizedBox(height: 32.h),
-            AuthPhoneField(
-              controller: f.loginPhone,
-              focusNode: f.loginPhoneFocus,
-              label: l.auth_phone_label,
-              hint: l.auth_phone_hint,
+            AuthEmailField(
+              controller: f.loginEmail,
+              focusNode: f.loginEmailFocus,
+              label: l.auth_email_label,
+              hint: l.auth_email_hint,
               textInputAction: TextInputAction.next,
               onFieldSubmitted: (_) => f.loginPasswordFocus.requestFocus(),
             ),
@@ -60,11 +57,19 @@ class LoginBody extends StatelessWidget {
             SizedBox(height: 30.h),
             AppPrimaryButton(
               label: l.auth_login_button,
-              // loading: state.isLoading,
-              // onPressed: bloc.submitLogin,
-              onPressed: () {
-                context.push(AppRouter.kHome);
-              },
+              loading: state.status == AuthStatus.loadingLogin,
+              onPressed: state.status == AuthStatus.loadingLogin
+                  ? null
+                  : () {
+                      if (f.loginFormKey.currentState!.validate()) {
+                        bloc.add(
+                          Login(
+                            f.loginEmail.text.trim(),
+                            f.loginPassword.text,
+                          ),
+                        );
+                      }
+                    },
             ),
             SizedBox(height: 14.h),
 

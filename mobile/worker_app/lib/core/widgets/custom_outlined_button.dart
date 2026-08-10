@@ -68,16 +68,16 @@ class CustomOutlinedButton extends BaseButton {
 
   @override
   Widget build(BuildContext context) {
+    final buttonWidget = _buildOutlinedButtonWidget(context);
     return alignment != null
         ? Align(
       alignment: alignment ?? Alignment.center,
-      child: buildOutlinedButtonWidget,
+      child: buttonWidget,
     )
-        : buildOutlinedButtonWidget;
+        : buttonWidget;
   }
 
-  Widget get buildOutlinedButtonWidget =>
-      Container(
+  Widget _buildOutlinedButtonWidget(BuildContext context) => Container(
         height: height ?? 56.h,
         width: width ?? double.maxFinite,
         margin: margin,
@@ -98,7 +98,8 @@ class CustomOutlinedButton extends BaseButton {
                   text,
                   style: buttonTextStyle ??
                       Styles.textStyle16.copyWith(
-                          color: Colors.black, fontWeight: FontWeight.w500),
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontWeight: FontWeight.w500),
                 ),
               ),
               rightIcon ?? const SizedBox.shrink(),

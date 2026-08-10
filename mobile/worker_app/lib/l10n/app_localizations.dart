@@ -332,6 +332,18 @@ abstract class AppLocalizations {
   /// **'9xx xxx xxx'**
   String get auth_phone_hint;
 
+  /// No description provided for @auth_email_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get auth_email_label;
+
+  /// No description provided for @auth_email_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get auth_email_hint;
+
   /// No description provided for @auth_password_label.
   ///
   /// In en, this message translates to:
@@ -1058,6 +1070,36 @@ abstract class AppLocalizations {
   /// **'Couldn\'t open the task. Please try again'**
   String get task_open_failed;
 
+  /// No description provided for @task_progress_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Progress'**
+  String get task_progress_section;
+
+  /// No description provided for @task_advance_to.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to: {status}'**
+  String task_advance_to(String status);
+
+  /// No description provided for @task_on_way_message.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re on your way to the location'**
+  String get task_on_way_message;
+
+  /// No description provided for @invalid_status_transition_message.
+  ///
+  /// In en, this message translates to:
+  /// **'The task status must advance one step in order (Assigned → On the way → In Progress → Completed); going backward or skipping a step isn\'t allowed'**
+  String get invalid_status_transition_message;
+
+  /// No description provided for @images_only_when_done_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Before/after photos can only be uploaded when completing the task'**
+  String get images_only_when_done_message;
+
   /// No description provided for @task_management_title.
   ///
   /// In en, this message translates to:
@@ -1111,6 +1153,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Urgent Task'**
   String get task_urgent_badge;
+
+  /// No description provided for @task_price_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Price'**
+  String get task_price_label;
+
+  /// No description provided for @task_package_details_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Package Details'**
+  String get task_package_details_label;
+
+  /// No description provided for @task_service_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Service'**
+  String get task_service_section;
+
+  /// No description provided for @task_service_rating_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get task_service_rating_label;
+
+  /// No description provided for @task_leader_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Leader'**
+  String get task_leader_section;
+
+  /// No description provided for @task_leader_yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get task_leader_yes;
+
+  /// No description provided for @task_leader_no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get task_leader_no;
 
   /// No description provided for @visual_documentation.
   ///
@@ -1196,6 +1280,12 @@ abstract class AppLocalizations {
   /// **'Offline'**
   String get availability_offline;
 
+  /// No description provided for @manual_busy_not_allowed_message.
+  ///
+  /// In en, this message translates to:
+  /// **'The \"Busy\" status is set automatically by the system and can\'t be selected manually'**
+  String get manual_busy_not_allowed_message;
+
   /// No description provided for @overall_rating.
   ///
   /// In en, this message translates to:
@@ -1208,11 +1298,89 @@ abstract class AppLocalizations {
   /// **'Completed Tasks'**
   String get completed_tasks_count;
 
+  /// No description provided for @profile_experience_years.
+  ///
+  /// In en, this message translates to:
+  /// **'Years of Experience'**
+  String get profile_experience_years;
+
+  /// No description provided for @profile_leader_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Leader'**
+  String get profile_leader_badge;
+
+  /// No description provided for @profile_worker_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker'**
+  String get profile_worker_badge;
+
+  /// No description provided for @profile_leader_status_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Leader'**
+  String get profile_leader_status_label;
+
+  /// No description provided for @profile_not_leader.
+  ///
+  /// In en, this message translates to:
+  /// **'Not a Leader'**
+  String get profile_not_leader;
+
+  /// No description provided for @profile_skills_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Skills'**
+  String get profile_skills_title;
+
+  /// No description provided for @profile_no_skills.
+  ///
+  /// In en, this message translates to:
+  /// **'No skills added yet'**
+  String get profile_no_skills;
+
+  /// No description provided for @edit_name_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit name'**
+  String get edit_name_title;
+
+  /// No description provided for @edit_address_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit address'**
+  String get edit_address_title;
+
+  /// No description provided for @edit_phone_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit phone number'**
+  String get edit_phone_title;
+
+  /// No description provided for @edit_photo_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Change profile photo'**
+  String get edit_photo_title;
+
   /// No description provided for @job_id_label.
   ///
   /// In en, this message translates to:
   /// **'Job ID'**
   String get job_id_label;
+
+  /// No description provided for @profile_address_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get profile_address_label;
+
+  /// No description provided for @profile_phone_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get profile_phone_label;
 
   /// No description provided for @profile_load_failed.
   ///
@@ -1279,6 +1447,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Received'**
   String get notification_received;
+
+  /// No description provided for @notification_mark_as_read.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as read'**
+  String get notification_mark_as_read;
 
   /// No description provided for @search_title.
   ///
@@ -1363,6 +1537,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hello,'**
   String get greeting_hello;
+
+  /// No description provided for @availability_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Available'**
+  String get availability_off;
+
+  /// No description provided for @validation_experience_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid number of years (0 or more)'**
+  String get validation_experience_invalid;
+
+  /// No description provided for @edit_experience_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit experience'**
+  String get edit_experience_title;
+
+  /// No description provided for @profile_skills_loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading skills…'**
+  String get profile_skills_loading;
+
+  /// No description provided for @profile_all_skills_assigned.
+  ///
+  /// In en, this message translates to:
+  /// **'All available skills are already assigned.'**
+  String get profile_all_skills_assigned;
+
+  /// No description provided for @profile_add_skill_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a skill'**
+  String get profile_add_skill_hint;
+
+  /// No description provided for @profile_skill_added_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Skill added'**
+  String get profile_skill_added_message;
+
+  /// No description provided for @logout_confirm_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out?'**
+  String get logout_confirm_message;
+
+  /// No description provided for @logout_failed_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach the server, but you\'ve been logged out.'**
+  String get logout_failed_message;
+
+  /// No description provided for @skills_available_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Skills you can add'**
+  String get skills_available_title;
+
+  /// No description provided for @skills_load_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load the skills list'**
+  String get skills_load_failed;
+
+  /// No description provided for @skills_removed_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Skill removed'**
+  String get skills_removed_message;
+
+  /// No description provided for @skills_empty_dictionary.
+  ///
+  /// In en, this message translates to:
+  /// **'No skills are available right now.'**
+  String get skills_empty_dictionary;
 }
 
 class _AppLocalizationsDelegate

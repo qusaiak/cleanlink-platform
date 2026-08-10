@@ -15,8 +15,9 @@ enum TasksStatus {
 }
 
 /// Which worker action produced an [TasksStatus.actionSuccess]/`actionFailure`,
-/// so the UI picks the correct localized message.
-enum TaskActionType { start, pause, complete, cancel, accept, updateStatus }
+/// so the UI picks the correct localized message. [onWay] = heading to the
+/// location, [start] = starting the handling step.
+enum TaskActionType { onWay, start, complete, cancel, accept, updateStatus }
 
 class TasksState extends Equatable {
   final TasksStatus status;

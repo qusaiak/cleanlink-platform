@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../config/theme/app_decoration.dart';
+import '../../../../config/theme/colors.dart';
 import '../bloc/notifications_bloc.dart';
 
 /// The top-bar notifications button: a bell with a live unread badge driven by
@@ -28,7 +30,7 @@ class NotificationBell extends StatelessWidget {
           width: 42.w,
           height: 42.w,
           decoration: BoxDecoration(
-            color: theme.primary.withValues(alpha: 0.1),
+            color: AppColor.primarySoft,
             shape: BoxShape.circle,
           ),
           child: IconButton(
@@ -46,7 +48,7 @@ class NotificationBell extends StatelessWidget {
               constraints: BoxConstraints(minWidth: 18.w),
               decoration: BoxDecoration(
                 color: theme.error,
-                borderRadius: BorderRadius.circular(12.r),
+                borderRadius: BorderRadius.circular(AppRadius.pill),
                 border: Border.all(color: theme.surface, width: 1.5),
               ),
               child: Text(
@@ -54,7 +56,7 @@ class NotificationBell extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 9.sp,
-                  color: Colors.white,
+                  color: theme.onError,
                   fontWeight: FontWeight.w700,
                 ),
               ),

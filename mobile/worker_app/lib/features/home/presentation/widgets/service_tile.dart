@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/custom_image_view.dart';
@@ -17,20 +18,22 @@ class ServiceTile extends StatelessWidget {
     final theme = Theme.of(context).colorScheme;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20.r),
+      borderRadius: AppRadius.card,
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: theme.primary.withOpacity(0.5), width: 1),
+            color: theme.surfaceContainer.withValues(alpha: 0.55),
+            borderRadius: AppRadius.card,
+            border: Border.all(color: theme.primary.withValues(alpha: 0.5), width: 1),
+            boxShadow: AppShadow.card(Theme.of(context).brightness),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(10.r),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 child: CustomImageView(
                   imagePath: service.image,
                   height: 110.w,
@@ -53,6 +56,7 @@ class ServiceTile extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: Styles.textStyle14.copyWith(
                               fontWeight: FontWeight.bold,
+                              color: theme.onSurface,
                             ),
                           ),
                         ),
@@ -96,6 +100,7 @@ class ServiceTile extends StatelessWidget {
                           service.price,
                           style: Styles.textStyle11.copyWith(
                             color: theme.primary,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ],
@@ -109,8 +114,12 @@ class ServiceTile extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
-                      buttonStyle: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(theme.primary),
+                      buttonStyle: ElevatedButton.styleFrom(
+                        backgroundColor: theme.primary,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: AppRadius.button,
+                        ),
                       ),
                       onPressed: () {},
                     ),

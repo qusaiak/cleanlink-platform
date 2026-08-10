@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/language/app_language_info.dart';
 import '../../../../config/theme/app_theme_info.dart';
+import '../../../../services/notification_service.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
@@ -42,6 +43,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     languageCode = languageCode == "en" ? "ar" : "en";
 
     await AppLanguageInfo.setLanguageCode(languageCode);
+
+    // Re-register the FCM token so the backend localises push notifications to
+    // the new language. Fire-and-forget; no-ops when not logged in.
+    NotificationService.instance.registerToken();
 
     // sl<ClientWrapper>().updateHeader(
     //   HttpHeader.acceptLanguage,

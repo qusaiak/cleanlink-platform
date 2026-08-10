@@ -53,11 +53,38 @@ class AppRouter {
   /// ===============================
   /// ROUTER
   /// ===============================
-  static final router = GoRouter(
-    observers: [MyNavigatorObserver()],
-    initialLocation: kOnboarding,
-    navigatorKey: rootNavigatorKey,
-    routes: [
+  static final router = _buildRouter();
+
+  static GoRouter _buildRouter() {
+    final goRouter = GoRouter(
+      observers: [MyNavigatorObserver()],
+      initialLocation: kOnboarding,
+      navigatorKey: rootNavigatorKey,
+      routes: _routes,
+    );
+
+    /// Print the full path of the visible interface — including every layer
+    /// on the navigation stack — each time the active route changes.
+    goRouter.routerDelegate.addListener(() => _logInterfacePath(goRouter));
+
+    return goRouter;
+  }
+
+  /// Logs the complete route stack of the currently visible interface, e.g.
+  /// `🧭 INTERFACE: /home → /task_details  (full: /task_details)`.
+  /// Each segment is one layer, from the root route down to the topmost page.
+  static void _logInterfacePath(GoRouter goRouter) {
+    final config = goRouter.routerDelegate.currentConfiguration;
+
+    final layers = config.matches.map((match) {
+      final route = match.route;
+      return route is GoRoute ? route.path : route.runtimeType.toString();
+    }).toList();
+
+    log('🧭 INTERFACE: ${layers.join(' → ')}  (full: ${config.uri})');
+  }
+
+  static final List<RouteBase> _routes = [
       /// ================= SPLASH =================
       GoRoute(
         path: '/',
@@ -159,7 +186,7 @@ class AppRouter {
           ),
         ),
       ),
-    ],
+    ];
 
     /// ===============================
     /// REDIRECT (FIXED LOGIC)
@@ -177,7 +204,6 @@ class AppRouter {
     //   // }
     //   return null;
     // },
-  );
 
   static String returnFullPath() {
     return AppRouter.router.state.fullPath!;

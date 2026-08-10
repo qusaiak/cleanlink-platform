@@ -8,16 +8,6 @@ sealed class TaskDetailEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// The worker picked a new target status from the radio list.
-class StatusSelected extends TaskDetailEvent {
-  final TaskStatus status;
-
-  const StatusSelected(this.status);
-
-  @override
-  List<Object?> get props => [status];
-}
-
 /// A photo was captured/picked for the before ([isBefore] = true) or after
 /// documentation slot. [path] is the local file path.
 class PhotoAdded extends TaskDetailEvent {
@@ -41,7 +31,8 @@ class PhotoRemoved extends TaskDetailEvent {
   List<Object?> get props => [index, isBefore];
 }
 
-/// Submit: upload any newly attached photos, then apply the selected status.
-class DetailSubmitted extends TaskDetailEvent {
-  const DetailSubmitted();
+/// Submit: advance the task to the next status in the sequence (attaching the
+/// picked photos when — and only when — that next status is `done`).
+class AdvanceStatusSubmitted extends TaskDetailEvent {
+  const AdvanceStatusSubmitted();
 }

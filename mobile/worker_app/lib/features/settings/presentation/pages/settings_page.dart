@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../core/widgets/custom_appbar.dart';
 import '../../../../core/widgets/custom_dialog.dart';
@@ -31,7 +30,7 @@ class SettingsPage extends StatelessWidget {
         Icons.arrow_back_ios_new_rounded,
         null,
         () => Navigator.of(context).maybePop(),
-        theme.onSurface,
+        theme.primary,
       ),
       body: SafeArea(
         top: false,
@@ -53,7 +52,7 @@ class SettingsPage extends StatelessWidget {
                         state.isLight
                             ? Icons.light_mode_rounded
                             : Icons.dark_mode_rounded,
-                        color: AppColor.primaryColor,
+                        color: theme.primary,
                       ),
                     ),
                     // Language — confirm, then toggle Arabic/English.

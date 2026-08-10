@@ -7,9 +7,6 @@ class TaskDetailState extends Equatable {
   /// The task being viewed/edited (updated after a successful submit).
   final Task task;
 
-  /// Currently chosen status in the radio list (defaults to the task's status).
-  final TaskStatus selectedStatus;
-
   /// Local file paths picked but not yet uploaded, per documentation slot.
   final List<String> newBeforePhotos;
   final List<String> newAfterPhotos;
@@ -19,16 +16,22 @@ class TaskDetailState extends Equatable {
 
   const TaskDetailState({
     required this.task,
-    required this.selectedStatus,
     this.newBeforePhotos = const [],
     this.newAfterPhotos = const [],
     this.status = TaskDetailStatus.initial,
     this.error,
   });
 
+  /// The single status the task may advance to next (strictly sequential),
+  /// or `null` when the task is done / outside the sequence.
+  TaskStatus? get nextStatus => task.status.next;
+
+  /// Whether the upcoming step is `done` — the only step where the before/
+  /// after photo pickers are shown and images are sent.
+  bool get isMarkingDone => nextStatus == TaskStatus.completed;
+
   TaskDetailState copyWith({
     Task? task,
-    TaskStatus? selectedStatus,
     List<String>? newBeforePhotos,
     List<String>? newAfterPhotos,
     TaskDetailStatus? status,
@@ -37,7 +40,6 @@ class TaskDetailState extends Equatable {
   }) {
     return TaskDetailState(
       task: task ?? this.task,
-      selectedStatus: selectedStatus ?? this.selectedStatus,
       newBeforePhotos:
           clearNewPhotos ? const [] : (newBeforePhotos ?? this.newBeforePhotos),
       newAfterPhotos:
@@ -51,7 +53,6 @@ class TaskDetailState extends Equatable {
   @override
   List<Object?> get props => [
     task,
-    selectedStatus,
     newBeforePhotos,
     newAfterPhotos,
     status,

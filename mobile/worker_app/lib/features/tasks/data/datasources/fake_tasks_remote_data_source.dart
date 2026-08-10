@@ -205,22 +205,8 @@ class FakeTasksRemoteDataSource implements TasksRemoteDataSource {
   Future<TaskModel> updateTaskStatus({
     required String taskId,
     required TaskStatus status,
-  }) async {
-    await _delay();
-    final index = _tasks.indexWhere((t) => t.id == taskId);
-    if (index == -1) {
-      throw StateError('Task $taskId not found');
-    }
-    final updated = TaskModel.fromEntity(_tasks[index].copyWith(status: status));
-    _tasks[index] = updated;
-    return updated;
-  }
-
-  @override
-  Future<TaskModel> uploadTaskPhotos({
-    required String taskId,
-    required List<String> beforePaths,
-    required List<String> afterPaths,
+    String? imageBeforePath,
+    String? imageAfterPath,
   }) async {
     await _delay();
     final index = _tasks.indexWhere((t) => t.id == taskId);
@@ -230,8 +216,13 @@ class FakeTasksRemoteDataSource implements TasksRemoteDataSource {
     final current = _tasks[index];
     final updated = TaskModel.fromEntity(
       current.copyWith(
-        beforePhotos: [...current.beforePhotos, ...beforePaths],
-        afterPhotos: [...current.afterPhotos, ...afterPaths],
+        status: status,
+        beforePhotos: imageBeforePath == null
+            ? null
+            : [...current.beforePhotos, imageBeforePath],
+        afterPhotos: imageAfterPath == null
+            ? null
+            : [...current.afterPhotos, imageAfterPath],
       ),
     );
     _tasks[index] = updated;

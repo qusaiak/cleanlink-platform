@@ -1,4 +1,5 @@
 import '../../domain/entities/daily_tasks.dart';
+import '../../domain/entities/task.dart';
 import '../../domain/entities/task_stats.dart';
 import 'task_model.dart';
 
@@ -7,21 +8,47 @@ import 'task_model.dart';
 class DailyTasksModel extends DailyTasks {
   const DailyTasksModel({required super.stats, required super.tasks});
 
+  /// Parses either the flat mock contract (`{stats: {...}, tasks: [...]}`) or
+  /// the real `GET /api/tasks` response envelope
+  /// (`{status, message, data: [...worker task logs]}`), deriving the summary
+  /// stats from the list itself when the backend doesn't send them.
   factory DailyTasksModel.fromJson(Map<String, dynamic> json) {
-    final statsJson = (json['stats'] ?? const {}) as Map<String, dynamic>;
-    final tasksJson = (json['tasks'] ?? const []) as List;
+    final tasksJson = (json['data'] ?? json['tasks'] ?? const []) as List;
+    final tasks = tasksJson
+        .map((e) => TaskModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+
+    final statsJson = json['stats'] as Map<String, dynamic>?;
+    if (statsJson != null) {
+      return DailyTasksModel(
+        stats: TaskStats(
+          remainingToday:
+              (statsJson['remainingToday'] ?? statsJson['remaining_today'] ?? 0)
+                  as int,
+          completed: (statsJson['completed'] ?? 0) as int,
+          total: (statsJson['total'] ?? 0) as int,
+        ),
+        tasks: tasks,
+      );
+    }
+
+    final completed =
+        tasks.where((t) => t.status == TaskStatus.completed).length;
+    final remaining = tasks
+        .where(
+          (t) =>
+              t.status != TaskStatus.completed &&
+              t.status != TaskStatus.cancelled,
+        )
+        .length;
 
     return DailyTasksModel(
       stats: TaskStats(
-        remainingToday:
-            (statsJson['remainingToday'] ?? statsJson['remaining_today'] ?? 0)
-                as int,
-        completed: (statsJson['completed'] ?? 0) as int,
-        total: (statsJson['total'] ?? 0) as int,
+        remainingToday: remaining,
+        completed: completed,
+        total: tasks.length,
       ),
-      tasks: tasksJson
-          .map((e) => TaskModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      tasks: tasks,
     );
   }
 }

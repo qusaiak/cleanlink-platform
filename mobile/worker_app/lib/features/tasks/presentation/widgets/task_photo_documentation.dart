@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../core/utils/functions/build_app_snack_bar.dart';
 import '../../../../core/widgets/custom_image_view.dart';
@@ -107,7 +108,7 @@ class TaskPhotoDocumentation extends StatelessWidget {
             child: CustomPaint(
               painter: _DashedBorderPainter(
                 color: theme.primary.withValues(alpha: 0.4),
-                radius: 14.r,
+                radius: AppRadius.md,
               ),
               child: preview == null
                   ? _placeholder(theme, label)
@@ -143,7 +144,7 @@ class TaskPhotoDocumentation extends StatelessWidget {
 
   Widget _previewTile(ColorScheme theme, String path, int count) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(14.r),
+      borderRadius: BorderRadius.circular(AppRadius.md),
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -156,7 +157,7 @@ class TaskPhotoDocumentation extends StatelessWidget {
               padding: EdgeInsets.all(4.r),
               decoration: BoxDecoration(
                 color: Colors.black.withValues(alpha: 0.55),
-                borderRadius: BorderRadius.circular(8.r),
+                borderRadius: BorderRadius.circular(AppRadius.xs),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -188,7 +189,7 @@ class TaskPhotoDocumentation extends StatelessWidget {
               clipBehavior: Clip.none,
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(8.r),
+                  borderRadius: BorderRadius.circular(AppRadius.xs),
                   child: CustomImageView(
                     imagePath: picked[i],
                     width: 44.w,
@@ -223,9 +224,7 @@ class TaskPhotoDocumentation extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       backgroundColor: theme.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: AppRadius.sheet),
       builder: (sheetContext) {
         return SafeArea(
           child: Padding(

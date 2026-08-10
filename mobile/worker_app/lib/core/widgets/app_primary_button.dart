@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../config/theme/app_decoration.dart';
 import '../../config/theme/colors.dart';
 import '../../config/theme/styles.dart';
 import '../utils/functions/spinkit.dart';
@@ -40,18 +41,34 @@ class _AppPrimaryButtonState extends State<AppPrimaryButton> {
   Widget build(BuildContext context) {
     final disabled =
         !widget.enabled || widget.loading || widget.onPressed == null;
+    final radius = BorderRadius.circular(AppRadius.md);
+    // Disabled fill follows the theme brightness (a light gray block would
+    // glare on the dark theme's surfaces).
+    final disabledColor = Theme.of(context).brightness == Brightness.dark
+        ? AppColor.gray700
+        : AppColor.gray300;
 
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 200),
       opacity: disabled ? 0.5 : 1,
       child: InkWell(
         onTap: disabled ? null : _handleTap,
-        borderRadius: BorderRadius.circular(14.r),
+        borderRadius: radius,
         child: Ink(
           height: 52.h,
           decoration: BoxDecoration(
-            color: disabled ? AppColor.gray300 : AppColor.primaryColor,
-            borderRadius: BorderRadius.circular(14.r),
+            color: disabled ? disabledColor : null,
+            gradient: disabled ? null : AppDecoration.primaryGradient,
+            borderRadius: radius,
+            boxShadow: disabled
+                ? null
+                : [
+                    BoxShadow(
+                      color: AppColor.primaryColor.withValues(alpha: 0.28),
+                      blurRadius: 16,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
           ),
           child: Center(
             child: AnimatedSwitcher(

@@ -29,9 +29,9 @@ class WorkerAvailabilityUi {
           label: l.availability_busy,
           color: AppColor.warningColor,
         );
-      case WorkerAvailability.offline:
+      case WorkerAvailability.off:
         return WorkerAvailabilityUi(
-          label: l.availability_offline,
+          label: l.availability_off,
           color: AppColor.gray500,
         );
     }

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/styles.dart';
+import '../../../../core/widgets/network_avatar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../notifications/presentation/bloc/notifications_bloc.dart';
 import '../../../notifications/presentation/widgets/notification_bell.dart';
@@ -57,7 +58,7 @@ class TasksTopBar extends StatelessWidget {
                   if (context.mounted) {
                     context
                         .read<NotificationsBloc>()
-                        .add(const LoadNotifications());
+                        .add(const LoadNotifications(silent: true));
                   }
                 },
               ),
@@ -127,14 +128,11 @@ class _ProfileButton extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(color: ringColor, width: 1.5),
                 ),
-                child: CircleAvatar(
+                child: NetworkAvatar(
+                  avatarUrl: avatarUrl,
                   radius: 18.r,
                   backgroundColor: theme.primary.withValues(alpha: 0.1),
-                  backgroundImage:
-                      avatarUrl.isNotEmpty ? NetworkImage(avatarUrl) : null,
-                  child: avatarUrl.isEmpty
-                      ? Icon(Icons.person, color: theme.primary, size: 20.r)
-                      : null,
+                  iconColor: theme.primary,
                 ),
               ),
               SizedBox(width: 8.w),

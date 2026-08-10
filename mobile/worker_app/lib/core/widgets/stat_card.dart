@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../config/theme/app_decoration.dart';
 import '../../config/theme/styles.dart';
 
 /// A compact summary card (label + big value + icon) used in summary rows
@@ -34,7 +35,7 @@ class StatCard extends StatelessWidget {
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: background,
-        borderRadius: BorderRadius.circular(18.r),
+        borderRadius: AppRadius.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,21 +43,26 @@ class StatCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Flexible(
+              Expanded(
                 child: Text(
                   label,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: Styles.textStyle12.copyWith(
                     color: foreground.withValues(alpha: 0.9),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
+              SizedBox(width: 6.w),
               Icon(icon, color: foreground, size: 20.r),
             ],
           ),
           SizedBox(height: 12.h),
           Text(
             value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: Styles.textStyle22.copyWith(
               color: foreground,
               fontWeight: FontWeight.bold,

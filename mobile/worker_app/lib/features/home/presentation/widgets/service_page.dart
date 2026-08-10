@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart'; // مكتبة اختيار الصور
 import 'package:worker_app/config/theme/colors.dart';
-import '../../../../config/theme/styles.dart';
 
 class TaskModel {
   final String title;
@@ -113,11 +112,20 @@ class _SuperExplosiveUIState extends State<SuperExplosiveUI> {
   }
 
   Color _getBackgroundColor() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     switch (_currentStatus) {
-      case 'متاح': return AppColor.backgroundColorLight;
-      case 'مشغول': return const Color(0xFFFFF3CD);
-      case 'غير متصل': return const Color(0xFFF8D7DA);
-      default: return AppColor.backgroundColorLight;
+      case 'متاح':
+        return isDark ? AppColor.backgroundColorDark : AppColor.backgroundColorLight;
+      case 'مشغول':
+        return isDark
+            ? Color.alphaBlend(AppColor.warningColor.withValues(alpha: 0.18), AppColor.surfaceContainerDark)
+            : const Color(0xFFFFF3CD);
+      case 'غير متصل':
+        return isDark
+            ? Color.alphaBlend(AppColor.errorDark.withValues(alpha: 0.18), AppColor.surfaceContainerDark)
+            : const Color(0xFFF8D7DA);
+      default:
+        return isDark ? AppColor.backgroundColorDark : AppColor.backgroundColorLight;
     }
   }
 
@@ -207,7 +215,9 @@ class _SuperExplosiveUIState extends State<SuperExplosiveUI> {
                 labelStyle: TextStyle(color: AppColor.primaryColor, fontWeight: FontWeight.bold, fontSize: 14),
                 border: InputBorder.none,
               ),
-              dropdownColor: Colors.white.withOpacity(0.95),
+              dropdownColor: Theme.of(context).brightness == Brightness.dark
+                  ? AppColor.surfaceContainerHighDark.withValues(alpha: 0.95)
+                  : Colors.white.withOpacity(0.95),
               icon: const Icon(Icons.arrow_drop_down_circle_outlined, color: AppColor.primaryColor),
               style: const TextStyle(color: AppColor.primaryColor, fontSize: 16, fontWeight: FontWeight.bold),
               items: _statusOptions.map((String status) {
@@ -395,7 +405,9 @@ class _TaskDetailsUIState extends State<TaskDetailsUI> {
   void _showImageSourceBottomSheet() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white.withOpacity(0.9),
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? AppColor.surfaceContainerHighDark.withValues(alpha: 0.95)
+          : Colors.white.withOpacity(0.9),
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
       builder: (context) {
         return ClipRRect(
@@ -466,12 +478,24 @@ class _TaskDetailsUIState extends State<TaskDetailsUI> {
   }
 
   Color _getStepBackgroundColor() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     switch (_currentStepIndex) {
-      case 0: return AppColor.backgroundColorLight;
-      case 1: return const Color(0xFFE2F0D9);
-      case 2: return const Color(0xFFFFF3CD);
-      case 3: return const Color(0xFFD1ECF1);
-      default: return AppColor.backgroundColorLight;
+      case 0:
+        return isDark ? AppColor.backgroundColorDark : AppColor.backgroundColorLight;
+      case 1:
+        return isDark
+            ? Color.alphaBlend(AppColor.successColor.withValues(alpha: 0.18), AppColor.surfaceContainerDark)
+            : const Color(0xFFE2F0D9);
+      case 2:
+        return isDark
+            ? Color.alphaBlend(AppColor.warningColor.withValues(alpha: 0.18), AppColor.surfaceContainerDark)
+            : const Color(0xFFFFF3CD);
+      case 3:
+        return isDark
+            ? Color.alphaBlend(AppColor.infoColor.withValues(alpha: 0.18), AppColor.surfaceContainerDark)
+            : const Color(0xFFD1ECF1);
+      default:
+        return isDark ? AppColor.backgroundColorDark : AppColor.backgroundColorLight;
     }
   }
 

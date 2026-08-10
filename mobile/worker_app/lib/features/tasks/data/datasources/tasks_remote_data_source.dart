@@ -19,15 +19,15 @@ abstract class TasksRemoteDataSource {
   /// Used to open a task from a search result or a notification.
   Future<TaskModel> getTaskById(String id);
 
+  /// Advances a task to [status]. [imageBeforePath]/[imageAfterPath] are local
+  /// file paths for the before/after documentation photos — the contract only
+  /// accepts them when [status] is `done` (enforced upstream by
+  /// `UpdateTaskStatusUseCase` before this is ever called).
   Future<TaskModel> updateTaskStatus({
     required String taskId,
     required TaskStatus status,
-  });
-
-  Future<TaskModel> uploadTaskPhotos({
-    required String taskId,
-    required List<String> beforePaths,
-    required List<String> afterPaths,
+    String? imageBeforePath,
+    String? imageAfterPath,
   });
 }
 
@@ -36,8 +36,7 @@ abstract class TasksRemoteDataSource {
 /// This is the production path. It is intentionally kept simple (plain Dio
 /// instead of retrofit codegen) so it compiles without `build_runner` and so
 /// the endpoints in [ApiUrlParameters] can be filled in later without a
-/// generation step. Swap [FakeTasksRemoteDataSource] for this in
-/// `injection_container.dart` once the backend base URL is configured.
+/// generation step.
 class TasksRemoteDataSourceImpl implements TasksRemoteDataSource {
   final Dio dio;
 
@@ -51,40 +50,78 @@ class TasksRemoteDataSourceImpl implements TasksRemoteDataSource {
 
   @override
   Future<TaskModel> getTaskById(String id) async {
-    final response = await dio.get(ApiUrlParameters.taskById(id));
-    return TaskModel.fromJson(response.data as Map<String, dynamic>);
+    try {
+      final response = await dio.get(ApiUrlParameters.taskById(id));
+      final body = response.data as Map<String, dynamic>;
+      return TaskModel.fromJson(_unwrapData(body), idOverride: id);
+    } on DioException catch (e) {
+      // Notifications (and some search results) only carry the *order id*
+      // (`data.order_id`), but the detail endpoint resolves a task by its
+      // `workgroup_id` — so an order id 404s. Map the order id to the task's
+      // workgroup id via the daily list, then fetch the real detail by it so
+      // the screen renders in full (the list copy alone lacks the company
+      // image, which the list query doesn't load).
+      if (e.response?.statusCode == 404) {
+        final workgroupId = await _workgroupIdFor(id);
+        if (workgroupId != null && workgroupId != id) {
+          return getTaskById(workgroupId);
+        }
+      }
+      rethrow;
+    }
+  }
+
+  /// Resolves the task's API identifier (its `workgroup_id`, i.e. [Task.id] in
+  /// this app) for a task addressed by [identifier] — its workgroup id or its
+  /// order id ([Task.requestNumber]) — by scanning the worker's daily list.
+  /// Returns `null` when the task isn't in today's set.
+  Future<String?> _workgroupIdFor(String identifier) async {
+    final daily = await getDailyTasks();
+    for (final task in daily.tasks) {
+      if (task.id == identifier || task.requestNumber == identifier) {
+        return task.id;
+      }
+    }
+    return null;
   }
 
   @override
   Future<TaskModel> updateTaskStatus({
     required String taskId,
     required TaskStatus status,
+    String? imageBeforePath,
+    String? imageAfterPath,
   }) async {
-    final response = await dio.patch(
+    // POST /api/tasks/{order_id}/update-status with
+    // `{status, image_before, image_after}`. When photos ride along (only
+    // ever at `done`) the body goes multipart so the files upload; otherwise
+    // plain JSON with the image fields empty, exactly as the contract shows.
+    final code = TaskModel.statusCode(status);
+    final Object body;
+    if (imageBeforePath != null || imageAfterPath != null) {
+      body = FormData.fromMap({
+        'status': code,
+        'image_before': imageBeforePath == null
+            ? ''
+            : await MultipartFile.fromFile(imageBeforePath),
+        'image_after': imageAfterPath == null
+            ? ''
+            : await MultipartFile.fromFile(imageAfterPath),
+      });
+    } else {
+      body = {'status': code, 'image_before': '', 'image_after': ''};
+    }
+
+    final response = await dio.post(
       ApiUrlParameters.taskStatus(taskId),
-      data: {'status': TaskModel.statusCode(status)},
+      data: body,
     );
-    return TaskModel.fromJson(response.data as Map<String, dynamic>);
+    final responseBody = response.data as Map<String, dynamic>;
+    return TaskModel.fromJson(_unwrapData(responseBody), idOverride: taskId);
   }
 
-  @override
-  Future<TaskModel> uploadTaskPhotos({
-    required String taskId,
-    required List<String> beforePaths,
-    required List<String> afterPaths,
-  }) async {
-    final formData = FormData.fromMap({
-      'before': [
-        for (final p in beforePaths) await MultipartFile.fromFile(p),
-      ],
-      'after': [
-        for (final p in afterPaths) await MultipartFile.fromFile(p),
-      ],
-    });
-    final response = await dio.post(
-      ApiUrlParameters.taskPhotos(taskId),
-      data: formData,
-    );
-    return TaskModel.fromJson(response.data as Map<String, dynamic>);
-  }
+  /// The real backend wraps every payload as `{status, message, data}`; this
+  /// unwraps it while staying compatible with a flat (unwrapped) response.
+  Map<String, dynamic> _unwrapData(Map<String, dynamic> body) =>
+      (body['data'] as Map<String, dynamic>?) ?? body;
 }

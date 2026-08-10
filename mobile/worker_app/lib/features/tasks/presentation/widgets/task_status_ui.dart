@@ -28,37 +28,39 @@ class TaskStatusUi {
         return TaskStatusUi(
           label: l.task_status_assigned,
           color: AppColor.secondaryColorDark,
-          background: AppColor.secondaryColor.withValues(alpha: 0.15),
+          background: AppColor.secondarySoft,
         );
       case TaskStatus.onTheWay:
+        // Distinct from "assigned" via the neutral info tone, so the two
+        // pre-work states remain visually separable at a glance.
         return TaskStatusUi(
           label: l.task_status_on_the_way,
-          color: AppColor.secondaryColorDark,
-          background: AppColor.secondaryColor.withValues(alpha: 0.15),
+          color: AppColor.infoColor,
+          background: AppColor.infoSoft,
         );
       case TaskStatus.inProgress:
         return TaskStatusUi(
           label: l.task_status_in_progress,
           color: AppColor.primaryColorDarker,
-          background: AppColor.primaryColorLighter.withValues(alpha: 0.20),
+          background: AppColor.primarySoft,
         );
       case TaskStatus.paused:
         return TaskStatusUi(
           label: l.task_status_paused,
           color: AppColor.warningColor,
-          background: AppColor.warningColor.withValues(alpha: 0.15),
+          background: AppColor.warningSoft,
         );
       case TaskStatus.completed:
         return TaskStatusUi(
           label: l.task_status_completed,
           color: AppColor.successColor,
-          background: AppColor.successColor.withValues(alpha: 0.15),
+          background: AppColor.successSoft,
         );
       case TaskStatus.cancelled:
         return TaskStatusUi(
           label: l.task_status_cancelled,
           color: AppColor.errorLight,
-          background: AppColor.errorLight.withValues(alpha: 0.12),
+          background: AppColor.errorSoft,
         );
     }
   }

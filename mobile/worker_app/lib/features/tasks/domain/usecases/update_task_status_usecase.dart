@@ -8,19 +8,47 @@ import '../entities/task.dart';
 import '../repositories/tasks_repository.dart';
 
 /// Parameters for [UpdateTaskStatusUseCase].
+///
+/// [currentStatus] is the task's status right now — it lets the use case
+/// verify the transition is legal BEFORE any request is sent. The image paths
+/// are the local files for the before/after documentation photos.
 class UpdateTaskStatusParams extends Equatable {
   final String taskId;
-  final TaskStatus status;
+  final TaskStatus currentStatus;
+  final TaskStatus newStatus;
+  final String? imageBeforePath;
+  final String? imageAfterPath;
 
-  const UpdateTaskStatusParams({required this.taskId, required this.status});
+  const UpdateTaskStatusParams({
+    required this.taskId,
+    required this.currentStatus,
+    required this.newStatus,
+    this.imageBeforePath,
+    this.imageAfterPath,
+  });
 
   @override
-  List<Object?> get props => [taskId, status];
+  List<Object?> get props => [
+    taskId,
+    currentStatus,
+    newStatus,
+    imageBeforePath,
+    imageAfterPath,
+  ];
 }
 
-/// Transitions a task to a new lifecycle [status]. All worker actions
-/// (start work, pause, complete, on-the-way…) funnel through here so the
-/// status-change rules live in one place.
+/// Transitions a task to a new lifecycle status. Every status change funnels
+/// through here, so the contract's client-side rules are enforced in one
+/// place, before any request goes out:
+///
+///  1. The flow is strictly sequential (`pending → on_way → handling → done`):
+///     the only accepted [UpdateTaskStatusParams.newStatus] is the single next
+///     step — never backward, never skipping.
+///  2. Before/after images may ride along ONLY when the status being sent is
+///     `done`.
+///
+/// Violations return a [ValidationFailure] (mapped to a localized message in
+/// the UI) without touching the network.
 class UpdateTaskStatusUseCase
     implements UseCase<Either<Failure, Task>, UpdateTaskStatusParams> {
   final TasksRepository repository;
@@ -28,10 +56,36 @@ class UpdateTaskStatusUseCase
   UpdateTaskStatusUseCase(this.repository);
 
   @override
-  Future<Either<Failure, Task>> call({UpdateTaskStatusParams? params}) {
+  Future<Either<Failure, Task>> call({UpdateTaskStatusParams? params}) async {
+    final p = params!;
+
+    if (!p.currentStatus.canAdvanceTo(p.newStatus)) {
+      return const Left(
+        ValidationFailure(
+          'Task statuses must advance one step at a time '
+          '(pending → on_way → handling → done); going backward or skipping '
+          'is not allowed.',
+          ErrorCode.invalidStatusTransition,
+        ),
+      );
+    }
+
+    final hasImages = p.imageBeforePath != null || p.imageAfterPath != null;
+    if (hasImages && p.newStatus != TaskStatus.completed) {
+      return const Left(
+        ValidationFailure(
+          'Before/after images may only be uploaded when marking the task '
+          'as done.',
+          ErrorCode.imagesOnlyWhenDone,
+        ),
+      );
+    }
+
     return repository.updateTaskStatus(
-      taskId: params!.taskId,
-      status: params.status,
+      taskId: p.taskId,
+      status: p.newStatus,
+      imageBeforePath: p.imageBeforePath,
+      imageAfterPath: p.imageAfterPath,
     );
   }
 }

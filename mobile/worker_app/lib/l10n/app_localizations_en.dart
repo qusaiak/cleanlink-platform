@@ -136,6 +136,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_phone_hint => '9xx xxx xxx';
 
   @override
+  String get auth_email_label => 'Email';
+
+  @override
+  String get auth_email_hint => 'Enter your email';
+
+  @override
   String get auth_password_label => 'Password';
 
   @override
@@ -515,6 +521,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get task_open_failed => 'Couldn\'t open the task. Please try again';
 
   @override
+  String get task_progress_section => 'Task Progress';
+
+  @override
+  String task_advance_to(String status) {
+    return 'Move to: $status';
+  }
+
+  @override
+  String get task_on_way_message => 'You\'re on your way to the location';
+
+  @override
+  String get invalid_status_transition_message =>
+      'The task status must advance one step in order (Assigned → On the way → In Progress → Completed); going backward or skipping a step isn\'t allowed';
+
+  @override
+  String get images_only_when_done_message =>
+      'Before/after photos can only be uploaded when completing the task';
+
+  @override
   String get task_management_title => 'Task Management';
 
   @override
@@ -540,6 +565,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get task_urgent_badge => 'Urgent Task';
+
+  @override
+  String get task_price_label => 'Total Price';
+
+  @override
+  String get task_package_details_label => 'Package Details';
+
+  @override
+  String get task_service_section => 'Service';
+
+  @override
+  String get task_service_rating_label => 'Rating';
+
+  @override
+  String get task_leader_section => 'Team Leader';
+
+  @override
+  String get task_leader_yes => 'Yes';
+
+  @override
+  String get task_leader_no => 'No';
 
   @override
   String get visual_documentation => 'Visual Documentation';
@@ -584,13 +630,56 @@ class AppLocalizationsEn extends AppLocalizations {
   String get availability_offline => 'Offline';
 
   @override
+  String get manual_busy_not_allowed_message =>
+      'The \"Busy\" status is set automatically by the system and can\'t be selected manually';
+
+  @override
   String get overall_rating => 'Overall Rating';
 
   @override
   String get completed_tasks_count => 'Completed Tasks';
 
   @override
+  String get profile_experience_years => 'Years of Experience';
+
+  @override
+  String get profile_leader_badge => 'Leader';
+
+  @override
+  String get profile_worker_badge => 'Worker';
+
+  @override
+  String get profile_leader_status_label => 'Leader';
+
+  @override
+  String get profile_not_leader => 'Not a Leader';
+
+  @override
+  String get profile_skills_title => 'Skills';
+
+  @override
+  String get profile_no_skills => 'No skills added yet';
+
+  @override
+  String get edit_name_title => 'Edit name';
+
+  @override
+  String get edit_address_title => 'Edit address';
+
+  @override
+  String get edit_phone_title => 'Edit phone number';
+
+  @override
+  String get edit_photo_title => 'Change profile photo';
+
+  @override
   String get job_id_label => 'Job ID';
+
+  @override
+  String get profile_address_label => 'Address';
+
+  @override
+  String get profile_phone_label => 'Phone';
 
   @override
   String get profile_load_failed => 'Failed to load profile';
@@ -627,6 +716,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notification_received => 'Received';
+
+  @override
+  String get notification_mark_as_read => 'Mark as read';
 
   @override
   String get search_title => 'Search';
@@ -674,4 +766,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get greeting_hello => 'Hello,';
+
+  @override
+  String get availability_off => 'Not Available';
+
+  @override
+  String get validation_experience_invalid =>
+      'Enter a valid number of years (0 or more)';
+
+  @override
+  String get edit_experience_title => 'Edit experience';
+
+  @override
+  String get profile_skills_loading => 'Loading skills…';
+
+  @override
+  String get profile_all_skills_assigned =>
+      'All available skills are already assigned.';
+
+  @override
+  String get profile_add_skill_hint => 'Add a skill';
+
+  @override
+  String get profile_skill_added_message => 'Skill added';
+
+  @override
+  String get logout_confirm_message => 'Are you sure you want to log out?';
+
+  @override
+  String get logout_failed_message =>
+      'Couldn\'t reach the server, but you\'ve been logged out.';
+
+  @override
+  String get skills_available_title => 'Skills you can add';
+
+  @override
+  String get skills_load_failed => 'Couldn\'t load the skills list';
+
+  @override
+  String get skills_removed_message => 'Skill removed';
+
+  @override
+  String get skills_empty_dictionary => 'No skills are available right now.';
 }

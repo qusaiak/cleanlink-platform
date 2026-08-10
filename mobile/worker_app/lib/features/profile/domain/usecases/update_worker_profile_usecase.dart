@@ -7,18 +7,31 @@ import '../entities/worker_profile.dart';
 import '../repositories/worker_profile_repository.dart';
 
 /// Fields the worker can edit inline on the profile screen. Only the non-null
-/// ones are sent to the backend.
+/// ones are sent to the backend. (The photo is handled separately by
+/// [UpdateProfileImageUseCase].)
 class UpdateProfileParams extends Equatable {
+  final String? fullname;
   final String? email;
-  final String? employeeId;
+  final String? address;
+  final String? phone;
+  final int? experienceYears;
+  final WorkerAvailability? status;
 
-  const UpdateProfileParams({this.email, this.employeeId});
+  const UpdateProfileParams({
+    this.fullname,
+    this.email,
+    this.address,
+    this.phone,
+    this.experienceYears,
+    this.status,
+  });
 
   @override
-  List<Object?> get props => [email, employeeId];
+  List<Object?> get props =>
+      [fullname, email, address, phone, experienceYears, status];
 }
 
-/// Updates editable worker profile fields (email / employee id).
+/// Updates editable account fields (name / email / address / phone / photo).
 class UpdateWorkerProfileUseCase
     implements UseCase<Either<Failure, WorkerProfile>, UpdateProfileParams> {
   final WorkerProfileRepository repository;
@@ -28,8 +41,12 @@ class UpdateWorkerProfileUseCase
   @override
   Future<Either<Failure, WorkerProfile>> call({UpdateProfileParams? params}) {
     return repository.updateProfile(
+      fullname: params?.fullname,
       email: params?.email,
-      employeeId: params?.employeeId,
+      address: params?.address,
+      phone: params?.phone,
+      experienceYears: params?.experienceYears,
+      status: params?.status,
     );
   }
 }

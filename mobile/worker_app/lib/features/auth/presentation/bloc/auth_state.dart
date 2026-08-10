@@ -70,7 +70,12 @@ class AuthState extends Equatable {
       isOldPasswordVis: isOldPasswordVis ?? this.isOldPasswordVis,
       isNewPasswordVis: isNewPasswordVis ?? this.isNewPasswordVis,
       isConfirmPasswordVis: isConfirmPasswordVis ?? this.isConfirmPasswordVis,
-      error: error ?? this.error,
+      // Transient — an error belongs to the emit that produced it and is
+      // cleared on every following emit (same convention as
+      // [WorkerProfileState]). `error ?? this.error` made it impossible to
+      // clear: the loading state of a RETRY still carried the previous
+      // failure, and so did the eventual success state.
+      error: error,
     );
   }
 

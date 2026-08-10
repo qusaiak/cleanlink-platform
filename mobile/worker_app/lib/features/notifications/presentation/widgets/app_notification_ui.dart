@@ -32,7 +32,7 @@ class AppNotificationUi {
       case AppNotificationType.general:
         return const AppNotificationUi(
           icon: Icons.notifications_rounded,
-          color: AppColor.gray500,
+          color: AppColor.infoColor,
         );
     }
   }

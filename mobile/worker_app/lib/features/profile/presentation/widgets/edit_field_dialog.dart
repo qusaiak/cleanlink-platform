@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/styles.dart';
+import '../../../../core/utils/functions/localized_failure_message.dart';
+import '../../../../core/utils/functions/spinkit.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/custom_outlined_button.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../bloc/worker_profile_bloc.dart';
 
-/// A small dialog that lets the worker edit a single text field (e.g. email or
-/// employee id) and save it. Returns the trimmed new value via
-/// `Navigator.pop`, or null when cancelled / unchanged.
+/// A dialog that edits a single profile field and saves it through
+/// [WorkerProfileBloc].
 ///
-/// Use [showEditFieldDialog] rather than constructing this directly.
+/// It dispatches the event returned by [buildEvent], then watches the bloc: the
+/// Save button shows a spinner and is disabled while the request is in flight,
+/// the dialog closes on success, and any server (validation) error is shown
+/// inline so the worker can correct and retry. Cancelling / leaving the value
+/// unchanged closes without a round-trip.
 class EditFieldDialog extends StatefulWidget {
   final String title;
   final String label;
@@ -19,11 +26,16 @@ class EditFieldDialog extends StatefulWidget {
   final TextInputType keyboardType;
   final FormFieldValidator<String>? validator;
 
+  /// Builds the [SaveProfileField] event from the entered value (e.g.
+  /// `(v) => SaveProfileField(email: v)`).
+  final SaveProfileField Function(String value) buildEvent;
+
   const EditFieldDialog({
     super.key,
     required this.title,
     required this.label,
     required this.initialValue,
+    required this.buildEvent,
     this.keyboardType = TextInputType.text,
     this.validator,
   });
@@ -37,6 +49,11 @@ class _EditFieldDialogState extends State<EditFieldDialog> {
   late final TextEditingController _controller =
       TextEditingController(text: widget.initialValue);
 
+  /// True once this dialog has fired a save and is awaiting the bloc's result,
+  /// so it only reacts to its own request (not a stale success/failure).
+  bool _submitting = false;
+  String? _serverError;
+
   @override
   void dispose() {
     _controller.dispose();
@@ -44,10 +61,19 @@ class _EditFieldDialogState extends State<EditFieldDialog> {
   }
 
   void _save() {
+    if (_submitting) return;
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final value = _controller.text.trim();
-    // Treat "no change" as a cancel so callers don't fire a needless save.
-    Navigator.of(context).pop(value == widget.initialValue.trim() ? null : value);
+    // Treat "no change" as a cancel so we don't fire a needless save.
+    if (value == widget.initialValue.trim()) {
+      Navigator.of(context).pop();
+      return;
+    }
+    setState(() {
+      _submitting = true;
+      _serverError = null;
+    });
+    context.read<WorkerProfileBloc>().add(widget.buildEvent(value));
   }
 
   @override
@@ -58,77 +84,111 @@ class _EditFieldDialogState extends State<EditFieldDialog> {
     // Use a plain [Dialog] (not [AlertDialog]): AlertDialog wraps its content in
     // an IntrinsicWidth, and a Row with Expanded children can't report an
     // intrinsic width — which previously crashed this dialog during paint.
-    // Dialog gives the child bounded (but non-intrinsic) width, so Expanded is
-    // happy. The content is scrollable to stay safe when the keyboard shows.
-    return Dialog(
-      backgroundColor: theme.surface,
-      surfaceTintColor: theme.surface,
-      insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 16.h),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.title,
-                style: Styles.textStyle16.copyWith(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 16.h),
-              AppTextField(
-                controller: _controller,
-                label: widget.label,
-                keyboardType: widget.keyboardType,
-                textInputAction: TextInputAction.done,
-                autofocus: true,
-                validator: widget.validator,
-                onFieldSubmitted: (_) => _save(),
-              ),
-              SizedBox(height: 16.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomOutlinedButton(
-                      text: l.cancel,
-                      height: 44.h,
-                      onPressed: () => Navigator.of(context).pop(),
-                      buttonTextStyle: Styles.textStyle14.copyWith(
-                        color: theme.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      buttonStyle: OutlinedButton.styleFrom(
-                        side: BorderSide(color: theme.primary),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: CustomElevatedButton(
-                      text: l.save,
-                      height: 44.h,
-                      onPressed: _save,
-                      buttonTextStyle: Styles.textStyle14.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      buttonStyle: ElevatedButton.styleFrom(
-                        backgroundColor: theme.primary,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                    ),
+    return BlocListener<WorkerProfileBloc, WorkerProfileState>(
+      listenWhen: (prev, curr) =>
+          curr.status == WorkerProfileStatus.saveFieldSuccess ||
+          curr.status == WorkerProfileStatus.saveFieldFailure,
+      listener: (context, state) {
+        if (!_submitting) return;
+        if (state.status == WorkerProfileStatus.saveFieldSuccess) {
+          Navigator.of(context).pop();
+        } else if (state.status == WorkerProfileStatus.saveFieldFailure) {
+          setState(() {
+            _submitting = false;
+            _serverError = localizedFailureMessage(context, state.error);
+          });
+        }
+      },
+      child: Dialog(
+        backgroundColor: theme.surface,
+        surfaceTintColor: theme.surface,
+        insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 16.h),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.title,
+                  style: Styles.textStyle16.copyWith(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16.h),
+                AppTextField(
+                  controller: _controller,
+                  label: widget.label,
+                  keyboardType: widget.keyboardType,
+                  textInputAction: TextInputAction.done,
+                  autofocus: true,
+                  validator: widget.validator,
+                  onFieldSubmitted: (_) => _save(),
+                ),
+                if (_serverError != null) ...[
+                  SizedBox(height: 8.h),
+                  Text(
+                    _serverError!,
+                    style: Styles.textStyle12.copyWith(color: theme.error),
                   ),
                 ],
-              ),
-            ],
+                SizedBox(height: 16.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomOutlinedButton(
+                        text: l.cancel,
+                        height: 44.h,
+                        // Block cancel mid-request to avoid a dangling save.
+                        isDisabled: _submitting,
+                        onPressed: () => Navigator.of(context).pop(),
+                        buttonTextStyle: Styles.textStyle14.copyWith(
+                          color: theme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        buttonStyle: OutlinedButton.styleFrom(
+                          side: BorderSide(color: theme.primary),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: CustomElevatedButton(
+                        text: l.save,
+                        height: 44.h,
+                        // Disabled + spinner on the button while in flight.
+                        isDisabled: _submitting,
+                        onPressed: _save,
+                        leftIcon: _submitting
+                            ? SizedBox(
+                                width: 18.r,
+                                height: 18.r,
+                                child: spinKitApp(Colors.white),
+                              )
+                            : null,
+                        buttonTextStyle: Styles.textStyle14.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        buttonStyle: ElevatedButton.styleFrom(
+                          backgroundColor: theme.primary,
+                          disabledBackgroundColor:
+                              theme.primary.withValues(alpha: 0.6),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -136,24 +196,33 @@ class _EditFieldDialogState extends State<EditFieldDialog> {
   }
 }
 
-/// Shows an [EditFieldDialog] and resolves to the new (trimmed) value, or null
-/// if the worker cancelled or left it unchanged.
-Future<String?> showEditFieldDialog(
+/// Shows an [EditFieldDialog] wired to [bloc]. Resolves when the dialog closes
+/// (after a successful save, or a cancel).
+Future<void> showEditFieldDialog(
   BuildContext context, {
+  required WorkerProfileBloc bloc,
   required String title,
   required String label,
   required String initialValue,
+  required SaveProfileField Function(String value) buildEvent,
   TextInputType keyboardType = TextInputType.text,
   FormFieldValidator<String>? validator,
 }) {
-  return showDialog<String>(
+  return showDialog<void>(
     context: context,
-    builder: (_) => EditFieldDialog(
-      title: title,
-      label: label,
-      initialValue: initialValue,
-      keyboardType: keyboardType,
-      validator: validator,
+    barrierDismissible: false,
+    // The dialog lives in the root overlay, outside the page's provider, so the
+    // bloc is supplied explicitly.
+    builder: (_) => BlocProvider.value(
+      value: bloc,
+      child: EditFieldDialog(
+        title: title,
+        label: label,
+        initialValue: initialValue,
+        keyboardType: keyboardType,
+        validator: validator,
+        buildEvent: buildEvent,
+      ),
     ),
   );
 }

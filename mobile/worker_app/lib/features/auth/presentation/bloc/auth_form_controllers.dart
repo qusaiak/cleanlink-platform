@@ -7,9 +7,9 @@ class AuthFormControllers {
 
   // ── Login ─────────────────────────────────────────────────────────────────
   final GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
-  final TextEditingController loginPhone = TextEditingController();
+  final TextEditingController loginEmail = TextEditingController();
   final TextEditingController loginPassword = TextEditingController();
-  final FocusNode loginPhoneFocus = FocusNode();
+  final FocusNode loginEmailFocus = FocusNode();
   final FocusNode loginPasswordFocus = FocusNode();
 
   // ── Register ────────────────────────────────────────────────────────────────
@@ -38,9 +38,9 @@ class AuthFormControllers {
   final FocusNode changeConfirmFocus = FocusNode();
 
   void dispose() {
-    loginPhone.dispose();
+    loginEmail.dispose();
     loginPassword.dispose();
-    loginPhoneFocus.dispose();
+    loginEmailFocus.dispose();
     loginPasswordFocus.dispose();
 
     registerName.dispose();

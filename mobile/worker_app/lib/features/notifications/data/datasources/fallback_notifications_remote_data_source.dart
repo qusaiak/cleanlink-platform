@@ -25,6 +25,7 @@ class FallbackNotificationsRemoteDataSource
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
+      case DioExceptionType.transformTimeout:
       case DioExceptionType.unknown:
         return true;
       case DioExceptionType.badResponse:
@@ -51,7 +52,7 @@ class FallbackNotificationsRemoteDataSource
       _preferLive(primary.getNotifications, fallback.getNotifications);
 
   @override
-  Future<AppNotificationModel> markAsRead(String id) => _preferLive(
+  Future<void> markAsRead(String id) => _preferLive(
         () => primary.markAsRead(id),
         () => fallback.markAsRead(id),
       );

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
 
@@ -23,18 +24,19 @@ class CustomTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12.r),
+      borderRadius: BorderRadius.circular(AppRadius.sm),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 6.h),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(6),
+              padding: EdgeInsets.all(6.w),
               decoration: BoxDecoration(
-                color: AppColor.primaryColor.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(8),
+                color: AppColor.primarySoft,
+                borderRadius: BorderRadius.circular(AppRadius.xs),
               ),
               child: Icon(icon, size: 16, color: AppColor.primaryColor),
             ),
@@ -45,9 +47,15 @@ class CustomTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: Styles.textStyle12),
+                  Text(
+                    title,
+                    style: Styles.textStyle12.copyWith(color: colorScheme.onSurface),
+                  ),
                   if (subtitle != null)
-                    Text(subtitle!, style: Styles.textStyle11),
+                    Text(
+                      subtitle!,
+                      style: Styles.textStyle11.copyWith(color: colorScheme.onSurfaceVariant),
+                    ),
                 ],
               ),
             ),
