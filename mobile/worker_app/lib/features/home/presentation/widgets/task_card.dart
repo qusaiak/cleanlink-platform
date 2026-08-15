@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/custom_image_view.dart';
@@ -15,72 +16,82 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context)!.colorScheme;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(22),
-      child: Stack(
-        children: [
-          CustomImageView(
-            imagePath: task.image,
-            fit: BoxFit.cover,
-            width: double.infinity,
-          ),
+    var theme = Theme.of(context).colorScheme;
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: AppRadius.card,
+        boxShadow: AppShadow.card(Theme.of(context).brightness),
+      ),
+      child: ClipRRect(
+        borderRadius: AppRadius.card,
+        child: Stack(
+          children: [
+            CustomImageView(
+              imagePath: task.image,
+              fit: BoxFit.cover,
+              width: double.infinity,
+            ),
 
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.black.withOpacity(0.05),
-                  Colors.black.withOpacity(0.8),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.black.withValues(alpha: 0.05),
+                    Colors.black.withValues(alpha: 0.8),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
               ),
             ),
-          ),
 
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    task.title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+            Padding(
+              padding: EdgeInsets.all(16.r),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      task.title,
+                      style: Styles.textStyle16.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
 
-                  const SizedBox(height: 6),
+                    SizedBox(height: 6.h),
 
-                  Text(
-                    task.subtitle,
-                    style: const TextStyle(color: Colors.white70),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  CustomElevatedButton(
-                    width: 120.w,
-                    text: AppLocalizations.of(context)!.book_now,
-                    buttonTextStyle: Styles.textStyle12.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    Text(
+                      task.subtitle,
+                      style: Styles.textStyle12.copyWith(color: Colors.white70),
                     ),
-                    buttonStyle: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(theme.primary),
+
+                    SizedBox(height: 10.h),
+
+                    CustomElevatedButton(
+                      width: 120.w,
+                      text: AppLocalizations.of(context)!.book_now,
+                      buttonTextStyle: Styles.textStyle12.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      buttonStyle: ElevatedButton.styleFrom(
+                        backgroundColor: theme.primary,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: AppRadius.button,
+                        ),
+                      ),
+                      onPressed: () {},
                     ),
-                    onPressed: () {},
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

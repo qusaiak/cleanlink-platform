@@ -135,6 +135,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get auth_phone_hint => '9xx xxx xxx';
 
   @override
+  String get auth_email_label => 'البريد الإلكتروني';
+
+  @override
+  String get auth_email_hint => 'أدخل بريدك الإلكتروني';
+
+  @override
   String get auth_password_label => 'كلمة المرور';
 
   @override
@@ -509,6 +515,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get task_open_failed => 'تعذّر فتح المهمة. حاول مرة أخرى';
 
   @override
+  String get task_progress_section => 'تقدم المهمة';
+
+  @override
+  String task_advance_to(String status) {
+    return 'الانتقال إلى: $status';
+  }
+
+  @override
+  String get task_on_way_message => 'أنت الآن في الطريق إلى الموقع';
+
+  @override
+  String get invalid_status_transition_message =>
+      'يجب أن تتقدم حالة المهمة خطوة واحدة بالترتيب (تم التعيين ← في الطريق ← قيد التنفيذ ← مكتملة)؛ لا يمكن الرجوع للخلف أو تخطي خطوة';
+
+  @override
+  String get images_only_when_done_message =>
+      'لا يمكن رفع صور قبل/بعد إلا عند إنهاء المهمة (الحالة \"مكتملة\")';
+
+  @override
   String get task_management_title => 'إدارة المهام';
 
   @override
@@ -534,6 +559,27 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get task_urgent_badge => 'مهمة عاجلة';
+
+  @override
+  String get task_price_label => 'السعر الإجمالي';
+
+  @override
+  String get task_package_details_label => 'تفاصيل الباقة';
+
+  @override
+  String get task_service_section => 'الخدمة';
+
+  @override
+  String get task_service_rating_label => 'التقييم';
+
+  @override
+  String get task_leader_section => 'قائد الفريق';
+
+  @override
+  String get task_leader_yes => 'نعم';
+
+  @override
+  String get task_leader_no => 'لا';
 
   @override
   String get visual_documentation => 'التوثيق المرئي';
@@ -578,13 +624,56 @@ class AppLocalizationsAr extends AppLocalizations {
   String get availability_offline => 'غير متصل';
 
   @override
+  String get manual_busy_not_allowed_message =>
+      'حالة \"مشغول\" يحددها النظام تلقائياً ولا يمكن اختيارها يدوياً';
+
+  @override
   String get overall_rating => 'التقييم العام';
 
   @override
   String get completed_tasks_count => 'المهام المكتملة';
 
   @override
+  String get profile_experience_years => 'سنوات الخبرة';
+
+  @override
+  String get profile_leader_badge => 'قائد فريق';
+
+  @override
+  String get profile_worker_badge => 'عامل';
+
+  @override
+  String get profile_leader_status_label => 'القيادة';
+
+  @override
+  String get profile_not_leader => 'ليس قائد فريق';
+
+  @override
+  String get profile_skills_title => 'المهارات';
+
+  @override
+  String get profile_no_skills => 'لا توجد مهارات مضافة بعد';
+
+  @override
+  String get edit_name_title => 'تعديل الاسم';
+
+  @override
+  String get edit_address_title => 'تعديل العنوان';
+
+  @override
+  String get edit_phone_title => 'تعديل رقم الهاتف';
+
+  @override
+  String get edit_photo_title => 'تغيير الصورة الشخصية';
+
+  @override
   String get job_id_label => 'المعرف الوظيفي';
+
+  @override
+  String get profile_address_label => 'العنوان';
+
+  @override
+  String get profile_phone_label => 'رقم الهاتف';
 
   @override
   String get profile_load_failed => 'تعذّر تحميل الملف الشخصي';
@@ -621,6 +710,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notification_received => 'وصل في';
+
+  @override
+  String get notification_mark_as_read => 'تعليم كمقروء';
 
   @override
   String get search_title => 'البحث';
@@ -668,4 +760,46 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get greeting_hello => 'مرحباً،';
+
+  @override
+  String get availability_off => 'غير متاح';
+
+  @override
+  String get validation_experience_invalid =>
+      'أدخل عدد سنوات صحيحاً (0 أو أكثر)';
+
+  @override
+  String get edit_experience_title => 'تعديل سنوات الخبرة';
+
+  @override
+  String get profile_skills_loading => 'جارٍ تحميل المهارات…';
+
+  @override
+  String get profile_all_skills_assigned =>
+      'تم إضافة جميع المهارات المتاحة بالفعل.';
+
+  @override
+  String get profile_add_skill_hint => 'أضف مهارة';
+
+  @override
+  String get profile_skill_added_message => 'تمت إضافة المهارة';
+
+  @override
+  String get logout_confirm_message => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+
+  @override
+  String get logout_failed_message =>
+      'تعذّر الوصول إلى الخادم، لكن تم تسجيل خروجك.';
+
+  @override
+  String get skills_available_title => 'مهارات يمكنك إضافتها';
+
+  @override
+  String get skills_load_failed => 'تعذّر تحميل قائمة المهارات';
+
+  @override
+  String get skills_removed_message => 'تمت إزالة المهارة';
+
+  @override
+  String get skills_empty_dictionary => 'لا توجد مهارات متاحة حالياً.';
 }

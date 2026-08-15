@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../../config/routes/app_router.dart';
+import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../core/utils/functions/build_app_snack_bar.dart';
-import '../../../../core/utils/functions/spinkit.dart';
+import '../../../../core/utils/functions/localized_failure_message.dart';
+import '../../../../core/widgets/app_shimmer.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/stat_card.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/task.dart';
 import '../bloc/tasks_bloc.dart';
+import '../utils/open_task.dart';
 import 'tasks_filter.dart';
 import 'tasks_top_bar.dart';
 import 'worker_task_card.dart';
@@ -42,15 +43,16 @@ class TasksBody extends StatelessWidget {
         } else if (state.status == TasksStatus.actionFailure) {
           showAppSnackBar(
             context,
-            message: state.error?.message ?? l.task_action_failed_message,
+            message: localizedFailureMessage(context, state.error),
             type: SnackBarType.error,
           );
         }
       },
       builder: (context, state) {
-        // First load with nothing yet → full-screen spinner.
+        // First load with nothing yet → shimmer skeleton list, shaped like
+        // the real task cards so the transition into content is seamless.
         if (state.status == TasksStatus.loading && state.daily == null) {
-          return Center(child: spinKitApp(Theme.of(context).colorScheme.primary));
+          return const _TasksLoadingSkeleton();
         }
 
         // Load failed and we have nothing to show → error + retry.
@@ -62,10 +64,25 @@ class TasksBody extends StatelessWidget {
           );
         }
 
-        return RefreshIndicator(
-          onRefresh: () async =>
-              context.read<TasksBloc>().add(const LoadDailyTasks()),
-          child: _content(context, state, l),
+        // A background auto-refresh (push / notification) keeps the loaded
+        // list on screen; a thin bar signals it non-blockingly.
+        final refreshing =
+            state.status == TasksStatus.loading && state.daily != null;
+
+        return Column(
+          children: [
+            SizedBox(
+              height: 2.h,
+              child: refreshing ? const LinearProgressIndicator() : null,
+            ),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async =>
+                    context.read<TasksBloc>().add(const LoadDailyTasks()),
+                child: _content(context, state, l),
+              ),
+            ),
+          ],
         );
       },
     );
@@ -132,34 +149,13 @@ class TasksBody extends StatelessWidget {
                 task: task,
                 isActing: state.status == TasksStatus.actionLoading &&
                     state.actingTaskId == task.id,
-                onTap: () async {
-                  // Open the detail screen; refresh the list on return so any
-                  // status/photo changes made there are reflected.
-                  final bloc = context.read<TasksBloc>();
-                  await context.push(AppRouter.kTaskDetails, extra: task);
-                  bloc.add(const LoadDailyTasks());
-                },
-                onStart: () => context.read<TasksBloc>().add(
-                  ChangeTaskStatus(
-                    taskId: task.id,
-                    newStatus: TaskStatus.inProgress,
-                    action: TaskActionType.start,
-                  ),
-                ),
-                onPause: () => context.read<TasksBloc>().add(
-                  ChangeTaskStatus(
-                    taskId: task.id,
-                    newStatus: TaskStatus.paused,
-                    action: TaskActionType.pause,
-                  ),
-                ),
-                onComplete: () => context.read<TasksBloc>().add(
-                  ChangeTaskStatus(
-                    taskId: task.id,
-                    newStatus: TaskStatus.completed,
-                    action: TaskActionType.complete,
-                  ),
-                ),
+                // Fetch the task's private detail (GET /api/tasks/{id}) and open
+                // the detail screen. A status change there writes through the
+                // repository (the single source of truth), so this card updates
+                // on its own — no list reload needed (unlike a notification tap).
+                onTap: () =>
+                    openTaskById(context, task.id, refreshTasksOnReturn: false),
+                onAdvance: () => _advance(context, task),
                 onNavigate: () => _openMaps(task.location),
               ),
             ),
@@ -171,14 +167,44 @@ class TasksBody extends StatelessWidget {
     );
   }
 
+  /// Advances [task] one step along the strict
+  /// `pending → on_way → handling → done` sequence.
+  ///
+  /// The final step is special: before/after photos may only be uploaded with
+  /// `done`, so instead of firing the request blindly the card opens the task
+  /// detail screen, where the leader can attach them and confirm. Every other
+  /// step is a plain status change fired from the list.
+  Future<void> _advance(BuildContext context, Task task) async {
+    final next = task.status.next;
+    if (next == null) return;
+
+    if (next == TaskStatus.completed) {
+      // The `done` step needs before/after photos, so it's completed on the
+      // detail screen; the repository propagates the change back to this list.
+      await openTaskById(context, task.id, refreshTasksOnReturn: false);
+      return;
+    }
+
+    context.read<TasksBloc>().add(
+      ChangeTaskStatus(
+        taskId: task.id,
+        currentStatus: task.status,
+        newStatus: next,
+        action: next == TaskStatus.onTheWay
+            ? TaskActionType.onWay
+            : TaskActionType.start,
+      ),
+    );
+  }
+
   /// Resolves the localized success message for the last performed action.
   String _successMessage(BuildContext context, TasksState state) {
     final l = AppLocalizations.of(context)!;
     switch (state.lastAction) {
+      case TaskActionType.onWay:
+        return l.task_on_way_message;
       case TaskActionType.start:
         return l.task_started_message;
-      case TaskActionType.pause:
-        return l.task_paused_message;
       case TaskActionType.complete:
         return l.task_completed_message;
       case TaskActionType.accept:
@@ -276,12 +302,103 @@ class _ErrorView extends StatelessWidget {
                 backgroundColor: theme.primary,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Shimmering placeholder for the initial task-list load. Shaped to roughly
+/// match [WorkerTaskCard] (leading thumb + name + status badge, a couple of
+/// info lines, an action row) so the swap to real content doesn't jump.
+class _TasksLoadingSkeleton extends StatelessWidget {
+  const _TasksLoadingSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      physics: const AlwaysScrollableScrollPhysics(),
+      itemCount: 5,
+      itemBuilder: (context, index) => Padding(
+        padding: EdgeInsets.only(bottom: 14.h),
+        child: const _SkeletonTaskCard(),
+      ),
+    );
+  }
+}
+
+class _SkeletonTaskCard extends StatelessWidget {
+  const _SkeletonTaskCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context).colorScheme;
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: theme.surface,
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+        border: Border.all(color: theme.onSurface.withValues(alpha: 0.06)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppShimmerBox(width: 44.w, height: 44.w, radius: AppRadius.sm),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppShimmerBox(width: 120.w, height: 14.h),
+                    SizedBox(height: 8.h),
+                    AppShimmerBox(width: 70.w, height: 10.h),
+                  ],
+                ),
+              ),
+              SizedBox(width: 8.w),
+              AppShimmerBox(
+                width: 64.w,
+                height: 20.h,
+                radius: AppRadius.pill,
+              ),
+            ],
+          ),
+          SizedBox(height: 16.h),
+          AppShimmerBox(width: 180.w, height: 12.h),
+          SizedBox(height: 8.h),
+          AppShimmerBox(width: 140.w, height: 12.h),
+          SizedBox(height: 8.h),
+          AppShimmerBox(width: 110.w, height: 12.h),
+          SizedBox(height: 16.h),
+          Row(
+            children: [
+              Expanded(
+                child: AppShimmerBox(
+                  height: 48.h,
+                  radius: AppRadius.sm,
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: AppShimmerBox(
+                  height: 48.h,
+                  radius: AppRadius.sm,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

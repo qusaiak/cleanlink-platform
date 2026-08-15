@@ -23,7 +23,7 @@ class CustomConnectionTimeout extends StatelessWidget {
               child: Text(
                 AppLocalizations.of(context)!.error_connection_timeout,
                 style: Styles.textStyle14.copyWith(
-                  color: Colors.grey,
+                  color: theme.onSurfaceVariant,
                   fontWeight: FontWeight.w400,
                 ),
                 textAlign: TextAlign.center,

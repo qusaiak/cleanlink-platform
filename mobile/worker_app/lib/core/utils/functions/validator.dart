@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+  import 'package:flutter/widgets.dart';
 import '../../../l10n/app_localizations.dart';
 
 /// Centralised validators used across the whole app.
@@ -32,6 +32,16 @@ class AppValidators {
     final l = AppLocalizations.of(context)!;
     final v = (value ?? '').replaceAll(RegExp(r'\D'), '');
     if (v.length < 9) return l.validation_phone_invalid;
+    return null;
+  }
+
+  /// Years of experience: required, and a non-negative whole number.
+  static String? experienceYears(String? value, BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final v = (value ?? '').trim();
+    if (v.isEmpty) return l.validation_required;
+    final n = int.tryParse(v);
+    if (n == null || n < 0) return l.validation_experience_invalid;
     return null;
   }
 

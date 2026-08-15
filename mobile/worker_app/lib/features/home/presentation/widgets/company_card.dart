@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../config/theme/app_decoration.dart';
 import '../../../../core/widgets/custom_image_view.dart';
 import '../../../../core/widgets/rating_badge.dart';
 import '../../data/models/company_model.dart';
@@ -12,13 +13,17 @@ class CompanyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).colorScheme;
+
     return Container(
       width: 200.w,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.r),
+        color: theme.surfaceContainer,
+        borderRadius: AppRadius.card,
+        boxShadow: AppShadow.card(Theme.of(context).brightness),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: AppRadius.card,
         child: Stack(
           children: [
             CustomImageView(
@@ -32,8 +37,8 @@ class CompanyCard extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.black.withOpacity(0.1),
-                    Colors.black.withOpacity(0.75),
+                    Colors.black.withValues(alpha: 0.1),
+                    Colors.black.withValues(alpha: 0.75),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,

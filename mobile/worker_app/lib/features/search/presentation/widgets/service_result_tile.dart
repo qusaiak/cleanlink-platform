@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../tasks/presentation/utils/task_formatting.dart';
@@ -23,13 +24,14 @@ class ServiceResultTile extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: theme.surface,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: AppRadius.card,
+        border: Border.all(color: theme.onSurface.withValues(alpha: 0.06)),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: AppRadius.card,
           child: Padding(
             padding: EdgeInsets.all(14.w),
             child: Column(

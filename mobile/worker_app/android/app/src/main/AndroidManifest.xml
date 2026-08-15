@@ -1,8 +1,27 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Required to show notifications on Android 13+ (API 33). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!--
+        Plain-HTTP policy for the dev backend (Android 9+ blocks it by default):
+
+          android:networkSecurityConfig — the one that actually applies. It
+            permits cleartext for the dev hosts ONLY (see res/xml/
+            network_security_config.xml); every other host still needs HTTPS.
+
+          android:usesCleartextTraffic — IGNORED while the attribute above is
+            present (Android reads one or the other, never both). Kept as the
+            fallback for anyone who removes the networkSecurityConfig line, and
+            as an at-a-glance marker that this app talks plain HTTP in dev.
+
+        Both are DEVELOPMENT settings — drop them before shipping over HTTPS.
+    -->
     <application
         android:label="worker_app"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -25,6 +44,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Default FCM channel for background/terminated notifications; must
+             match the channel id created in NotificationService. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="high_importance_channel" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

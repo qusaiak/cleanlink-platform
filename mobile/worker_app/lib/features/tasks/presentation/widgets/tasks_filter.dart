@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/task.dart';
@@ -40,7 +41,7 @@ class TasksSectionHeader extends StatelessWidget {
             current: activeFilter,
             onSelected: onFilterSelected,
           ),
-          borderRadius: BorderRadius.circular(8.r),
+          borderRadius: BorderRadius.circular(AppRadius.xs),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
             child: Row(
@@ -87,9 +88,7 @@ void showTaskFilterSheet(
   showModalBottomSheet(
     context: context,
     backgroundColor: theme.surface,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-    ),
+    shape: RoundedRectangleBorder(borderRadius: AppRadius.sheet),
     builder: (sheetContext) {
       // "All" is represented by null; the rest map 1:1 to TaskStatus.
       final entries = <MapEntry<TaskStatus?, String>>[
@@ -109,7 +108,7 @@ void showTaskFilterSheet(
                 height: 4.h,
                 decoration: BoxDecoration(
                   color: theme.onSurfaceVariant.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(4.r),
+                  borderRadius: BorderRadius.circular(AppRadius.pill),
                 ),
               ),
               SizedBox(height: 8.h),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/search_query.dart';
@@ -77,7 +78,7 @@ class _ServiceSearchFieldState extends State<ServiceSearchField> {
           padding: EdgeInsets.all(3.r),
           decoration: BoxDecoration(
             color: theme.primary.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(AppRadius.pill),
           ),
           child: Row(
             children: [
@@ -112,19 +113,19 @@ class _ServiceSearchFieldState extends State<ServiceSearchField> {
             contentPadding:
                 EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14.r),
+              borderRadius: AppRadius.input,
               borderSide: BorderSide(
                 color: theme.primary.withValues(alpha: 0.2),
               ),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14.r),
+              borderRadius: AppRadius.input,
               borderSide: BorderSide(
                 color: theme.primary.withValues(alpha: 0.2),
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14.r),
+              borderRadius: AppRadius.input,
               borderSide: BorderSide(color: theme.primary, width: 1.5),
             ),
           ),
@@ -156,7 +157,7 @@ class _ServiceSearchFieldState extends State<ServiceSearchField> {
                           color: theme.primary.withValues(alpha: 0.2),
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.r),
+                          borderRadius: AppRadius.chip,
                         ),
                         onSelected: (_) => setState(() => _field = field),
                       );
@@ -179,7 +180,7 @@ class _ServiceSearchFieldState extends State<ServiceSearchField> {
           padding: EdgeInsets.symmetric(vertical: 8.h),
           decoration: BoxDecoration(
             color: selected ? theme.primary : Colors.transparent,
-            borderRadius: BorderRadius.circular(10.r),
+            borderRadius: BorderRadius.circular(AppRadius.pill),
           ),
           child: Text(
             label,

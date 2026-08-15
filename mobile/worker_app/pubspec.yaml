@@ -11,6 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # lib/l10n/app_localizations.dart imports this directly. It used to arrive
+  # only as a transitive dep of the third-party `flutter_localization` package,
+  # which is fragile; declared explicitly now.
+  flutter_localizations:
+    sdk: flutter
 
   cupertino_icons: ^1.0.8
   flutter_bloc: ^9.1.1
@@ -26,11 +31,14 @@ dependencies:
   flutter_svg: ^2.2.4
   flutter_spinkit: ^5.2.2
   lottie: ^3.3.3
-  flutter_localization: ^0.4.0
   url_launcher: ^6.3.2
   cached_network_image: ^3.4.1
   fluttertoast: ^9.0.0
-  retrofit: ^4.9.2
+  shared_preferences: ^2.5.5
+  firebase_core: ^4.12.1
+  firebase_messaging: ^16.4.3
+  flutter_local_notifications: ^22.0.1
+  device_info_plus: ^13.2.0
 
 dev_dependencies:
   flutter_test:

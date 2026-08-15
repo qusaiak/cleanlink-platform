@@ -15,7 +15,9 @@ import '../widgets/tasks_body.dart';
 ///  - [TasksBloc]          — the daily task list.
 ///  - [WorkerProfileBloc]  — the account shown in the top bar profile button
 ///    AND the sidebar header (same account, same source).
-///  - [NotificationsBloc]  — the top bar bell's live unread badge.
+///  - [NotificationsBloc]  — the top bar bell's live unread badge; polling is
+///    started here so the badge stays current. Nothing else is shown
+///    automatically — the feed itself only opens from the bell.
 ///
 /// The actual UI lives in [TasksBody]; the surrounding [Scaffold] (background +
 /// drawer) is here.
@@ -33,7 +35,9 @@ class TasksPage extends StatelessWidget {
           create: (_) => sl<WorkerProfileBloc>()..add(const LoadWorkerProfile()),
         ),
         BlocProvider<NotificationsBloc>(
-          create: (_) => sl<NotificationsBloc>()..add(const LoadNotifications()),
+          create: (_) => sl<NotificationsBloc>()
+            ..add(const LoadNotifications())
+            ..add(const StartNotificationsPolling()),
         ),
       ],
       child: const _TasksView(),

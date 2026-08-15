@@ -24,19 +24,35 @@ class FilterTasksByStatus extends TasksEvent {
   List<Object?> get props => [status];
 }
 
-/// Transition a task to [newStatus]. [action] records which worker action
-/// triggered it so the UI can show the matching success/failure snackbar.
+/// Advance a task from [currentStatus] to [newStatus] (must be the single
+/// next step of the sequence — validated by the use case before any request).
+/// [action] records which worker action triggered it so the UI can show the
+/// matching success/failure snackbar.
 class ChangeTaskStatus extends TasksEvent {
   final String taskId;
+  final TaskStatus currentStatus;
   final TaskStatus newStatus;
   final TaskActionType action;
 
   const ChangeTaskStatus({
     required this.taskId,
+    required this.currentStatus,
     required this.newStatus,
     required this.action,
   });
 
   @override
-  List<Object?> get props => [taskId, newStatus, action];
+  List<Object?> get props => [taskId, currentStatus, newStatus, action];
+}
+
+/// Internal: the repository's task cache (the single source of truth) emitted a
+/// new [daily]. Dispatched by the bloc's own stream subscription — never from
+/// the UI — so the list rebuilds whenever the shared store changes.
+class _DailyTasksSynced extends TasksEvent {
+  final DailyTasks daily;
+
+  const _DailyTasksSynced(this.daily);
+
+  @override
+  List<Object?> get props => [daily];
 }

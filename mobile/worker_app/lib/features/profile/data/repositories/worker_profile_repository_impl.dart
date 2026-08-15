@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/error/failure.dart';
 import '../../../../core/network/network_info.dart';
@@ -44,9 +45,36 @@ class WorkerProfileRepositoryImpl implements WorkerProfileRepository {
 
   @override
   Future<Either<Failure, WorkerProfile>> updateProfile({
+    String? fullname,
     String? email,
-    String? employeeId,
+    String? address,
+    String? phone,
+    int? experienceYears,
+    WorkerAvailability? status,
   }) => _guard(
-    () => remoteDataSource.updateProfile(email: email, employeeId: employeeId),
+    () => remoteDataSource.updateProfile(
+      fullname: fullname,
+      email: email,
+      address: address,
+      phone: phone,
+      experienceYears: experienceYears,
+      status: status,
+    ),
   );
+
+  @override
+  Future<Either<Failure, WorkerProfile>> updateProfileImage(XFile image) =>
+      _guard(() => remoteDataSource.updateProfileImage(image));
+
+  @override
+  Future<Either<Failure, List<WorkerSkill>>> getAllSkills() =>
+      _guard(() => remoteDataSource.getAllSkills());
+
+  @override
+  Future<Either<Failure, WorkerProfile>> attachSkills(List<int> skillIds) =>
+      _guard(() => remoteDataSource.attachSkills(skillIds));
+
+  @override
+  Future<Either<Failure, WorkerProfile>> detachSkills(List<int> skillIds) =>
+      _guard(() => remoteDataSource.detachSkills(skillIds));
 }

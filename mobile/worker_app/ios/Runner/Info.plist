@@ -45,5 +45,41 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>نحتاج إلى الكاميرا لالتقاط صورتك الشخصية. / We need camera access to take your profile photo.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>نحتاج إلى الوصول إلى الصور لاختيار صورتك الشخصية. / We need photo library access to choose your profile photo.</string>
+	<!-- App Transport Security: iOS blocks plain http:// by default, which is
+	     why a build can work in the simulator and fail on a real iPhone.
+
+	     NSAllowsLocalNetworking permits cleartext to LAN and .local addresses
+	     only — it covers the dev machine whatever DHCP address it lands on, so
+	     unlike the Android config this does NOT need editing when the IP
+	     changes. The explicit domains below cover the simulator's `localhost`.
+
+	     This deliberately replaces NSAllowsArbitraryLoads (which switched ATS
+	     off for the entire internet and draws App Store review questions). To
+	     go back to the blunt version for a moment, swap this whole dict for:
+	         <key>NSAllowsArbitraryLoads</key><true/>
+
+	     A plist change needs a FULL rebuild — hot restart will not apply it. -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>192.168.1.107</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 </dict>
 </plist>

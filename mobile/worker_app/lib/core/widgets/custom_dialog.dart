@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../config/theme/app_decoration.dart';
 import '../../config/theme/styles.dart';
 import '../../l10n/app_localizations.dart';
 import '../utils/gen/assets.gen.dart';
@@ -42,19 +43,16 @@ class CustomDialog extends StatelessWidget {
       },
       canPop: isBackButtonDismiss,
       child: AlertDialog(
-        shadowColor: theme.surface,
-        surfaceTintColor: theme.surface,
-        backgroundColor: theme.surface,
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: theme.surfaceContainerHighest,
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.dialog),
         buttonPadding: EdgeInsets.zero,
         contentPadding: EdgeInsets.zero,
         actionsAlignment: MainAxisAlignment.center,
         content: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.sizeOf(context).width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50.r),
-            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -79,7 +77,7 @@ class CustomDialog extends StatelessWidget {
                   child: Text(
                     body ?? '',
                     style: Styles.textStyle12.copyWith(
-                      color: Colors.grey,
+                      color: theme.onSurfaceVariant,
                       fontWeight: FontWeight.w400,
                     ),
                     maxLines: 100,
@@ -104,11 +102,10 @@ class CustomDialog extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                       buttonStyle: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        side: BorderSide(color: theme.primary, width: 2),
-                        // Border color and width
+                        backgroundColor: theme.surfaceContainerHighest,
+                        side: BorderSide(color: theme.primary, width: 1.4),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.r),
+                          borderRadius: AppRadius.button,
                         ),
                         padding: EdgeInsets.zero,
                       ),
@@ -124,10 +121,15 @@ class CustomDialog extends StatelessWidget {
                       ),
                       buttonStyle: ElevatedButton.styleFrom(
                         backgroundColor: theme.primary,
+                        elevation: 0,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.r),
+                          borderRadius: AppRadius.button,
                         ),
-                        shadowColor: Colors.white,
+                        // The theme's 14.h vertical padding is taller than
+                        // this 25.h button, which clipped the label away
+                        // entirely (the "Done" button looked empty).
+                        padding: EdgeInsets.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       onPressed: onTap,
                     ),
@@ -141,15 +143,17 @@ class CustomDialog extends StatelessWidget {
                       width: 80.w,
                       height: 25.h,
                       buttonTextStyle: Styles.textStyle12.copyWith(
-                        color: Colors.white,
+                        color: theme.onPrimary,
                         fontWeight: FontWeight.w500,
                       ),
                       buttonStyle: ElevatedButton.styleFrom(
                         backgroundColor: theme.primary,
+                        elevation: 0,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.r),
+                          borderRadius: AppRadius.button,
                         ),
-                        shadowColor: Colors.white,
+                        padding: EdgeInsets.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       onPressed: onTap,
                     ),

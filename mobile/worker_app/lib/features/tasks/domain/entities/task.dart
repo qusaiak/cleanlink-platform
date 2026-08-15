@@ -11,6 +11,45 @@ import 'package:equatable/equatable.dart';
 /// - [cancelled]  ("ملغاة").
 enum TaskStatus { assigned, onTheWay, inProgress, paused, completed, cancelled }
 
+/// The backend's strict task progression: `pending → on_way → handling → done`
+/// (mapped onto [TaskStatus.assigned] → [TaskStatus.onTheWay] →
+/// [TaskStatus.inProgress] → [TaskStatus.completed]).
+///
+/// Going backward or skipping a step is NEVER allowed, so the only legal
+/// transition from any status is [next]. [paused]/[cancelled] are legacy UI
+/// statuses outside the API contract and can't be advanced from or into.
+extension TaskStatusProgression on TaskStatus {
+  /// The four statuses of the API contract, in order — drives the progress
+  /// stepper on the task-detail screen.
+  static const List<TaskStatus> sequence = [
+    TaskStatus.assigned,
+    TaskStatus.onTheWay,
+    TaskStatus.inProgress,
+    TaskStatus.completed,
+  ];
+
+  /// The single status this one may advance to, or `null` when the task is at
+  /// the end of the sequence (or outside it).
+  TaskStatus? get next {
+    switch (this) {
+      case TaskStatus.assigned:
+        return TaskStatus.onTheWay;
+      case TaskStatus.onTheWay:
+        return TaskStatus.inProgress;
+      case TaskStatus.inProgress:
+        return TaskStatus.completed;
+      case TaskStatus.paused:
+      case TaskStatus.completed:
+      case TaskStatus.cancelled:
+        return null;
+    }
+  }
+
+  /// Whether moving from this status to [target] is the one allowed
+  /// (strictly sequential, never backward, never skipping) transition.
+  bool canAdvanceTo(TaskStatus target) => next == target;
+}
+
 /// The kind of service a task represents.
 ///
 /// Used only to pick an icon/accent in the UI. The domain layer stays
@@ -56,9 +95,13 @@ class Task extends Equatable {
   /// Rendered as a checklist in the task-detail screen.
   final List<String> includedItems;
 
-  /// URL of a photo representing the task subject (e.g. the AC unit), shown in
-  /// the detail header. Empty when the backend provides none.
+  /// URL of the service's photo (`service.image`), shown as the thumbnail in
+  /// the Public Tasks list. Empty when the backend provides none.
   final String imageUrl;
+
+  /// URL of the company/provider's photo (`company.image`), shown in the
+  /// Task Details header banner. Empty when the backend provides none.
+  final String companyImageUrl;
 
   /// Combined date + time of the appointment. Formatting (e.g. "10:00 AM" or
   /// "24 مايو 2024") is done in the UI via `intl` so it respects the locale.
@@ -78,6 +121,22 @@ class Task extends Equatable {
   final List<String> beforePhotos;
   final List<String> afterPhotos;
 
+  /// The service's average rating (e.g. 4.2), shown in the task-detail
+  /// "service" section. Zero when the backend doesn't provide one.
+  final double serviceRating;
+
+  /// Whether the signed-in worker is the leader of the workgroup assigned to
+  /// this task (compares the workgroup's leader id against the logged-in
+  /// worker's own id). Shown as a yes/no attribute on the task-detail screen.
+  final bool isTeamLeader;
+
+  /// Full name of the workgroup's leader (a worker, e.g. "Ahmed Ali"), shown
+  /// in the task list in place of the (unavailable) client name.
+  final String leaderName;
+
+  /// The workgroup leader's id, shown next to [leaderName].
+  final String leaderId;
+
   const Task({
     required this.id,
     required this.requestNumber,
@@ -88,6 +147,7 @@ class Task extends Equatable {
     required this.scheduledAt,
     required this.status,
     this.imageUrl = '',
+    this.companyImageUrl = '',
     this.companyName = '',
     this.packageName = '',
     this.price = 0,
@@ -99,6 +159,10 @@ class Task extends Equatable {
     this.requiredTools = const [],
     this.beforePhotos = const [],
     this.afterPhotos = const [],
+    this.serviceRating = 0,
+    this.isTeamLeader = false,
+    this.leaderName = '',
+    this.leaderId = '',
   });
 
   /// Returns a copy with selected fields overridden. The bloc uses this to
@@ -118,6 +182,7 @@ class Task extends Equatable {
       customerName: customerName,
       location: location,
       imageUrl: imageUrl,
+      companyImageUrl: companyImageUrl,
       companyName: companyName,
       packageName: packageName,
       price: price,
@@ -131,6 +196,10 @@ class Task extends Equatable {
       requiredTools: requiredTools,
       beforePhotos: beforePhotos ?? this.beforePhotos,
       afterPhotos: afterPhotos ?? this.afterPhotos,
+      serviceRating: serviceRating,
+      isTeamLeader: isTeamLeader,
+      leaderName: leaderName,
+      leaderId: leaderId,
     );
   }
 
@@ -143,6 +212,7 @@ class Task extends Equatable {
     customerName,
     location,
     imageUrl,
+    companyImageUrl,
     companyName,
     packageName,
     price,
@@ -156,5 +226,9 @@ class Task extends Equatable {
     requiredTools,
     beforePhotos,
     afterPhotos,
+    serviceRating,
+    isTeamLeader,
+    leaderName,
+    leaderId,
   ];
 }

@@ -63,16 +63,14 @@ class FakeNotificationsRemoteDataSource
   }
 
   @override
-  Future<AppNotificationModel> markAsRead(String id) async {
+  Future<void> markAsRead(String id) async {
     await _delay();
     final index = _items.indexWhere((n) => n.id == id);
     if (index == -1) {
       throw StateError('Notification $id not found');
     }
-    final updated =
+    _items[index] =
         AppNotificationModel.fromEntity(_items[index].copyWith(isRead: true));
-    _items[index] = updated;
-    return updated;
   }
 
   @override

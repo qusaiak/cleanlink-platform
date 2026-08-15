@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../domain/entities/worker_profile.dart';
 import '../models/worker_profile_model.dart';
@@ -30,6 +31,7 @@ class FallbackWorkerProfileRemoteDataSource
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
+      case DioExceptionType.transformTimeout:
       case DioExceptionType.unknown:
         return true;
       case DioExceptionType.badResponse:
@@ -65,10 +67,67 @@ class FallbackWorkerProfileRemoteDataSource
 
   @override
   Future<WorkerProfileModel> updateProfile({
+    String? fullname,
     String? email,
-    String? employeeId,
+    String? address,
+    String? phone,
+    int? experienceYears,
+    WorkerAvailability? status,
   }) => _preferLive(
-    () => primary.updateProfile(email: email, employeeId: employeeId),
-    () => fallback.updateProfile(email: email, employeeId: employeeId),
+    () => primary.updateProfile(
+      fullname: fullname,
+      email: email,
+      address: address,
+      phone: phone,
+      experienceYears: experienceYears,
+      status: status,
+    ),
+    () => fallback.updateProfile(
+      fullname: fullname,
+      email: email,
+      address: address,
+      phone: phone,
+      experienceYears: experienceYears,
+      status: status,
+    ),
   );
+
+  @override
+  Future<WorkerProfileModel> updateProfileImage(XFile image) => _preferLive(
+    () => primary.updateProfileImage(image),
+    () => fallback.updateProfileImage(image),
+  );
+
+  @override
+  Future<WorkerProfileModel> persistProfileImage(String storedImagePath) =>
+      _preferLive(
+        () => primary.persistProfileImage(storedImagePath),
+        () => fallback.persistProfileImage(storedImagePath),
+      );
+
+  @override
+  Future<List<WorkerSkill>> getAllSkills() =>
+      _preferLive(primary.getAllSkills, fallback.getAllSkills);
+
+  // Skills mutations deliberately do NOT go through [_preferLive].
+  //
+  // Falling back to the in-memory source on an unreachable server is right for
+  // a READ (show something rather than an empty screen) and badly wrong for a
+  // WRITE: the fake source happily "succeeds", so the app reported "Skill
+  // added", adopted the FAKE worker as the new source of truth — overwriting
+  // the real skills, rating and avatar in state and in the cached session —
+  // and then the next real profile fetch silently undid it all. From the
+  // worker's side that is exactly "adding a skill does nothing".
+  //
+  // A write that did not reach the backend must fail loudly instead, so the
+  // repository turns it into a Failure and the screen shows the real reason
+  // and rolls the chip back.
+
+  @override
+  Future<WorkerProfileModel> attachSkills(List<int> skillIds) =>
+      primary.attachSkills(skillIds);
+
+  @override
+  Future<WorkerProfileModel> detachSkills(List<int> skillIds) =>
+      primary.detachSkills(skillIds);
 }

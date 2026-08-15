@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/styles.dart';
 
 class SectionCard extends StatelessWidget {
@@ -12,19 +13,23 @@ class SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).colorScheme;
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: Colors.grey.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(18.r),
+        color: theme.surfaceContainer,
+        borderRadius: BorderRadius.circular(AppRadius.xl),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: Styles.textStyle14.copyWith(fontWeight: FontWeight.w600),
+            style: Styles.textStyle14.copyWith(
+              fontWeight: FontWeight.w600,
+              color: theme.onSurface,
+            ),
           ),
           SizedBox(height: 10.h),
           ...children,

@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/task.dart';
 import '../utils/task_formatting.dart';
+import 'task_status_badge.dart';
 
-/// The main information card on the task-detail screen: optional urgency badge,
-/// title, time + date, the description, and the required-tools chips.
+/// The main information card on the task-detail screen.
+///
+/// Shows exactly the private attributes of a worker-tasks-log entry: status,
+/// order duration, total price, date, the selected package (name + details),
+/// the service (name + rating), and whether the signed-in worker leads the
+/// assigned workgroup. (Image + location are shown by [TaskLocationBanner]
+/// above this card.)
 class TaskInfoCard extends StatelessWidget {
   final Task task;
 
@@ -25,51 +32,32 @@ class TaskInfoCard extends StatelessWidget {
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: theme.surface,
-        borderRadius: BorderRadius.circular(18.r),
+        borderRadius: BorderRadius.circular(AppRadius.xl),
         border: Border.all(color: theme.onSurface.withValues(alpha: 0.06)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (task.isUrgent) ...[
-            _urgentBadge(l),
-            SizedBox(height: 10.h),
-          ],
-          Text(
-            task.title,
-            style: Styles.textStyle18.copyWith(fontWeight: FontWeight.bold),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TaskStatusBadge(status: task.status),
+              const Spacer(),
+              if (task.price > 0) _priceTag(theme),
+            ],
           ),
-          if (task.companyName.isNotEmpty) ...[
-            SizedBox(height: 6.h),
-            Row(
-              children: [
-                Icon(Icons.business_rounded, size: 16.r, color: theme.primary),
-                SizedBox(width: 6.w),
-                Text(
-                  task.companyName,
-                  style: Styles.textStyle14.copyWith(
-                    color: theme.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ],
-          if (task.packageName.isNotEmpty || task.price > 0) ...[
-            SizedBox(height: 12.h),
-            _packageBanner(theme, l),
-          ],
           SizedBox(height: 14.h),
           Row(
             children: [
-              Expanded(
-                child: _metric(
-                  theme,
-                  Icons.access_time_rounded,
-                  l.task_time_label,
-                  formatTaskTime(task.scheduledAt),
+              if (task.durationLabel.isNotEmpty)
+                Expanded(
+                  child: _metric(
+                    theme,
+                    Icons.timelapse_rounded,
+                    l.task_duration_label,
+                    task.durationLabel,
+                  ),
                 ),
-              ),
               Expanded(
                 child: _metric(
                   theme,
@@ -80,79 +68,99 @@ class TaskInfoCard extends StatelessWidget {
               ),
             ],
           ),
-          if (task.durationLabel.isNotEmpty) ...[
-            SizedBox(height: 16.h),
+          if (task.title.isNotEmpty || task.serviceRating > 0) ...[
+            Divider(height: 28.h, color: theme.onSurface.withValues(alpha: 0.08)),
+            _label(theme, Icons.cleaning_services_outlined, l.task_service_section),
+            SizedBox(height: 8.h),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: _metric(
-                    theme,
-                    Icons.timelapse_rounded,
-                    l.task_duration_label,
-                    task.durationLabel,
-                  ),
-                ),
-                if (task.packageName.isNotEmpty)
+                if (task.title.isNotEmpty)
                   Expanded(
-                    child: _metric(
-                      theme,
-                      Icons.local_offer_outlined,
-                      l.task_package_label,
-                      task.packageName,
+                    child: Text(
+                      task.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Styles.textStyle14.copyWith(fontWeight: FontWeight.w600),
                     ),
                   ),
+                if (task.serviceRating > 0) ...[
+                  SizedBox(width: 8.w),
+                  _ratingChip(theme),
+                ],
               ],
             ),
           ],
-          if (task.includedItems.isNotEmpty) ...[
+          if (task.packageName.isNotEmpty || task.includedItems.isNotEmpty) ...[
             Divider(height: 28.h, color: theme.onSurface.withValues(alpha: 0.08)),
-            _label(theme, Icons.checklist_rounded, l.task_included_section),
-            SizedBox(height: 10.h),
-            ...task.includedItems.map((item) => _includedRow(theme, item)),
-          ],
-          if (task.details.isNotEmpty) ...[
-            Divider(height: 28.h, color: theme.onSurface.withValues(alpha: 0.08)),
-            _label(theme, Icons.description_outlined, l.task_details_section),
+            _label(theme, Icons.local_offer_outlined, l.task_package_label),
             SizedBox(height: 8.h),
-            Text(
-              task.details,
-              style: Styles.textStyle12.copyWith(
-                color: theme.onSurfaceVariant,
-                height: 1.6,
+            if (task.packageName.isNotEmpty)
+              Text(
+                task.packageName,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Styles.textStyle16.copyWith(
+                  color: theme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
+            if (task.includedItems.isNotEmpty) ...[
+              SizedBox(height: 10.h),
+              Text(
+                l.task_package_details_label,
+                style: Styles.textStyle12.copyWith(
+                  color: theme.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              ...task.includedItems.map((item) => _includedRow(theme, item)),
+            ],
           ],
-          if (task.requiredTools.isNotEmpty) ...[
-            SizedBox(height: 18.h),
-            _label(theme, Icons.build_outlined, l.task_required_tools),
-            SizedBox(height: 10.h),
-            Wrap(
-              spacing: 8.w,
-              runSpacing: 8.h,
-              children: task.requiredTools.map((t) => _toolChip(theme, t)).toList(),
-            ),
-          ],
+          Divider(height: 28.h, color: theme.onSurface.withValues(alpha: 0.08)),
+          _leaderRow(theme, l),
         ],
       ),
     );
   }
 
-  Widget _urgentBadge(AppLocalizations l) {
+  /// Emphasized pill showing the order's total price, e.g. "$75".
+  Widget _priceTag(ColorScheme theme) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: theme.primary,
+        borderRadius: BorderRadius.circular(AppRadius.xxl),
+      ),
+      child: Text(
+        formatTaskPrice(task.price, task.currency),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: Styles.textStyle16.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  /// Star-and-value chip showing the service's rating, e.g. "★ 4.2".
+  Widget _ratingChip(ColorScheme theme) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       decoration: BoxDecoration(
         color: AppColor.warningColor.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(AppRadius.xxl),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.priority_high_rounded,
-              size: 14.r, color: AppColor.warningColor),
+          Icon(Icons.star_rounded, size: 16.r, color: AppColor.warningColor),
           SizedBox(width: 4.w),
           Text(
-            l.task_urgent_badge,
-            style: Styles.textStyle11.copyWith(
+            task.serviceRating.toStringAsFixed(1),
+            style: Styles.textStyle12.copyWith(
               color: AppColor.warningColor,
               fontWeight: FontWeight.w700,
             ),
@@ -162,56 +170,66 @@ class TaskInfoCard extends StatelessWidget {
     );
   }
 
-  /// Highlights the package the customer selected and its price, e.g.
-  /// "Studio" on the start side and "$75" as an emphasized pill.
-  Widget _packageBanner(ColorScheme theme, AppLocalizations l) {
-    final hasPrice = task.price > 0;
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-      decoration: BoxDecoration(
-        color: theme.primary.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(14.r),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+  /// Whether the signed-in worker leads the assigned workgroup (boolean
+  /// yes/no pill), plus the leader's full name + id underneath.
+  Widget _leaderRow(ColorScheme theme, AppLocalizations l) {
+    final isLeader = task.isTeamLeader;
+    final color = isLeader ? AppColor.successColor : theme.onSurfaceVariant;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.shield_outlined, size: 18.r, color: theme.primary),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: Text(
+                l.task_leader_section,
+                style: Styles.textStyle14.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(AppRadius.xxl),
+              ),
+              child: Text(
+                isLeader ? l.task_leader_yes : l.task_leader_no,
+                style: Styles.textStyle12.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ],
+        ),
+        if (task.leaderName.isNotEmpty) ...[
+          SizedBox(height: 6.h),
+          Padding(
+            padding: EdgeInsetsDirectional.only(start: 26.w),
+            child: Row(
               children: [
-                Text(
-                  l.task_package_label,
-                  style: Styles.textStyle11.copyWith(
-                    color: theme.onSurfaceVariant,
+                Flexible(
+                  child: Text(
+                    task.leaderName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Styles.textStyle12.copyWith(color: theme.onSurfaceVariant),
                   ),
                 ),
-                SizedBox(height: 2.h),
-                Text(
-                  task.packageName.isNotEmpty ? task.packageName : '—',
-                  style: Styles.textStyle16.copyWith(
-                    color: theme.primary,
-                    fontWeight: FontWeight.bold,
+                if (task.leaderId.isNotEmpty) ...[
+                  SizedBox(width: 6.w),
+                  Text(
+                    '#${task.leaderId}',
+                    style: Styles.textStyle12.copyWith(color: theme.onSurfaceVariant),
                   ),
-                ),
+                ],
               ],
             ),
           ),
-          if (hasPrice)
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-              decoration: BoxDecoration(
-                color: theme.primary,
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Text(
-                formatTaskPrice(task.price, task.currency),
-                style: Styles.textStyle16.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
         ],
-      ),
+      ],
     );
   }
 
@@ -257,6 +275,8 @@ class TaskInfoCard extends StatelessWidget {
         SizedBox(height: 4.h),
         Text(
           value,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: Styles.textStyle14.copyWith(fontWeight: FontWeight.w600),
         ),
       ],
@@ -276,20 +296,4 @@ class TaskInfoCard extends StatelessWidget {
     );
   }
 
-  Widget _toolChip(ColorScheme theme, String tool) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
-      decoration: BoxDecoration(
-        color: theme.primary.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      child: Text(
-        tool,
-        style: Styles.textStyle12.copyWith(
-          color: theme.primary,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/functions/build_app_snack_bar.dart';
+import '../../../../core/utils/functions/localized_failure_message.dart';
 import '../../../../core/widgets/app_primary_button.dart';
 import '../../../../core/widgets/custom_appbar.dart';
 import '../../../../injection_container.dart';
@@ -13,14 +14,16 @@ import '../bloc/task_detail_bloc.dart';
 import '../widgets/task_info_card.dart';
 import '../widgets/task_location_banner.dart';
 import '../widgets/task_photo_documentation.dart';
-import '../widgets/task_status_selector.dart';
+import '../widgets/task_progress_stepper.dart';
 import '../widgets/task_status_ui.dart';
 
 /// Screen 3 — full task detail.
 ///
 /// Receives the [task] (via navigation) and provides a [TaskDetailBloc] built
-/// with it plus the use cases from `get_it`. Lets the worker review the job,
-/// attach before/after photos, pick a new status and submit.
+/// with it plus the use case from `get_it`. Shows the strict progress stepper
+/// (`pending → on_way → handling → done`) and a single button that advances
+/// only to the next allowed status; the before/after photo pickers appear
+/// exclusively on the final (`done`) step, matching the API contract.
 class TaskDetailsPage extends StatelessWidget {
   final Task task;
 
@@ -29,11 +32,7 @@ class TaskDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<TaskDetailBloc>(
-      create: (_) => TaskDetailBloc(
-        task: task,
-        updateTaskStatus: sl(),
-        uploadTaskPhotos: sl(),
-      ),
+      create: (_) => TaskDetailBloc(task: task, updateTaskStatus: sl()),
       child: const _TaskDetailsView(),
     );
   }
@@ -68,18 +67,21 @@ class _TaskDetailsView extends StatelessWidget {
               context,
               message: l.task_status_updated_message(statusLabel),
             );
-            // Return to the list, which refreshes on resume.
-            context.pop();
+            // Return to the list, handing back the updated task so the list
+            // (the single source of truth) reflects the new status at once.
+            context.pop(state.task);
           } else if (state.status == TaskDetailStatus.failure) {
             showAppSnackBar(
               context,
-              message: state.error?.message ?? l.task_action_failed_message,
+              message: localizedFailureMessage(context, state.error),
               type: SnackBarType.error,
             );
           }
         },
         builder: (context, state) {
           final bloc = context.read<TaskDetailBloc>();
+          final next = state.nextStatus;
+
           return SafeArea(
             top: false,
             child: Column(
@@ -94,38 +96,47 @@ class _TaskDetailsView extends StatelessWidget {
                         SizedBox(height: 16.h),
                         TaskInfoCard(task: state.task),
                         SizedBox(height: 22.h),
-                        TaskPhotoDocumentation(
-                          beforeExisting: state.task.beforePhotos,
-                          afterExisting: state.task.afterPhotos,
-                          beforeNew: state.newBeforePhotos,
-                          afterNew: state.newAfterPhotos,
-                          onPicked: (isBefore, path) => bloc.add(
-                            PhotoAdded(path: path, isBefore: isBefore),
+                        // Progress through the strict sequence — visible to the
+                        // whole crew; only the leader can advance it below.
+                        TaskProgressStepper(current: state.task.status),
+                        // The photo pickers exist ONLY while marking the task
+                        // done (the API accepts images with no other status).
+                        if (state.task.isTeamLeader &&
+                            state.isMarkingDone) ...[
+                          SizedBox(height: 22.h),
+                          TaskPhotoDocumentation(
+                            beforeExisting: state.task.beforePhotos,
+                            afterExisting: state.task.afterPhotos,
+                            beforeNew: state.newBeforePhotos,
+                            afterNew: state.newAfterPhotos,
+                            onPicked: (isBefore, path) => bloc.add(
+                              PhotoAdded(path: path, isBefore: isBefore),
+                            ),
+                            onRemoveNew: (isBefore, index) => bloc.add(
+                              PhotoRemoved(index: index, isBefore: isBefore),
+                            ),
                           ),
-                          onRemoveNew: (isBefore, index) => bloc.add(
-                            PhotoRemoved(index: index, isBefore: isBefore),
-                          ),
-                        ),
-                        SizedBox(height: 22.h),
-                        TaskStatusSelector(
-                          selected: state.selectedStatus,
-                          onChanged: (status) =>
-                              bloc.add(StatusSelected(status)),
-                        ),
+                        ],
                       ],
                     ),
                   ),
                 ),
-                // Pinned submit button.
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 12.h),
-                  child: AppPrimaryButton(
-                    label: l.update_status_button,
-                    icon: Icons.save_outlined,
-                    loading: state.status == TaskDetailStatus.submitting,
-                    onPressed: () => bloc.add(const DetailSubmitted()),
+                // Pinned advance button — leader only, and only while there is
+                // a next status to move to.
+                if (state.task.isTeamLeader && next != null)
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 12.h),
+                    child: AppPrimaryButton(
+                      label: l.task_advance_to(
+                        TaskStatusUi.of(context, next).label,
+                      ),
+                      icon: next == TaskStatus.completed
+                          ? Icons.check_circle_outline_rounded
+                          : Icons.arrow_forward_rounded,
+                      loading: state.status == TaskDetailStatus.submitting,
+                      onPressed: () => bloc.add(const AdvanceStatusSubmitted()),
+                    ),
                   ),
-                ),
               ],
             ),
           );

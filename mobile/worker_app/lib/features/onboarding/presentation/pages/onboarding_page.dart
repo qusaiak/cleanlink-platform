@@ -7,10 +7,11 @@ class OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.white,
+    return Scaffold(
+      // Follows the theme so onboarding isn't a white flash in dark mode.
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: null,
-      body: OnboardingBody(),
+      body: const OnboardingBody(),
     );
   }
 }

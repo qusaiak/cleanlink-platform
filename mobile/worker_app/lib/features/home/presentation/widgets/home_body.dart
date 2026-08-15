@@ -1,13 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:worker_app/features/home/presentation/widgets/service_page.dart';
-import 'package:worker_app/features/home/presentation/widgets/services_section.dart';
-import '../../../../core/widgets/row_title.dart';
-import '../../../../l10n/app_localizations.dart';
-import 'categories_section.dart';
-import 'companies_section.dart';
-import 'home_app_bar.dart';
-import 'tasks_section.dart';
 
 class HomeBody extends StatelessWidget {
   const HomeBody({super.key});
@@ -17,7 +10,7 @@ class HomeBody extends StatelessWidget {
     final theme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: theme.background,
+      backgroundColor: theme.surface,
       body: SafeArea(
      child: SuperExplosiveUI(),
        // child: ListView(

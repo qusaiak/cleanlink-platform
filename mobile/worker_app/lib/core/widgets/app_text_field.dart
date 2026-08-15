@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../config/theme/app_decoration.dart';
 import '../../config/theme/colors.dart';
 import '../../config/theme/styles.dart';
 
@@ -95,7 +96,7 @@ class AppTextField extends StatelessWidget {
             suffixIcon: suffix,
             isDense: true,
             filled: true,
-            fillColor: theme.onSurface.withValues(alpha: 0.04),
+            fillColor: theme.onSurface.withValues(alpha: 0.045),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16.w,
               vertical: 16.h,
@@ -118,7 +119,7 @@ class AppTextField extends StatelessWidget {
 
   OutlineInputBorder _border(Color color, {double width = 1}) {
     return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(14.r),
+      borderRadius: BorderRadius.circular(AppRadius.md),
       borderSide: BorderSide(color: color, width: width),
     );
   }

@@ -9,8 +9,9 @@ abstract class NotificationsRepository {
   /// All notifications, newest first.
   Future<Either<Failure, List<AppNotification>>> getNotifications();
 
-  /// Marks a single notification read; returns the updated notification.
-  Future<Either<Failure, AppNotification>> markAsRead(String id);
+  /// Marks a single notification read on the server. The caller updates its
+  /// local copy on success ([unit] carries no payload).
+  Future<Either<Failure, Unit>> markAsRead(String id);
 
   /// Marks every notification read; returns the updated list.
   Future<Either<Failure, List<AppNotification>>> markAllAsRead();

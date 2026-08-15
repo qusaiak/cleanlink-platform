@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../config/theme/colors.dart';
-import '../utils/functions/spinkit.dart';
+import 'app_shimmer.dart';
 
 class CustomImageView extends StatelessWidget {
   ///[imagePath] is required parameter for showing image
@@ -132,7 +132,11 @@ class CustomImageView extends StatelessWidget {
               fit: BoxFit.cover,
                     color: color,
                   )
-                : spinKitApp(AppColor.primaryLight),
+                : AppShimmerBox(
+                    width: width,
+                    height: height ?? 40,
+                    radius: radius?.topLeft.x ?? 8,
+                  ),
             errorWidget: (context, url, error) => const Icon(
               Icons.error,
               color: AppColor.primaryLight,

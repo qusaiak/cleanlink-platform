@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/styles.dart';
+import '../../../../core/widgets/network_avatar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../auth/presentation/widgets/logout_dialog.dart';
 import '../../../profile/presentation/bloc/worker_profile_bloc.dart';
 import '../../../profile/presentation/widgets/worker_availability_ui.dart';
 
@@ -51,17 +53,12 @@ class AppDrawer extends StatelessWidget {
                             shape: BoxShape.circle,
                             border: Border.all(color: ringColor, width: 2),
                           ),
-                          child: CircleAvatar(
+                          child: NetworkAvatar(
+                            avatarUrl: avatarUrl,
                             radius: 24.r,
                             backgroundColor:
                                 theme.primary.withValues(alpha: 0.12),
-                            backgroundImage: avatarUrl.isNotEmpty
-                                ? NetworkImage(avatarUrl)
-                                : null,
-                            child: avatarUrl.isEmpty
-                                ? Icon(Icons.person,
-                                    color: theme.primary, size: 26.r)
-                                : null,
+                            iconColor: theme.primary,
                           ),
                         ),
                         SizedBox(width: 12.w),
@@ -106,6 +103,25 @@ class AppDrawer extends StatelessWidget {
               label: l.setting_title,
               onTap: () => _go(context, AppRouter.kSettings),
             ),
+
+            // Logout pinned to the bottom, separated and styled as a
+            // destructive/exit action.
+            const Spacer(),
+            const Divider(height: 1),
+            _DrawerItem(
+              icon: Icons.logout_rounded,
+              label: l.logout,
+              destructive: true,
+              // Close the drawer first, then open the confirmation dialog on
+              // the root navigator (independent of the closing drawer context).
+              onTap: () {
+                Navigator.of(context).pop();
+                showLogoutDialog(
+                  AppRouter.rootNavigatorKey.currentContext ?? context,
+                );
+              },
+            ),
+            SizedBox(height: 8.h),
           ],
         ),
       ),
@@ -130,20 +146,29 @@ class _DrawerItem extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
+  /// Renders the item in the error colour to read as a destructive/exit action
+  /// (used for Logout).
+  final bool destructive;
+
   const _DrawerItem({
     required this.icon,
     required this.label,
     required this.onTap,
+    this.destructive = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
+    final color = destructive ? theme.error : theme.primary;
     return ListTile(
-      leading: Icon(icon, color: theme.primary),
+      leading: Icon(icon, color: color),
       title: Text(
         label,
-        style: Styles.textStyle14.copyWith(color: theme.onSurface),
+        style: Styles.textStyle14.copyWith(
+          color: destructive ? theme.error : theme.onSurface,
+          fontWeight: destructive ? FontWeight.w600 : FontWeight.w400,
+        ),
       ),
       onTap: onTap,
     );

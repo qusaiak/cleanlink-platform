@@ -40,6 +40,7 @@ class FallbackTasksRemoteDataSource implements TasksRemoteDataSource {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
+      case DioExceptionType.transformTimeout:
       case DioExceptionType.unknown:
         return true;
       case DioExceptionType.badResponse:
@@ -74,26 +75,20 @@ class FallbackTasksRemoteDataSource implements TasksRemoteDataSource {
   Future<TaskModel> updateTaskStatus({
     required String taskId,
     required TaskStatus status,
+    String? imageBeforePath,
+    String? imageAfterPath,
   }) => _preferLive(
-    () => primary.updateTaskStatus(taskId: taskId, status: status),
-    () => fallback.updateTaskStatus(taskId: taskId, status: status),
-  );
-
-  @override
-  Future<TaskModel> uploadTaskPhotos({
-    required String taskId,
-    required List<String> beforePaths,
-    required List<String> afterPaths,
-  }) => _preferLive(
-    () => primary.uploadTaskPhotos(
+    () => primary.updateTaskStatus(
       taskId: taskId,
-      beforePaths: beforePaths,
-      afterPaths: afterPaths,
+      status: status,
+      imageBeforePath: imageBeforePath,
+      imageAfterPath: imageAfterPath,
     ),
-    () => fallback.uploadTaskPhotos(
+    () => fallback.updateTaskStatus(
       taskId: taskId,
-      beforePaths: beforePaths,
-      afterPaths: afterPaths,
+      status: status,
+      imageBeforePath: imageBeforePath,
+      imageAfterPath: imageAfterPath,
     ),
   );
 }
