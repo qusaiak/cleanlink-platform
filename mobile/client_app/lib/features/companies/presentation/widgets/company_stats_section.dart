@@ -120,7 +120,7 @@ class _ActionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
     return Material(
-      color: theme.surface,
+      color: theme.surfaceContainer,
       borderRadius: BorderRadius.circular(14.r),
       child: InkWell(
         onTap: onTap,
@@ -173,7 +173,7 @@ class _CardIcon extends StatelessWidget {
 
 BoxDecoration _cardDecoration(ColorScheme theme, {bool includeColor = true}) =>
     BoxDecoration(
-      color: includeColor ? theme.surface : Colors.transparent,
+      color: includeColor ? theme.surfaceContainer : Colors.transparent,
       borderRadius: BorderRadius.circular(14.r),
       border: Border.all(color: theme.outline.withValues(alpha: .1)),
       boxShadow: [

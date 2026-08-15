@@ -19,6 +19,7 @@ Future<void> showFeedbackActions({
   final l = AppLocalizations.of(context)!;
   await showModalBottomSheet<void>(
     context: context,
+    backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
     builder: (sheetContext) => SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10.h),

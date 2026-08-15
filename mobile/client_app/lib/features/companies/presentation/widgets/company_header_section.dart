@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/styles.dart';
-import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../../core/widgets/custom_image_view.dart';
+import '../../../../core/widgets/glass/circular_glass_button.dart';
 import '../../../favorites/presentation/bloc/favorites_bloc.dart';
 import '../../domain/entities/company_entity.dart';
 
@@ -15,7 +15,7 @@ class CompanyHeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context)!.colorScheme;
+    final theme = Theme.of(context).colorScheme;
     return SliverAppBar(
       pinned: true,
       expandedHeight: 240.h,
@@ -23,6 +23,27 @@ class CompanyHeaderSection extends StatelessWidget {
       surfaceTintColor: Colors.transparent,
       elevation: 0,
       leading: const BackButton(),
+      actions: [
+        BlocBuilder<FavoritesBloc, FavoritesState>(
+          builder: (context, state) {
+            var isFav = company.isFavorite;
+            if (state is FavoritesLoaded) {
+              isFav = state.data.companies.any((item) => item.id == company.id);
+            }
+            return Padding(
+              padding: EdgeInsetsDirectional.only(end: 12.w),
+              child: CircularGlassButton(
+                onTap: () => context.read<FavoritesBloc>().add(
+                  ToggleFavoriteEvent(type: 'company', id: company.id),
+                ),
+                icon: isFav ? Icons.favorite : Icons.favorite_outline,
+                isActive: isFav,
+                activeColor: theme.error,
+              ),
+            );
+          },
+        ),
+      ],
       flexibleSpace: LayoutBuilder(
         builder: (context, constraints) {
           final top = constraints.biggest.height;
@@ -33,7 +54,11 @@ class CompanyHeaderSection extends StatelessWidget {
           );
 
           return FlexibleSpaceBar(
-            titlePadding: EdgeInsets.only(left: 56.w, bottom: 16.h),
+            titlePadding: EdgeInsetsDirectional.only(
+              start: 56.w,
+              end: 56.w,
+              bottom: 16.h,
+            ),
             title: TweenAnimationBuilder(
               tween: Tween<double>(begin: 0, end: opacity),
               duration: const Duration(milliseconds: 150),
@@ -65,16 +90,16 @@ class CompanyHeaderSection extends StatelessWidget {
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          Colors.black.withOpacity(.7),
+                          Colors.black.withValues(alpha: .7),
                         ],
                       ),
                     ),
                   ),
                 ),
 
-                Positioned(
-                  left: 20,
-                  right: 20,
+                PositionedDirectional(
+                  start: 20.w,
+                  end: 20.w,
                   bottom: 20,
                   child: Column(
                     children: [
@@ -97,76 +122,6 @@ class CompanyHeaderSection extends StatelessWidget {
                     ],
                   ),
                 ),
-                Positioned(
-                  top: 40.h,
-                  right: 20.w,
-                  child: BlocBuilder<FavoritesBloc, FavoritesState>(
-                    builder: (context, state) {
-                      bool isFav = company.isFavorite;
-
-                      if (state is FavoritesLoaded) {
-                        isFav = state.data.companies.any(
-                          (e) => e.id == company.id,
-                        );
-                      }
-
-                      return Container(
-                        width: 40.w,
-                        height: 40.w,
-                        decoration: BoxDecoration(
-                          color: theme.onSurface.withValues(alpha: 0.3),
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-
-                          onPressed: () {
-                            context.read<FavoritesBloc>().add(
-                              ToggleFavoriteEvent(
-                                type: 'company',
-                                id: company.id,
-                              ),
-                            );
-                          },
-
-                          icon: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 250),
-
-                            child: Icon(
-                              isFav ? Icons.favorite : Icons.favorite_outline,
-
-                              key: ValueKey(isFav),
-
-                              color: isFav ? Colors.red : theme.onSurface,
-
-                              size: isFav ? 30.sp : 25.sp,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ), // CircleAvatar(
-                //   backgroundColor: Colors.white,
-                //   child: IconButton(
-                //     onPressed: () {
-                //       context.read<FavoritesBloc>().add(
-                //         ToggleFavoriteEvent(
-                //           type: 'company',
-                //           id: company.id,
-                //         ),
-                //       );
-                //     },
-                //     icon: Icon(
-                //       company.isFavorite
-                //           ? Icons.favorite
-                //           : Icons.favorite_outline,
-                //       color: company.isFavorite
-                //           ? Colors.red
-                //           : Colors.black,
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           );

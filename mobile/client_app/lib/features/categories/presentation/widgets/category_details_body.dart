@@ -12,6 +12,8 @@ import '../../../../config/theme/styles.dart';
 import '../../../../core/utils/functions/spinkit.dart';
 import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../../core/widgets/app_empty_state.dart';
+import '../../../../core/widgets/app_error_state.dart';
+import '../../../../core/utils/content_validation.dart';
 import '../../../../core/widgets/row_title.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../services/domain/entities/service_entity.dart';
@@ -48,7 +50,7 @@ class _CategoryDetailsBodyState extends State<CategoryDetailsBody> {
           current is CategoryError,
       builder: (context, state) {
         if (state is CategoryError) {
-          return _ErrorView(message: state.message, onRetry: _retry);
+          return AppErrorState(failure: state.failure, onRetry: _retry);
         }
 
         final isLoading = state is! CategoryLoaded;
@@ -154,49 +156,53 @@ class _CategoryContent extends StatelessWidget {
                 //     fontWeight: FontWeight.bold,
                 //   ),
                 // ),
-                RowTitle(
-                  iconData: Icons.description_outlined,
-                  title: AppLocalizations.of(context)!.overview,
-                  padding: EdgeInsets.all(0),
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  category.description,
-                  maxLines: 10,
-                  style: Styles.textStyle12.copyWith(
-                    color: theme.onSurfaceVariant,
-                    height: 1.5,
+                if (ContentValidation.hasText(category.description)) ...[
+                  RowTitle(
+                    iconData: Icons.description_outlined,
+                    title: AppLocalizations.of(context)!.overview,
+                    padding: EdgeInsets.all(0),
                   ),
-                ),
-                SizedBox(height: 16.h),
-                Row(
-                  children: [
-                    RowTitle(
-                      iconData: Icons.cleaning_services_outlined,
-                      title: AppLocalizations.of(context)!.services_title,
-                      padding: EdgeInsets.all(0),
+                  SizedBox(height: 8.h),
+                  Text(
+                    category.description.trim(),
+                    maxLines: 10,
+                    style: Styles.textStyle12.copyWith(
+                      color: theme.onSurfaceVariant,
+                      height: 1.5,
                     ),
-                    SizedBox(width: 8.w),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 2.h,
+                  ),
+                ],
+                if (category.services.isNotEmpty) ...[
+                  SizedBox(height: 16.h),
+                  Row(
+                    children: [
+                      RowTitle(
+                        iconData: Icons.cleaning_services_outlined,
+                        title: AppLocalizations.of(context)!.services_title,
+                        padding: EdgeInsets.all(0),
                       ),
-                      decoration: BoxDecoration(
-                        color: theme.primary.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(20.r),
-                      ),
-                      child: Text(
-                        "${category.serviceCount}",
-                        style: Styles.textStyle12.copyWith(
-                          color: theme.primary,
-                          fontWeight: FontWeight.w700,
+                      SizedBox(width: 8.w),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 2.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.primary.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(20.r),
+                        ),
+                        child: Text(
+                          "${category.serviceCount}",
+                          style: Styles.textStyle12.copyWith(
+                            color: theme.primary,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 14.h),
+                    ],
+                  ),
+                  SizedBox(height: 14.h),
+                ],
               ],
             ),
           ),
@@ -230,35 +236,6 @@ class _CategoryContent extends StatelessWidget {
             ),
           ),
       ],
-    );
-  }
-}
-
-class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.message, required this.onRetry});
-
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(20.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.error_outline, size: 42.sp),
-            SizedBox(height: 10.h),
-            Text(message, textAlign: TextAlign.center),
-            SizedBox(height: 16.h),
-            ElevatedButton(
-              onPressed: onRetry,
-              child: Text(AppLocalizations.of(context)!.retry),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

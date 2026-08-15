@@ -3,6 +3,7 @@ import 'dart:async';
 import '../../../../config/constants/pagination_constants.dart';
 import '../../../../core/pagination/paginated_result.dart';
 import '../../../../core/pagination/pagination_utils.dart';
+import '../../../../core/error/failure.dart';
 import 'package:client_app/features/companies/domain/usecases/get_company_details_use_case.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -96,8 +97,10 @@ class CompaniesBloc extends Bloc<CompaniesEvent, CompaniesState> {
       final result = await companyDetailsUseCase(event.id);
 
       emit(CompanyDetailsSuccess(result));
-    } catch (e) {
-      emit(CompanyDetailsError(e.toString()));
+    } on Failure catch (failure) {
+      emit(CompanyDetailsError(failure));
+    } catch (_) {
+      emit(const CompanyDetailsError(ServerFailure('', '')));
     }
   }
 

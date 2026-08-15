@@ -111,10 +111,10 @@ class CategoryLoaded extends CategoriesState {
 }
 
 class CategoryError extends CategoriesState {
-  final String message;
+  final Failure failure;
 
-  const CategoryError(this.message);
+  const CategoryError(this.failure);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }

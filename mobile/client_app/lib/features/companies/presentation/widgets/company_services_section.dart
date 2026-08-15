@@ -1,18 +1,12 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:client_app/features/services/domain/entities/service_entity.dart';
+import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_router.dart';
-import '../../../../config/theme/styles.dart';
-import '../../../../core/utils/gen/assets.gen.dart';
-import '../../../../core/widgets/custom_image_view.dart';
-import '../../../../core/widgets/dummy_data.dart';
 import '../../../../core/widgets/row_title.dart';
 import '../../../categories/presentation/widgets/category_service_card.dart';
-import '../../../services/data/models/service_model.dart';
-import '../../../home/presentation/widgets/service_tile.dart';
 
 class CompanyServicesSection extends StatefulWidget {
   final List<ServiceEntity> services;
@@ -33,11 +27,12 @@ class _CompanyServicesSectionState extends State<CompanyServicesSection> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.services.isEmpty) return const SizedBox.shrink();
     return Column(
       children: [
         RowTitle(
           iconData: Icons.cleaning_services_rounded,
-          title: "Available Services",
+          title: AppLocalizations.of(context)!.available_services,
           onTap: () {},
         ),
 
@@ -86,7 +81,7 @@ class _CompanyServicesSectionState extends State<CompanyServicesSection> {
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             itemCount: widget.services.length,
-            separatorBuilder: (_, __) => SizedBox(width: 12.w),
+            separatorBuilder: (_, _) => SizedBox(width: 12.w),
             itemBuilder: (_, index) {
               return SizedBox(
                 width: 320.w,

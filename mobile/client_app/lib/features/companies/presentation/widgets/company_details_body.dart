@@ -1,8 +1,9 @@
-import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/functions/spinkit.dart';
+import '../../../../core/utils/content_validation.dart';
+import '../../../../core/widgets/app_error_state.dart';
 import '../../../reviews/domain/entities/reviewable_type.dart';
 import '../../../reviews/presentation/widgets/review_dialog.dart';
 import '../../../complaints/domain/entities/complaint_entity.dart';
@@ -43,35 +44,24 @@ class _CompanyDetailsBodyState extends State<CompanyDetailsBody> {
           }
 
           if (state is CompanyDetailsError) {
-            return Center(
-              child: Padding(
-                padding: EdgeInsets.all(20.w),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.error_outline, size: 42.sp),
-
-                    SizedBox(height: 10.h),
-
-                    Text(state.message, textAlign: TextAlign.center),
-
-                    SizedBox(height: 16.h),
-
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<CompaniesBloc>().add(
-                          GetCompanyDetailsEvent(widget.id),
-                        );
-                      },
-                      child: Text(AppLocalizations.of(context)!.retry),
-                    ),
-                  ],
-                ),
+            return AppErrorState(
+              failure: state.failure,
+              onRetry: () => context.read<CompaniesBloc>().add(
+                GetCompanyDetailsEvent(widget.id),
               ),
             );
           }
           if (state is CompanyDetailsSuccess) {
             final company = state.company;
+            final hasAbout = ContentValidation.hasText(company.description);
+            final hasHours = company.workTimes.isNotEmpty;
+            final services = ContentValidation.validItems(
+              company.services,
+              (service) =>
+                  service.id > 0 && ContentValidation.hasText(service.name),
+            );
+            final workers = company.workers;
+            final reviews = company.reviews;
 
             return CustomScrollView(
               slivers: [
@@ -98,28 +88,29 @@ class _CompanyDetailsBodyState extends State<CompanyDetailsBody> {
                         ),
                       ),
 
-                      SizedBox(height: 20.h),
-
-                      AboutCompanySection(company: company),
-
-                      SizedBox(height: 20.h),
-
-                      WorkingHoursSection(company: company),
-
-                      SizedBox(height: 20.h),
-
-                      CompanyServicesSection(services: company.services),
-
-                      SizedBox(height: 20.h),
-
-                      ExpertsSection(company: company),
-
-                      SizedBox(height: 20.h),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        child: ReviewsSection(reviews: company.reviews),
-                      ),
+                      if (hasAbout) ...[
+                        SizedBox(height: 20.h),
+                        AboutCompanySection(company: company),
+                      ],
+                      if (hasHours) ...[
+                        SizedBox(height: 20.h),
+                        WorkingHoursSection(company: company),
+                      ],
+                      if (services.isNotEmpty) ...[
+                        SizedBox(height: 20.h),
+                        CompanyServicesSection(services: services),
+                      ],
+                      if (workers.isNotEmpty) ...[
+                        SizedBox(height: 20.h),
+                        ExpertsSection(company: company),
+                      ],
+                      if (reviews.isNotEmpty) ...[
+                        SizedBox(height: 20.h),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: ReviewsSection(reviews: reviews),
+                        ),
+                      ],
                       SizedBox(height: 30),
                     ],
                   ),

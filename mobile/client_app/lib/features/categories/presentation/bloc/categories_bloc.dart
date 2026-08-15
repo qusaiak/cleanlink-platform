@@ -3,6 +3,7 @@ import 'dart:async';
 import '../../../../config/constants/pagination_constants.dart';
 import '../../../../core/pagination/paginated_result.dart';
 import '../../../../core/pagination/pagination_utils.dart';
+import '../../../../core/error/failure.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/category_entity.dart';
@@ -92,8 +93,10 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
       emit(const CategoryLoading());
       final result = await getCategoryUseCase(event.id);
       emit(CategoryLoaded(result));
-    } catch (e) {
-      emit(CategoryError(e.toString()));
+    } on Failure catch (failure) {
+      emit(CategoryError(failure));
+    } catch (_) {
+      emit(const CategoryError(ServerFailure('', '')));
     }
   }
 

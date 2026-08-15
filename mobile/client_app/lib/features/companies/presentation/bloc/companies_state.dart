@@ -110,10 +110,10 @@ class CompanyDetailsSuccess extends CompaniesState {
 }
 
 class CompanyDetailsError extends CompaniesState {
-  final String message;
+  final Failure failure;
 
-  const CompanyDetailsError(this.message);
+  const CompanyDetailsError(this.failure);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }
