@@ -6,6 +6,7 @@ import '../../../../core/error/failure.dart';
 import '../../../../core/network/base_response_model.dart';
 import '../../../../core/network/network_exceptions.dart';
 import '../../../../core/session/user_session.dart';
+import '../../../../core/utils/map_address_normalizer.dart';
 import '../../domain/entities/auth_entity.dart';
 import '../../domain/entities/otp_dispatch_entity.dart';
 import '../../domain/entities/user_profile_entity.dart';
@@ -141,15 +142,37 @@ class AuthRepoImpl implements AuthRepo {
   @override
   Future<UserProfileEntity> updateProfile({
     File? image,
+    required double latitude,
+    required double longitude,
+    required String phone,
+  }) => updateProfileWithAddress(
+    image: image,
+    latitude: latitude,
+    longitude: longitude,
+    address: '',
+    phone: phone,
+  );
+
+  @override
+  Future<UserProfileEntity> updateProfileWithAddress({
+    File? image,
+    required double latitude,
+    required double longitude,
     required String address,
     required String phone,
   }) async {
     try {
-      final response = await api.updateProfile(image, address, phone);
+      final response = await api.updateProfile(
+        image,
+        null,
+        null,
+        normalizeGoogleMapAddress(address),
+        phone,
+      );
       final profile = _resolveProfile(response.data);
       await session.updateProfile(
         phone: profile.phone ?? phone,
-        address: profile.address ?? address,
+        address: profile.address ?? normalizeGoogleMapAddress(address),
         image: profile.image ?? image?.path ?? session.image ?? '',
       );
       return profile;

@@ -17,9 +17,8 @@ AttributeModel _$AttributeModelFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updated_at'] == null
           ? null
           : DateTime.parse(json['updated_at'] as String),
-      pivot: json['pivot'] == null
-          ? null
-          : PivotModel.fromJson(json['pivot'] as Map<String, dynamic>),
+      price: json['price'] == null ? 0 : _doubleFromJson(json['price']),
+      duration: json['duration'] == null ? 0 : _intFromJson(json['duration']),
     );
 
 Map<String, dynamic> _$AttributeModelToJson(AttributeModel instance) =>
@@ -29,5 +28,6 @@ Map<String, dynamic> _$AttributeModelToJson(AttributeModel instance) =>
       'type': instance.type,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
-      'pivot': instance.pivot,
+      'price': instance.price,
+      'duration': instance.duration,
     };

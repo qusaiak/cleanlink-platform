@@ -11,8 +11,10 @@ PackageModel _$PackageModelFromJson(Map<String, dynamic> json) => PackageModel(
   serviceId: (json['service_id'] as num?)?.toInt(),
   name: json['name'] as String?,
   duration: (json['duration'] as num?)?.toInt(),
-  price: (json['price'] as num?)?.toInt(),
-  priceAfterDiscount: (json['price_after_discount'] as num?)?.toInt(),
+  price: _nullableDoubleFromJson(json['price']),
+  priceAfterDiscount: _nullableDoubleFromJson(json['price_after_discount']),
+  minimumWorkers: (json['minimum_workers'] as num?)?.toInt(),
+  isOpenPackage: json['is_open_package'] as bool?,
   details: (json['details'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
@@ -32,6 +34,8 @@ Map<String, dynamic> _$PackageModelToJson(PackageModel instance) =>
       'duration': instance.duration,
       'price': instance.price,
       'price_after_discount': instance.priceAfterDiscount,
+      'minimum_workers': instance.minimumWorkers,
+      'is_open_package': instance.isOpenPackage,
       'details': instance.details,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),

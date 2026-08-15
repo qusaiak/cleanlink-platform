@@ -14,9 +14,15 @@ class PackageModel {
 
   final int? duration;
 
-  final int? price;
+  @JsonKey(fromJson: _nullableDoubleFromJson)
+  final double? price;
 
-  final int? priceAfterDiscount;
+  @JsonKey(fromJson: _nullableDoubleFromJson)
+  final double? priceAfterDiscount;
+
+  final int? minimumWorkers;
+
+  final bool? isOpenPackage;
 
   final List<String>? details;
 
@@ -31,6 +37,8 @@ class PackageModel {
     this.duration,
     this.price,
     this.priceAfterDiscount,
+    this.minimumWorkers,
+    this.isOpenPackage,
     this.details,
     this.createdAt,
     this.updatedAt,
@@ -54,6 +62,10 @@ class PackageModel {
 
       priceAfterDiscount: priceAfterDiscount ?? 0,
 
+      minimumWorkers: minimumWorkers ?? 1,
+
+      isOpenPackage: isOpenPackage ?? false,
+
       details: details ?? [],
 
       createdAt: createdAt ?? DateTime.now(),
@@ -61,4 +73,10 @@ class PackageModel {
       updatedAt: updatedAt ?? DateTime.now(),
     );
   }
+}
+
+double? _nullableDoubleFromJson(Object? value) {
+  if (value == null) return null;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value.toString());
 }

@@ -19,7 +19,8 @@ class AuthInterceptor extends Interceptor {
   ) async {
     final token = await SharedStorage.get(StorageData.token);
     final languageCode = await SharedStorage.get(StorageData.languageCode);
-
+    print("token");
+    print(token);
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }

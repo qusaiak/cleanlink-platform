@@ -33,7 +33,21 @@ abstract class AuthRepo {
 
   Future<UserProfileEntity> updateProfile({
     File? image,
-    required String address,
+    required double latitude,
+    required double longitude,
     required String phone,
   });
+
+  Future<UserProfileEntity> updateProfileWithAddress({
+    File? image,
+    required double latitude,
+    required double longitude,
+    required String address,
+    required String phone,
+  }) => updateProfile(
+    image: image,
+    latitude: latitude,
+    longitude: longitude,
+    phone: phone,
+  );
 }

@@ -49,6 +49,8 @@ abstract class AuthApiService {
   Future<HttpResponse<BaseResponseModel<UserProfileResponseModel>>>
   updateProfile(
     @Part(name: 'image') File? image,
+    @Part(name: 'latitude') double? latitude,
+    @Part(name: 'longitude') double? longitude,
     @Part(name: 'address') String address,
     @Part(name: 'phone') String phone,
   );

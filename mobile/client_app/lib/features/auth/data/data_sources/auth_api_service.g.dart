@@ -209,7 +209,13 @@ class _AuthApiService implements AuthApiService {
 
   @override
   Future<HttpResponse<BaseResponseModel<UserProfileResponseModel>>>
-  updateProfile(File? image, String address, String phone) async {
+  updateProfile(
+    File? image,
+    double? latitude,
+    double? longitude,
+    String address,
+    String phone,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     queryParameters.removeWhere((k, v) => v == null);
@@ -225,6 +231,12 @@ class _AuthApiService implements AuthApiService {
           ),
         ),
       );
+    }
+    if (latitude != null) {
+      _data.fields.add(MapEntry('latitude', latitude.toString()));
+    }
+    if (longitude != null) {
+      _data.fields.add(MapEntry('longitude', longitude.toString()));
     }
     _data.fields.add(MapEntry('address', address));
     _data.fields.add(MapEntry('phone', phone));

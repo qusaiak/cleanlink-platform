@@ -1,8 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../domain/entities/attribute_entity.dart';
-import '../../domain/entities/pivot_entity.dart';
-import 'pivot_model.dart';
 
 part 'attribute_model.g.dart';
 
@@ -18,7 +16,11 @@ class AttributeModel {
 
   final DateTime? updatedAt;
 
-  final PivotModel? pivot;
+  @JsonKey(fromJson: _doubleFromJson)
+  final double price;
+
+  @JsonKey(fromJson: _intFromJson)
+  final int duration;
 
   const AttributeModel({
     this.id,
@@ -26,7 +28,8 @@ class AttributeModel {
     this.type,
     this.createdAt,
     this.updatedAt,
-    this.pivot,
+    this.price = 0,
+    this.duration = 0,
   });
 
   factory AttributeModel.fromJson(Map<String, dynamic> json) =>
@@ -46,16 +49,15 @@ class AttributeModel {
 
       updatedAt: updatedAt ?? DateTime.now(),
 
-      pivot:
-          pivot?.toEntity() ??
-          PivotEntity(
-            serviceId: 0,
-            attributeId: 0,
-            price: "0",
-            duration: 0,
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ),
+      price: price,
+      duration: duration,
     );
   }
 }
+
+double _doubleFromJson(Object? value) => value is num
+    ? value.toDouble()
+    : double.tryParse(value?.toString() ?? '') ?? 0;
+
+int _intFromJson(Object? value) =>
+    value is num ? value.toInt() : int.tryParse(value?.toString() ?? '') ?? 0;
