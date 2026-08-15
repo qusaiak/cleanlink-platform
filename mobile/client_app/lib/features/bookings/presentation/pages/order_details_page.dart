@@ -249,9 +249,11 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
           switch (order?.statusType) {
             case OrderStatus.pending:
               return Colors.orange;
-            case OrderStatus.assignedToWorker:
+            case OrderStatus.assigned:
               return AppColor.primaryColor;
-            case OrderStatus.inProgress:
+            case OrderStatus.onTheWay:
+              return Colors.blue;
+            case OrderStatus.inProcess:
               return Colors.purple;
             case OrderStatus.completed:
               return AppColor.success;
@@ -354,14 +356,22 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                     ),
                     _row(
                       Icons.stop_circle_outlined,
-                      l10n.end_time,
+                      order.travelBufferMinutes > 0
+                          ? l10n.worker_return
+                          : l10n.end_time,
                       _date(context, order.endTime),
                     ),
                     _row(
                       Icons.schedule,
                       l10n.duration,
-                      '${order.duration} ${l10n.minutes}',
+                      '${order.package?.isOpenPackage == true ? order.duration : (order.package?.duration ?? order.duration)} ${l10n.minutes}',
                     ),
+                    if (order.travelBufferMinutes > 0)
+                      _row(
+                        Icons.route_outlined,
+                        l10n.travel_allocation,
+                        '${order.travelBufferMinutes} ${l10n.minutes}',
+                      ),
                     _row(
                       Icons.payments_outlined,
                       l10n.total_price,
@@ -381,7 +391,8 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                         l10n.company_location,
                         order.package!.service!.company!.location,
                       ),
-                    if (order.package?.details.isNotEmpty == true) ...[
+                    if (order.package?.isOpenPackage != true &&
+                        order.package?.details.isNotEmpty == true) ...[
                       SizedBox(height: 12.h),
                       Text(
                         l10n.package_details,
@@ -409,14 +420,39 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                         ),
                       ),
                     ],
-                    if (order.attributes.isNotEmpty) ...[
-                      Text(
-                        l10n.attributes,
-                        style: Styles.textStyle16.copyWith(
-                          fontWeight: FontWeight.bold,
+                    if (order.package?.isOpenPackage == true) ...[
+                      SizedBox(height: 12.h),
+                      Row(
+                        children: [
+                          Text(
+                            l10n.package_details,
+                            style: Styles.textStyle16.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            "(${l10n.selected_configuration})",
+                            style: Styles.textStyle12.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: colors.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8.h),
+                      if (order.attributes.isEmpty)
+                        Text(l10n.no_attributes_available),
+                      ...order.attributes.map(
+                        (attribute) => Padding(
+                          padding: EdgeInsets.only(bottom: 6.h),
+                          child: _row(
+                            Icons.tune,
+                            attribute.name,
+                            '${attribute.qty ?? 0}',
+                          ),
                         ),
                       ),
-                      Text(order.attributes.join(', ')),
                     ],
                     if (order.leader != null) _leaderCard(order.leader!),
                     SizedBox(height: 24.h),

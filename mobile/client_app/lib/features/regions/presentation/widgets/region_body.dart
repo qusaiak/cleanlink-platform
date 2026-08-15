@@ -175,8 +175,8 @@ class _RegionContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (region.manager != null) _ManagerTile(region: region),
-                SizedBox(height: 16.h),
+                // if (region.manager != null) _ManagerTile(region: region),
+                // SizedBox(height: 16.h),
                 Row(
                   children: [
                     Expanded(

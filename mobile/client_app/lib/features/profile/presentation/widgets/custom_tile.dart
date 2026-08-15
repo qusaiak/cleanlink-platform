@@ -51,14 +51,14 @@ class CustomTile extends StatelessWidget {
               ),
             ),
 
-            ?onTap != null
-                ? trailing ??
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        size: 12,
-                        color: AppColor.primaryColor,
-                      )
-                : null,
+            if (trailing != null)
+              trailing!
+            else if (onTap != null)
+              const Icon(
+                Icons.arrow_forward_ios,
+                size: 12,
+                color: AppColor.primaryColor,
+              ),
           ],
         ),
       ),

@@ -18,6 +18,7 @@ class ServicePackagesSection extends StatefulWidget {
 class _ServicePackagesSectionState extends State<ServicePackagesSection> {
   @override
   Widget build(BuildContext context) {
+    if (widget.packages.isEmpty) return const SizedBox.shrink();
     final theme = Theme.of(context).colorScheme;
 
     return BlocBuilder<ServicesBloc, ServicesState>(
@@ -62,19 +63,21 @@ class _ServicePackagesSectionState extends State<ServicePackagesSection> {
                       vertical: 12.h,
                     ),
                     decoration: BoxDecoration(
-                      color: isSelected ? theme.primary : theme.surface,
+                      color: isSelected
+                          ? theme.primary
+                          : theme.surfaceContainer,
                       borderRadius: BorderRadius.circular(15.r),
                       border: Border.all(
                         color: isSelected
                             ? theme.primary
-                            : theme.outline.withOpacity(0.2),
+                            : theme.outline.withValues(alpha: 0.2),
                       ),
                     ),
                     child: Text(
                       package.name,
                       maxLines: 2,
                       style: Styles.textStyle12.copyWith(
-                        color: isSelected ? Colors.white : theme.onSurface,
+                        color: isSelected ? theme.onPrimary : theme.onSurface,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -87,9 +90,9 @@ class _ServicePackagesSectionState extends State<ServicePackagesSection> {
               width: double.infinity,
               padding: EdgeInsets.all(20.w),
               decoration: BoxDecoration(
-                color: theme.surface,
+                color: theme.surfaceContainer,
                 borderRadius: BorderRadius.circular(24.r),
-                border: Border.all(color: theme.outline.withOpacity(0.1)),
+                border: Border.all(color: theme.outline.withValues(alpha: 0.1)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,7 +115,7 @@ class _ServicePackagesSectionState extends State<ServicePackagesSection> {
                           vertical: 6.h,
                         ),
                         decoration: BoxDecoration(
-                          color: theme.primary.withOpacity(0.1),
+                          color: theme.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Text(
@@ -131,49 +134,60 @@ class _ServicePackagesSectionState extends State<ServicePackagesSection> {
                       Icon(
                         Icons.access_time,
                         size: 14.sp,
-                        color: theme.onSurface.withOpacity(0.7),
+                        color: theme.onSurface.withValues(alpha: 0.7),
                       ),
                       SizedBox(width: 4.w),
                       Text(
                         "${selectedPackage.duration.toString()} ${AppLocalizations.of(context)!.track_minutes_short}",
                         style: Styles.textStyle12.copyWith(
-                          color: theme.onSurface.withOpacity(0.7),
+                          color: theme.onSurface.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: 16.h),
-                  Divider(height: 1, color: theme.outline.withOpacity(0.2)),
+                  Divider(
+                    height: 1,
+                    color: theme.outline.withValues(alpha: 0.2),
+                  ),
                   SizedBox(height: 16.h),
                   Text(
-                    "${AppLocalizations.of(context)!.what_is_included}:",
+                    selectedPackage.isOpenPackage
+                        ? AppLocalizations.of(context)!.customize_your_service
+                        : "${AppLocalizations.of(context)!.what_is_included}:",
                     style: Styles.textStyle12.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   SizedBox(height: 12.h),
-                  ...selectedPackage.details.map(
-                    (feature) => Padding(
-                      padding: EdgeInsets.only(bottom: 8.h),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.check_circle_outline,
-                            size: 16.sp,
-                            color: theme.primary,
+                  ...(selectedPackage.isOpenPackage
+                          ? state.service.attributes?.map(
+                                  (item) => item.name,
+                                ) ??
+                                const Iterable<String>.empty()
+                          : selectedPackage.details)
+                      .map(
+                        (feature) => Padding(
+                          padding: EdgeInsets.only(bottom: 8.h),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.check_circle_outline,
+                                size: 16.sp,
+                                color: theme.primary,
+                              ),
+                              SizedBox(width: 10.w),
+                              Expanded(
+                                child: Text(
+                                  feature,
+                                  maxLines: 5,
+                                  style: Styles.textStyle12,
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(width: 10.w),
-                          Expanded(
-                            child: Text(
-                              feature,
-                              maxLines: 5,
-                              style: Styles.textStyle12,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
                 ],
               ),
             ),

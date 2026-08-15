@@ -6,7 +6,7 @@ import 'package:client_app/features/services/presentation/widgets/service_summar
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/app_error_state.dart';
 import '../../../bookings/presentation/pages/booking_details_page.dart';
 import '../../../reviews/domain/entities/reviewable_type.dart';
 import '../../../reviews/presentation/widgets/review_dialog.dart';
@@ -39,30 +39,10 @@ class _ServiceDetailsBodyState extends State<ServiceDetailsBody> {
         }
 
         if (state is ServiceDetailsError) {
-          return Center(
-            child: Padding(
-              padding: EdgeInsets.all(20.w),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.error_outline, size: 42.sp),
-
-                  SizedBox(height: 10.h),
-
-                  Text(state.message, textAlign: TextAlign.center),
-
-                  SizedBox(height: 16.h),
-
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<ServicesBloc>().add(
-                        GetServiceDetailsEvent(widget.id),
-                      );
-                    },
-                    child: Text(AppLocalizations.of(context)!.retry),
-                  ),
-                ],
-              ),
+          return AppErrorState(
+            failure: state.failure,
+            onRetry: () => context.read<ServicesBloc>().add(
+              GetServiceDetailsEvent(widget.id),
             ),
           );
         }
@@ -83,7 +63,10 @@ class _ServiceDetailsBodyState extends State<ServiceDetailsBody> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => BookingDetailsPage(package: package),
+                          builder: (_) => BookingDetailsPage(
+                            package: package,
+                            attributes: service.attributes ?? const [],
+                          ),
                         ),
                       );
                     },
@@ -106,10 +89,17 @@ class _ServiceDetailsBodyState extends State<ServiceDetailsBody> {
                             ),
                           ),
 
-                          Positioned(
-                            top: 40.h,
-                            left: 16.w,
-                            child: BackButton(color: theme.onSurface),
+                          PositionedDirectional(
+                            top: 10.h,
+                            start: 16.w,
+                            child: SafeArea(
+                              bottom: false,
+                              child: Material(
+                                color: theme.surface.withValues(alpha: .60),
+                                shape: const CircleBorder(),
+                                child: BackButton(color: theme.onSurface),
+                              ),
+                            ),
                           ),
                         ],
                       ),

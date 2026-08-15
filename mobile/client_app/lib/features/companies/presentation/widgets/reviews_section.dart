@@ -16,6 +16,7 @@ class ReviewsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (reviews.isEmpty) return const SizedBox.shrink();
     return Column(
       children: [
         RowTitle(
@@ -68,7 +69,7 @@ class GlassReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context)!.colorScheme;
+    var theme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -93,11 +94,13 @@ class GlassReviewCard extends StatelessWidget {
                 padding: EdgeInsets.all(16.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24.r),
-                  color: Colors.white.withOpacity(.08),
-                  border: Border.all(color: Colors.white.withOpacity(.25)),
+                  color: theme.surfaceContainer,
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: .25),
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(.05),
+                      color: Colors.black.withValues(alpha: .05),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -114,7 +117,7 @@ class GlassReviewCard extends StatelessWidget {
                               padding: EdgeInsets.all(1.5.r),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.white.withOpacity(.25),
+                                color: Colors.white.withValues(alpha: .25),
                               ),
                               child: CircleAvatar(
                                 radius: 26.r,
@@ -217,7 +220,7 @@ class ReviewBubbleDialog extends StatelessWidget {
                 child: Icon(
                   Icons.format_quote_rounded,
                   size: 25.sp,
-                  color: Colors.grey.withOpacity(0.5),
+                  color: Colors.grey.withValues(alpha: 0.5),
                 ),
               ),
 
@@ -233,7 +236,7 @@ class ReviewBubbleDialog extends StatelessWidget {
                             padding: EdgeInsets.all(1.5.r),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.white.withOpacity(.25),
+                              color: Colors.white.withValues(alpha: .25),
                             ),
                             child: CircleAvatar(
                               radius: 26.r,

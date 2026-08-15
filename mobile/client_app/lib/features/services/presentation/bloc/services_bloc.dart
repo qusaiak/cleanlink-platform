@@ -3,6 +3,7 @@ import 'dart:async';
 import '../../../../config/constants/pagination_constants.dart';
 import '../../../../core/pagination/paginated_result.dart';
 import '../../../../core/pagination/pagination_utils.dart';
+import '../../../../core/error/failure.dart';
 import 'package:client_app/features/services/domain/usecases/get_service_details_use_case.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -163,8 +164,10 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
               : null,
         ),
       );
-    } catch (e) {
-      emit(ServiceDetailsError(e.toString()));
+    } on Failure catch (failure) {
+      emit(ServiceDetailsError(failure));
+    } catch (_) {
+      emit(const ServiceDetailsError(ServerFailure('', '')));
     }
   }
 

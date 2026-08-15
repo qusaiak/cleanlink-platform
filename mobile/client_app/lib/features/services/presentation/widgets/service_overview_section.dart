@@ -10,6 +10,7 @@ class ServiceOverviewSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (overview.trim().isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

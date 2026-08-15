@@ -205,10 +205,10 @@ class ServiceDetailsLoaded extends ServicesState {
 }
 
 class ServiceDetailsError extends ServicesState {
-  final String message;
+  final Failure failure;
 
-  const ServiceDetailsError(this.message);
+  const ServiceDetailsError(this.failure);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }
