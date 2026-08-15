@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,9 +16,7 @@ abstract class SharedStorage {
 
   static Future<void> init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    _secureStorage = const FlutterSecureStorage(
-      aOptions: AndroidOptions(encryptedSharedPreferences: true),
-    );
+    _secureStorage = const FlutterSecureStorage();
   }
 
   static Future<T?> get<T>(Storable key) async {
@@ -32,7 +31,9 @@ abstract class SharedStorage {
       } on PlatformException catch (e) {
         // Handle decryption errors (e.g., BadPaddingException)
         // This can happen when encryption keys change or data is corrupted
-        print('Error reading secure storage for key ${key.storableKey}: $e');
+        debugPrint(
+          'Error reading secure storage for key ${key.storableKey}: $e',
+        );
         // Delete the corrupted key
         try {
           await _secureStorage!.delete(key: key.storableKey);
@@ -44,6 +45,26 @@ abstract class SharedStorage {
     }
 
     return _sharedPreferences?.get(key.storableKey) as T?;
+  }
+
+  /// Reads a boolean preference while remaining compatible with values saved
+  /// as strings or integers by older application versions.
+  static Future<bool?> getBool(Storable key) async {
+    final value = await get<Object>(key);
+    return parseBool(value);
+  }
+
+  static bool? parseBool(Object? value) {
+    if (value is bool) return value;
+    if (value is int) return value != 0;
+    if (value is String) {
+      return switch (value.trim().toLowerCase()) {
+        'true' || '1' => true,
+        'false' || '0' => false,
+        _ => null,
+      };
+    }
+    return null;
   }
 
   static Future<void> set<T>(Storable key, T value) async {
