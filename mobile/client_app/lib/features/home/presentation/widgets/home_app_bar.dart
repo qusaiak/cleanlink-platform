@@ -22,7 +22,6 @@ class HomeAppBar extends StatelessWidget {
       builder: (context, child) {
         final session = sl<UserSession>();
         final displayName = session.fullname ?? 'Guest';
-        final address = session.address;
         final image = session.image;
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -50,25 +49,6 @@ class HomeAppBar extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    if (address != null && address.isNotEmpty)
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.location_on_rounded,
-                            size: 14,
-                            color: theme.onSurfaceVariant,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            address,
-                            style: Styles.textStyle12.copyWith(
-                              color: theme.onSurfaceVariant,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
                   ],
                 ),
               ),

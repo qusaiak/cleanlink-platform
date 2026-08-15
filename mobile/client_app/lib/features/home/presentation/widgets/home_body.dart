@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/language/app_language_info.dart';
 import '../../../../config/routes/app_router.dart';
 import '../../../../core/utils/functions/spinkit.dart';
+import '../../../../core/widgets/app_error_state.dart';
 import '../bloc/home_bloc.dart';
 import 'categories_section.dart';
 import 'offers_section.dart';
@@ -67,7 +68,11 @@ class _HomeBodyState extends State<HomeBody> {
               return Center(child: spinKitApp(theme.primary));
             }
             if (state is HomeError) {
-              return Center(child: Text(state.error ?? 'Error'));
+              return AppErrorState(
+                failure: state.error,
+                onRetry: () =>
+                    context.read<HomeBloc>().add(const GetHomeEvent()),
+              );
             }
             if (state is HomeLoaded) {
               final home = state.home!;
@@ -82,25 +87,33 @@ class _HomeBodyState extends State<HomeBody> {
                   children: [
                     SizedBox(height: 10.h),
                     const HomeAppBar(),
-                    SizedBox(height: 20.h),
-                    OffersSection(offers: home.offers),
-                    SizedBox(height: 10.h),
-                    RowTitle(
-                      iconData: Icons.category,
-                      title: AppLocalizations.of(context)!.popular_categories,
-                      onTap: () {
-                        GoRouter.of(context).push(AppRouter.kCategories);
-                      },
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16.h,
-                        vertical: 4.h,
+                    if (home.offers.isNotEmpty) ...[
+                      SizedBox(height: 20.h),
+                      OffersSection(offers: home.offers),
+                    ],
+                    if (home.categories.isNotEmpty) ...[
+                      SizedBox(height: 10.h),
+                      RowTitle(
+                        iconData: Icons.category,
+                        title: AppLocalizations.of(context)!.popular_categories,
+                        onTap: () {
+                          GoRouter.of(context).push(AppRouter.kCategories);
+                        },
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.h,
+                          vertical: 4.h,
+                        ),
                       ),
-                    ),
-                    CategoriesSection(categories: home.categories),
-                    SizedBox(height: 10.h),
-                    CompaniesSection(companies: home.companies),
-                    SizedBox(height: 10.h),
-                    ServicesSection(services: home.services),
+                      CategoriesSection(categories: home.categories),
+                    ],
+                    if (home.companies.isNotEmpty) ...[
+                      SizedBox(height: 10.h),
+                      CompaniesSection(companies: home.companies),
+                    ],
+                    if (home.services.isNotEmpty) ...[
+                      SizedBox(height: 10.h),
+                      ServicesSection(services: home.services),
+                    ],
                   ],
                 ),
               );

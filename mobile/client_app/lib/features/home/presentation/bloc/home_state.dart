@@ -5,11 +5,11 @@ class HomeState extends Equatable {
 
   final HomeEntity? home;
 
-  final String? error;
+  final Failure? error;
 
   const HomeState({this.isLoading = false, this.home, this.error});
 
-  HomeState copyWith({bool? isLoading, HomeEntity? home, String? error}) {
+  HomeState copyWith({bool? isLoading, HomeEntity? home, Failure? error}) {
     return HomeState(
       isLoading: isLoading ?? this.isLoading,
       home: home ?? this.home,
@@ -34,5 +34,5 @@ final class HomeLoaded extends HomeState {
 }
 
 final class HomeError extends HomeState {
-  const HomeError(String message) : super(error: message);
+  const HomeError(Failure failure) : super(error: failure);
 }

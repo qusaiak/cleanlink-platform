@@ -1,5 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/error/failure.dart';
 import '../../domain/entities/home_entity.dart';
 import '../../domain/usecases/home_usecase.dart';
 
@@ -20,8 +21,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final result = await getHomeUseCase();
 
       emit(HomeLoaded(result));
-    } catch (e) {
-      emit(HomeError(e.toString()));
+    } on Failure catch (failure) {
+      emit(HomeError(failure));
+    } catch (_) {
+      emit(const HomeError(ServerFailure('', '')));
     }
   }
 }
