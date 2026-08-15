@@ -45,9 +45,9 @@ String formatServicePriceRange(BuildContext context, ServiceEntity service) {
 
   if (min == null && max == null) return l.price_unavailable;
   if (min != null && max != null) {
-    if (min == max) return price(min);
+    if (min == max) return '${price(min)} ${l.sp}';
     return '${price(min)}-${price(max)} ${l.sp}';
   }
-  if (min != null) return '${l.from_price} ${price(min)}';
-  return '${l.up_to_price} ${price(max!)}';
+  if (min != null) return '${l.from_price} ${price(min)} ${l.sp}';
+  return '${l.up_to_price} ${price(max!)} ${l.sp}';
 }

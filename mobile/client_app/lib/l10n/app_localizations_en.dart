@@ -58,6 +58,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get retry => 'Retry';
 
   @override
+  String get network_no_internet_title => 'No internet connection';
+
+  @override
+  String get network_no_internet_description =>
+      'Please check your connection and try again.';
+
+  @override
+  String get network_timeout_title => 'The request took too long';
+
+  @override
+  String get network_timeout_description =>
+      'The server did not respond in time. Please try again.';
+
+  @override
+  String get network_server_title => 'The service is unavailable';
+
+  @override
+  String get network_server_description =>
+      'The server could not complete your request. Please try again shortly.';
+
+  @override
+  String get network_generic_title => 'Something went wrong';
+
+  @override
+  String get network_generic_description =>
+      'We could not load this content. Please try again.';
+
+  @override
   String get logging_in => 'Logging in...';
 
   @override
@@ -453,6 +481,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notification_setting => 'Push Notifications';
 
   @override
+  String get notification_setting_description =>
+      'Receive updates about orders, complaints, offers, and account activity.';
+
+  @override
+  String get notifications_enabled_message => 'Push notifications are enabled.';
+
+  @override
+  String get notifications_disabled_message =>
+      'Push notifications are disabled on this device.';
+
+  @override
+  String get notification_permission_title =>
+      'Notification permission required';
+
+  @override
+  String get notification_permission_disabled =>
+      'Notification permission is disabled. Enable it from the application settings to receive updates.';
+
+  @override
+  String get notification_sync_failed =>
+      'Notifications could not be enabled right now. Check your connection and try again.';
+
+  @override
+  String get open_settings => 'Open Settings';
+
+  @override
   String get notifications => 'Notifications';
 
   @override
@@ -556,6 +610,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get all_services => 'All Services';
+
+  @override
+  String get available_services => 'Available Services';
 
   @override
   String get all_regions => 'All Regions';
@@ -1237,4 +1294,215 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get could_not_load_more_offers => 'Could not load more offers';
+
+  @override
+  String get service_location => 'Service location';
+
+  @override
+  String get select_location => 'Select location';
+
+  @override
+  String get selected_location => 'Selected location';
+
+  @override
+  String get confirm_location => 'Confirm location';
+
+  @override
+  String get choose_location_on_map => 'Choose a location on the map';
+
+  @override
+  String get change_location => 'Change location';
+
+  @override
+  String get select => 'Select';
+
+  @override
+  String get move_map_to_select_location =>
+      'Move the map to select the exact service location.';
+
+  @override
+  String get loading_address => 'Loading address...';
+
+  @override
+  String get address_unavailable =>
+      'Address unavailable. Enter the address manually.';
+
+  @override
+  String get use_current_location => 'Use my current location';
+
+  @override
+  String get location_permission_denied_message =>
+      'Location permission is needed to detect your current position. You can still select a location manually from the map.';
+
+  @override
+  String get location_permission_denied_forever_message =>
+      'Location permission is disabled for CleanLink. Enable it from application settings or select the location manually.';
+
+  @override
+  String get location_service_disabled_message =>
+      'Turn on your device location service to use your current location. You can still choose a location manually.';
+
+  @override
+  String get continue_manually => 'Continue manually';
+
+  @override
+  String get open_location_settings => 'Open location settings';
+
+  @override
+  String get try_again => 'Try again';
+
+  @override
+  String get please_select_service_location =>
+      'Please select the service location.';
+
+  @override
+  String get please_select_date => 'Please select a date.';
+
+  @override
+  String get please_select_available_time => 'Please select an available time.';
+
+  @override
+  String get no_available_slots_for_location =>
+      'No available times for this location';
+
+  @override
+  String get no_available_slots_for_location_message =>
+      'No available times were found for this location. Try another date or location.';
+
+  @override
+  String get company_location_missing =>
+      'The company has not configured its location yet.';
+
+  @override
+  String get travel_time_temporarily_unavailable =>
+      'Travel time is temporarily unavailable. Please retry without changing your selection.';
+
+  @override
+  String get route_unavailable_for_location =>
+      'A driving route is unavailable for this location. Please choose another location.';
+
+  @override
+  String get no_qualified_workgroup =>
+      'No qualified workgroup is currently available for this package.';
+
+  @override
+  String get travel_allocation => 'Travel allocation';
+
+  @override
+  String get worker_return => 'Worker return';
+
+  @override
+  String get my_locations => 'My locations';
+
+  @override
+  String get saved_locations => 'Saved locations';
+
+  @override
+  String get add_location => 'Add location';
+
+  @override
+  String get edit_location => 'Edit location';
+
+  @override
+  String get delete_location => 'Delete location';
+
+  @override
+  String get delete_location_confirmation =>
+      'Are you sure you want to delete this saved location?';
+
+  @override
+  String get location_name => 'Location name';
+
+  @override
+  String get location_name_hint => 'For example, Home or Work (optional)';
+
+  @override
+  String get location_coordinates => 'Coordinates';
+
+  @override
+  String get location_added_successfully => 'Location added successfully';
+
+  @override
+  String get location_updated_successfully => 'Location updated successfully';
+
+  @override
+  String get location_deleted_successfully => 'Location deleted successfully';
+
+  @override
+  String get no_saved_locations => 'No saved locations';
+
+  @override
+  String get no_saved_locations_message =>
+      'You don\'t have any saved locations yet.';
+
+  @override
+  String get could_not_load_locations => 'Could not load your locations';
+
+  @override
+  String get choose_another_location => 'Choose another location on map';
+
+  @override
+  String get add_new_saved_location => 'Add new saved location';
+
+  @override
+  String get select_service_location => 'Select service location';
+
+  @override
+  String get save_location => 'Save location';
+
+  @override
+  String get update_location => 'Update location';
+
+  @override
+  String get cached_locations_warning =>
+      'Showing saved locations from this device. Pull to retry.';
+
+  @override
+  String get map_address_not_saved =>
+      'The server saves the map address and coordinates. Your location name stays on this device.';
+
+  @override
+  String get travel_considered_message =>
+      'Travel time is already considered when calculating available times.';
+
+  @override
+  String get saved_location => 'Saved location';
+
+  @override
+  String get customize_your_service => 'Customize your service';
+
+  @override
+  String get no_attributes_available =>
+      'No customization options are available.';
+
+  @override
+  String get increase => 'Increase';
+
+  @override
+  String get decrease => 'Decrease';
+
+  @override
+  String get estimated_price => 'Estimated price';
+
+  @override
+  String get estimated_duration => 'Estimated duration';
+
+  @override
+  String get calculating => 'Calculating…';
+
+  @override
+  String get check_price_duration => 'Check Price & Duration';
+
+  @override
+  String get checking_price_duration => 'Checking…';
+
+  @override
+  String get please_check_price_duration_again =>
+      'Please check price and duration for the current configuration first.';
+
+  @override
+  String get selected_configuration => 'Selected Configuration';
+
+  @override
+  String get on_the_way => 'On the Way';
 }

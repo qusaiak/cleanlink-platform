@@ -6,6 +6,7 @@ import 'colors.dart';
 
 ThemeData lightTheme() {
   return ThemeData(
+    useMaterial3: true,
     fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily.cairo,
     navigationBarTheme: const NavigationBarThemeData(
       backgroundColor: AppColor.bottomNavigationBarLight,
@@ -19,6 +20,7 @@ ThemeData lightTheme() {
     scaffoldBackgroundColor: AppColor.backgroundColorLight,
     colorScheme: const ColorScheme.light(
       surfaceContainerHighest: AppColor.onBackgroundColorLight,
+      surfaceContainer: AppColor.onPrimaryLight,
       brightness: Brightness.light,
       primary: AppColor.primaryLight,
       onPrimary: AppColor.onPrimaryLight,
@@ -36,6 +38,7 @@ ThemeData lightTheme() {
 
 ThemeData darkTheme() {
   return ThemeData(
+    useMaterial3: true,
     fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily.cairo,
     navigationBarTheme: const NavigationBarThemeData(
       backgroundColor: AppColor.bottomNavigationBarLight,
@@ -49,6 +52,7 @@ ThemeData darkTheme() {
     scaffoldBackgroundColor: AppColor.backgroundColorDark,
     colorScheme: const ColorScheme(
       surfaceContainerHighest: AppColor.secondaryBackgroundColorDark,
+      surfaceContainer: AppColor.secondaryBackgroundColorDark,
       brightness: Brightness.dark,
       primary: AppColor.primaryDark,
       onPrimary: AppColor.onPrimaryDark,

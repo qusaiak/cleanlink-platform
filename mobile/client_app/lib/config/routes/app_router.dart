@@ -19,6 +19,12 @@ import 'package:client_app/features/favorites/presentation/pages/favorites_page.
 import 'package:client_app/features/reviews/presentation/pages/my_reviews_page.dart';
 import 'package:client_app/features/home/presentation/pages/home_page.dart';
 import 'package:client_app/features/notification/presentation/pages/notifications_page.dart';
+import 'package:client_app/features/locations/domain/entities/selected_map_location.dart';
+import 'package:client_app/features/locations/presentation/pages/map_location_picker_page.dart';
+import 'package:client_app/features/locations/domain/entities/client_location_entity.dart';
+import 'package:client_app/features/locations/presentation/bloc/locations_bloc.dart';
+import 'package:client_app/features/locations/presentation/pages/location_editor_page.dart';
+import 'package:client_app/features/locations/presentation/pages/locations_page.dart';
 import 'package:client_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:client_app/features/profile/presentation/pages/contact_us_page.dart';
 import 'package:client_app/features/profile/presentation/pages/edit_profile_page.dart';
@@ -29,7 +35,9 @@ import 'package:client_app/features/services/presentation/pages/offers_page.dart
 import 'package:client_app/features/services/presentation/pages/service_details_page.dart';
 import 'package:client_app/features/services/presentation/pages/services_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../injection_container.dart';
 
 import '../../core/storage/shared_storage.dart';
 import '../../core/storage/storage_data.dart';
@@ -62,6 +70,10 @@ class AppRouter {
   static const kContactUs = '/contact_us';
   static const kHelpCenter = '/help_center';
   static const kEditProfile = '/profile/edit';
+  static const kMapLocationPicker = '/locations/map-picker';
+  static const kLocations = '/locations';
+  static const kAddLocation = '/locations/add';
+  static const kEditLocation = '/locations/edit';
 
   static const kAppContentPage = '/content';
 
@@ -186,6 +198,47 @@ class AppRouter {
         path: kEditProfile,
         pageBuilder: (context, state) =>
             slideTransitionHorizontal(const EditProfilePage()),
+      ),
+      GoRoute(
+        path: kMapLocationPicker,
+        pageBuilder: (context, state) => slideTransitionHorizontal(
+          MapLocationPickerPage(
+            initialLocation: state.extra is SelectedMapLocation
+                ? state.extra! as SelectedMapLocation
+                : null,
+          ),
+        ),
+      ),
+      GoRoute(
+        path: kLocations,
+        pageBuilder: (context, state) => slideTransitionHorizontal(
+          BlocProvider.value(
+            value: sl<LocationsBloc>(),
+            child: const LocationsPage(),
+          ),
+        ),
+      ),
+      GoRoute(
+        path: kAddLocation,
+        pageBuilder: (context, state) => slideTransitionHorizontal(
+          BlocProvider.value(
+            value: sl<LocationsBloc>(),
+            child: const LocationEditorPage(),
+          ),
+        ),
+      ),
+      GoRoute(
+        path: kEditLocation,
+        redirect: (context, state) =>
+            state.extra is ClientLocationEntity ? null : kLocations,
+        pageBuilder: (context, state) => slideTransitionHorizontal(
+          BlocProvider.value(
+            value: sl<LocationsBloc>(),
+            child: LocationEditorPage(
+              location: state.extra! as ClientLocationEntity,
+            ),
+          ),
+        ),
       ),
       GoRoute(
         path: kFavorites,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 
 import '../error/failure.dart';
@@ -30,10 +32,16 @@ abstract class NetworkExceptions {
       case DioExceptionType.badCertificate:
         return const ServerFailure('Bad certificate from the server', '');
       case DioExceptionType.cancel:
-        return const ServerFailure('Request to the server was cancelled', '');
+        return const ServerFailure('Request cancelled', 'CANCELLED');
       case DioExceptionType.badResponse:
         return _fromResponse(e.response);
       case DioExceptionType.unknown:
+        if (e.error is SocketException) {
+          return const ServerFailure(
+            'No internet connection',
+            ErrorCode.noInternet,
+          );
+        }
         return const ServerFailure(
           'Oops, something went wrong. Please try again',
           '',
@@ -45,7 +53,9 @@ abstract class NetworkExceptions {
     final data = response?.data;
     if (data is Map<String, dynamic>) {
       final message = data['message'] ?? data['ErrorMessage'];
-      final code = (data['status'] ?? data['ErrorCode'] ?? '').toString();
+      final code =
+          (response?.statusCode ?? data['status'] ?? data['ErrorCode'] ?? '')
+              .toString();
       final fieldErrors = _fieldErrors(data['errors']);
       if (message != null) {
         return ServerFailure(

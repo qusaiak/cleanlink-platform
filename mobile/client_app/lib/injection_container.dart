@@ -1,6 +1,7 @@
 import 'package:client_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:client_app/features/base/presentation/bloc/base_bloc.dart';
 import 'package:client_app/features/bookings/domain/usecases/get_available_slots_usecase.dart';
+import 'package:client_app/features/bookings/domain/usecases/open_package_usecases.dart';
 import 'package:client_app/features/categories/data/data_sources/categories_api_service.dart';
 import 'package:client_app/features/categories/data/repositories/categories_repo_impl.dart';
 import 'package:client_app/features/categories/domain/repositories/categories_repo.dart';
@@ -82,6 +83,14 @@ import 'features/bookings/domain/usecases/book_order_usecase.dart';
 import 'features/bookings/domain/usecases/cancel_order_usecase.dart';
 import 'features/bookings/domain/usecases/show_order_usecase.dart';
 import 'features/bookings/presentation/bloc/bookings_bloc.dart';
+import 'features/locations/domain/services/device_location_service.dart';
+import 'features/locations/domain/services/reverse_geocoding_service.dart';
+import 'features/locations/data/data_sources/locations_api_service.dart';
+import 'features/locations/data/data_sources/locations_local_data_source.dart';
+import 'features/locations/data/repositories/locations_repository_impl.dart';
+import 'features/locations/domain/repositories/locations_repository.dart';
+import 'features/locations/domain/usecases/locations_usecases.dart';
+import 'features/locations/presentation/bloc/locations_bloc.dart';
 import 'features/companies/domain/repositories/companies_repo.dart';
 import 'features/companies/presentation/bloc/companies_bloc.dart';
 import 'features/regions/domain/usecases/get_region_names_usecase.dart';
@@ -101,6 +110,12 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<Dio>(() => DioFactory.createDio());
   sl.registerLazySingleton(() => InternetConnectionChecker.instance);
   sl.registerLazySingleton(() => ImagePicker());
+  sl.registerLazySingleton<DeviceLocationService>(
+    () => const GeolocatorDeviceLocationService(),
+  );
+  sl.registerLazySingleton<ReverseGeocodingService>(
+    () => const DeviceReverseGeocodingService(),
+  );
 
   // Session
   sl.registerLazySingleton<UserSession>(() => UserSession());
@@ -130,6 +145,12 @@ Future<void> initializeDependencies() async {
     () => NotificationsApiService(sl()),
   );
   sl.registerLazySingleton<ProfileApiService>(() => ProfileApiService(sl()));
+  sl.registerLazySingleton<LocationsApiService>(
+    () => LocationsApiService(sl()),
+  );
+  sl.registerLazySingleton<LocationsLocalDataSource>(
+    () => const SharedStorageLocationsLocalDataSource(),
+  );
 
   // Repositories
   sl.registerLazySingleton<AuthRepo>(() => AuthRepoImpl(sl(), sl()));
@@ -150,6 +171,9 @@ Future<void> initializeDependencies() async {
   );
   sl.registerLazySingleton<ProfileRepository>(
     () => ProfileRepositoryImpl(sl(), sl()),
+  );
+  sl.registerLazySingleton<LocationsRepository>(
+    () => LocationsRepositoryImpl(sl(), sl()),
   );
 
   // UseCases
@@ -213,6 +237,12 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<GetAvailableSlotsUseCase>(
     () => GetAvailableSlotsUseCase(sl()),
   );
+  sl.registerLazySingleton<CheckOpenPackagePriceUseCase>(
+    () => CheckOpenPackagePriceUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetOpenPackageAvailableSlotsUseCase>(
+    () => GetOpenPackageAvailableSlotsUseCase(sl()),
+  );
   sl.registerLazySingleton<GetOrdersUseCase>(() => GetOrdersUseCase(sl()));
   sl.registerLazySingleton<BookOrderUseCase>(() => BookOrderUseCase(sl()));
   sl.registerLazySingleton<ShowOrderUseCase>(() => ShowOrderUseCase(sl()));
@@ -239,11 +269,26 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<DeleteAccountUseCase>(
     () => DeleteAccountUseCase(sl()),
   );
+  sl.registerLazySingleton<GetCachedLocationsUseCase>(
+    () => GetCachedLocationsUseCase(sl()),
+  );
+  sl.registerLazySingleton<RefreshLocationsUseCase>(
+    () => RefreshLocationsUseCase(sl()),
+  );
+  sl.registerLazySingleton<AddLocationUseCase>(() => AddLocationUseCase(sl()));
+  sl.registerLazySingleton<UpdateLocationUseCase>(
+    () => UpdateLocationUseCase(sl()),
+  );
+  sl.registerLazySingleton<DeleteLocationUseCase>(
+    () => DeleteLocationUseCase(sl()),
+  );
 
   // Blocs
   sl.registerFactory(() => BaseBloc());
   sl.registerFactory(() => AuthBloc(sl(), sl(), sl(), sl(), sl()));
-  sl.registerFactory(() => ProfileBloc(sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory(
+    () => ProfileBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl()),
+  );
   sl.registerFactory(() => HomeBloc(sl()));
   sl.registerFactory(() => CompaniesBloc(sl(), sl()));
   sl.registerFactory(() => CategoriesBloc(sl(), sl()));
@@ -251,11 +296,14 @@ Future<void> initializeDependencies() async {
   sl.registerFactory(() => ServicesBloc(sl(), sl(), sl()));
   sl.registerFactory(() => ReviewBloc(sl()));
   sl.registerFactory(() => MyReviewsBloc(sl()));
-  sl.registerFactory(() => PersonalDetailsBloc(sl(), sl()));
+  sl.registerFactory(() => PersonalDetailsBloc(sl(), sl(), sl()));
   sl.registerFactory(() => FavoritesBloc(sl(), sl()));
   sl.registerFactory(() => SearchBloc(sl()));
   sl.registerLazySingleton(() => NotificationsBloc(sl(), sl(), sl(), sl()));
   sl.registerLazySingleton(() => ComplaintsBloc(sl(), sl(), sl(), sl(), sl()));
+  sl.registerLazySingleton(() => LocationsBloc(sl(), sl(), sl(), sl(), sl()));
 
-  sl.registerFactory(() => BookingsBloc(sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory(
+    () => BookingsBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl()),
+  );
 }

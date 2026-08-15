@@ -58,6 +58,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String get retry => 'إعادة المحاولة';
 
   @override
+  String get network_no_internet_title => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String get network_no_internet_description =>
+      'يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.';
+
+  @override
+  String get network_timeout_title => 'استغرق الطلب وقتاً طويلاً';
+
+  @override
+  String get network_timeout_description =>
+      'لم يستجب الخادم في الوقت المحدد. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get network_server_title => 'الخدمة غير متاحة';
+
+  @override
+  String get network_server_description =>
+      'تعذر على الخادم إكمال طلبك. يرجى المحاولة بعد قليل.';
+
+  @override
+  String get network_generic_title => 'حدث خطأ ما';
+
+  @override
+  String get network_generic_description =>
+      'تعذر تحميل هذا المحتوى. يرجى المحاولة مرة أخرى.';
+
+  @override
   String get logging_in => 'جاري تسجيل الدخول…';
 
   @override
@@ -445,6 +473,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notification_setting => 'الإشعارات';
 
   @override
+  String get notification_setting_description =>
+      'تلقي تحديثات حول الطلبات والشكاوى والعروض ونشاط الحساب.';
+
+  @override
+  String get notifications_enabled_message => 'تم تفعيل الإشعارات.';
+
+  @override
+  String get notifications_disabled_message =>
+      'تم إيقاف الإشعارات على هذا الجهاز.';
+
+  @override
+  String get notification_permission_title => 'إذن الإشعارات مطلوب';
+
+  @override
+  String get notification_permission_disabled =>
+      'تم تعطيل إذن الإشعارات. فعّله من إعدادات التطبيق لتلقي التحديثات.';
+
+  @override
+  String get notification_sync_failed =>
+      'تعذر تفعيل الإشعارات الآن. تحقق من اتصالك وحاول مرة أخرى.';
+
+  @override
+  String get open_settings => 'فتح الإعدادات';
+
+  @override
   String get notifications => 'الإشعارات';
 
   @override
@@ -547,6 +600,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get all_services => 'جميع الخدمات';
+
+  @override
+  String get available_services => 'الخدمات المتاحة';
 
   @override
   String get all_regions => 'جميع المناطق';
@@ -1223,4 +1279,210 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get could_not_load_more_offers => 'تعذر تحميل المزيد من العروض';
+
+  @override
+  String get service_location => 'موقع الخدمة';
+
+  @override
+  String get select_location => 'اختيار الموقع';
+
+  @override
+  String get selected_location => 'الموقع المحدد';
+
+  @override
+  String get confirm_location => 'تأكيد الموقع';
+
+  @override
+  String get choose_location_on_map => 'اختر موقعاً على الخريطة';
+
+  @override
+  String get change_location => 'تغيير الموقع';
+
+  @override
+  String get select => 'اختيار';
+
+  @override
+  String get move_map_to_select_location =>
+      'حرّك الخريطة لاختيار موقع الخدمة بدقة.';
+
+  @override
+  String get loading_address => 'جارٍ تحميل العنوان...';
+
+  @override
+  String get address_unavailable => 'العنوان غير متاح. أدخل العنوان يدوياً.';
+
+  @override
+  String get use_current_location => 'استخدام موقعي الحالي';
+
+  @override
+  String get location_permission_denied_message =>
+      'يلزم إذن الموقع لتحديد موقعك الحالي. لا يزال بإمكانك اختيار الموقع يدوياً من الخريطة.';
+
+  @override
+  String get location_permission_denied_forever_message =>
+      'إذن الموقع معطّل لتطبيق كلين لينك. فعّله من إعدادات التطبيق أو اختر الموقع يدوياً.';
+
+  @override
+  String get location_service_disabled_message =>
+      'فعّل خدمة الموقع في جهازك لاستخدام موقعك الحالي. لا يزال بإمكانك اختيار الموقع يدوياً.';
+
+  @override
+  String get continue_manually => 'المتابعة يدوياً';
+
+  @override
+  String get open_location_settings => 'فتح إعدادات الموقع';
+
+  @override
+  String get try_again => 'المحاولة مجدداً';
+
+  @override
+  String get please_select_service_location => 'يرجى اختيار موقع الخدمة.';
+
+  @override
+  String get please_select_date => 'يرجى اختيار التاريخ.';
+
+  @override
+  String get please_select_available_time => 'يرجى اختيار وقت متاح.';
+
+  @override
+  String get no_available_slots_for_location =>
+      'لا توجد أوقات متاحة لهذا الموقع';
+
+  @override
+  String get no_available_slots_for_location_message =>
+      'لم يتم العثور على أوقات متاحة لهذا الموقع. جرّب تاريخاً أو موقعاً آخر.';
+
+  @override
+  String get company_location_missing => 'لم تقم الشركة بإعداد موقعها بعد.';
+
+  @override
+  String get travel_time_temporarily_unavailable =>
+      'وقت التنقل غير متاح مؤقتاً. أعد المحاولة دون تغيير اختيارك.';
+
+  @override
+  String get route_unavailable_for_location =>
+      'مسار القيادة غير متاح لهذا الموقع. يرجى اختيار موقع آخر.';
+
+  @override
+  String get no_qualified_workgroup =>
+      'لا توجد حالياً مجموعة عمل مؤهلة لهذه الباقة.';
+
+  @override
+  String get travel_allocation => 'الوقت المخصص للتنقل';
+
+  @override
+  String get worker_return => 'عودة العامل';
+
+  @override
+  String get my_locations => 'مواقعي';
+
+  @override
+  String get saved_locations => 'المواقع المحفوظة';
+
+  @override
+  String get add_location => 'إضافة موقع';
+
+  @override
+  String get edit_location => 'تعديل الموقع';
+
+  @override
+  String get delete_location => 'حذف الموقع';
+
+  @override
+  String get delete_location_confirmation =>
+      'هل أنت متأكد من حذف هذا الموقع المحفوظ؟';
+
+  @override
+  String get location_name => 'اسم الموقع';
+
+  @override
+  String get location_name_hint => 'مثلاً المنزل أو العمل (اختياري)';
+
+  @override
+  String get location_coordinates => 'الإحداثيات';
+
+  @override
+  String get location_added_successfully => 'تمت إضافة الموقع بنجاح';
+
+  @override
+  String get location_updated_successfully => 'تم تحديث الموقع بنجاح';
+
+  @override
+  String get location_deleted_successfully => 'تم حذف الموقع بنجاح';
+
+  @override
+  String get no_saved_locations => 'لا توجد مواقع محفوظة';
+
+  @override
+  String get no_saved_locations_message => 'ليس لديك أي مواقع محفوظة بعد.';
+
+  @override
+  String get could_not_load_locations => 'تعذر تحميل مواقعك';
+
+  @override
+  String get choose_another_location => 'اختيار موقع آخر على الخريطة';
+
+  @override
+  String get add_new_saved_location => 'إضافة موقع محفوظ جديد';
+
+  @override
+  String get select_service_location => 'اختيار موقع الخدمة';
+
+  @override
+  String get save_location => 'حفظ الموقع';
+
+  @override
+  String get update_location => 'تحديث الموقع';
+
+  @override
+  String get cached_locations_warning =>
+      'يتم عرض المواقع المحفوظة على هذا الجهاز. اسحب لإعادة المحاولة.';
+
+  @override
+  String get map_address_not_saved =>
+      'يحفظ الخادم عنوان الخريطة والإحداثيات، ويبقى اسم الموقع على هذا الجهاز.';
+
+  @override
+  String get travel_considered_message =>
+      'يتم احتساب وقت التنقل مسبقاً عند تحديد الأوقات المتاحة.';
+
+  @override
+  String get saved_location => 'موقع محفوظ';
+
+  @override
+  String get customize_your_service => 'خصّص خدمتك';
+
+  @override
+  String get no_attributes_available => 'لا تتوفر خيارات تخصيص.';
+
+  @override
+  String get increase => 'زيادة';
+
+  @override
+  String get decrease => 'تقليل';
+
+  @override
+  String get estimated_price => 'السعر التقديري';
+
+  @override
+  String get estimated_duration => 'المدة التقديرية';
+
+  @override
+  String get calculating => 'جارٍ الحساب…';
+
+  @override
+  String get check_price_duration => 'تحقق من السعر والمدة';
+
+  @override
+  String get checking_price_duration => 'جارٍ التحقق…';
+
+  @override
+  String get please_check_price_duration_again =>
+      'يرجى التحقق من السعر والمدة للإعداد الحالي أولاً.';
+
+  @override
+  String get selected_configuration => 'الإعداد المختار';
+
+  @override
+  String get on_the_way => 'في الطريق';
 }

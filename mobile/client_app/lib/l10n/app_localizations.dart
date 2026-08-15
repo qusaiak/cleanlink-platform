@@ -188,6 +188,54 @@ abstract class AppLocalizations {
   /// **'Retry'**
   String get retry;
 
+  /// No description provided for @network_no_internet_title.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get network_no_internet_title;
+
+  /// No description provided for @network_no_internet_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again.'**
+  String get network_no_internet_description;
+
+  /// No description provided for @network_timeout_title.
+  ///
+  /// In en, this message translates to:
+  /// **'The request took too long'**
+  String get network_timeout_title;
+
+  /// No description provided for @network_timeout_description.
+  ///
+  /// In en, this message translates to:
+  /// **'The server did not respond in time. Please try again.'**
+  String get network_timeout_description;
+
+  /// No description provided for @network_server_title.
+  ///
+  /// In en, this message translates to:
+  /// **'The service is unavailable'**
+  String get network_server_title;
+
+  /// No description provided for @network_server_description.
+  ///
+  /// In en, this message translates to:
+  /// **'The server could not complete your request. Please try again shortly.'**
+  String get network_server_description;
+
+  /// No description provided for @network_generic_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get network_generic_title;
+
+  /// No description provided for @network_generic_description.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not load this content. Please try again.'**
+  String get network_generic_description;
+
   /// No description provided for @logging_in.
   ///
   /// In en, this message translates to:
@@ -932,6 +980,48 @@ abstract class AppLocalizations {
   /// **'Push Notifications'**
   String get notification_setting;
 
+  /// No description provided for @notification_setting_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive updates about orders, complaints, offers, and account activity.'**
+  String get notification_setting_description;
+
+  /// No description provided for @notifications_enabled_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Push notifications are enabled.'**
+  String get notifications_enabled_message;
+
+  /// No description provided for @notifications_disabled_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Push notifications are disabled on this device.'**
+  String get notifications_disabled_message;
+
+  /// No description provided for @notification_permission_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification permission required'**
+  String get notification_permission_title;
+
+  /// No description provided for @notification_permission_disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification permission is disabled. Enable it from the application settings to receive updates.'**
+  String get notification_permission_disabled;
+
+  /// No description provided for @notification_sync_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications could not be enabled right now. Check your connection and try again.'**
+  String get notification_sync_failed;
+
+  /// No description provided for @open_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get open_settings;
+
   /// No description provided for @notifications.
   ///
   /// In en, this message translates to:
@@ -1135,6 +1225,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All Services'**
   String get all_services;
+
+  /// No description provided for @available_services.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Services'**
+  String get available_services;
 
   /// No description provided for @all_regions.
   ///
@@ -2473,6 +2569,390 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not load more offers'**
   String get could_not_load_more_offers;
+
+  /// No description provided for @service_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Service location'**
+  String get service_location;
+
+  /// No description provided for @select_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Select location'**
+  String get select_location;
+
+  /// No description provided for @selected_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected location'**
+  String get selected_location;
+
+  /// No description provided for @confirm_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm location'**
+  String get confirm_location;
+
+  /// No description provided for @choose_location_on_map.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a location on the map'**
+  String get choose_location_on_map;
+
+  /// No description provided for @change_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Change location'**
+  String get change_location;
+
+  /// No description provided for @select.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get select;
+
+  /// No description provided for @move_map_to_select_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the map to select the exact service location.'**
+  String get move_map_to_select_location;
+
+  /// No description provided for @loading_address.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading address...'**
+  String get loading_address;
+
+  /// No description provided for @address_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Address unavailable. Enter the address manually.'**
+  String get address_unavailable;
+
+  /// No description provided for @use_current_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Use my current location'**
+  String get use_current_location;
+
+  /// No description provided for @location_permission_denied_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission is needed to detect your current position. You can still select a location manually from the map.'**
+  String get location_permission_denied_message;
+
+  /// No description provided for @location_permission_denied_forever_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission is disabled for CleanLink. Enable it from application settings or select the location manually.'**
+  String get location_permission_denied_forever_message;
+
+  /// No description provided for @location_service_disabled_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on your device location service to use your current location. You can still choose a location manually.'**
+  String get location_service_disabled_message;
+
+  /// No description provided for @continue_manually.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue manually'**
+  String get continue_manually;
+
+  /// No description provided for @open_location_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open location settings'**
+  String get open_location_settings;
+
+  /// No description provided for @try_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get try_again;
+
+  /// No description provided for @please_select_service_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select the service location.'**
+  String get please_select_service_location;
+
+  /// No description provided for @please_select_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a date.'**
+  String get please_select_date;
+
+  /// No description provided for @please_select_available_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select an available time.'**
+  String get please_select_available_time;
+
+  /// No description provided for @no_available_slots_for_location.
+  ///
+  /// In en, this message translates to:
+  /// **'No available times for this location'**
+  String get no_available_slots_for_location;
+
+  /// No description provided for @no_available_slots_for_location_message.
+  ///
+  /// In en, this message translates to:
+  /// **'No available times were found for this location. Try another date or location.'**
+  String get no_available_slots_for_location_message;
+
+  /// No description provided for @company_location_missing.
+  ///
+  /// In en, this message translates to:
+  /// **'The company has not configured its location yet.'**
+  String get company_location_missing;
+
+  /// No description provided for @travel_time_temporarily_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel time is temporarily unavailable. Please retry without changing your selection.'**
+  String get travel_time_temporarily_unavailable;
+
+  /// No description provided for @route_unavailable_for_location.
+  ///
+  /// In en, this message translates to:
+  /// **'A driving route is unavailable for this location. Please choose another location.'**
+  String get route_unavailable_for_location;
+
+  /// No description provided for @no_qualified_workgroup.
+  ///
+  /// In en, this message translates to:
+  /// **'No qualified workgroup is currently available for this package.'**
+  String get no_qualified_workgroup;
+
+  /// No description provided for @travel_allocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel allocation'**
+  String get travel_allocation;
+
+  /// No description provided for @worker_return.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker return'**
+  String get worker_return;
+
+  /// No description provided for @my_locations.
+  ///
+  /// In en, this message translates to:
+  /// **'My locations'**
+  String get my_locations;
+
+  /// No description provided for @saved_locations.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved locations'**
+  String get saved_locations;
+
+  /// No description provided for @add_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Add location'**
+  String get add_location;
+
+  /// No description provided for @edit_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit location'**
+  String get edit_location;
+
+  /// No description provided for @delete_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete location'**
+  String get delete_location;
+
+  /// No description provided for @delete_location_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this saved location?'**
+  String get delete_location_confirmation;
+
+  /// No description provided for @location_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Location name'**
+  String get location_name;
+
+  /// No description provided for @location_name_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'For example, Home or Work (optional)'**
+  String get location_name_hint;
+
+  /// No description provided for @location_coordinates.
+  ///
+  /// In en, this message translates to:
+  /// **'Coordinates'**
+  String get location_coordinates;
+
+  /// No description provided for @location_added_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Location added successfully'**
+  String get location_added_successfully;
+
+  /// No description provided for @location_updated_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Location updated successfully'**
+  String get location_updated_successfully;
+
+  /// No description provided for @location_deleted_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Location deleted successfully'**
+  String get location_deleted_successfully;
+
+  /// No description provided for @no_saved_locations.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved locations'**
+  String get no_saved_locations;
+
+  /// No description provided for @no_saved_locations_message.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have any saved locations yet.'**
+  String get no_saved_locations_message;
+
+  /// No description provided for @could_not_load_locations.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load your locations'**
+  String get could_not_load_locations;
+
+  /// No description provided for @choose_another_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another location on map'**
+  String get choose_another_location;
+
+  /// No description provided for @add_new_saved_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Add new saved location'**
+  String get add_new_saved_location;
+
+  /// No description provided for @select_service_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Select service location'**
+  String get select_service_location;
+
+  /// No description provided for @save_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Save location'**
+  String get save_location;
+
+  /// No description provided for @update_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Update location'**
+  String get update_location;
+
+  /// No description provided for @cached_locations_warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing saved locations from this device. Pull to retry.'**
+  String get cached_locations_warning;
+
+  /// No description provided for @map_address_not_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'The server saves the map address and coordinates. Your location name stays on this device.'**
+  String get map_address_not_saved;
+
+  /// No description provided for @travel_considered_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel time is already considered when calculating available times.'**
+  String get travel_considered_message;
+
+  /// No description provided for @saved_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved location'**
+  String get saved_location;
+
+  /// No description provided for @customize_your_service.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize your service'**
+  String get customize_your_service;
+
+  /// No description provided for @no_attributes_available.
+  ///
+  /// In en, this message translates to:
+  /// **'No customization options are available.'**
+  String get no_attributes_available;
+
+  /// No description provided for @increase.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase'**
+  String get increase;
+
+  /// No description provided for @decrease.
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease'**
+  String get decrease;
+
+  /// No description provided for @estimated_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated price'**
+  String get estimated_price;
+
+  /// No description provided for @estimated_duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated duration'**
+  String get estimated_duration;
+
+  /// No description provided for @calculating.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculating…'**
+  String get calculating;
+
+  /// No description provided for @check_price_duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Price & Duration'**
+  String get check_price_duration;
+
+  /// No description provided for @checking_price_duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking…'**
+  String get checking_price_duration;
+
+  /// No description provided for @please_check_price_duration_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check price and duration for the current configuration first.'**
+  String get please_check_price_duration_again;
+
+  /// No description provided for @selected_configuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Configuration'**
+  String get selected_configuration;
+
+  /// No description provided for @on_the_way.
+  ///
+  /// In en, this message translates to:
+  /// **'On the Way'**
+  String get on_the_way;
 }
 
 class _AppLocalizationsDelegate

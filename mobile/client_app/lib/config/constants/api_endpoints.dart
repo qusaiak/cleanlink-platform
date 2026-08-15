@@ -19,6 +19,11 @@ class ApiEndpoints {
   static const String regionNamesEndpoint = '/regions/names';
   static const String packageAvailableSlotsEndpoint =
       '/packages/{id}/available-slots';
+  static const String openPackageCheckPriceEndpoint =
+      '/packages/{id}/open-package/check-price';
+  static const String openPackageAvailableSlotsEndpoint =
+      '/packages/{id}/open-package/available-slots';
+  static const String openPackageOrdersEndpoint = 'orders/open-package';
   static const String ordersEndpoint = 'orders';
   static const String showOrderEndpoint = 'orders/{orderId}';
   static const String cancelOrderEndpoint = 'orders/{orderId}/cancel';
@@ -32,6 +37,7 @@ class ApiEndpoints {
   static const String deleteAccountEndpoint = 'auth/delete-account';
   static const String complaintsEndpoint = 'complaints';
   static const String complaintUnreadCountEndpoint = 'complaints/unread-count';
+  static const String locationsEndpoint = 'locations';
 
   static String markNotificationAsReadEndpoint(int notificationId) =>
       'notifications/$notificationId/mark-as-read';

@@ -1,8 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import '../../config/routes/app_router.dart';
+
+enum AppFailureType {
+  noInternet,
+  timeout,
+  unauthorized,
+  forbidden,
+  notFound,
+  validation,
+  server,
+  cancelled,
+  unknown,
+}
 
 // Error codes for specific failure types
 class ErrorCode {
@@ -29,6 +38,20 @@ abstract class Failure extends Equatable {
   bool get isTimeout =>
       isConnectionTimeout || isSendTimeout || isReceiveTimeout;
 
+  AppFailureType get type {
+    if (errorCode == ErrorCode.noInternet) return AppFailureType.noInternet;
+    if (isTimeout) return AppFailureType.timeout;
+    return switch (errorCode) {
+      '401' => AppFailureType.unauthorized,
+      '403' => AppFailureType.forbidden,
+      '404' => AppFailureType.notFound,
+      '422' => AppFailureType.validation,
+      'CANCELLED' => AppFailureType.cancelled,
+      '500' || '502' || '503' || '504' => AppFailureType.server,
+      _ => AppFailureType.unknown,
+    };
+  }
+
   @override
   List<Object> get props => [message, errorCode, fieldErrors];
 }
@@ -39,10 +62,6 @@ class ServerFailure extends Failure {
   factory ServerFailure.fromDioError(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
-        BuildContext context =
-            AppRouter.router.configuration.navigatorKey.currentContext!;
-        final router = GoRouter.of(context);
-        router.pushReplacement(AppRouter.kConnectionTimeout);
         return const ServerFailure(
           'Connection timeout with api server',
           ErrorCode.connectionTimeout,
@@ -62,7 +81,7 @@ class ServerFailure extends Failure {
       case DioExceptionType.badResponse:
         return ServerFailure.fromResponse(e.response!.data);
       case DioExceptionType.cancel:
-        return const ServerFailure('Request to ApiServer was canceld', "");
+        return const ServerFailure('Request cancelled', 'CANCELLED');
       case DioExceptionType.connectionError:
         return const ServerFailure(
           'No Internet Connection',
