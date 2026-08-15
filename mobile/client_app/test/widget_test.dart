@@ -24,6 +24,8 @@ void main() {
       const request = BookOrderRequestModel(
         packageId: 13,
         location: 'Damascus',
+        latitude: 33.5138,
+        longitude: 36.2765,
         startTime: '2026-07-06 14:00:00',
         note: 'Pet hair',
       );
@@ -31,6 +33,8 @@ void main() {
       expect(request.toJson(), {
         'package_id': 13,
         'location': 'Damascus',
+        'latitude': 33.5138,
+        'longitude': 36.2765,
         'start_time': '2026-07-06 14:00:00',
         'note': 'Pet hair',
       });
@@ -61,7 +65,7 @@ void main() {
 
       final entity = model.toEntity();
 
-      expect(entity.statusType, OrderStatus.assignedToWorker);
+      expect(entity.statusType, OrderStatus.assigned);
       expect(entity.leader?.fullname, 'Ahmed Ali');
       expect(entity.leader?.phone, '+201057656460');
     });

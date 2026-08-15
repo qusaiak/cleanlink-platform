@@ -46,6 +46,7 @@ app.*.map.json
 /android/app/google-services.json
 /lib/firebase_options.dart
 local_config.env
+/ios/Flutter/Maps.xcconfig
 firebase.json
 /docs
 /.github/

@@ -271,9 +271,24 @@ class _FakeAuthRepo implements AuthRepo {
   @override
   Future<UserProfileEntity> updateProfile({
     File? image,
-    required String address,
+    required double latitude,
+    required double longitude,
     required String phone,
   }) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<UserProfileEntity> updateProfileWithAddress({
+    File? image,
+    required double latitude,
+    required double longitude,
+    required String address,
+    required String phone,
+  }) => updateProfile(
+    image: image,
+    latitude: latitude,
+    longitude: longitude,
+    phone: phone,
+  );
 }
