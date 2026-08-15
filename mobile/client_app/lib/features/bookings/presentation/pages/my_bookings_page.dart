@@ -7,8 +7,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/language/app_language_info.dart';
 import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/custom_appbar.dart';
-import '../../../../core/widgets/custom_toast.dart';
-import '../../../../core/widgets/pagination_footer.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/booking_entity.dart';
 import '../bloc/bookings_bloc.dart';
@@ -23,14 +21,6 @@ class MyBookingsPage extends StatefulWidget {
 
 class _MyBookingsPageState extends State<MyBookingsPage> {
   String? _lastLanguageCode;
-  late final ScrollController _scrollController;
-
-  void _onScroll() {
-    if (!_scrollController.hasClients) return;
-    if (_scrollController.position.extentAfter <= 250) {
-      context.read<BookingsBloc>().add(const GetMoreOrdersEvent());
-    }
-  }
 
   Future<void> _refresh() {
     final completer = Completer<void>();
@@ -45,9 +35,11 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
       case BookingTab.pending:
         return order.statusType == OrderStatus.pending;
       case BookingTab.assigned:
-        return order.statusType == OrderStatus.assignedToWorker;
+        return order.statusType == OrderStatus.assigned;
+      case BookingTab.onTheWay:
+        return order.statusType == OrderStatus.onTheWay;
       case BookingTab.inProcess:
-        return order.statusType == OrderStatus.inProgress;
+        return order.statusType == OrderStatus.inProcess;
       case BookingTab.completed:
         return order.statusType == OrderStatus.completed;
       case BookingTab.canceled:
@@ -58,17 +50,8 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController()..addListener(_onScroll);
     _lastLanguageCode = AppLanguageInfo.languageCode;
     context.read<BookingsBloc>().add(const GetOrdersEvent());
-  }
-
-  @override
-  void dispose() {
-    _scrollController
-      ..removeListener(_onScroll)
-      ..dispose();
-    super.dispose();
   }
 
   @override
@@ -101,19 +84,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
             const BookingsTabBar(),
             SizedBox(height: 12.h),
             Expanded(
-              child: BlocConsumer<BookingsBloc, BookingsState>(
-                listenWhen: (previous, current) =>
-                    previous.loadMoreOrdersError !=
-                        current.loadMoreOrdersError &&
-                    current.loadMoreOrdersError != null,
-                listener: (context, state) {
-                  final l = AppLocalizations.of(context)!;
-                  AppSnackBar.showError(
-                    context: context,
-                    title: l.error,
-                    message: state.loadMoreOrdersError!,
-                  );
-                },
+              child: BlocBuilder<BookingsBloc, BookingsState>(
                 builder: (context, state) {
                   final colors = Theme.of(context).colorScheme;
 
@@ -155,10 +126,9 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                   return RefreshIndicator(
                     onRefresh: _refresh,
                     child: ListView.builder(
-                      controller: _scrollController,
                       physics: const AlwaysScrollableScrollPhysics(),
                       padding: EdgeInsets.only(bottom: 24.h),
-                      itemCount: orders.isEmpty ? 2 : orders.length + 1,
+                      itemCount: orders.isEmpty ? 1 : orders.length,
                       itemBuilder: (_, index) {
                         if (orders.isEmpty && index == 0) {
                           return Padding(
@@ -169,21 +139,6 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                               body: AppLocalizations.of(
                                 context,
                               )!.no_bookings_message,
-                            ),
-                          );
-                        }
-
-                        final footerIndex = orders.isEmpty ? 1 : orders.length;
-                        if (index == footerIndex) {
-                          return PaginationFooter(
-                            isLoading: state.isLoadingMoreOrders,
-                            errorMessage: state.loadMoreOrdersError == null
-                                ? null
-                                : AppLocalizations.of(
-                                    context,
-                                  )!.could_not_load_more_orders,
-                            onRetry: () => context.read<BookingsBloc>().add(
-                              const GetMoreOrdersEvent(),
                             ),
                           );
                         }

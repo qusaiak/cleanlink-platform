@@ -18,6 +18,7 @@ class BookingsTabBar extends StatelessWidget {
       BookingTab.all: l10n.all,
       BookingTab.pending: l10n.pending,
       BookingTab.assigned: l10n.assigned,
+      BookingTab.onTheWay: l10n.on_the_way,
       BookingTab.inProcess: l10n.in_process,
       BookingTab.completed: l10n.completed,
       BookingTab.canceled: l10n.canceled,

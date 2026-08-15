@@ -12,6 +12,8 @@ BookingModel _$BookingModelFromJson(Map<String, dynamic> json) => BookingModel(
   packageId: (json['package_id'] as num?)?.toInt(),
   status: json['status'] as String?,
   location: json['location'] as String?,
+  latitude: _nullableDoubleFromJson(json['latitude']),
+  longitude: _nullableDoubleFromJson(json['longitude']),
   startTime: json['start_time'] == null
       ? null
       : DateTime.parse(json['start_time'] as String),
@@ -19,6 +21,9 @@ BookingModel _$BookingModelFromJson(Map<String, dynamic> json) => BookingModel(
       ? null
       : DateTime.parse(json['end_time'] as String),
   duration: json['duration'] == null ? 0 : _intFromJson(json['duration']),
+  travelBufferMinutes: json['travel_buffer_minutes'] == null
+      ? 0
+      : _intFromJson(json['travel_buffer_minutes']),
   totalPrice: json['total_price'] == null
       ? 0
       : _doubleFromJson(json['total_price']),
@@ -38,7 +43,9 @@ BookingModel _$BookingModelFromJson(Map<String, dynamic> json) => BookingModel(
   package: json['package'] == null
       ? null
       : OrderPackageModel.fromJson(json['package'] as Map<String, dynamic>),
-  attributes: json['attributes'] as List<dynamic>?,
+  attributes: (json['attributes'] as List<dynamic>?)
+      ?.map((e) => OrderAttributeModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$BookingModelToJson(BookingModel instance) =>
@@ -48,9 +55,12 @@ Map<String, dynamic> _$BookingModelToJson(BookingModel instance) =>
       'package_id': instance.packageId,
       'status': instance.status,
       'location': instance.location,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
       'start_time': instance.startTime?.toIso8601String(),
       'end_time': instance.endTime?.toIso8601String(),
       'duration': instance.duration,
+      'travel_buffer_minutes': instance.travelBufferMinutes,
       'total_price': instance.totalPrice,
       'note': instance.note,
       'created_at': instance.createdAt?.toIso8601String(),
@@ -165,6 +175,7 @@ OrderPackageModel _$OrderPackageModelFromJson(Map<String, dynamic> json) =>
       service: json['service'] == null
           ? null
           : OrderServiceModel.fromJson(json['service'] as Map<String, dynamic>),
+      isOpenPackage: json['is_open_package'] as bool?,
     );
 
 Map<String, dynamic> _$OrderPackageModelToJson(OrderPackageModel instance) =>
@@ -177,7 +188,27 @@ Map<String, dynamic> _$OrderPackageModelToJson(OrderPackageModel instance) =>
       'price_after_discount': instance.priceAfterDiscount,
       'details': instance.details,
       'service': instance.service,
+      'is_open_package': instance.isOpenPackage,
     };
+
+OrderAttributeModel _$OrderAttributeModelFromJson(Map<String, dynamic> json) =>
+    OrderAttributeModel(
+      id: (json['id'] as num?)?.toInt(),
+      name: json['name'] as String?,
+      type: json['type'] as String?,
+      qty: _nullableIntFromJson(json['qty']),
+      pivot: json['pivot'] as Map<String, dynamic>?,
+    );
+
+Map<String, dynamic> _$OrderAttributeModelToJson(
+  OrderAttributeModel instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'type': instance.type,
+  'qty': instance.qty,
+  'pivot': instance.pivot,
+};
 
 OrderServiceModel _$OrderServiceModelFromJson(Map<String, dynamic> json) =>
     OrderServiceModel(

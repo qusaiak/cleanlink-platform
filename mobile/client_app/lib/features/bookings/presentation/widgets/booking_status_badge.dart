@@ -15,9 +15,11 @@ class BookingStatusBadge extends StatelessWidget {
     switch (statusType) {
       case OrderStatus.pending:
         return l10n.pending;
-      case OrderStatus.assignedToWorker:
+      case OrderStatus.assigned:
         return l10n.assigned;
-      case OrderStatus.inProgress:
+      case OrderStatus.onTheWay:
+        return l10n.on_the_way;
+      case OrderStatus.inProcess:
         return l10n.in_process;
       case OrderStatus.completed:
         return l10n.completed;
@@ -32,9 +34,11 @@ class BookingStatusBadge extends StatelessWidget {
     switch (statusType) {
       case OrderStatus.pending:
         return Colors.orange;
-      case OrderStatus.assignedToWorker:
+      case OrderStatus.assigned:
         return AppColor.primaryColor;
-      case OrderStatus.inProgress:
+      case OrderStatus.onTheWay:
+        return Colors.blue;
+      case OrderStatus.inProcess:
         return Colors.purple;
       case OrderStatus.completed:
         return AppColor.success;

@@ -28,7 +28,7 @@ class WorkingHoursSection extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 20.w),
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: theme.surface,
+            color: theme.surfaceContainer,
             borderRadius: BorderRadius.circular(20.r),
             border: Border.all(color: theme.outline.withValues(alpha: .08)),
             boxShadow: [

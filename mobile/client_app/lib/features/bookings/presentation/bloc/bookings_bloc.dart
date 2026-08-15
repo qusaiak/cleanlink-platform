@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:client_app/config/constants/pagination_constants.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/error/failure.dart';
-import '../../../../core/pagination/pagination_utils.dart';
 import '../../domain/entities/available_day_entity.dart';
 import '../../domain/entities/booking_entity.dart';
 import '../../domain/usecases/book_order_usecase.dart';
@@ -12,39 +10,64 @@ import '../../domain/usecases/cancel_order_usecase.dart';
 import '../../domain/usecases/get_available_slots_usecase.dart';
 import '../../domain/usecases/get_bookings_usecase.dart';
 import '../../domain/usecases/show_order_usecase.dart';
+import '../../domain/usecases/open_package_usecases.dart';
+import '../../domain/entities/open_package_entities.dart';
+import '../../../services/domain/entities/attribute_entity.dart';
+import '../../../services/domain/entities/package_entity.dart';
+import '../../../locations/domain/entities/selected_map_location.dart';
 
 part 'bookings_event.dart';
 part 'bookings_state.dart';
 
 class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
+  int _slotRequestId = 0;
+  int _quoteRequestId = 0;
   final GetAvailableSlotsUseCase getAvailableSlotsUseCase;
   final GetOrdersUseCase getOrdersUseCase;
   final BookOrderUseCase bookOrderUseCase;
   final ShowOrderUseCase showOrderUseCase;
   final CancelOrderUseCase cancelOrderUseCase;
+  final CheckOpenPackagePriceUseCase? checkOpenPackagePriceUseCase;
+  final GetOpenPackageAvailableSlotsUseCase?
+  getOpenPackageAvailableSlotsUseCase;
   BookingsBloc(
     this.getAvailableSlotsUseCase,
     this.getOrdersUseCase,
     this.bookOrderUseCase,
     this.showOrderUseCase,
-    this.cancelOrderUseCase,
-  ) : super(BookingsState.initial()) {
+    this.cancelOrderUseCase, [
+    this.checkOpenPackagePriceUseCase,
+    this.getOpenPackageAvailableSlotsUseCase,
+  ]) : super(BookingsState.initial()) {
     on<GetOrdersEvent>(_getOrders);
-    on<GetMoreOrdersEvent>(_getMoreOrders);
     on<BookOrderEvent>(_bookOrder);
     on<ShowOrderEvent>(_showOrder);
     on<CancelOrderEvent>(_cancelOrder);
-    on<ResetBookingStateEvent>(
-      (_, emit) => emit(
+    on<ResetBookingStateEvent>((_, emit) {
+      _slotRequestId++;
+      emit(
         state.copyWith(
           clearError: true,
           clearSuccessMessage: true,
           bookingSuccess: false,
           cancelSuccess: false,
+          availableDays: const [],
+          clearSelectedDay: true,
+          clearSelectedTime: true,
+          clearSelectedLocation: true,
+          clearSlotsFailure: true,
+          clearPackage: true,
+          serviceAttributes: const [],
+          openPackageAttributeQuantities: const {},
+          clearOpenPackageQuote: true,
+          isCheckingOpenPackagePrice: false,
         ),
-      ),
-    );
+      );
+    });
     on<LoadAvailableSlots>(_loadAvailableSlots);
+    on<ConfigureBookingPackage>(_configureBookingPackage);
+    on<UpdateOpenPackageAttributeQty>(_updateOpenPackageAttributeQty);
+    on<CheckOpenPackagePrice>(_checkOpenPackagePrice);
     on<SelectDate>(
       (event, emit) =>
           emit(state.copyWith(selectedDay: event.day, clearSelectedTime: true)),
@@ -52,6 +75,41 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
     on<SelectTime>(
       (event, emit) => emit(state.copyWith(selectedTime: event.time)),
     );
+    on<SelectBookingLocation>((event, emit) {
+      _slotRequestId++;
+      emit(
+        state.copyWith(
+          selectedLocation: event.location,
+          availableDays: const [],
+          clearSelectedDay: true,
+          clearSelectedTime: true,
+          clearSlotsFailure: true,
+        ),
+      );
+      if (!(state.package?.isOpenPackage ?? false) ||
+          state.isOpenPackageConfigurationChecked) {
+        add(
+          LoadAvailableSlots(
+            packageId: event.packageId,
+            latitude: event.location.latitude,
+            longitude: event.location.longitude,
+          ),
+        );
+      }
+    });
+    on<ClearBookingLocation>((_, emit) {
+      _slotRequestId++;
+      emit(
+        state.copyWith(
+          clearSelectedLocation: true,
+          availableDays: const [],
+          clearSelectedDay: true,
+          clearSelectedTime: true,
+          clearSlotsFailure: true,
+          isLoadingSlots: false,
+        ),
+      );
+    });
     on<ChangeTab>(
       (event, emit) => emit(state.copyWith(selectedTab: event.tab)),
     );
@@ -64,7 +122,7 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
     GetOrdersEvent event,
     Emitter<BookingsState> emit,
   ) async {
-    if (state.isLoadingOrders || state.isLoadingMoreOrders) {
+    if (state.isLoadingOrders) {
       event.completer?.complete();
       return;
     }
@@ -73,37 +131,22 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
       state.copyWith(
         isLoadingOrders: true,
         isRefreshingOrders: event.isRefresh,
-        isLoadingMoreOrders: false,
         hasLoadedOrders: false,
         orders: const [],
-        currentPage: 0,
-        perPage: PaginationConstants.ordersPageSize,
-        total: 0,
-        lastPage: 1,
-        hasMorePages: true,
         clearOrdersErrorMessage: true,
-        clearLoadMoreOrdersError: true,
         clearError: true,
       ),
     );
 
     try {
-      final result = await getOrdersUseCase(
-        page: 1,
-        perPage: PaginationConstants.ordersPageSize,
-      );
+      final result = await getOrdersUseCase();
 
       emit(
         state.copyWith(
-          orders: result.items,
+          orders: result,
           isLoadingOrders: false,
           isRefreshingOrders: false,
           hasLoadedOrders: true,
-          currentPage: result.pagination.currentPage,
-          perPage: result.pagination.perPage,
-          total: result.pagination.total,
-          lastPage: result.pagination.lastPage,
-          hasMorePages: result.pagination.hasMorePages,
         ),
       );
     } catch (e) {
@@ -118,52 +161,6 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
       );
     } finally {
       event.completer?.complete();
-    }
-  }
-
-  Future<void> _getMoreOrders(
-    GetMoreOrdersEvent event,
-    Emitter<BookingsState> emit,
-  ) async {
-    if (state.isLoadingOrders ||
-        state.isRefreshingOrders ||
-        state.isLoadingMoreOrders ||
-        !state.hasMorePages) {
-      return;
-    }
-
-    final nextPage = state.currentPage + 1;
-    emit(
-      state.copyWith(isLoadingMoreOrders: true, clearLoadMoreOrdersError: true),
-    );
-
-    try {
-      final result = await getOrdersUseCase(
-        page: nextPage,
-        perPage: PaginationConstants.ordersPageSize,
-      );
-      emit(
-        state.copyWith(
-          orders: mergeWithoutDuplicates(
-            state.orders,
-            result.items,
-            (order) => order.id,
-          ),
-          isLoadingMoreOrders: false,
-          currentPage: result.pagination.currentPage,
-          perPage: result.pagination.perPage,
-          total: result.pagination.total,
-          lastPage: result.pagination.lastPage,
-          hasMorePages: result.pagination.hasMorePages,
-        ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          isLoadingMoreOrders: false,
-          loadMoreOrdersError: _message(e),
-        ),
-      );
     }
   }
 
@@ -183,8 +180,12 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
       final result = await bookOrderUseCase(
         packageId: event.packageId,
         location: event.location,
+        latitude: event.latitude,
+        longitude: event.longitude,
         startTime: event.startTime,
         note: event.note,
+        isOpenPackage: state.package?.isOpenPackage ?? false,
+        attributes: state.selectedOpenPackageAttributes,
       );
       emit(
         state.copyWith(
@@ -195,7 +196,6 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
             result.order,
             ...state.orders.where((item) => item.id != result.order.id),
           ],
-          total: state.total + 1,
           selectedOrder: result.order,
         ),
       );
@@ -266,10 +266,12 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
     LoadAvailableSlots event,
     Emitter<BookingsState> emit,
   ) async {
+    final requestId = ++_slotRequestId;
     emit(
       state.copyWith(
         isLoadingSlots: true,
         clearError: true,
+        clearSlotsFailure: true,
         availableDays: const [],
         clearSelectedDay: true,
         clearSelectedTime: true,
@@ -277,22 +279,152 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
     );
 
     try {
-      final days = (await getAvailableSlotsUseCase(
-        event.packageId,
-      )).where((day) => day.hasAvailableSlots).toList();
+      final isOpen = state.package?.isOpenPackage ?? false;
+      final days = isOpen && getOpenPackageAvailableSlotsUseCase != null
+          ? await getOpenPackageAvailableSlotsUseCase!(
+              packageId: event.packageId,
+              latitude: event.latitude,
+              longitude: event.longitude,
+              attributes: state.selectedOpenPackageAttributes,
+            )
+          : await getAvailableSlotsUseCase(
+              packageId: event.packageId,
+              latitude: event.latitude,
+              longitude: event.longitude,
+            );
+      if (requestId != _slotRequestId) return;
 
-      final first = days.isEmpty ? null : days.first;
+      AvailableDayEntity? first;
+      for (final day in days) {
+        if (day.hasAvailableSlots) {
+          first = day;
+          break;
+        }
+      }
 
       emit(
         state.copyWith(
           isLoadingSlots: false,
           availableDays: days,
           selectedDay: first,
-          selectedTime: first?.slots.first,
+          clearSelectedTime: true,
         ),
       );
     } catch (e) {
-      emit(state.copyWith(isLoadingSlots: false, errorMessage: _message(e)));
+      if (requestId != _slotRequestId) return;
+      emit(
+        state.copyWith(
+          isLoadingSlots: false,
+          slotsFailure: e is Failure
+              ? e
+              : ServerFailure(_message(e), 'UNKNOWN'),
+        ),
+      );
+    }
+  }
+
+  void _configureBookingPackage(
+    ConfigureBookingPackage event,
+    Emitter<BookingsState> emit,
+  ) {
+    _quoteRequestId++;
+    _slotRequestId++;
+    final quantities = event.package.isOpenPackage
+        ? {for (final attribute in event.attributes) attribute.id: 0}
+        : <int, int>{};
+    emit(
+      state.copyWith(
+        package: event.package,
+        serviceAttributes: event.package.isOpenPackage
+            ? event.attributes
+            : const [],
+        openPackageAttributeQuantities: quantities,
+        clearOpenPackageQuote: true,
+        isCheckingOpenPackagePrice: false,
+        availableDays: const [],
+        clearSelectedDay: true,
+        clearSelectedTime: true,
+        clearSlotsFailure: true,
+      ),
+    );
+  }
+
+  void _updateOpenPackageAttributeQty(
+    UpdateOpenPackageAttributeQty event,
+    Emitter<BookingsState> emit,
+  ) {
+    final package = state.package;
+    if (package == null || !package.isOpenPackage) return;
+    final quantities = Map<int, int>.from(state.openPackageAttributeQuantities);
+    final attribute = state.serviceAttributes
+        .where((item) => item.id == event.attributeId)
+        .firstOrNull;
+    quantities[event.attributeId] = attribute?.isBoolean == true
+        ? (event.qty > 0 ? 1 : 0)
+        : (event.qty < 0 ? 0 : event.qty);
+    _quoteRequestId++;
+    _slotRequestId++;
+    emit(
+      state.copyWith(
+        openPackageAttributeQuantities: quantities,
+        clearOpenPackageQuote: true,
+        isCheckingOpenPackagePrice: false,
+        availableDays: const [],
+        clearSelectedDay: true,
+        clearSelectedTime: true,
+        clearSlotsFailure: true,
+      ),
+    );
+  }
+
+  Future<void> _checkOpenPackagePrice(
+    CheckOpenPackagePrice event,
+    Emitter<BookingsState> emit,
+  ) async {
+    final useCase = checkOpenPackagePriceUseCase;
+    if (useCase == null || state.package?.id != event.packageId) {
+      emit(state.copyWith(isCheckingOpenPackagePrice: false));
+      return;
+    }
+    final requestId = ++_quoteRequestId;
+    emit(
+      state.copyWith(
+        isCheckingOpenPackagePrice: true,
+        clearOpenPackageQuote: true,
+        clearError: true,
+      ),
+    );
+    try {
+      final quote = await useCase(
+        packageId: event.packageId,
+        attributes: state.selectedOpenPackageAttributes,
+      );
+      if (requestId != _quoteRequestId) return;
+      emit(
+        state.copyWith(
+          openPackageQuote: quote,
+          isCheckingOpenPackagePrice: false,
+          clearError: true,
+        ),
+      );
+      final location = state.selectedLocation;
+      if (location != null) {
+        add(
+          LoadAvailableSlots(
+            packageId: event.packageId,
+            latitude: location.latitude,
+            longitude: location.longitude,
+          ),
+        );
+      }
+    } catch (error) {
+      if (requestId != _quoteRequestId) return;
+      emit(
+        state.copyWith(
+          isCheckingOpenPackagePrice: false,
+          errorMessage: _message(error),
+        ),
+      );
     }
   }
 }

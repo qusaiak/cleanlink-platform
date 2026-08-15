@@ -2,8 +2,9 @@ import 'package:equatable/equatable.dart';
 
 enum OrderStatus {
   pending,
-  assignedToWorker,
-  inProgress,
+  assigned,
+  onTheWay,
+  inProcess,
   completed,
   canceled,
   unknown,
@@ -14,9 +15,15 @@ OrderStatus orderStatusFromApi(String? status) {
     case 'pending':
       return OrderStatus.pending;
     case 'assigned_to_worker':
-      return OrderStatus.assignedToWorker;
+    case 'assigned':
+      return OrderStatus.assigned;
+    case 'on_the_way':
+    case 'on_way':
+    case 'in_route':
+      return OrderStatus.onTheWay;
     case 'in_progress':
-      return OrderStatus.inProgress;
+    case 'in_process':
+      return OrderStatus.inProcess;
     case 'completed':
       return OrderStatus.completed;
     case 'canceled':
@@ -31,10 +38,12 @@ String orderStatusApiValue(OrderStatus status) {
   switch (status) {
     case OrderStatus.pending:
       return 'pending';
-    case OrderStatus.assignedToWorker:
+    case OrderStatus.assigned:
       return 'assigned_to_worker';
-    case OrderStatus.inProgress:
-      return 'in_progress';
+    case OrderStatus.onTheWay:
+      return 'on_the_way';
+    case OrderStatus.inProcess:
+      return 'in_process';
     case OrderStatus.completed:
       return 'completed';
     case OrderStatus.canceled:
@@ -60,9 +69,12 @@ class OrderEntity extends Equatable {
   final int packageId;
   final String status;
   final String location;
+  final double? latitude;
+  final double? longitude;
   final DateTime? startTime;
   final DateTime? endTime;
   final int duration;
+  final int travelBufferMinutes;
   final double totalPrice;
   final String? note;
   final DateTime? createdAt;
@@ -70,7 +82,7 @@ class OrderEntity extends Equatable {
   final OrderClientEntity? client;
   final OrderLeaderEntity? leader;
   final OrderPackageEntity? package;
-  final List<dynamic> attributes;
+  final List<OrderAttributeEntity> attributes;
 
   const OrderEntity({
     required this.id,
@@ -78,9 +90,12 @@ class OrderEntity extends Equatable {
     required this.packageId,
     required this.status,
     required this.location,
+    this.latitude,
+    this.longitude,
     required this.startTime,
     required this.endTime,
     required this.duration,
+    this.travelBufferMinutes = 0,
     required this.totalPrice,
     this.note,
     this.createdAt,
@@ -98,9 +113,12 @@ class OrderEntity extends Equatable {
         packageId: packageId,
         status: status ?? this.status,
         location: location,
+        latitude: latitude,
+        longitude: longitude,
         startTime: startTime,
         endTime: endTime,
         duration: duration,
+        travelBufferMinutes: travelBufferMinutes,
         totalPrice: totalPrice,
         note: note,
         createdAt: createdAt,
@@ -114,18 +132,25 @@ class OrderEntity extends Equatable {
   OrderStatus get statusType => orderStatusFromApi(status);
 
   bool get isPending => statusType == OrderStatus.pending;
-  bool get isAssigned => statusType == OrderStatus.assignedToWorker;
-  bool get isInProgress => statusType == OrderStatus.inProgress;
+  bool get isAssigned => statusType == OrderStatus.assigned;
+  bool get isOnTheWay => statusType == OrderStatus.onTheWay;
+  bool get isInProgress => statusType == OrderStatus.inProcess;
   bool get isCompleted => statusType == OrderStatus.completed;
   bool get isCanceled => statusType == OrderStatus.canceled;
 
-  bool get canCancel {
-    return statusType != OrderStatus.canceled &&
-        statusType != OrderStatus.completed;
-  }
+  bool get canCancel => statusType == OrderStatus.pending;
 
   @override
-  List<Object?> get props => [id, status, updatedAt, leader];
+  List<Object?> get props => [
+    id,
+    status,
+    updatedAt,
+    leader,
+    location,
+    latitude,
+    longitude,
+    travelBufferMinutes,
+  ];
 }
 
 class OrderClientEntity extends Equatable {
@@ -190,6 +215,7 @@ class OrderPackageEntity extends Equatable {
   final double priceAfterDiscount;
   final List<String> details;
   final OrderServiceEntity? service;
+  final bool isOpenPackage;
   const OrderPackageEntity({
     required this.id,
     required this.serviceId,
@@ -199,9 +225,33 @@ class OrderPackageEntity extends Equatable {
     required this.priceAfterDiscount,
     this.details = const [],
     this.service,
+    this.isOpenPackage = false,
   });
   @override
-  List<Object?> get props => [id, name, duration, priceAfterDiscount, service];
+  List<Object?> get props => [
+    id,
+    name,
+    duration,
+    priceAfterDiscount,
+    service,
+    isOpenPackage,
+  ];
+}
+
+class OrderAttributeEntity extends Equatable {
+  const OrderAttributeEntity({
+    required this.id,
+    required this.name,
+    required this.type,
+    this.qty,
+  });
+  final int id;
+  final String name;
+  final String type;
+  final int? qty;
+
+  @override
+  List<Object?> get props => [id, name, type, qty];
 }
 
 class OrderServiceEntity extends Equatable {

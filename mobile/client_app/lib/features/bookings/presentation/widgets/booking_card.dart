@@ -17,9 +17,11 @@ class BookingCard extends StatelessWidget {
     switch (booking.statusType) {
       case OrderStatus.pending:
         return Colors.orange;
-      case OrderStatus.assignedToWorker:
+      case OrderStatus.assigned:
         return AppColor.primaryColor;
-      case OrderStatus.inProgress:
+      case OrderStatus.onTheWay:
+        return Colors.blue;
+      case OrderStatus.inProcess:
         return Colors.purple;
       case OrderStatus.completed:
         return AppColor.success;
@@ -36,7 +38,6 @@ class BookingCard extends StatelessWidget {
     final accent = _statusColor();
     final package = booking.package;
     final service = package?.service;
-    final company = service?.company;
     final date = booking.startTime == null
         ? '—'
         : DateFormat(

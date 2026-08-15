@@ -22,10 +22,16 @@ class BookingModel {
   final int? packageId;
   final String? status;
   final String? location;
+  @JsonKey(fromJson: _nullableDoubleFromJson)
+  final double? latitude;
+  @JsonKey(fromJson: _nullableDoubleFromJson)
+  final double? longitude;
   final DateTime? startTime;
   final DateTime? endTime;
   @JsonKey(fromJson: _intFromJson)
   final int duration;
+  @JsonKey(fromJson: _intFromJson)
+  final int travelBufferMinutes;
   @JsonKey(fromJson: _doubleFromJson)
   final double totalPrice;
   final String? note;
@@ -34,16 +40,19 @@ class BookingModel {
   final OrderClientModel? client;
   final OrderLeaderModel? leader;
   final OrderPackageModel? package;
-  final List<dynamic>? attributes;
+  final List<OrderAttributeModel>? attributes;
   const BookingModel({
     this.id,
     this.clientId,
     this.packageId,
     this.status,
     this.location,
+    this.latitude,
+    this.longitude,
     this.startTime,
     this.endTime,
     this.duration = 0,
+    this.travelBufferMinutes = 0,
     this.totalPrice = 0,
     this.note,
     this.createdAt,
@@ -62,9 +71,12 @@ class BookingModel {
     packageId: packageId ?? 0,
     status: status ?? '',
     location: location ?? '',
+    latitude: latitude,
+    longitude: longitude,
     startTime: startTime,
     endTime: endTime,
     duration: duration,
+    travelBufferMinutes: travelBufferMinutes,
     totalPrice: totalPrice,
     note: note,
     createdAt: createdAt,
@@ -72,7 +84,7 @@ class BookingModel {
     client: client?.toEntity(),
     leader: leader?.toEntity(),
     package: package?.toEntity(),
-    attributes: attributes ?? const [],
+    attributes: attributes?.map((item) => item.toEntity()).toList() ?? const [],
   );
 }
 
@@ -197,6 +209,7 @@ class OrderPackageModel {
   final double priceAfterDiscount;
   final List<String>? details;
   final OrderServiceModel? service;
+  final bool? isOpenPackage;
   const OrderPackageModel({
     this.id,
     this.serviceId,
@@ -206,6 +219,7 @@ class OrderPackageModel {
     this.priceAfterDiscount = 0,
     this.details,
     this.service,
+    this.isOpenPackage,
   });
   factory OrderPackageModel.fromJson(Map<String, dynamic> json) =>
       _$OrderPackageModelFromJson(json);
@@ -219,7 +233,42 @@ class OrderPackageModel {
     priceAfterDiscount: priceAfterDiscount,
     details: details ?? const [],
     service: service?.toEntity(),
+    isOpenPackage: isOpenPackage ?? false,
   );
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class OrderAttributeModel {
+  const OrderAttributeModel({
+    this.id,
+    this.name,
+    this.type,
+    this.qty,
+    this.pivot,
+  });
+  final int? id;
+  final String? name;
+  final String? type;
+  @JsonKey(fromJson: _nullableIntFromJson)
+  final int? qty;
+  final Map<String, dynamic>? pivot;
+
+  factory OrderAttributeModel.fromJson(Map<String, dynamic> json) =>
+      _$OrderAttributeModelFromJson(json);
+  Map<String, dynamic> toJson() => _$OrderAttributeModelToJson(this);
+
+  OrderAttributeEntity toEntity() => OrderAttributeEntity(
+    id: id ?? 0,
+    name: name ?? '',
+    type: type ?? '',
+    qty: qty ?? _nullableIntFromJson(pivot?['qty']),
+  );
+}
+
+int? _nullableIntFromJson(Object? value) {
+  if (value == null) return null;
+  if (value is num) return value.toInt();
+  return int.tryParse(value.toString());
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)

@@ -1,0 +1,126 @@
+import 'package:client_app/features/bookings/domain/repositories/bookings_repo.dart';
+import 'package:client_app/features/bookings/domain/usecases/book_order_usecase.dart';
+import 'package:client_app/features/bookings/domain/usecases/cancel_order_usecase.dart';
+import 'package:client_app/features/bookings/domain/usecases/get_available_slots_usecase.dart';
+import 'package:client_app/features/bookings/domain/usecases/get_bookings_usecase.dart';
+import 'package:client_app/features/bookings/domain/usecases/show_order_usecase.dart';
+import 'package:client_app/features/bookings/presentation/bloc/bookings_bloc.dart';
+import 'package:client_app/features/bookings/presentation/pages/booking_details_page.dart';
+import 'package:client_app/features/services/domain/entities/attribute_entity.dart';
+import 'package:client_app/features/services/domain/entities/package_entity.dart';
+import 'package:client_app/l10n/app_localizations.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  testWidgets('boolean uses a checkbox while number uses stepper buttons', (
+    tester,
+  ) async {
+    final repo = _NoopBookingsRepo();
+    final bloc = BookingsBloc(
+      GetAvailableSlotsUseCase(repo),
+      GetOrdersUseCase(repo),
+      BookOrderUseCase(repo),
+      ShowOrderUseCase(repo),
+      CancelOrderUseCase(repo),
+    );
+    addTearDown(bloc.close);
+
+    bloc.add(
+      ConfigureBookingPackage(
+        package: _package,
+        attributes: [_numberAttribute, _booleanAttribute],
+      ),
+    );
+    await bloc.stream.firstWhere(
+      (state) => state.openPackageAttributeQuantities.length == 2,
+    );
+
+    await tester.pumpWidget(
+      ScreenUtilInit(
+        designSize: const Size(375, 812),
+        builder: (_, _) => MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: BlocProvider.value(
+              value: bloc,
+              child: BlocBuilder<BookingsBloc, BookingsState>(
+                builder: (_, state) => OpenPackageCustomizer(
+                  attributes: state.serviceAttributes,
+                  quantities: state.openPackageAttributeQuantities,
+                  quote: state.openPackageQuote,
+                  isCalculating: state.isCheckingOpenPackagePrice,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(Checkbox), findsOneWidget);
+    expect(find.byKey(const ValueKey('open-package-number-1')), findsOneWidget);
+    expect(find.byIcon(Icons.add_circle_outline), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('open-package-boolean-22')));
+    await tester.pump();
+    expect(bloc.state.openPackageAttributeQuantities[22], 1);
+    expect(bloc.state.selectedOpenPackageAttributes.single.id, 22);
+    expect(bloc.state.selectedOpenPackageAttributes.single.qty, 1);
+
+    await tester.tap(find.byKey(const ValueKey('open-package-boolean-22')));
+    await tester.pump();
+    expect(bloc.state.openPackageAttributeQuantities[22], 0);
+    expect(bloc.state.selectedOpenPackageAttributes, isEmpty);
+
+    await tester.tap(find.byIcon(Icons.add_circle_outline));
+    await tester.pump();
+    expect(bloc.state.openPackageAttributeQuantities[1], 1);
+  });
+}
+
+class _NoopBookingsRepo implements BookingsRepo {
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+final _date = DateTime(2026, 8, 14);
+
+final _package = PackageEntity(
+  id: 3,
+  serviceId: 4,
+  name: 'Open Package',
+  duration: 60,
+  price: 10,
+  priceAfterDiscount: 10,
+  details: const [],
+  minimumWorkers: 1,
+  isOpenPackage: true,
+  createdAt: _date,
+  updatedAt: _date,
+);
+
+final _numberAttribute = AttributeEntity(
+  id: 1,
+  name: 'Extra rooms',
+  type: 'number',
+  createdAt: _date,
+  updatedAt: _date,
+  price: 25,
+  duration: 45,
+);
+
+final _booleanAttribute = AttributeEntity(
+  id: 22,
+  name: 'Is the home empty?',
+  type: 'boolean',
+  createdAt: _date,
+  updatedAt: _date,
+  price: -20,
+  duration: -30,
+);

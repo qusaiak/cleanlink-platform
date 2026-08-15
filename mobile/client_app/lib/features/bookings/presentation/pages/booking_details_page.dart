@@ -1,32 +1,114 @@
+import 'dart:async';
+
 import 'package:client_app/core/utils/functions/spinkit.dart';
 import 'package:client_app/core/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../config/theme/styles.dart';
+import '../../../../core/error/failure.dart';
 import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/custom_toast.dart';
 import '../../../../config/routes/app_router.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../injection_container.dart';
 import '../../../base/presentation/bloc/base_bloc.dart';
 import '../../../services/domain/entities/package_entity.dart';
+import '../../../services/domain/entities/attribute_entity.dart';
+import '../../domain/entities/open_package_entities.dart';
 import '../bloc/bookings_bloc.dart';
+import '../widgets/booking_location_selector.dart';
+import '../../../locations/domain/entities/selected_map_location.dart';
+import '../../../locations/domain/entities/client_location_entity.dart';
+import '../../../locations/presentation/bloc/locations_bloc.dart';
+import '../widgets/booking_location_sheet.dart';
 
 class BookingDetailsPage extends StatefulWidget {
   final PackageEntity package;
+  final List<AttributeEntity> attributes;
 
-  const BookingDetailsPage({super.key, required this.package});
+  const BookingDetailsPage({
+    super.key,
+    required this.package,
+    this.attributes = const [],
+  });
 
   @override
   State<BookingDetailsPage> createState() => _BookingDetailsPageState();
 }
 
 class _BookingDetailsPageState extends State<BookingDetailsPage> {
-  final TextEditingController _addressController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
+  StreamSubscription<LocationsState>? _locationsSubscription;
+
+  Future<void> _selectLocation() async {
+    final bookingBloc = context.read<BookingsBloc>();
+    final locationsBloc = sl<LocationsBloc>();
+    if (!locationsBloc.state.hasLoaded) {
+      locationsBloc.add(const LoadLocationsEvent());
+    }
+    final choice = await showModalBottomSheet<Object>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: false,
+      builder: (_) => BlocProvider.value(
+        value: locationsBloc,
+        child: BookingLocationSheet(
+          selectedLocation: bookingBloc.state.selectedLocation,
+        ),
+      ),
+    );
+    if (!mounted || choice == null) return;
+
+    SelectedMapLocation? location;
+    if (choice is SelectedMapLocation) {
+      location = choice;
+    } else if (choice == BookingLocationSheetAction.chooseOnMap) {
+      location = await context.push<SelectedMapLocation>(
+        AppRouter.kMapLocationPicker,
+        extra: bookingBloc.state.selectedLocation,
+      );
+    } else if (choice == BookingLocationSheetAction.addSaved) {
+      final created = await context.push<ClientLocationEntity>(
+        AppRouter.kAddLocation,
+      );
+      location = created?.toSelectedMapLocation();
+    }
+    if (!mounted || location == null) return;
+    bookingBloc.add(
+      SelectBookingLocation(packageId: widget.package.id, location: location),
+    );
+  }
+
+  String _localizedSlotFailure(BuildContext context, Failure failure) {
+    final l = AppLocalizations.of(context)!;
+    final message = failure.message.trim().toLowerCase();
+    if (message.contains('company location is not configured')) {
+      return l.company_location_missing;
+    }
+    if (message.contains('unable to calculate travel time')) {
+      return l.travel_time_temporarily_unavailable;
+    }
+    if (message.contains('far distance')) {
+      return l.route_unavailable_for_location;
+    }
+    if (message.contains('not enough eligible workers')) {
+      return l.no_qualified_workgroup;
+    }
+    return switch (failure.type) {
+      AppFailureType.noInternet => l.network_no_internet_description,
+      AppFailureType.timeout => l.network_timeout_description,
+      AppFailureType.server =>
+        failure.message.trim().isEmpty
+            ? l.network_server_description
+            : failure.message,
+      _ => l.network_generic_description,
+    };
+  }
 
   DateTime? _selectedStartTime(BookingsState state) {
     if (state.selectedDay == null || state.selectedTime == null) return null;
@@ -44,20 +126,48 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
 
   void _confirmBooking() {
     final state = context.read<BookingsBloc>().state;
-    final location = _addressController.text.trim();
+    final location = state.selectedLocation;
     final startTime = _selectedStartTime(state);
-    if (location.isEmpty || startTime == null) {
+    final l = AppLocalizations.of(context)!;
+    if (widget.package.isOpenPackage &&
+        !state.isOpenPackageConfigurationChecked) {
       AppSnackBar.showWarning(
         context: context,
-        title: AppLocalizations.of(context)!.warning,
-        message: AppLocalizations.of(context)!.validation_required,
+        title: l.warning,
+        message: l.please_check_price_duration_again,
+      );
+      return;
+    }
+    if (location == null) {
+      AppSnackBar.showWarning(
+        context: context,
+        title: l.warning,
+        message: l.please_select_service_location,
+      );
+      return;
+    }
+    if (state.selectedDay == null) {
+      AppSnackBar.showWarning(
+        context: context,
+        title: l.warning,
+        message: l.please_select_date,
+      );
+      return;
+    }
+    if (startTime == null) {
+      AppSnackBar.showWarning(
+        context: context,
+        title: l.warning,
+        message: l.please_select_available_time,
       );
       return;
     }
     context.read<BookingsBloc>().add(
       BookOrderEvent(
         packageId: widget.package.id,
-        location: location,
+        location: location.formattedAddress,
+        latitude: location.latitude,
+        longitude: location.longitude,
         startTime: startTime,
         note: _notesController.text.trim(),
       ),
@@ -67,13 +177,80 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   @override
   void initState() {
     super.initState();
+    final bloc = context.read<BookingsBloc>();
+    bloc.add(
+      ConfigureBookingPackage(
+        package: widget.package,
+        attributes: widget.attributes,
+      ),
+    );
+    final locationsBloc = sl<LocationsBloc>();
+    _locationsSubscription = locationsBloc.stream.listen((locationsState) {
+      final selected = bloc.state.selectedLocation;
+      final savedId = selected?.savedLocationId;
+      if (savedId == null) return;
+      ClientLocationEntity? current;
+      for (final location in locationsState.locations) {
+        if (location.id == savedId) {
+          current = location;
+          break;
+        }
+      }
+      if (current == null &&
+          locationsState.mutation == LocationMutation.deleted) {
+        bloc.add(const ClearBookingLocation());
+      } else if (current != null &&
+          locationsState.mutation == LocationMutation.updated &&
+          current.toSelectedMapLocation() != selected) {
+        bloc.add(
+          SelectBookingLocation(
+            packageId: widget.package.id,
+            location: current.toSelectedMapLocation(),
+          ),
+        );
+      }
+    });
+    final location = bloc.state.selectedLocation;
+    if (location != null &&
+        (!widget.package.isOpenPackage ||
+            bloc.state.isOpenPackageConfigurationChecked)) {
+      bloc.add(
+        LoadAvailableSlots(
+          packageId: widget.package.id,
+          latitude: location.latitude,
+          longitude: location.longitude,
+        ),
+      );
+    }
+  }
 
-    context.read<BookingsBloc>().add(LoadAvailableSlots(widget.package.id));
+  String _localizedBookingError(BuildContext context, String rawMessage) {
+    final l = AppLocalizations.of(context)!;
+    final message = rawMessage.trim().toLowerCase();
+    if (message.contains('company location is not configured')) {
+      return l.company_location_missing;
+    }
+    if (message.contains('unable to calculate travel time')) {
+      return l.travel_time_temporarily_unavailable;
+    }
+    if (message.contains('far distance')) {
+      return l.route_unavailable_for_location;
+    }
+    if (message.contains('not enough eligible workers')) {
+      return l.no_qualified_workgroup;
+    }
+    if (message.contains('no internet')) {
+      return l.network_no_internet_description;
+    }
+    if (message.contains('timeout')) return l.network_timeout_description;
+    return rawMessage.trim().isEmpty
+        ? l.network_generic_description
+        : rawMessage;
   }
 
   @override
   void dispose() {
-    _addressController.dispose();
+    _locationsSubscription?.cancel();
     _notesController.dispose();
     super.dispose();
   }
@@ -99,7 +276,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
           AppSnackBar.showError(
             context: context,
             title: AppLocalizations.of(context)!.error,
-            message: state.errorMessage!,
+            message: _localizedBookingError(context, state.errorMessage!),
           );
         }
       },
@@ -155,18 +332,82 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AppTextField(
-                label: AppLocalizations.of(context)!.selected_package_label,
-                labelStyle: Styles.textStyle16.copyWith(
-                  fontWeight: FontWeight.bold,
+              BlocBuilder<BookingsBloc, BookingsState>(
+                builder: (context, state) {
+                  return AppTextField(
+                    label: AppLocalizations.of(context)!.selected_package_label,
+                    labelStyle: Styles.textStyle16.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    hint: widget.package.name,
+                    suffix: Text(
+                      widget.package.isOpenPackage
+                          ? "${state.openPackageQuote?.totalPrice ?? 0}"
+                          : "${widget.package.price} ${AppLocalizations.of(context)!.sp}",
+                      style: Styles.textStyle14.copyWith(color: theme.primary),
+                      textAlign: TextAlign.center,
+                    ),
+                    readOnly: true,
+                  );
+                },
+              ),
+
+              if (widget.package.isOpenPackage) ...[
+                SizedBox(height: 16.h),
+                BlocBuilder<BookingsBloc, BookingsState>(
+                  buildWhen: (previous, current) =>
+                      previous.openPackageAttributeQuantities !=
+                          current.openPackageAttributeQuantities ||
+                      previous.openPackageQuote != current.openPackageQuote ||
+                      previous.isCheckingOpenPackagePrice !=
+                          current.isCheckingOpenPackagePrice,
+                  builder: (context, state) => OpenPackageCustomizer(
+                    attributes: state.serviceAttributes,
+                    quantities: state.openPackageAttributeQuantities,
+                    quote: state.openPackageQuote,
+                    isCalculating: state.isCheckingOpenPackagePrice,
+                  ),
                 ),
-                hint: widget.package.name,
-                suffix: Text(
-                  "${widget.package.price} ${AppLocalizations.of(context)!.sp}",
-                  style: Styles.textStyle14.copyWith(color: theme.primary),
-                  textAlign: TextAlign.center,
+              ],
+
+              SizedBox(height: 16.h),
+
+              BlocBuilder<BookingsBloc, BookingsState>(
+                buildWhen: (previous, current) =>
+                    previous.selectedLocation != current.selectedLocation,
+                builder: (context, state) => BookingLocationSelector(
+                  location: state.selectedLocation,
+                  onTap: _selectLocation,
                 ),
-                readOnly: true,
+              ),
+
+              BlocBuilder<BookingsBloc, BookingsState>(
+                buildWhen: (previous, current) =>
+                    previous.selectedLocation != current.selectedLocation,
+                builder: (context, state) => state.selectedLocation == null
+                    ? const SizedBox.shrink()
+                    : Container(
+                        margin: EdgeInsets.only(top: 10.h),
+                        padding: EdgeInsets.all(12.r),
+                        decoration: BoxDecoration(
+                          color: theme.primaryContainer.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.route_outlined, color: theme.primary),
+                            SizedBox(width: 10.w),
+                            Expanded(
+                              child: Text(
+                                AppLocalizations.of(
+                                  context,
+                                )!.travel_considered_message,
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
               ),
 
               SizedBox(height: 16.h),
@@ -175,8 +416,13 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                 buildWhen: (previous, current) =>
                     previous.isLoadingSlots != current.isLoadingSlots ||
                     previous.availableDays != current.availableDays ||
-                    previous.selectedDay != current.selectedDay,
+                    previous.selectedDay != current.selectedDay ||
+                    previous.selectedLocation != current.selectedLocation ||
+                    previous.slotsFailure != current.slotsFailure,
                 builder: (context, state) {
+                  if (state.selectedLocation == null) {
+                    return const SizedBox.shrink();
+                  }
                   if (state.isLoadingSlots) {
                     return Center(
                       child: Padding(
@@ -185,6 +431,31 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                       ),
                     );
                   }
+
+                  if (state.slotsFailure != null) {
+                    final message = _localizedSlotFailure(
+                      context,
+                      state.slotsFailure!,
+                    );
+                    return _SlotsErrorCard(
+                      message: message,
+                      onRetry: () {
+                        final location = state.selectedLocation!;
+                        context.read<BookingsBloc>().add(
+                          LoadAvailableSlots(
+                            packageId: widget.package.id,
+                            latitude: location.latitude,
+                            longitude: location.longitude,
+                          ),
+                        );
+                      },
+                      onChangeLocation: _selectLocation,
+                    );
+                  }
+
+                  final hasAnySlots = state.availableDays.any(
+                    (day) => day.hasAvailableSlots,
+                  );
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,15 +469,15 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
 
                       SizedBox(height: 12.h),
 
-                      state.availableDays.isEmpty
+                      !hasAnySlots
                           ? AppEmptyState(
                               icon: Icons.event_busy_outlined,
                               title: AppLocalizations.of(
                                 context,
-                              )!.no_available_dates,
+                              )!.no_available_slots_for_location,
                               body: AppLocalizations.of(
                                 context,
-                              )!.no_available_dates_message,
+                              )!.no_available_slots_for_location_message,
                             )
                           : SizedBox(
                               height: 74.h,
@@ -291,7 +562,9 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                     previous.selectedDay != current.selectedDay ||
                     previous.selectedTime != current.selectedTime,
                 builder: (context, state) {
-                  if (state.isLoadingSlots || state.selectedDay == null) {
+                  if (state.isLoadingSlots ||
+                      state.slotsFailure != null ||
+                      state.selectedDay == null) {
                     return const SizedBox.shrink();
                   }
 
@@ -352,21 +625,6 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
               ),
               SizedBox(height: 16.h),
               AppTextField(
-                controller: _addressController,
-                label: AppLocalizations.of(context)!.address_label,
-                labelStyle: Styles.textStyle16.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-                hint: AppLocalizations.of(context)!.address_hint,
-                suffix: Icon(
-                  Icons.location_on_outlined,
-                  size: 20.sp,
-                  color: theme.primary,
-                ),
-              ),
-              SizedBox(height: 16.h),
-
-              AppTextField(
                 controller: _notesController,
                 label: AppLocalizations.of(context)!.notes_label,
                 labelStyle: Styles.textStyle16.copyWith(
@@ -379,6 +637,205 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class OpenPackageCustomizer extends StatelessWidget {
+  const OpenPackageCustomizer({
+    super.key,
+    required this.attributes,
+    required this.quantities,
+    required this.quote,
+    required this.isCalculating,
+  });
+
+  final List<AttributeEntity> attributes;
+  final Map<int, int> quantities;
+  final OpenPackageQuote? quote;
+  final bool isCalculating;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.r),
+      decoration: BoxDecoration(
+        color: colors.surfaceContainer,
+        borderRadius: BorderRadius.circular(18.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l.customize_your_service,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          SizedBox(height: 12.h),
+          if (attributes.isEmpty)
+            Text(l.no_attributes_available)
+          else
+            for (final attribute in attributes)
+              Padding(
+                padding: EdgeInsets.only(bottom: 10.h),
+                child: attribute.isBoolean
+                    ? CheckboxListTile(
+                        key: ValueKey('open-package-boolean-${attribute.id}'),
+                        value: (quantities[attribute.id] ?? 0) > 0,
+                        onChanged: (value) => context.read<BookingsBloc>().add(
+                          UpdateOpenPackageAttributeQty(
+                            attributeId: attribute.id,
+                            qty: value == true ? 1 : 0,
+                          ),
+                        ),
+                        title: Text(attribute.name),
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                        controlAffinity: ListTileControlAffinity.trailing,
+                      )
+                    : Row(
+                        key: ValueKey('open-package-number-${attribute.id}'),
+                        children: [
+                          Expanded(child: Text(attribute.name)),
+                          IconButton(
+                            tooltip: l.decrease,
+                            onPressed: (quantities[attribute.id] ?? 0) == 0
+                                ? null
+                                : () => context.read<BookingsBloc>().add(
+                                    UpdateOpenPackageAttributeQty(
+                                      attributeId: attribute.id,
+                                      qty: (quantities[attribute.id] ?? 0) - 1,
+                                    ),
+                                  ),
+                            icon: const Icon(Icons.remove_circle_outline),
+                          ),
+                          SizedBox(
+                            width: 28.w,
+                            child: Text(
+                              '${quantities[attribute.id] ?? 0}',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          IconButton(
+                            tooltip: l.increase,
+                            onPressed: () => context.read<BookingsBloc>().add(
+                              UpdateOpenPackageAttributeQty(
+                                attributeId: attribute.id,
+                                qty: (quantities[attribute.id] ?? 0) + 1,
+                              ),
+                            ),
+                            icon: const Icon(Icons.add_circle_outline),
+                          ),
+                        ],
+                      ),
+              ),
+          SizedBox(height: 8.h),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: isCalculating
+                  ? null
+                  : () => context.read<BookingsBloc>().add(
+                      CheckOpenPackagePrice(
+                        context.read<BookingsBloc>().state.package!.id,
+                      ),
+                    ),
+              child: isCalculating
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: 18.w,
+                          height: 18.w,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: colors.onPrimary,
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(l.checking_price_duration),
+                      ],
+                    )
+                  : Text(l.check_price_duration),
+            ),
+          ),
+          if (quote != null) Divider(color: colors.outlineVariant),
+          if (quote != null)
+            Text(
+              '${l.estimated_price}: ${quote!.totalPrice} ${l.sp}\n${l.estimated_duration}: ${quote!.duration} ${l.track_minutes_short}',
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SlotsErrorCard extends StatelessWidget {
+  const _SlotsErrorCard({
+    required this.message,
+    required this.onRetry,
+    required this.onChangeLocation,
+  });
+
+  final String message;
+  final VoidCallback onRetry;
+  final VoidCallback onChangeLocation;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.r),
+      decoration: BoxDecoration(
+        color: colors.errorContainer.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.route_outlined, color: colors.error, size: 30.sp),
+          SizedBox(height: 10.h),
+          Text(
+            message,
+            maxLines: 5,
+            textAlign: TextAlign.center,
+            style: Styles.textStyle12.copyWith(color: colors.onSurface),
+          ),
+          SizedBox(height: 10.h),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8.w,
+            children: [
+              TextButton(
+                onPressed: onChangeLocation,
+                child: Text(
+                  l.change_location,
+                  style: Styles.textStyle14.copyWith(
+                    color: colors.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              FilledButton(
+                onPressed: onRetry,
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(Colors.white),
+                ),
+                child: Text(
+                  l.retry,
+                  style: Styles.textStyle14.copyWith(
+                    color: colors.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

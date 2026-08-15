@@ -2,33 +2,94 @@ import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/network/network_exceptions.dart';
-import '../../../../core/pagination/paginated_result.dart';
 import '../../domain/entities/available_day_entity.dart';
 import '../../domain/entities/booking_entity.dart';
 import '../../domain/repositories/bookings_repo.dart';
 import '../data_sources/bookings_api_service.dart';
 import '../models/book_order_request_model.dart';
+import '../models/open_package_models.dart';
+import '../../domain/entities/open_package_entities.dart';
+import '../../../../core/utils/map_address_normalizer.dart';
 
 class BookingsRepoImpl implements BookingsRepo {
   final BookingsApiService api;
   BookingsRepoImpl(this.api);
 
   @override
-  Future<List<AvailableDayEntity>> getAvailableSlots(int packageId) async {
+  Future<List<AvailableDayEntity>> getAvailableSlots({
+    required int packageId,
+    required double latitude,
+    required double longitude,
+  }) async {
     try {
-      return (await api.getAvailableSlots(packageId)).data.toEntity();
+      return (await api.getAvailableSlots(
+        packageId,
+        latitude,
+        longitude,
+      )).data.toEntity();
     } on DioException catch (e) {
       throw NetworkExceptions.fromDio(e);
     }
   }
 
   @override
-  Future<PaginatedResult<OrderEntity>> getOrders({
-    required int page,
-    required int perPage,
+  Future<List<AvailableDayEntity>> getOpenPackageAvailableSlots({
+    required int packageId,
+    required double latitude,
+    required double longitude,
+    required List<SelectedOpenPackageAttribute> attributes,
   }) async {
     try {
-      return (await api.getOrders(page: page, perPage: perPage)).data.data;
+      return (await api.getOpenPackageAvailableSlots(
+        packageId,
+        OpenPackageSlotsRequestModel(
+          latitude: latitude,
+          longitude: longitude,
+          attributes: attributes,
+        ),
+      )).data.days;
+    } on DioException catch (e) {
+      throw NetworkExceptions.fromDio(e);
+    }
+  }
+
+  @override
+  Future<OpenPackageQuote> checkOpenPackagePrice({
+    required int packageId,
+    required List<SelectedOpenPackageAttribute> attributes,
+  }) async {
+    try {
+      return (await api.checkOpenPackagePrice(
+        packageId,
+        OpenPackageAttributesRequestModel(attributes: attributes),
+      )).data.data;
+    } on DioException catch (e) {
+      throw NetworkExceptions.fromDio(e);
+    }
+  }
+
+  @override
+  Future<List<OrderEntity>> getOrders() async {
+    try {
+      const pageSize = 100;
+      var page = 1;
+      final orders = <OrderEntity>[];
+      final ids = <int>{};
+      while (true) {
+        final result = (await api.getOrders(
+          page: page,
+          perPage: pageSize,
+        )).data.data;
+        for (final order in result.items) {
+          if (ids.add(order.id)) orders.add(order);
+        }
+        if (!result.pagination.hasMorePages ||
+            page >= result.pagination.lastPage) {
+          break;
+        }
+        page++;
+      }
+      return orders;
     } on DioException catch (e) {
       throw NetworkExceptions.fromDio(e);
     }
@@ -38,18 +99,68 @@ class BookingsRepoImpl implements BookingsRepo {
   Future<OrderResult> bookOrder({
     required int packageId,
     required String location,
+    required double latitude,
+    required double longitude,
     required DateTime startTime,
     String? note,
   }) async {
+    return _book(
+      packageId: packageId,
+      location: location,
+      latitude: latitude,
+      longitude: longitude,
+      startTime: startTime,
+      note: note,
+      isOpenPackage: false,
+      attributes: const [],
+    );
+  }
+
+  @override
+  Future<OrderResult> bookOpenPackage({
+    required int packageId,
+    required String location,
+    required double latitude,
+    required double longitude,
+    required DateTime startTime,
+    String? note,
+    required List<SelectedOpenPackageAttribute> attributes,
+  }) => _book(
+    packageId: packageId,
+    location: location,
+    latitude: latitude,
+    longitude: longitude,
+    startTime: startTime,
+    note: note,
+    isOpenPackage: true,
+    attributes: attributes,
+  );
+
+  Future<OrderResult> _book({
+    required int packageId,
+    required String location,
+    required double latitude,
+    required double longitude,
+    required DateTime startTime,
+    required String? note,
+    required bool isOpenPackage,
+    required List<SelectedOpenPackageAttribute> attributes,
+  }) async {
     try {
-      final response = (await api.bookOrder(
-        BookOrderRequestModel(
-          packageId: packageId,
-          location: location,
-          startTime: DateFormat('yyyy-MM-dd HH:mm:ss').format(startTime),
-          note: note?.trim().isEmpty == true ? null : note?.trim(),
-        ),
-      )).data;
+      final body = BookOrderRequestModel(
+        packageId: packageId,
+        location: normalizeGoogleMapAddress(location),
+        latitude: latitude,
+        longitude: longitude,
+        startTime: DateFormat('yyyy-MM-dd HH:mm:ss').format(startTime),
+        note: note?.trim().isEmpty == true ? null : note?.trim(),
+        attributes: isOpenPackage ? attributes : null,
+      );
+      final response =
+          (isOpenPackage
+                  ? await api.bookOpenPackage(body)
+                  : await api.bookOrder(body))
+              .data;
       if (response.data == null) {
         throw const ServerFailure(
           'Booking response did not include an order',

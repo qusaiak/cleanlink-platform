@@ -1,24 +1,24 @@
 part of 'bookings_bloc.dart';
 
-enum BookingTab { all, pending, assigned, inProcess, completed, canceled }
+enum BookingTab {
+  all,
+  pending,
+  assigned,
+  onTheWay,
+  inProcess,
+  completed,
+  canceled,
+}
 
 class BookingsState extends Equatable {
   final List<OrderEntity> orders;
   final OrderEntity? selectedOrder;
 
   final bool isLoadingOrders;
-  final bool isLoadingMoreOrders;
   final bool isRefreshingOrders;
   final bool hasLoadedOrders;
 
-  final int currentPage;
-  final int perPage;
-  final int total;
-  final int lastPage;
-  final bool hasMorePages;
-
   final String? ordersErrorMessage;
-  final String? loadMoreOrdersError;
 
   final bool isBookingOrder;
   final bool isLoadingOrderDetails;
@@ -36,21 +36,21 @@ class BookingsState extends Equatable {
   final List<AvailableDayEntity> availableDays;
   final AvailableDayEntity? selectedDay;
   final String? selectedTime;
+  final SelectedMapLocation? selectedLocation;
+  final Failure? slotsFailure;
+  final PackageEntity? package;
+  final List<AttributeEntity> serviceAttributes;
+  final Map<int, int> openPackageAttributeQuantities;
+  final OpenPackageQuote? openPackageQuote;
+  final bool isCheckingOpenPackagePrice;
 
   const BookingsState({
     required this.orders,
     this.selectedOrder,
     required this.isLoadingOrders,
-    required this.isLoadingMoreOrders,
     required this.isRefreshingOrders,
     required this.hasLoadedOrders,
-    required this.currentPage,
-    required this.perPage,
-    required this.total,
-    required this.lastPage,
-    required this.hasMorePages,
     this.ordersErrorMessage,
-    this.loadMoreOrdersError,
     required this.isBookingOrder,
     required this.isLoadingOrderDetails,
     required this.isCancelingOrder,
@@ -63,19 +63,20 @@ class BookingsState extends Equatable {
     required this.availableDays,
     this.selectedDay,
     this.selectedTime,
+    this.selectedLocation,
+    this.slotsFailure,
+    this.package,
+    this.serviceAttributes = const [],
+    this.openPackageAttributeQuantities = const {},
+    this.openPackageQuote,
+    this.isCheckingOpenPackagePrice = false,
   });
 
   factory BookingsState.initial() => const BookingsState(
     orders: [],
     isLoadingOrders: false,
-    isLoadingMoreOrders: false,
     isRefreshingOrders: false,
     hasLoadedOrders: false,
-    currentPage: 0,
-    perPage: PaginationConstants.ordersPageSize,
-    total: 0,
-    lastPage: 1,
-    hasMorePages: true,
     isBookingOrder: false,
     isLoadingOrderDetails: false,
     isCancelingOrder: false,
@@ -90,26 +91,28 @@ class BookingsState extends Equatable {
 
   List<OrderEntity> get bookings => orders;
 
+  bool get isOpenPackageConfigurationChecked => openPackageQuote != null;
+
+  List<SelectedOpenPackageAttribute> get selectedOpenPackageAttributes =>
+      openPackageAttributeQuantities.entries
+          .where((entry) => entry.value > 0)
+          .map(
+            (entry) =>
+                SelectedOpenPackageAttribute(id: entry.key, qty: entry.value),
+          )
+          .toList(growable: false);
+
   BookingsState copyWith({
     List<OrderEntity>? orders,
     OrderEntity? selectedOrder,
     bool clearSelectedOrder = false,
 
     bool? isLoadingOrders,
-    bool? isLoadingMoreOrders,
     bool? isRefreshingOrders,
     bool? hasLoadedOrders,
 
-    int? currentPage,
-    int? perPage,
-    int? total,
-    int? lastPage,
-    bool? hasMorePages,
-
     String? ordersErrorMessage,
     bool clearOrdersErrorMessage = false,
-    String? loadMoreOrdersError,
-    bool clearLoadMoreOrdersError = false,
 
     bool? isBookingOrder,
     bool? isLoadingOrderDetails,
@@ -133,6 +136,17 @@ class BookingsState extends Equatable {
 
     String? selectedTime,
     bool clearSelectedTime = false,
+    SelectedMapLocation? selectedLocation,
+    bool clearSelectedLocation = false,
+    Failure? slotsFailure,
+    bool clearSlotsFailure = false,
+    PackageEntity? package,
+    bool clearPackage = false,
+    List<AttributeEntity>? serviceAttributes,
+    Map<int, int>? openPackageAttributeQuantities,
+    OpenPackageQuote? openPackageQuote,
+    bool clearOpenPackageQuote = false,
+    bool? isCheckingOpenPackagePrice,
   }) {
     return BookingsState(
       orders: orders ?? this.orders,
@@ -141,20 +155,11 @@ class BookingsState extends Equatable {
           : selectedOrder ?? this.selectedOrder,
 
       isLoadingOrders: isLoadingOrders ?? this.isLoadingOrders,
-      isLoadingMoreOrders: isLoadingMoreOrders ?? this.isLoadingMoreOrders,
       isRefreshingOrders: isRefreshingOrders ?? this.isRefreshingOrders,
       hasLoadedOrders: hasLoadedOrders ?? this.hasLoadedOrders,
-      currentPage: currentPage ?? this.currentPage,
-      perPage: perPage ?? this.perPage,
-      total: total ?? this.total,
-      lastPage: lastPage ?? this.lastPage,
-      hasMorePages: hasMorePages ?? this.hasMorePages,
       ordersErrorMessage: clearOrdersErrorMessage
           ? null
           : ordersErrorMessage ?? this.ordersErrorMessage,
-      loadMoreOrdersError: clearLoadMoreOrdersError
-          ? null
-          : loadMoreOrdersError ?? this.loadMoreOrdersError,
 
       isBookingOrder: isBookingOrder ?? this.isBookingOrder,
       isLoadingOrderDetails:
@@ -177,6 +182,21 @@ class BookingsState extends Equatable {
       selectedTime: clearSelectedTime
           ? null
           : selectedTime ?? this.selectedTime,
+      selectedLocation: clearSelectedLocation
+          ? null
+          : selectedLocation ?? this.selectedLocation,
+      slotsFailure: clearSlotsFailure
+          ? null
+          : slotsFailure ?? this.slotsFailure,
+      package: clearPackage ? null : package ?? this.package,
+      serviceAttributes: serviceAttributes ?? this.serviceAttributes,
+      openPackageAttributeQuantities:
+          openPackageAttributeQuantities ?? this.openPackageAttributeQuantities,
+      openPackageQuote: clearOpenPackageQuote
+          ? null
+          : openPackageQuote ?? this.openPackageQuote,
+      isCheckingOpenPackagePrice:
+          isCheckingOpenPackagePrice ?? this.isCheckingOpenPackagePrice,
     );
   }
 
@@ -185,16 +205,9 @@ class BookingsState extends Equatable {
     orders,
     selectedOrder,
     isLoadingOrders,
-    isLoadingMoreOrders,
     isRefreshingOrders,
     hasLoadedOrders,
-    currentPage,
-    perPage,
-    total,
-    lastPage,
-    hasMorePages,
     ordersErrorMessage,
-    loadMoreOrdersError,
     isBookingOrder,
     isLoadingOrderDetails,
     isCancelingOrder,
@@ -207,5 +220,12 @@ class BookingsState extends Equatable {
     availableDays,
     selectedDay,
     selectedTime,
+    selectedLocation,
+    slotsFailure,
+    package,
+    serviceAttributes,
+    openPackageAttributeQuantities,
+    openPackageQuote,
+    isCheckingOpenPackagePrice,
   ];
 }

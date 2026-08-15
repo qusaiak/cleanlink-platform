@@ -6,7 +6,15 @@ class GetAvailableSlotsUseCase {
 
   GetAvailableSlotsUseCase(this.repository);
 
-  Future<List<AvailableDayEntity>> call(int packageId) {
-    return repository.getAvailableSlots(packageId);
+  Future<List<AvailableDayEntity>> call({
+    required int packageId,
+    required double latitude,
+    required double longitude,
+  }) {
+    return repository.getAvailableSlots(
+      packageId: packageId,
+      latitude: latitude,
+      longitude: longitude,
+    );
   }
 }

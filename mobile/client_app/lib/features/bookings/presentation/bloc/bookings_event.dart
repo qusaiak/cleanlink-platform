@@ -24,10 +24,6 @@ class RefreshBookings extends GetOrdersEvent {
   const RefreshBookings({super.completer}) : super(isRefresh: true);
 }
 
-class GetMoreOrdersEvent extends BookingsEvent {
-  const GetMoreOrdersEvent();
-}
-
 class ShowOrderEvent extends BookingsEvent {
   final int orderId;
   const ShowOrderEvent(this.orderId);
@@ -45,16 +41,27 @@ class CancelOrderEvent extends BookingsEvent {
 class BookOrderEvent extends BookingsEvent {
   final int packageId;
   final String location;
+  final double latitude;
+  final double longitude;
   final DateTime startTime;
   final String? note;
   const BookOrderEvent({
     required this.packageId,
     required this.location,
+    required this.latitude,
+    required this.longitude,
     required this.startTime,
     this.note,
   });
   @override
-  List<Object?> get props => [packageId, location, startTime, note];
+  List<Object?> get props => [
+    packageId,
+    location,
+    latitude,
+    longitude,
+    startTime,
+    note,
+  ];
 }
 
 class ResetBookingStateEvent extends BookingsEvent {
@@ -70,9 +77,32 @@ class ChangeTab extends BookingsEvent {
 
 class LoadAvailableSlots extends BookingsEvent {
   final int packageId;
-  const LoadAvailableSlots(this.packageId);
+  final double latitude;
+  final double longitude;
+  const LoadAvailableSlots({
+    required this.packageId,
+    required this.latitude,
+    required this.longitude,
+  });
   @override
-  List<Object?> get props => [packageId];
+  List<Object?> get props => [packageId, latitude, longitude];
+}
+
+class SelectBookingLocation extends BookingsEvent {
+  const SelectBookingLocation({
+    required this.packageId,
+    required this.location,
+  });
+
+  final int packageId;
+  final SelectedMapLocation location;
+
+  @override
+  List<Object?> get props => [packageId, location];
+}
+
+class ClearBookingLocation extends BookingsEvent {
+  const ClearBookingLocation();
 }
 
 class SelectDate extends BookingsEvent {
@@ -87,4 +117,33 @@ class SelectTime extends BookingsEvent {
   const SelectTime(this.time);
   @override
   List<Object?> get props => [time];
+}
+
+class ConfigureBookingPackage extends BookingsEvent {
+  const ConfigureBookingPackage({
+    required this.package,
+    required this.attributes,
+  });
+  final PackageEntity package;
+  final List<AttributeEntity> attributes;
+  @override
+  List<Object?> get props => [package, attributes];
+}
+
+class UpdateOpenPackageAttributeQty extends BookingsEvent {
+  const UpdateOpenPackageAttributeQty({
+    required this.attributeId,
+    required this.qty,
+  });
+  final int attributeId;
+  final int qty;
+  @override
+  List<Object?> get props => [attributeId, qty];
+}
+
+class CheckOpenPackagePrice extends BookingsEvent {
+  const CheckOpenPackagePrice(this.packageId);
+  final int packageId;
+  @override
+  List<Object?> get props => [packageId];
 }

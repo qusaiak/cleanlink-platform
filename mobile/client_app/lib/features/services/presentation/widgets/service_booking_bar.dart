@@ -6,8 +6,8 @@ import '../../../../l10n/app_localizations.dart';
 
 class ServiceBookingBar extends StatelessWidget {
   final String packageName;
-  final int price;
-  final int priceAfterDiscount;
+  final double price;
+  final double priceAfterDiscount;
   final VoidCallback onBook;
 
   const ServiceBookingBar({
