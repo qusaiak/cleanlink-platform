@@ -23,8 +23,8 @@ class _ProfileApiService implements ProfileApiService {
   Future<HttpResponse<UpdateProfileResponseModel>> updateProfile(
     String fullname,
     String email,
-    String address,
     String phone,
+    String address,
     File? image,
   ) async {
     final _extra = <String, dynamic>{};
@@ -34,8 +34,8 @@ class _ProfileApiService implements ProfileApiService {
     final _data = FormData();
     _data.fields.add(MapEntry('fullname', fullname));
     _data.fields.add(MapEntry('email', email));
-    _data.fields.add(MapEntry('address', address));
     _data.fields.add(MapEntry('phone', phone));
+    _data.fields.add(MapEntry('address', address));
     if (image != null) {
       _data.files.add(
         MapEntry(

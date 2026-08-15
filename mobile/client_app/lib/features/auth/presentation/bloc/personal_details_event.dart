@@ -11,13 +11,13 @@ class PersonalDetailsImagePicked extends PersonalDetailsEvent {
   const PersonalDetailsImagePicked();
 }
 
-class PersonalDetailsAddressChanged extends PersonalDetailsEvent {
-  final String address;
+class PersonalDetailsLocationChanged extends PersonalDetailsEvent {
+  final SelectedMapLocation location;
 
-  const PersonalDetailsAddressChanged(this.address);
+  const PersonalDetailsLocationChanged(this.location);
 
   @override
-  List<Object?> get props => [address];
+  List<Object?> get props => [location];
 }
 
 class PersonalDetailsPhoneChanged extends PersonalDetailsEvent {

@@ -15,8 +15,8 @@ class UpdateClientProfileUseCase {
     return repo.updateProfile(
       fullname: params.fullname,
       email: params.email,
-      address: params.address,
       phone: params.phone,
+      address: params.address,
       image: params.image,
     );
   }
@@ -25,20 +25,20 @@ class UpdateClientProfileUseCase {
 class UpdateClientProfileParams extends Equatable {
   final String fullname;
   final String email;
-  final String address;
   final String phone;
+  final String address;
   final File? image;
 
   const UpdateClientProfileParams({
     required this.fullname,
     required this.email,
-    required this.address,
     required this.phone,
+    required this.address,
     this.image,
   });
 
   @override
-  List<Object?> get props => [fullname, email, address, phone, image?.path];
+  List<Object?> get props => [fullname, email, phone, address, image?.path];
 }
 
 class LogoutUseCase {

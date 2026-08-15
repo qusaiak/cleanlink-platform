@@ -8,6 +8,7 @@ import '../../../../core/widgets/custom_appbar.dart';
 import '../../../../core/widgets/custom_dialog.dart';
 import '../../../../core/widgets/custom_toast.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../firebase_api.dart';
 import '../bloc/profile_bloc.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../widgets/profile_body.dart';
@@ -32,7 +33,9 @@ class ProfilePage extends StatelessWidget {
                 current.deleteAccountError != null) ||
             (previous.deleteAccountSuccessMessage !=
                     current.deleteAccountSuccessMessage &&
-                current.deleteAccountSuccessMessage != null),
+                current.deleteAccountSuccessMessage != null) ||
+            (previous.notificationMessage != current.notificationMessage &&
+                current.notificationMessage != null),
         listener: (context, state) {
           if (state.deleteAccountSuccessMessage != null) {
             final message = state.deleteAccountSuccessMessage!;
@@ -57,6 +60,38 @@ class ProfilePage extends StatelessWidget {
               title: l.error,
               message: _localizedProfileMessage(state.deleteAccountError, l),
             );
+          } else if (state.notificationMessage != null) {
+            if (state.notificationPermissionStatus ==
+                NotificationPermissionStatus.permanentlyDenied) {
+              showAdaptiveDialog(
+                context: context,
+                builder: (dialogContext) => CustomDialog(
+                  title: l.notification_permission_title,
+                  body: l.notification_permission_disabled,
+                  onTap: () {
+                    Navigator.of(dialogContext).pop();
+                    context.read<ProfileBloc>().add(
+                      OpenNotificationSettingsEvent(),
+                    );
+                  },
+                  onCancel: () => Navigator.of(dialogContext).pop(),
+                  cancelButtonText: l.cancel,
+                  doneButtonText: l.open_settings,
+                ),
+              );
+            } else if (state.notificationsEnabled) {
+              AppSnackBar.showSuccess(
+                context: context,
+                title: l.success,
+                message: _localizedProfileMessage(state.notificationMessage, l),
+              );
+            } else {
+              AppSnackBar.showError(
+                context: context,
+                title: l.info,
+                message: _localizedProfileMessage(state.notificationMessage, l),
+              );
+            }
           } else if (state.status == ProfileStatus.logoutSuccess) {
             AppSnackBar.showSuccess(
               context: context,
@@ -150,6 +185,10 @@ class ProfilePage extends StatelessWidget {
       'failed_to_logout' => l.failed_to_logout,
       'failed_to_delete_account' => l.failed_to_delete_account,
       'could_not_load_profile_summary' => l.could_not_load_profile_summary,
+      'notifications_enabled_message' => l.notifications_enabled_message,
+      'notifications_disabled_message' => l.notifications_disabled_message,
+      'notification_permission_disabled' => l.notification_permission_disabled,
+      'notification_sync_failed' => l.notification_sync_failed,
       _ => message ?? l.failed_to_logout,
     };
   }

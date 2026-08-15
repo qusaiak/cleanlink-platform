@@ -7,8 +7,8 @@ abstract class ProfileRepository {
   Future<UserEntity> updateProfile({
     required String fullname,
     required String email,
-    required String address,
     required String phone,
+    required String address,
     File? image,
   });
 

@@ -12,6 +12,8 @@ import '../../../../config/theme/app_theme_info.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/session/user_session.dart';
 import '../../../auth/domain/entities/user_entity.dart';
+import '../../../locations/presentation/bloc/locations_bloc.dart';
+import '../../../locations/domain/entities/selected_map_location.dart';
 import '../../domain/usecases/profile_usecase.dart';
 import '../../domain/entities/dashboard_summary_entity.dart';
 
@@ -25,6 +27,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final DeleteAccountUseCase _deleteAccountUseCase;
   final UserSession _session;
   final ImagePicker _imagePicker;
+  final FirebaseApi _firebaseApi;
 
   ProfileBloc(
     this._updateProfileUseCase,
@@ -33,22 +36,38 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     this._deleteAccountUseCase,
     this._session,
     this._imagePicker,
-  ) : super(
+    FirebaseApi firebaseApi,
+  ) : _firebaseApi = firebaseApi,
+      super(
         ProfileState(
           status: ProfileStatus.initial,
           isLight: AppThemeInfo.isLight,
           languageCode: AppLanguageInfo.languageCode,
+          notificationsEnabled: firebaseApi.notificationsEnabled,
         ),
       ) {
     on<ChangeThemeEvent>(_onChangeTheme);
     on<ChangeLanguageEvent>(_onChangeLanguage);
     on<LoadProfileDataEvent>(_onLoadProfileData);
     on<PickProfileImageEvent>(_onPickProfileImage);
+    on<SelectProfileLocationEvent>((event, emit) {
+      emit(
+        state.copyWith(
+          selectedMapLocation: event.location,
+          address: event.location.formattedAddress,
+        ),
+      );
+    });
     on<UpdateProfileEvent>(_onUpdateProfile);
     on<LogoutEvent>(_onLogout);
     on<GetDashboardSummaryEvent>(_onGetDashboardSummary);
     on<RefreshProfileEvent>(_onRefreshProfile);
     on<DeleteAccountEvent>(_onDeleteAccount);
+    on<LoadNotificationPreferenceEvent>(_onLoadNotificationPreference);
+    on<SetNotificationPreferenceEvent>(_onSetNotificationPreference);
+    on<OpenNotificationSettingsEvent>((event, emit) async {
+      await _firebaseApi.openNotificationSettings();
+    });
     on<ClearDeleteAccountResultEvent>((event, emit) {
       emit(
         state.copyWith(
@@ -106,6 +125,62 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
+  void _onLoadNotificationPreference(
+    LoadNotificationPreferenceEvent event,
+    Emitter<ProfileState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        notificationsEnabled: _firebaseApi.notificationsEnabled,
+        notificationPermissionStatus: _firebaseApi.notificationsEnabled
+            ? NotificationPermissionStatus.authorized
+            : null,
+      ),
+    );
+  }
+
+  Future<void> _onSetNotificationPreference(
+    SetNotificationPreferenceEvent event,
+    Emitter<ProfileState> emit,
+  ) async {
+    if (state.isUpdatingNotificationPreference ||
+        state.notificationsEnabled == event.enabled) {
+      return;
+    }
+    emit(
+      state.copyWith(
+        isUpdatingNotificationPreference: true,
+        clearNotificationMessage: true,
+      ),
+    );
+    if (!event.enabled) {
+      await _firebaseApi.disableNotifications();
+      emit(
+        state.copyWith(
+          notificationsEnabled: false,
+          isUpdatingNotificationPreference: false,
+          notificationMessage: 'notifications_disabled_message',
+          notificationPermissionStatus: NotificationPermissionStatus.authorized,
+        ),
+      );
+      return;
+    }
+
+    final result = await _firebaseApi.enableNotifications();
+    emit(
+      state.copyWith(
+        notificationsEnabled: result.enabled,
+        isUpdatingNotificationPreference: false,
+        notificationPermissionStatus: result.permissionStatus,
+        notificationMessage: result.enabled
+            ? 'notifications_enabled_message'
+            : result.syncFailed
+            ? 'notification_sync_failed'
+            : 'notification_permission_disabled',
+      ),
+    );
+  }
+
   Future<void> _onLoadProfileData(
     LoadProfileDataEvent event,
     Emitter<ProfileState> emit,
@@ -161,9 +236,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     final fullname = event.fullname.trim();
     final email = event.email.trim();
     final phone = event.phone.trim();
-    final address = event.address.trim();
 
-    if (fullname.isEmpty || email.isEmpty || phone.isEmpty || address.isEmpty) {
+    if (fullname.isEmpty || email.isEmpty || phone.isEmpty) {
       emit(
         state.copyWith(
           status: ProfileStatus.validationError,
@@ -191,8 +265,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         UpdateClientProfileParams(
           fullname: fullname,
           email: email,
-          address: address,
           phone: phone,
+          address: state.selectedMapLocation?.formattedAddress ?? state.address,
           image: state.imageFile,
         ),
       );
@@ -203,7 +277,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           fullname: user.fullname,
           email: user.email,
           phone: user.profile?.phone ?? phone,
-          address: user.profile?.address ?? address,
+          address: state.address,
           image: user.profile?.image ?? state.image,
           clearImageFile: true,
           successMessage: 'profile_updated_successfully',
@@ -231,6 +305,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     emit(state.copyWith(status: ProfileStatus.loggingOut, errorMessage: null));
     try {
       final message = await _logoutUseCase();
+      _clearLocationsSession();
       emit(
         state.copyWith(
           status: ProfileStatus.logoutSuccess,
@@ -241,6 +316,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } on Failure catch (failure) {
       if (failure.errorCode == '401' || failure.errorCode == '403') {
         await _session.clear();
+        _clearLocationsSession();
         emit(
           state.copyWith(
             status: ProfileStatus.logoutSuccess,
@@ -351,6 +427,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     );
     try {
       final message = await _deleteAccountUseCase();
+      _clearLocationsSession();
       emit(
         state.copyWith(
           isDeletingAccount: false,
@@ -373,5 +450,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         ),
       );
     }
+  }
+
+  void _clearLocationsSession() {
+    if (!GetIt.I.isRegistered<LocationsBloc>()) return;
+    GetIt.I<LocationsBloc>().add(const ClearLocationsSessionEvent());
   }
 }

@@ -5,7 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/error/failure.dart';
+import '../../../../core/utils/map_address_normalizer.dart';
 import '../../domain/usecases/update_profile_usecase.dart';
+import '../../../locations/domain/entities/selected_map_location.dart';
+import '../../../locations/domain/usecases/locations_usecases.dart';
 
 part 'personal_details_event.dart';
 part 'personal_details_state.dart';
@@ -14,11 +17,15 @@ class PersonalDetailsBloc
     extends Bloc<PersonalDetailsEvent, PersonalDetailsState> {
   final UpdateProfileUseCase _updateProfileUseCase;
   final ImagePicker _imagePicker;
+  final AddLocationUseCase _addLocationUseCase;
 
-  PersonalDetailsBloc(this._updateProfileUseCase, this._imagePicker)
-    : super(const PersonalDetailsState()) {
+  PersonalDetailsBloc(
+    this._updateProfileUseCase,
+    this._imagePicker,
+    this._addLocationUseCase,
+  ) : super(const PersonalDetailsState()) {
     on<PersonalDetailsImagePicked>(_onImagePicked);
-    on<PersonalDetailsAddressChanged>(_onAddressChanged);
+    on<PersonalDetailsLocationChanged>(_onLocationChanged);
     on<PersonalDetailsPhoneChanged>(_onPhoneChanged);
     on<PersonalDetailsSubmitted>(_onSubmitted);
   }
@@ -41,11 +48,11 @@ class PersonalDetailsBloc
     }
   }
 
-  void _onAddressChanged(
-    PersonalDetailsAddressChanged event,
+  void _onLocationChanged(
+    PersonalDetailsLocationChanged event,
     Emitter<PersonalDetailsState> emit,
   ) {
-    emit(state.copyWith(address: event.address, status: null));
+    emit(state.copyWith(location: event.location, status: null));
   }
 
   void _onPhoneChanged(
@@ -59,11 +66,11 @@ class PersonalDetailsBloc
     PersonalDetailsSubmitted event,
     Emitter<PersonalDetailsState> emit,
   ) async {
-    if (state.address.trim().isEmpty || state.phone.trim().isEmpty) {
+    if (state.location == null || state.phone.trim().isEmpty) {
       emit(
         state.copyWith(
           status: PersonalDetailsStatus.validationError,
-          error: const ServerFailure('Address and phone are required', ''),
+          error: const ServerFailure('select_service_location', ''),
         ),
       );
       return;
@@ -72,17 +79,28 @@ class PersonalDetailsBloc
     emit(state.copyWith(status: PersonalDetailsStatus.loading));
 
     try {
+      final address = normalizeGoogleMapAddress(
+        state.location!.formattedAddress,
+      );
       final profile = await _updateProfileUseCase(
         UpdateProfileParams(
           image: state.imagePath.isEmpty ? null : File(state.imagePath),
-          address: state.address.trim(),
+          latitude: state.location!.latitude,
+          longitude: state.location!.longitude,
+          address: address,
           phone: state.phone.trim(),
         ),
+      );
+      await _addLocationUseCase(
+        localName: 'home',
+        address: address,
+        latitude: state.location!.latitude,
+        longitude: state.location!.longitude,
       );
       emit(
         state.copyWith(
           status: PersonalDetailsStatus.success,
-          address: profile.address ?? state.address.trim(),
+          location: state.location,
           phone: profile.phone ?? state.phone.trim(),
           imagePath: profile.image ?? state.imagePath,
         ),

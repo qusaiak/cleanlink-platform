@@ -14,14 +14,14 @@ enum PersonalDetailsStatus {
 class PersonalDetailsState extends Equatable {
   final PersonalDetailsStatus status;
   final String imagePath;
-  final String address;
+  final SelectedMapLocation? location;
   final String phone;
   final Failure? error;
 
   const PersonalDetailsState({
     this.status = PersonalDetailsStatus.initial,
     this.imagePath = '',
-    this.address = '',
+    this.location,
     this.phone = '',
     this.error,
   });
@@ -29,19 +29,19 @@ class PersonalDetailsState extends Equatable {
   PersonalDetailsState copyWith({
     PersonalDetailsStatus? status,
     String? imagePath,
-    String? address,
+    SelectedMapLocation? location,
     String? phone,
     Failure? error,
   }) {
     return PersonalDetailsState(
       status: status ?? this.status,
       imagePath: imagePath ?? this.imagePath,
-      address: address ?? this.address,
+      location: location ?? this.location,
       phone: phone ?? this.phone,
       error: error ?? this.error,
     );
   }
 
   @override
-  List<Object?> get props => [status, imagePath, address, phone, error];
+  List<Object?> get props => [status, imagePath, location, phone, error];
 }

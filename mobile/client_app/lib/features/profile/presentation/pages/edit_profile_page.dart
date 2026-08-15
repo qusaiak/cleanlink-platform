@@ -12,6 +12,8 @@ import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/custom_appbar.dart';
 import '../../../../core/widgets/custom_toast.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../config/routes/app_router.dart';
+import '../../../locations/domain/entities/selected_map_location.dart';
 import '../bloc/profile_bloc.dart';
 
 class EditProfilePage extends StatelessWidget {
@@ -35,7 +37,6 @@ class _EditProfileViewState extends State<_EditProfileView> {
   late final TextEditingController _fullnameController;
   late final TextEditingController _emailController;
   late final TextEditingController _phoneController;
-  late final TextEditingController _addressController;
   String _image = '';
 
   @override
@@ -44,7 +45,6 @@ class _EditProfileViewState extends State<_EditProfileView> {
     _fullnameController = TextEditingController();
     _emailController = TextEditingController();
     _phoneController = TextEditingController();
-    _addressController = TextEditingController();
     context.read<ProfileBloc>().add(LoadProfileDataEvent());
   }
 
@@ -53,7 +53,6 @@ class _EditProfileViewState extends State<_EditProfileView> {
     _fullnameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
-    _addressController.dispose();
     super.dispose();
   }
 
@@ -177,20 +176,48 @@ class _EditProfileViewState extends State<_EditProfileView> {
                               ),
                             ),
                             SizedBox(height: 16.h),
-                            AppTextField(
-                              controller: _addressController,
-                              label: l.address_label,
-                              hint: l.address_hint,
-                              keyboardType: TextInputType.streetAddress,
-                              textInputAction: TextInputAction.done,
-                              validator: (value) =>
-                                  AppValidators.required(value, context),
-                              prefix: Icon(
-                                Icons.location_on_outlined,
-                                color: theme.onSurface.withValues(alpha: 0.55),
-                                size: 20.r,
+                            InkWell(
+                              onTap: () => _selectLocation(context, state),
+                              borderRadius: BorderRadius.circular(14.r),
+                              child: Ink(
+                                padding: EdgeInsets.all(16.r),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14.r),
+                                  border: Border.all(
+                                    color: theme.outlineVariant,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.map_outlined,
+                                      color: theme.primary,
+                                    ),
+                                    SizedBox(width: 12.w),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(l.change_location),
+                                          if (state.address.isNotEmpty) ...[
+                                            SizedBox(height: 4.h),
+                                            Text(
+                                              state.address,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: Theme.of(
+                                                context,
+                                              ).textTheme.bodySmall,
+                                            ),
+                                          ],
+                                        ],
+                                      ),
+                                    ),
+                                    const Icon(Icons.chevron_right),
+                                  ],
+                                ),
                               ),
-                              onFieldSubmitted: (_) => _submit(context),
                             ),
                             SizedBox(height: 32.h),
                             AppPrimaryButton(
@@ -214,7 +241,6 @@ class _EditProfileViewState extends State<_EditProfileView> {
     _fullnameController.text = state.fullname;
     _emailController.text = state.email;
     _phoneController.text = state.phone;
-    _addressController.text = state.address;
     setState(() => _image = state.image);
   }
 
@@ -226,9 +252,17 @@ class _EditProfileViewState extends State<_EditProfileView> {
         fullname: _fullnameController.text,
         email: _emailController.text,
         phone: _phoneController.text,
-        address: _addressController.text,
       ),
     );
+  }
+
+  Future<void> _selectLocation(BuildContext context, ProfileState state) async {
+    final location = await context.push<SelectedMapLocation>(
+      AppRouter.kMapLocationPicker,
+      extra: state.selectedMapLocation,
+    );
+    if (!context.mounted || location == null) return;
+    context.read<ProfileBloc>().add(SelectProfileLocationEvent(location));
   }
 
   String _localizedProfileMessage(String? message, AppLocalizations l) {

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../complaints/presentation/bloc/complaints_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/app_theme_info.dart';
 import '../../../../config/theme/colors.dart';
@@ -24,16 +23,9 @@ class ProfileContent extends StatefulWidget {
 }
 
 class _ProfileContentState extends State<ProfileContent> {
-  Future<void> _launchUrl(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      throw Exception('Could not launch $url');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context)!.colorScheme;
+    var theme = Theme.of(context).colorScheme;
     return Column(
       children: [
         ListenableBuilder(
@@ -41,25 +33,25 @@ class _ProfileContentState extends State<ProfileContent> {
           builder: (context, child) {
             final session = sl<UserSession>();
             final phone = session.phone;
-            final address = session.address;
 
-            if ((phone == null || phone.isEmpty) &&
-                (address == null || address.isEmpty)) {
+            if (phone == null || phone.isEmpty) {
               return const SizedBox.shrink();
             }
 
             return SectionCard(
               title: AppLocalizations.of(context)!.personal_details,
-              children: [
-                CustomTile(icon: Icons.phone, title: "0$phone"),
-                CustomTile(icon: Icons.location_on, title: address!),
-              ],
+              children: [CustomTile(icon: Icons.phone, title: "0$phone")],
             );
           },
         ),
         SectionCard(
           title: AppLocalizations.of(context)!.activity,
           children: [
+            CustomTile(
+              icon: Icons.location_on_outlined,
+              title: AppLocalizations.of(context)!.my_locations,
+              onTap: () => GoRouter.of(context).push(AppRouter.kLocations),
+            ),
             CustomTile(
               icon: Icons.favorite_border,
               title: AppLocalizations.of(context)!.favorites,
@@ -154,7 +146,7 @@ class _ProfileContentState extends State<ProfileContent> {
               onTap: () {
                 context.read<ProfileBloc>().add(ChangeThemeEvent());
               },
-              trailing: AppThemeInfo.isLight!
+              trailing: AppThemeInfo.isLight
                   ? const Icon(
                       Icons.light_mode_rounded,
                       color: AppColor.primaryColor,
@@ -167,21 +159,32 @@ class _ProfileContentState extends State<ProfileContent> {
             CustomTile(
               icon: Icons.notifications_none_outlined,
               title: AppLocalizations.of(context)!.notification_setting,
-              trailing: SizedBox(
-                height: 30.h,
-                width: 40.w,
-                child: FittedBox(
-                  fit: BoxFit.fill,
-                  child: Switch.adaptive(
-                    value: true,
-                    onChanged: (value) {},
-                    activeColor: AppColor.onPrimaryLight,
-                    activeTrackColor: theme.primary,
-                    inactiveThumbColor: const Color(0xFFD6D8DA),
-                    inactiveTrackColor: AppColor.onPrimaryLight,
-                    materialTapTargetSize: MaterialTapTargetSize.padded,
-                  ),
-                ),
+              trailing: BlocBuilder<ProfileBloc, ProfileState>(
+                buildWhen: (previous, current) =>
+                    previous.notificationsEnabled !=
+                        current.notificationsEnabled ||
+                    previous.isUpdatingNotificationPreference !=
+                        current.isUpdatingNotificationPreference,
+                builder: (context, state) =>
+                    state.isUpdatingNotificationPreference
+                    ? SizedBox(
+                        width: 22.w,
+                        height: 22.w,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: theme.primary,
+                        ),
+                      )
+                    : Switch.adaptive(
+                        value: state.notificationsEnabled,
+                        onChanged: (value) => context.read<ProfileBloc>().add(
+                          SetNotificationPreferenceEvent(value),
+                        ),
+                        activeThumbColor: theme.onPrimary,
+                        activeTrackColor: theme.primary,
+                        inactiveThumbColor: theme.onSurfaceVariant,
+                        inactiveTrackColor: theme.surfaceContainerHighest,
+                      ),
               ),
             ),
           ],
@@ -230,68 +233,6 @@ class _ProfileContentState extends State<ProfileContent> {
             ),
           ],
         ),
-        SectionCard(
-          title: AppLocalizations.of(context)!.support,
-          children: [
-            CustomTile(
-              icon: Icons.help_outline,
-              title: AppLocalizations.of(context)!.help_center_title,
-              onTap: () {
-                GoRouter.of(context).push(AppRouter.kHelpCenter);
-              },
-            ),
-            CustomTile(
-              icon: Icons.contact_mail,
-              title: AppLocalizations.of(context)!.contact_us,
-              onTap: () {
-                GoRouter.of(context).push(AppRouter.kContactUs);
-              },
-            ),
-            // CustomTile(
-            //   icon: Icons.feedback,
-            //   title: AppLocalizations.of(context)!.suggestions,
-            // ),
-          ],
-        ),
-        SizedBox(height: 24.h),
-        Column(
-          children: [
-            Wrap(
-              alignment: WrapAlignment.center,
-              children: [
-                GestureDetector(
-                  // onTap: () =>
-                  //     _launchUrl('https://privacy-policy'),
-                  child: Text(
-                    AppLocalizations.of(context)!.privacy_policy,
-                    style: Styles.textStyle12.copyWith(color: Colors.grey),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w),
-                  child: Text(
-                    "|",
-                    style: Styles.textStyle11.copyWith(color: Colors.grey),
-                  ),
-                ),
-                GestureDetector(
-                  // onTap: () =>
-                  //     _launchUrl('https://terms-of-use'),
-                  child: Text(
-                    AppLocalizations.of(context)!.terms_of_use,
-                    style: Styles.textStyle12.copyWith(color: Colors.grey),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 10.h),
-            Text(
-              "v 1.0",
-              style: Styles.textStyle11.copyWith(color: Colors.grey),
-            ),
-          ],
-        ),
-        SizedBox(height: 20.h),
       ],
     );
   }

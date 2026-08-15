@@ -24,6 +24,7 @@ class ProfileState extends Equatable {
   final String email;
   final String phone;
   final String address;
+  final SelectedMapLocation? selectedMapLocation;
   final String image;
   final File? imageFile;
   final UserEntity? user;
@@ -36,6 +37,10 @@ class ProfileState extends Equatable {
   final bool isDeletingAccount;
   final String? deleteAccountError;
   final String? deleteAccountSuccessMessage;
+  final bool notificationsEnabled;
+  final bool isUpdatingNotificationPreference;
+  final NotificationPermissionStatus? notificationPermissionStatus;
+  final String? notificationMessage;
 
   bool get isLoadingProfile => status == ProfileStatus.loadingProfile;
   bool get isUpdatingProfile => status == ProfileStatus.updatingProfile;
@@ -49,6 +54,7 @@ class ProfileState extends Equatable {
     this.email = '',
     this.phone = '',
     this.address = '',
+    this.selectedMapLocation,
     this.image = '',
     this.imageFile,
     this.user,
@@ -61,6 +67,10 @@ class ProfileState extends Equatable {
     this.isDeletingAccount = false,
     this.deleteAccountError,
     this.deleteAccountSuccessMessage,
+    this.notificationsEnabled = true,
+    this.isUpdatingNotificationPreference = false,
+    this.notificationPermissionStatus,
+    this.notificationMessage,
   });
 
   ProfileState copyWith({
@@ -71,6 +81,7 @@ class ProfileState extends Equatable {
     String? email,
     String? phone,
     String? address,
+    SelectedMapLocation? selectedMapLocation,
     String? image,
     File? imageFile,
     bool clearImageFile = false,
@@ -87,6 +98,11 @@ class ProfileState extends Equatable {
     bool clearDeleteAccountError = false,
     String? deleteAccountSuccessMessage,
     bool clearDeleteAccountSuccessMessage = false,
+    bool? notificationsEnabled,
+    bool? isUpdatingNotificationPreference,
+    NotificationPermissionStatus? notificationPermissionStatus,
+    String? notificationMessage,
+    bool clearNotificationMessage = false,
   }) {
     return ProfileState(
       status: status ?? this.status,
@@ -96,6 +112,7 @@ class ProfileState extends Equatable {
       email: email ?? this.email,
       phone: phone ?? this.phone,
       address: address ?? this.address,
+      selectedMapLocation: selectedMapLocation ?? this.selectedMapLocation,
       image: image ?? this.image,
       imageFile: clearImageFile ? null : imageFile ?? this.imageFile,
       user: user ?? this.user,
@@ -115,6 +132,15 @@ class ProfileState extends Equatable {
       deleteAccountSuccessMessage: clearDeleteAccountSuccessMessage
           ? null
           : deleteAccountSuccessMessage ?? this.deleteAccountSuccessMessage,
+      notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+      isUpdatingNotificationPreference:
+          isUpdatingNotificationPreference ??
+          this.isUpdatingNotificationPreference,
+      notificationPermissionStatus:
+          notificationPermissionStatus ?? this.notificationPermissionStatus,
+      notificationMessage: clearNotificationMessage
+          ? null
+          : notificationMessage ?? this.notificationMessage,
     );
   }
 
@@ -127,6 +153,7 @@ class ProfileState extends Equatable {
     email,
     phone,
     address,
+    selectedMapLocation,
     image,
     imageFile?.path,
     user,
@@ -139,5 +166,9 @@ class ProfileState extends Equatable {
     isDeletingAccount,
     deleteAccountError,
     deleteAccountSuccessMessage,
+    notificationsEnabled,
+    isUpdatingNotificationPreference,
+    notificationPermissionStatus,
+    notificationMessage,
   ];
 }

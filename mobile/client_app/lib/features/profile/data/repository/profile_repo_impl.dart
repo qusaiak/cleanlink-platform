@@ -9,6 +9,7 @@ import '../../../auth/domain/entities/user_entity.dart';
 import '../../domain/repository/profile_repo.dart';
 import '../../domain/entities/dashboard_summary_entity.dart';
 import '../data_sources/remote/profile_api_service.dart';
+import '../../../../core/utils/map_address_normalizer.dart';
 
 class ProfileRepositoryImpl implements ProfileRepository {
   final ProfileApiService api;
@@ -20,16 +21,17 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<UserEntity> updateProfile({
     required String fullname,
     required String email,
-    required String address,
     required String phone,
+    required String address,
     File? image,
   }) async {
     try {
+      final normalizedAddress = normalizeGoogleMapAddress(address);
       final response = await api.updateProfile(
         fullname,
         email,
-        address,
         phone,
+        normalizedAddress,
         image,
       );
       final user = response.data.toEntity();
@@ -44,7 +46,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
         fullname: user.fullname,
         email: user.email,
         phone: user.profile?.phone ?? phone,
-        address: user.profile?.address ?? address,
+        address: user.profile?.address ?? normalizedAddress,
         image: user.profile?.image ?? image?.path ?? session.image ?? '',
       );
 

@@ -2,7 +2,6 @@ import 'package:client_app/config/routes/app_router.dart';
 import 'package:client_app/core/widgets/app_primary_button.dart';
 import 'package:client_app/core/widgets/custom_toast.dart';
 import 'package:client_app/features/auth/presentation/bloc/personal_details_bloc.dart';
-import 'package:client_app/features/auth/presentation/widgets/address_field.dart';
 import 'package:client_app/features/auth/presentation/widgets/profile_image_picker.dart';
 import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../injection_container.dart';
+import '../../../locations/domain/entities/selected_map_location.dart';
 import '../widgets/auth_phone_field.dart';
 import '../widgets/auth_scaffold.dart';
 
@@ -30,13 +30,17 @@ class PersonalDetailsPage extends StatelessWidget {
             AppSnackBar.showError(
               context: context,
               title: AppLocalizations.of(context)!.error,
-              message: state.error!.message,
+              message: state.error!.message == 'select_service_location'
+                  ? AppLocalizations.of(context)!.please_select_service_location
+                  : state.error!.message,
             );
           } else if (state.status == PersonalDetailsStatus.validationError) {
             AppSnackBar.showWarning(
               context: context,
               title: AppLocalizations.of(context)!.warning,
-              message: state.error?.message ?? '',
+              message: state.error?.message == 'select_service_location'
+                  ? AppLocalizations.of(context)!.please_select_service_location
+                  : state.error?.message ?? '',
             );
           }
         },
@@ -56,23 +60,18 @@ class _PersonalDetailsBody extends StatefulWidget {
 }
 
 class _PersonalDetailsBodyState extends State<_PersonalDetailsBody> {
-  late final TextEditingController _addressController;
   late final TextEditingController _phoneController;
-  final _addressFocus = FocusNode();
   final _phoneFocus = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _addressController = TextEditingController(text: widget.state.address);
     _phoneController = TextEditingController(text: widget.state.phone);
   }
 
   @override
   void dispose() {
-    _addressController.dispose();
     _phoneController.dispose();
-    _addressFocus.dispose();
     _phoneFocus.dispose();
     super.dispose();
   }
@@ -123,10 +122,48 @@ class _PersonalDetailsBodyState extends State<_PersonalDetailsBody> {
               ),
             ),
             SizedBox(height: 32.h),
-            AddressField(
-              controller: _addressController,
-              focusNode: _addressFocus,
-              onFieldSubmitted: (_) => _phoneFocus.requestFocus(),
+            InkWell(
+              onTap: () => _selectLocation(bloc),
+              borderRadius: BorderRadius.circular(14.r),
+              child: Ink(
+                padding: EdgeInsets.all(16.r),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14.r),
+                  border: Border.all(
+                    color: widget.state.location == null
+                        ? theme.outlineVariant
+                        : theme.primary,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.map_outlined, color: theme.primary),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.state.location == null
+                                ? l.choose_location_on_map
+                                : l.home,
+                          ),
+                          if (widget.state.location != null) ...[
+                            SizedBox(height: 4.h),
+                            Text(
+                              widget.state.location!.formattedAddress,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.chevron_right),
+                  ],
+                ),
+              ),
             ),
             SizedBox(height: 16.h),
             AuthPhoneField(
@@ -152,8 +189,17 @@ class _PersonalDetailsBodyState extends State<_PersonalDetailsBody> {
   void _submit(PersonalDetailsBloc bloc) {
     if (widget.state.status == PersonalDetailsStatus.loading) return;
     FocusScope.of(context).unfocus();
-    bloc.add(PersonalDetailsAddressChanged(_addressController.text.trim()));
     bloc.add(PersonalDetailsPhoneChanged(stripPhone(_phoneController.text)));
     bloc.add(const PersonalDetailsSubmitted());
+  }
+
+  Future<void> _selectLocation(PersonalDetailsBloc bloc) async {
+    final location = await context.push<SelectedMapLocation>(
+      AppRouter.kMapLocationPicker,
+      extra: widget.state.location,
+    );
+    if (!mounted || location == null) return;
+    bloc.add(PersonalDetailsLocationChanged(location));
+    _phoneFocus.requestFocus();
   }
 }

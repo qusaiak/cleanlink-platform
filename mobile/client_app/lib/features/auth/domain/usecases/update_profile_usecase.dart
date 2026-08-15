@@ -11,8 +11,10 @@ class UpdateProfileUseCase {
   const UpdateProfileUseCase(this.repo);
 
   Future<UserProfileEntity> call(UpdateProfileParams params) {
-    return repo.updateProfile(
+    return repo.updateProfileWithAddress(
       image: params.image,
+      latitude: params.latitude,
+      longitude: params.longitude,
       address: params.address,
       phone: params.phone,
     );
@@ -21,15 +23,19 @@ class UpdateProfileUseCase {
 
 class UpdateProfileParams extends Equatable {
   final File? image;
-  final String address;
+  final double latitude;
+  final double longitude;
   final String phone;
+  final String address;
 
   const UpdateProfileParams({
     this.image,
+    required this.latitude,
+    required this.longitude,
     required this.address,
     required this.phone,
   });
 
   @override
-  List<Object?> get props => [image?.path, address, phone];
+  List<Object?> get props => [image?.path, latitude, longitude, address, phone];
 }

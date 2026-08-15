@@ -19,8 +19,8 @@ abstract class ProfileApiService {
   Future<HttpResponse<UpdateProfileResponseModel>> updateProfile(
     @Part(name: 'fullname') String fullname,
     @Part(name: 'email') String email,
-    @Part(name: 'address') String address,
     @Part(name: 'phone') String phone,
+    @Part(name: 'address') String address,
     @Part(name: 'image') File? image,
   );
 

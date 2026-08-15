@@ -18,6 +18,7 @@ class _ProfileBodyState extends State<ProfileBody> {
   void initState() {
     super.initState();
     context.read<ProfileBloc>().add(GetDashboardSummaryEvent());
+    context.read<ProfileBloc>().add(LoadNotificationPreferenceEvent());
     context.read<ComplaintsBloc>().add(const LoadComplaintUnreadCountEvent());
   }
 
