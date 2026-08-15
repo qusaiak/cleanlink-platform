@@ -43,29 +43,29 @@ class CustomSearchBar extends StatelessWidget {
                 onSubmitted ?? (_) => FocusScope.of(context).unfocus(),
             textInputAction: TextInputAction.search,
             style: Styles.textStyle14.copyWith(
-              color: Colors.white,
+              color: theme.onSurface,
               fontWeight: FontWeight.w500,
               overflow: TextOverflow.visible,
             ),
-            cursorColor: AppColor.primaryColor,
+            cursorColor: theme.primary,
             decoration: InputDecoration(
               counterText: '',
               hintText: hintText ?? l10n.search,
               hintStyle: Styles.textStyle14.copyWith(
-                color: Colors.white.withValues(alpha: 0.35),
+                color: theme.onSurfaceVariant,
               ),
               prefixIcon:
                   leading ??
                   Icon(
                     Icons.search_outlined,
-                    color: Colors.white.withValues(alpha: 0.75),
+                    color: theme.onSurfaceVariant,
                     size: 20.sp,
                   ),
               suffixIcon: searchController.text.isNotEmpty
                   ? IconButton(
                       icon: Icon(
                         Icons.clear,
-                        color: Colors.white.withValues(alpha: 0.75),
+                        color: theme.onSurfaceVariant,
                         size: 20.sp,
                       ),
                       onPressed: () {
@@ -76,21 +76,18 @@ class CustomSearchBar extends StatelessWidget {
                   : null,
               isDense: true,
               filled: true,
-              fillColor: Colors.white.withValues(alpha: 0.04),
+              fillColor: theme.surfaceContainerLow,
               contentPadding: EdgeInsets.symmetric(
                 horizontal: 12.w,
                 vertical: 12.h,
               ),
-              border: _border(Colors.white.withValues(alpha: 0.2)),
-              enabledBorder: _border(Colors.white.withValues(alpha: 0.2)),
-              focusedBorder: _border(
-                AppColor.primaryColor.withValues(alpha: 0.7),
-                width: 1.4,
-              ),
-              errorBorder: _border(AppColor.error, width: 1),
-              focusedErrorBorder: _border(AppColor.error, width: 1.4),
+              border: _border(theme.onSurfaceVariant),
+              enabledBorder: _border(theme.onSurfaceVariant),
+              focusedBorder: _border(theme.onSurfaceVariant),
+              errorBorder: _border(theme.error),
+              focusedErrorBorder: _border(theme.error),
               errorStyle: Styles.textStyle11.copyWith(
-                color: AppColor.error,
+                color: theme.error,
                 overflow: TextOverflow.visible,
               ),
             ),
@@ -100,7 +97,7 @@ class CustomSearchBar extends StatelessWidget {
     );
   }
 
-  OutlineInputBorder _border(Color color, {double width = 1}) {
+  OutlineInputBorder _border(Color color, {double width = 1.5}) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(30.r),
       borderSide: BorderSide(color: color, width: width),

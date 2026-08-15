@@ -62,7 +62,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   void _onClearSearch(ClearSearch event, Emitter<SearchState> emit) {
     _requestVersion++;
-    emit(const SearchState());
+    emit(
+      state.copyWith(
+        searchQuery: '',
+        isLoading: false,
+        hasSearched: false,
+        clearData: true,
+        clearErrorMessage: true,
+      ),
+    );
   }
 
   void _onSelectTab(SelectTab event, Emitter<SearchState> emit) {

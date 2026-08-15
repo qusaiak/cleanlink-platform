@@ -39,30 +39,14 @@ class _SearchViewState extends State<_SearchView> {
     super.initState();
     _searchController = TextEditingController();
     _searchFocusNode = FocusNode();
-    // _searchFocusNode.addListener(_onFocusChanged);
   }
 
   @override
   void dispose() {
-    // _searchFocusNode.removeListener(_onFocusChanged);
     _searchFocusNode.dispose();
     _searchController.dispose();
     super.dispose();
   }
-
-  // void _onFocusChanged() {
-  //   final bloc = context.read<SearchBloc>();
-  //
-  //   final state = bloc.state;
-  //
-  //   if (_searchFocusNode.hasFocus && !state.isSearching) {
-  //     bloc.add(StartSearching());
-  //   }
-  //
-  //   if (!_searchFocusNode.hasFocus && state.isSearching) {
-  //     bloc.add(StopSearching());
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -113,109 +97,12 @@ class _SearchViewState extends State<_SearchView> {
                 },
               ),
             ),
-            // Expanded(
-            //   child: BlocBuilder<SearchBloc, SearchState>(
-            //     buildWhen: (prev, curr) => prev.isSearching != curr.isSearching,
-            //     builder: (context, state) {
-            //       if (state.isSearching) {
-            //         return const SearchResults();
-            //       }
-            //       return _buildSearchContent(l10n, theme);
-            //     },
-            //   ),
-            // ),
           ],
         ),
       ),
     );
   }
 
-  // Widget _buildSearchBar(AppLocalizations l10n, ColorScheme theme) {
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(horizontal: 12.w),
-  //     child: Row(
-  //       children: [
-  //         Expanded(
-  //           child: BlocBuilder<SearchBloc, SearchState>(
-  //             buildWhen: (prev, curr) => prev.searchQuery != curr.searchQuery,
-  //             builder: (context, state) {
-  //               return CustomSearchBar(
-  //                 searchController: _searchController,
-  //                 focusNode: _searchFocusNode,
-  //                 hintText: l10n.search_hint,
-  //                 onChanged: (query) {
-  //                   context.read<SearchBloc>().add(UpdateSearchQuery(query));
-  //                 },
-  //               );
-  //             },
-  //           ),
-  //         ),
-  //         SizedBox(width: 8.w),
-  //         SizedBox(
-  //           height: 48.h,
-  //           width: 48.w,
-  //           child: CircularGlassButton(
-  //             icon: Icons.tune_rounded,
-  //             isActive: false,
-  //             activeColor: Colors.transparent,
-  //             onTap: () => SearchFilterBottomSheet.show(context),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-  // Widget _buildSearchBar(AppLocalizations l10n, ColorScheme theme) {
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(horizontal: 12.w),
-  //
-  //     child: Row(
-  //       children: [
-  //         Expanded(
-  //           child: CustomSearchBar(
-  //             searchController: _searchController,
-  //
-  //             focusNode: _searchFocusNode,
-  //
-  //             hintText: l10n.search_hint,
-  //
-  //             onChanged: (query) {
-  //               context.read<SearchBloc>().add(UpdateSearchQuery(query));
-  //             },
-  //
-  //             onSubmitted: (query) {
-  //               if (query.trim().isEmpty) {
-  //                 return;
-  //               }
-  //
-  //               context.read<SearchBloc>().add(Search());
-  //             },
-  //           ),
-  //         ),
-  //
-  //         SizedBox(width: 8.w),
-  //
-  //         SizedBox(
-  //           height: 48.h,
-  //
-  //           width: 48.w,
-  //
-  //           child: CircularGlassButton(
-  //             icon: Icons.tune_rounded,
-  //
-  //             isActive: false,
-  //
-  //             activeColor: Colors.transparent,
-  //
-  //             onTap: () {
-  //               SearchFilterBottomSheet.show(context);
-  //             },
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
   Widget _buildSearchBar(AppLocalizations l10n, ColorScheme theme) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -235,7 +122,6 @@ class _SearchViewState extends State<_SearchView> {
 
                 bloc.add(UpdateSearchQuery(query));
 
-                /// User removed all text
                 if (query.trim().isEmpty) {
                   bloc.add(const ClearSearch());
                 }
@@ -250,20 +136,6 @@ class _SearchViewState extends State<_SearchView> {
 
                 context.read<SearchBloc>().add(const Search());
               },
-              // onClear: () {
-              //
-              //   _searchController
-              //       .clear();
-              //
-              //   context
-              //       .read<SearchBloc>()
-              //       .add(
-              //     const ClearSearch(),
-              //   );
-              //
-              //   _searchFocusNode
-              //       .unfocus();
-              // },
             ),
           ),
 
@@ -294,13 +166,6 @@ class _SearchViewState extends State<_SearchView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /* Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Text(
-              l10n.Search_title,
-              style: Styles.textStyle22.copyWith(color: theme.onSurface),
-            ),
-          ), */
           SizedBox(height: 16.h),
           const SearchSectionsGrid(),
           SizedBox(height: 16.h),

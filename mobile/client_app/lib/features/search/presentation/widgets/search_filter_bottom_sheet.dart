@@ -91,10 +91,10 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
               ),
               SizedBox(height: 20.h),
 
-              _buildSectionTitle(l10n.search_availability, theme),
-              SizedBox(height: 8.h),
-              _buildAvailabilityToggle(l10n, theme),
-              SizedBox(height: 20.h),
+              // _buildSectionTitle(l10n.search_availability, theme),
+              // SizedBox(height: 8.h),
+              // _buildAvailabilityToggle(l10n, theme),
+              // SizedBox(height: 20.h),
 
               // _buildSectionTitle(l10n.search_order, theme),
               // SizedBox(height: 8.h),
@@ -366,7 +366,7 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
 
           min: 10,
 
-          max: 10000,
+          max: 1000,
 
           divisions: 100,
 
