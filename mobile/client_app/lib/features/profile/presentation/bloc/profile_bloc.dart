@@ -68,6 +68,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<OpenNotificationSettingsEvent>((event, emit) async {
       await _firebaseApi.openNotificationSettings();
     });
+    on<ClearNotificationFeedbackEvent>((event, emit) {
+      emit(state.copyWith(clearNotificationMessage: true));
+    });
     on<ClearDeleteAccountResultEvent>((event, emit) {
       emit(
         state.copyWith(
@@ -147,38 +150,53 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         state.notificationsEnabled == event.enabled) {
       return;
     }
+    final previousValue = state.notificationsEnabled;
     emit(
       state.copyWith(
         isUpdatingNotificationPreference: true,
         clearNotificationMessage: true,
       ),
     );
-    if (!event.enabled) {
-      await _firebaseApi.disableNotifications();
+    try {
+      if (!event.enabled) {
+        await _firebaseApi.disableNotifications();
+        emit(
+          state.copyWith(
+            notificationsEnabled: false,
+            isUpdatingNotificationPreference: false,
+            notificationMessage: 'notifications_disabled_message',
+            notificationPermissionStatus:
+                NotificationPermissionStatus.authorized,
+            notificationUpdateRevision: state.notificationUpdateRevision + 1,
+          ),
+        );
+        return;
+      }
+
+      final result = await _firebaseApi.enableNotifications();
       emit(
         state.copyWith(
-          notificationsEnabled: false,
+          notificationsEnabled: result.enabled,
           isUpdatingNotificationPreference: false,
-          notificationMessage: 'notifications_disabled_message',
-          notificationPermissionStatus: NotificationPermissionStatus.authorized,
+          notificationPermissionStatus: result.permissionStatus,
+          notificationMessage: result.enabled
+              ? 'notifications_enabled_message'
+              : result.syncFailed
+              ? 'notification_sync_failed'
+              : 'notification_permission_disabled',
+          notificationUpdateRevision: state.notificationUpdateRevision + 1,
         ),
       );
-      return;
+    } catch (_) {
+      emit(
+        state.copyWith(
+          notificationsEnabled: previousValue,
+          isUpdatingNotificationPreference: false,
+          notificationMessage: 'notification_sync_failed',
+          notificationUpdateRevision: state.notificationUpdateRevision + 1,
+        ),
+      );
     }
-
-    final result = await _firebaseApi.enableNotifications();
-    emit(
-      state.copyWith(
-        notificationsEnabled: result.enabled,
-        isUpdatingNotificationPreference: false,
-        notificationPermissionStatus: result.permissionStatus,
-        notificationMessage: result.enabled
-            ? 'notifications_enabled_message'
-            : result.syncFailed
-            ? 'notification_sync_failed'
-            : 'notification_permission_disabled',
-      ),
-    );
   }
 
   Future<void> _onLoadProfileData(

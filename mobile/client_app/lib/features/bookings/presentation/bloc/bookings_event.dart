@@ -45,6 +45,7 @@ class BookOrderEvent extends BookingsEvent {
   final double longitude;
   final DateTime startTime;
   final String? note;
+  final PaymentMethodType paymentMethod;
   const BookOrderEvent({
     required this.packageId,
     required this.location,
@@ -52,6 +53,7 @@ class BookOrderEvent extends BookingsEvent {
     required this.longitude,
     required this.startTime,
     this.note,
+    this.paymentMethod = PaymentMethodType.manual,
   });
   @override
   List<Object?> get props => [
@@ -61,6 +63,7 @@ class BookOrderEvent extends BookingsEvent {
     longitude,
     startTime,
     note,
+    paymentMethod,
   ];
 }
 

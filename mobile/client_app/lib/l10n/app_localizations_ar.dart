@@ -1029,7 +1029,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get auth_email_hint => 'أدخل بريدك الإلكتروني';
 
   @override
-  String get sp => 'ل.س';
+  String get sp => '\$';
 
   @override
   String get working_hours => 'ساعات العمل';
@@ -1485,4 +1485,94 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get on_the_way => 'في الطريق';
+
+  @override
+  String get payment_method => 'طريقة الدفع';
+
+  @override
+  String get cash => 'نقداً';
+
+  @override
+  String get credit_debit_card => 'بطاقة ائتمان / خصم';
+
+  @override
+  String get creating_payment => 'جارٍ إنشاء عملية الدفع...';
+
+  @override
+  String get preparing_payment => 'جارٍ تجهيز الدفع الآمن...';
+
+  @override
+  String get payment_cancelled => 'تم إلغاء الدفع';
+
+  @override
+  String get payment_cancelled_message =>
+      'تم إنشاء الحجز، لكن تم إلغاء الدفع بالبطاقة.';
+
+  @override
+  String get payment_failed => 'فشل الدفع';
+
+  @override
+  String get payment_failed_message =>
+      'تم إنشاء الحجز، لكن تعذر إكمال الدفع بالبطاقة.';
+
+  @override
+  String get electronic_payment => 'الدفع الإلكتروني';
+
+  @override
+  String get payment_status => 'حالة الدفع';
+
+  @override
+  String get pending_payment => 'الدفع معلّق';
+
+  @override
+  String get payment_authorized => 'تم تفويض الدفع';
+
+  @override
+  String get paid => 'مدفوع';
+
+  @override
+  String get refunded => 'تم رد المبلغ';
+
+  @override
+  String get pay_now => 'ادفع الآن';
+
+  @override
+  String get payment_processing => 'جارٍ تأكيد الدفع...';
+
+  @override
+  String get payment_processing_message =>
+      'اكتملت خطوة الدفع في Stripe، وما زال الخادم يؤكد حالة الدفع.';
+
+  @override
+  String get payment_confirmed => 'تم تأكيد الدفع من الخادم.';
+
+  @override
+  String get payment_details => 'تفاصيل الدفع';
+
+  @override
+  String get payment_amount => 'المبلغ';
+
+  @override
+  String get payment_id => 'رقم الدفع';
+
+  @override
+  String get order_id => 'رقم الطلب';
+
+  @override
+  String get company_label => 'الشركة';
+
+  @override
+  String get package_label => 'الباقة';
+
+  @override
+  String get booking_date => 'تاريخ الحجز';
+
+  @override
+  String get payment_reference => 'مرجع الدفع';
+
+  @override
+  String get no_payments => 'لا توجد مدفوعات بعد';
+
+  @override
+  String get no_payments_message => 'ستظهر مدفوعات حجوزاتك هنا.';
 }

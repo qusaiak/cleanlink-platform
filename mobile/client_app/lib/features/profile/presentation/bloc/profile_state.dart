@@ -41,6 +41,7 @@ class ProfileState extends Equatable {
   final bool isUpdatingNotificationPreference;
   final NotificationPermissionStatus? notificationPermissionStatus;
   final String? notificationMessage;
+  final int notificationUpdateRevision;
 
   bool get isLoadingProfile => status == ProfileStatus.loadingProfile;
   bool get isUpdatingProfile => status == ProfileStatus.updatingProfile;
@@ -71,6 +72,7 @@ class ProfileState extends Equatable {
     this.isUpdatingNotificationPreference = false,
     this.notificationPermissionStatus,
     this.notificationMessage,
+    this.notificationUpdateRevision = 0,
   });
 
   ProfileState copyWith({
@@ -103,6 +105,7 @@ class ProfileState extends Equatable {
     NotificationPermissionStatus? notificationPermissionStatus,
     String? notificationMessage,
     bool clearNotificationMessage = false,
+    int? notificationUpdateRevision,
   }) {
     return ProfileState(
       status: status ?? this.status,
@@ -141,6 +144,8 @@ class ProfileState extends Equatable {
       notificationMessage: clearNotificationMessage
           ? null
           : notificationMessage ?? this.notificationMessage,
+      notificationUpdateRevision:
+          notificationUpdateRevision ?? this.notificationUpdateRevision,
     );
   }
 
@@ -170,5 +175,6 @@ class ProfileState extends Equatable {
     isUpdatingNotificationPreference,
     notificationPermissionStatus,
     notificationMessage,
+    notificationUpdateRevision,
   ];
 }

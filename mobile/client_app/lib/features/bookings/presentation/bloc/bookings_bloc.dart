@@ -10,6 +10,7 @@ import '../../domain/usecases/cancel_order_usecase.dart';
 import '../../domain/usecases/get_available_slots_usecase.dart';
 import '../../domain/usecases/get_bookings_usecase.dart';
 import '../../domain/usecases/show_order_usecase.dart';
+import '../../../payments/domain/entities/payment_entities.dart';
 import '../../domain/usecases/open_package_usecases.dart';
 import '../../domain/entities/open_package_entities.dart';
 import '../../../services/domain/entities/attribute_entity.dart';
@@ -186,6 +187,7 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
         note: event.note,
         isOpenPackage: state.package?.isOpenPackage ?? false,
         attributes: state.selectedOpenPackageAttributes,
+        paymentMethod: event.paymentMethod,
       );
       emit(
         state.copyWith(

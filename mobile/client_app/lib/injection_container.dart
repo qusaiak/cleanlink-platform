@@ -63,6 +63,7 @@ import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'core/network/dio_factory.dart';
+import 'core/payment/stripe_payment_service.dart';
 import 'core/session/user_session.dart';
 import 'firebase_api.dart';
 import 'features/auth/data/data_sources/auth_api_service.dart';
@@ -83,6 +84,14 @@ import 'features/bookings/domain/usecases/book_order_usecase.dart';
 import 'features/bookings/domain/usecases/cancel_order_usecase.dart';
 import 'features/bookings/domain/usecases/show_order_usecase.dart';
 import 'features/bookings/presentation/bloc/bookings_bloc.dart';
+import 'features/payments/data/data_sources/payments_api_service.dart';
+import 'features/payments/data/data_sources/client_payments_api_service.dart';
+import 'features/payments/data/repositories/payments_repository_impl.dart';
+import 'features/payments/domain/repositories/payments_repository.dart';
+import 'features/payments/domain/usecases/create_payment_intent_usecase.dart';
+import 'features/payments/presentation/bloc/payments_bloc.dart';
+import 'features/payments/domain/usecases/client_payment_usecases.dart';
+import 'features/payments/presentation/bloc/payment_history_bloc.dart';
 import 'features/locations/domain/services/device_location_service.dart';
 import 'features/locations/domain/services/reverse_geocoding_service.dart';
 import 'features/locations/data/data_sources/locations_api_service.dart';
@@ -110,6 +119,7 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<Dio>(() => DioFactory.createDio());
   sl.registerLazySingleton(() => InternetConnectionChecker.instance);
   sl.registerLazySingleton(() => ImagePicker());
+  sl.registerLazySingleton(() => const StripePaymentService());
   sl.registerLazySingleton<DeviceLocationService>(
     () => const GeolocatorDeviceLocationService(),
   );
@@ -141,6 +151,10 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<ServicesApiService>(() => ServicesApiService(sl()));
   sl.registerLazySingleton<ReviewsApiService>(() => ReviewsApiService(sl()));
   sl.registerLazySingleton<BookingsApiService>(() => BookingsApiService(sl()));
+  sl.registerLazySingleton<PaymentsApiService>(() => PaymentsApiService(sl()));
+  sl.registerLazySingleton<ClientPaymentsApiService>(
+    () => ClientPaymentsApiService(sl()),
+  );
   sl.registerLazySingleton<NotificationsApiService>(
     () => NotificationsApiService(sl()),
   );
@@ -166,6 +180,9 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<ServicesRepo>(() => ServicesRepoImpl(sl()));
   sl.registerLazySingleton<ReviewsRepo>(() => ReviewsRepoImpl(sl()));
   sl.registerLazySingleton<BookingsRepo>(() => BookingsRepoImpl(sl()));
+  sl.registerLazySingleton<PaymentsRepository>(
+    () => PaymentsRepositoryImpl(sl(), sl()),
+  );
   sl.registerLazySingleton<NotificationsRepository>(
     () => NotificationsRepositoryImpl(sl()),
   );
@@ -245,6 +262,15 @@ Future<void> initializeDependencies() async {
   );
   sl.registerLazySingleton<GetOrdersUseCase>(() => GetOrdersUseCase(sl()));
   sl.registerLazySingleton<BookOrderUseCase>(() => BookOrderUseCase(sl()));
+  sl.registerLazySingleton<CreatePaymentIntentUseCase>(
+    () => CreatePaymentIntentUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetClientPaymentsUseCase>(
+    () => GetClientPaymentsUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetClientPaymentUseCase>(
+    () => GetClientPaymentUseCase(sl()),
+  );
   sl.registerLazySingleton<ShowOrderUseCase>(() => ShowOrderUseCase(sl()));
   sl.registerLazySingleton<CancelOrderUseCase>(() => CancelOrderUseCase(sl()));
   sl.registerLazySingleton<UpdateFcmTokenUseCase>(
@@ -306,4 +332,6 @@ Future<void> initializeDependencies() async {
   sl.registerFactory(
     () => BookingsBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl()),
   );
+  sl.registerFactory(() => PaymentsBloc(sl(), sl(), sl()));
+  sl.registerFactory(() => PaymentHistoryBloc(sl(), sl()));
 }

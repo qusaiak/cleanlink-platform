@@ -1042,7 +1042,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_email_hint => 'Enter your email';
 
   @override
-  String get sp => 'S.P';
+  String get sp => '\$';
 
   @override
   String get working_hours => 'Working Hours';
@@ -1505,4 +1505,94 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get on_the_way => 'On the Way';
+
+  @override
+  String get payment_method => 'Payment Method';
+
+  @override
+  String get cash => 'Cash';
+
+  @override
+  String get credit_debit_card => 'Credit / Debit Card';
+
+  @override
+  String get creating_payment => 'Creating payment...';
+
+  @override
+  String get preparing_payment => 'Preparing secure payment...';
+
+  @override
+  String get payment_cancelled => 'Payment cancelled';
+
+  @override
+  String get payment_cancelled_message =>
+      'The booking was created, but card payment was cancelled.';
+
+  @override
+  String get payment_failed => 'Payment failed';
+
+  @override
+  String get payment_failed_message =>
+      'The booking was created, but card payment could not be completed.';
+
+  @override
+  String get electronic_payment => 'Electronic payment';
+
+  @override
+  String get payment_status => 'Payment Status';
+
+  @override
+  String get pending_payment => 'Pending payment';
+
+  @override
+  String get payment_authorized => 'Payment authorized';
+
+  @override
+  String get paid => 'Paid';
+
+  @override
+  String get refunded => 'Refunded';
+
+  @override
+  String get pay_now => 'Pay Now';
+
+  @override
+  String get payment_processing => 'Confirming payment...';
+
+  @override
+  String get payment_processing_message =>
+      'Stripe completed the payment step. The server is still confirming the payment status.';
+
+  @override
+  String get payment_confirmed => 'Payment was confirmed by the server.';
+
+  @override
+  String get payment_details => 'Payment Details';
+
+  @override
+  String get payment_amount => 'Amount';
+
+  @override
+  String get payment_id => 'Payment ID';
+
+  @override
+  String get order_id => 'Order ID';
+
+  @override
+  String get company_label => 'Company';
+
+  @override
+  String get package_label => 'Package';
+
+  @override
+  String get booking_date => 'Booking date';
+
+  @override
+  String get payment_reference => 'Payment reference';
+
+  @override
+  String get no_payments => 'No payments yet';
+
+  @override
+  String get no_payments_message => 'Your booking payments will appear here.';
 }

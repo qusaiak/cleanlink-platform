@@ -34,7 +34,8 @@ class ProfilePage extends StatelessWidget {
             (previous.deleteAccountSuccessMessage !=
                     current.deleteAccountSuccessMessage &&
                 current.deleteAccountSuccessMessage != null) ||
-            (previous.notificationMessage != current.notificationMessage &&
+            (previous.notificationUpdateRevision !=
+                    current.notificationUpdateRevision &&
                 current.notificationMessage != null),
         listener: (context, state) {
           if (state.deleteAccountSuccessMessage != null) {
@@ -61,6 +62,7 @@ class ProfilePage extends StatelessWidget {
               message: _localizedProfileMessage(state.deleteAccountError, l),
             );
           } else if (state.notificationMessage != null) {
+            context.read<ProfileBloc>().add(ClearNotificationFeedbackEvent());
             if (state.notificationPermissionStatus ==
                 NotificationPermissionStatus.permanentlyDenied) {
               showAdaptiveDialog(

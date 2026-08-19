@@ -76,6 +76,13 @@ class OrderEntity extends Equatable {
   final int duration;
   final int travelBufferMinutes;
   final double totalPrice;
+  final String? paymentMethod;
+  final String? paymentStatus;
+  final String? stripePaymentIntentId;
+  final double? adminShare;
+  final double? companyShare;
+  final bool isDoneWithAdmin;
+  final bool isCompanyPaid;
   final String? note;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -97,6 +104,13 @@ class OrderEntity extends Equatable {
     required this.duration,
     this.travelBufferMinutes = 0,
     required this.totalPrice,
+    this.paymentMethod,
+    this.paymentStatus,
+    this.stripePaymentIntentId,
+    this.adminShare,
+    this.companyShare,
+    this.isDoneWithAdmin = false,
+    this.isCompanyPaid = false,
     this.note,
     this.createdAt,
     this.updatedAt,
@@ -120,6 +134,13 @@ class OrderEntity extends Equatable {
         duration: duration,
         travelBufferMinutes: travelBufferMinutes,
         totalPrice: totalPrice,
+        paymentMethod: paymentMethod,
+        paymentStatus: paymentStatus,
+        stripePaymentIntentId: stripePaymentIntentId,
+        adminShare: adminShare,
+        companyShare: companyShare,
+        isDoneWithAdmin: isDoneWithAdmin,
+        isCompanyPaid: isCompanyPaid,
         note: note,
         createdAt: createdAt,
         updatedAt: updatedAt,
@@ -138,7 +159,24 @@ class OrderEntity extends Equatable {
   bool get isCompleted => statusType == OrderStatus.completed;
   bool get isCanceled => statusType == OrderStatus.canceled;
 
-  bool get canCancel => statusType == OrderStatus.pending;
+  String get paymentMethodNormalized =>
+      paymentMethod?.trim().toLowerCase() ?? '';
+  String get paymentStatusNormalized =>
+      paymentStatus?.trim().toLowerCase() ?? '';
+
+  bool get isElectricPayment => paymentMethodNormalized == 'electric';
+  bool get isPaymentPending => paymentStatusNormalized == 'pending';
+  bool get isPaymentConfirmed =>
+      paymentStatusNormalized == 'held' ||
+      paymentStatusNormalized == 'paid' ||
+      paymentStatusNormalized == 'captured';
+  bool get canRetryPayment =>
+      isElectricPayment &&
+      isPaymentPending &&
+      (statusType == OrderStatus.pending || statusType == OrderStatus.assigned);
+
+  bool get canCancel =>
+      statusType == OrderStatus.pending || statusType == OrderStatus.assigned;
 
   @override
   List<Object?> get props => [
@@ -150,6 +188,8 @@ class OrderEntity extends Equatable {
     latitude,
     longitude,
     travelBufferMinutes,
+    paymentMethod,
+    paymentStatus,
   ];
 }
 

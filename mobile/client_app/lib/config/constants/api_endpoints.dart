@@ -27,6 +27,10 @@ class ApiEndpoints {
   static const String ordersEndpoint = 'orders';
   static const String showOrderEndpoint = 'orders/{orderId}';
   static const String cancelOrderEndpoint = 'orders/{orderId}/cancel';
+  static const String createPaymentIntentEndpoint = 'payments/create-intent';
+  static const String clientPaymentsEndpoint = 'client/payments';
+  static const String clientPaymentDetailsEndpoint =
+      'client/payments/{paymentId}';
   static const String updateFcmTokenEndpoint = 'auth/fcm-token';
   static const String notificationsEndpoint = 'notifications';
   static const String unreadNotificationsCountEndpoint =

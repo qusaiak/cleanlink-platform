@@ -222,9 +222,7 @@ class _TargetCard extends StatelessWidget {
 }
 
 class _ComplaintContentCard extends StatelessWidget {
-  const _ComplaintContentCard({
-    required this.complaint,
-  });
+  const _ComplaintContentCard({required this.complaint});
 
   final ComplaintEntity complaint;
 
@@ -238,20 +236,13 @@ class _ComplaintContentCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.surface,
         borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(
-          color: colors.primary.withValues(alpha: 0.7),
-        ),
+        border: Border.all(color: colors.primary.withValues(alpha: 0.7)),
       ),
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(
-              20.w,
-              18.h,
-              18.w,
-              18.h,
-            ),
+            padding: EdgeInsetsDirectional.fromSTEB(20.w, 18.h, 18.w, 18.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -293,10 +284,7 @@ class _ComplaintContentCard extends StatelessWidget {
                       SizedBox(width: 7.w),
                       Expanded(
                         child: Text(
-                          _formatDate(
-                            context,
-                            complaint.createdAt!,
-                          ),
+                          _formatDate(context, complaint.createdAt!),
                           style: Styles.textStyle11.copyWith(
                             color: colors.onSurfaceVariant,
                             fontWeight: FontWeight.w500,
@@ -316,10 +304,7 @@ class _ComplaintContentCard extends StatelessWidget {
 }
 
 class _ComplaintFieldHeader extends StatelessWidget {
-  const _ComplaintFieldHeader({
-    required this.icon,
-    required this.label,
-  });
+  const _ComplaintFieldHeader({required this.icon, required this.label});
 
   final IconData icon;
   final String label;
@@ -331,11 +316,7 @@ class _ComplaintFieldHeader extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          icon,
-          size: 18.sp,
-          color: colors.primary,
-        ),
+        Icon(icon, size: 18.sp, color: colors.primary),
         SizedBox(width: 7.w),
         Flexible(
           child: Text(
@@ -352,6 +333,7 @@ class _ComplaintFieldHeader extends StatelessWidget {
     );
   }
 }
+
 class _ReplyCard extends StatelessWidget {
   const _ReplyCard({required this.reply});
 

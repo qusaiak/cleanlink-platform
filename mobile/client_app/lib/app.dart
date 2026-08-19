@@ -9,6 +9,7 @@ import 'package:client_app/features/complaints/presentation/bloc/complaints_bloc
 import 'package:client_app/features/favorites/presentation/bloc/favorites_bloc.dart';
 import 'package:client_app/features/notification/presentation/bloc/notification_bloc.dart';
 import 'package:client_app/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:client_app/features/payments/presentation/bloc/payments_bloc.dart';
 import 'package:client_app/features/regions/presentation/bloc/regions_bloc.dart';
 import 'package:client_app/features/reviews/presentation/bloc/review_bloc.dart';
 import 'package:client_app/features/search/presentation/bloc/search_bloc.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<BaseBloc>(create: (BuildContext context) => sl()),
         BlocProvider<ProfileBloc>(create: (BuildContext context) => sl()),
         BlocProvider<BookingsBloc>(create: (BuildContext context) => sl()),
+        BlocProvider<PaymentsBloc>(create: (BuildContext context) => sl()),
         BlocProvider<HomeBloc>(create: (BuildContext context) => sl()),
         BlocProvider<CompaniesBloc>(create: (BuildContext context) => sl()),
         BlocProvider<CategoriesBloc>(create: (BuildContext context) => sl()),

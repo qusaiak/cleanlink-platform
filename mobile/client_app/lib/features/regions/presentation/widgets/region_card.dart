@@ -67,44 +67,6 @@ class RegionCard extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    SizedBox(height: 6.h),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.person_outline_rounded,
-                          size: 15.sp,
-                          color: theme.onSurfaceVariant,
-                        ),
-                        SizedBox(width: 4.w),
-                        Expanded(
-                          child: Text(
-                            region.manager!.fullname,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Styles.textStyle12.copyWith(
-                              color: theme.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 4.h),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.alternate_email,
-                          size: 15.sp,
-                          color: theme.onSurfaceVariant,
-                        ),
-                        SizedBox(width: 4.w),
-                        Text(
-                          region.manager!.email,
-                          style: Styles.textStyle12.copyWith(
-                            color: theme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),

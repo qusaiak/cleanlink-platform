@@ -59,3 +59,5 @@ class SetNotificationPreferenceEvent extends ProfileEvent {
 }
 
 class OpenNotificationSettingsEvent extends ProfileEvent {}
+
+class ClearNotificationFeedbackEvent extends ProfileEvent {}

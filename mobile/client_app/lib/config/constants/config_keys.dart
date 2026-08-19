@@ -4,6 +4,7 @@ class ConfigKeys {
   static const baseUrl = 'BASE_URL';
   static const apiVersion = 'API_VERSION';
   static const timeout = 'REQUEST_TIMEOUT';
+  static const stripePublishableKey = 'STRIPE_PUBLISHABLE_KEY';
 
   static const mapsKey = 'GOOGLE_MAPS_API_KEY';
   static const fcmTopic = 'FCM_TOPIC';

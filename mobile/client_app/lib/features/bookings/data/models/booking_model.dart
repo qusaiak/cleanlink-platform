@@ -34,6 +34,15 @@ class BookingModel {
   final int travelBufferMinutes;
   @JsonKey(fromJson: _doubleFromJson)
   final double totalPrice;
+  final String? paymentMethod;
+  final String? paymentStatus;
+  final String? stripePaymentIntentId;
+  @JsonKey(fromJson: _nullableDoubleFromJson)
+  final double? adminShare;
+  @JsonKey(fromJson: _nullableDoubleFromJson)
+  final double? companyShare;
+  final bool? isDoneWithAdmin;
+  final bool? isCompanyPaid;
   final String? note;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -54,6 +63,13 @@ class BookingModel {
     this.duration = 0,
     this.travelBufferMinutes = 0,
     this.totalPrice = 0,
+    this.paymentMethod,
+    this.paymentStatus,
+    this.stripePaymentIntentId,
+    this.adminShare,
+    this.companyShare,
+    this.isDoneWithAdmin,
+    this.isCompanyPaid,
     this.note,
     this.createdAt,
     this.updatedAt,
@@ -78,6 +94,13 @@ class BookingModel {
     duration: duration,
     travelBufferMinutes: travelBufferMinutes,
     totalPrice: totalPrice,
+    paymentMethod: paymentMethod,
+    paymentStatus: paymentStatus,
+    stripePaymentIntentId: stripePaymentIntentId,
+    adminShare: adminShare,
+    companyShare: companyShare,
+    isDoneWithAdmin: isDoneWithAdmin ?? false,
+    isCompanyPaid: isCompanyPaid ?? false,
     note: note,
     createdAt: createdAt,
     updatedAt: updatedAt,

@@ -25,6 +25,8 @@ import '../widgets/booking_location_selector.dart';
 import '../../../locations/domain/entities/selected_map_location.dart';
 import '../../../locations/domain/entities/client_location_entity.dart';
 import '../../../locations/presentation/bloc/locations_bloc.dart';
+import '../../../payments/domain/entities/payment_entities.dart';
+import '../../../payments/presentation/bloc/payments_bloc.dart';
 import '../widgets/booking_location_sheet.dart';
 
 class BookingDetailsPage extends StatefulWidget {
@@ -44,6 +46,7 @@ class BookingDetailsPage extends StatefulWidget {
 class _BookingDetailsPageState extends State<BookingDetailsPage> {
   final TextEditingController _notesController = TextEditingController();
   StreamSubscription<LocationsState>? _locationsSubscription;
+  PaymentMethodType _paymentMethod = PaymentMethodType.manual;
 
   Future<void> _selectLocation() async {
     final bookingBloc = context.read<BookingsBloc>();
@@ -170,6 +173,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
         longitude: location.longitude,
         startTime: startTime,
         note: _notesController.text.trim(),
+        paymentMethod: _paymentMethod,
       ),
     );
   }
@@ -178,6 +182,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   void initState() {
     super.initState();
     final bloc = context.read<BookingsBloc>();
+    context.read<PaymentsBloc>().add(const ResetPaymentState());
     bloc.add(
       ConfigureBookingPackage(
         package: widget.package,
@@ -224,6 +229,22 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
     }
   }
 
+  void _completeBooking() {
+    if (!mounted) return;
+    context.read<PaymentsBloc>().add(const ResetPaymentState());
+    context.read<BookingsBloc>().add(const ResetBookingStateEvent());
+    context.read<BaseBloc>().add(const ChangeBottomNavBarIndex(2));
+    AppRouter.router.go(AppRouter.kBookings);
+  }
+
+  void _openCreatedOrder(int orderId) {
+    if (!mounted) return;
+    context.read<PaymentsBloc>().add(const ResetPaymentState());
+    context.read<BookingsBloc>().add(const ResetBookingStateEvent());
+    context.read<BaseBloc>().add(const ChangeBottomNavBarIndex(2));
+    AppRouter.router.go(AppRouter.orderDetailsPath(orderId));
+  }
+
   String _localizedBookingError(BuildContext context, String rawMessage) {
     final l = AppLocalizations.of(context)!;
     final message = rawMessage.trim().toLowerCase();
@@ -258,28 +279,91 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
-    return BlocListener<BookingsBloc, BookingsState>(
-      listenWhen: (previous, current) =>
-          previous.bookingSuccess != current.bookingSuccess ||
-          previous.errorMessage != current.errorMessage,
-      listener: (context, state) {
-        if (state.bookingSuccess) {
-          AppSnackBar.showSuccess(
-            context: context,
-            title: AppLocalizations.of(context)!.success,
-            message: AppLocalizations.of(context)!.booking_successful_message,
-          );
-          context.read<BookingsBloc>().add(const ResetBookingStateEvent());
-          context.read<BaseBloc>().add(const ChangeBottomNavBarIndex(2));
-          AppRouter.router.go(AppRouter.kBookings);
-        } else if (state.errorMessage != null) {
-          AppSnackBar.showError(
-            context: context,
-            title: AppLocalizations.of(context)!.error,
-            message: _localizedBookingError(context, state.errorMessage!),
-          );
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<BookingsBloc, BookingsState>(
+          listenWhen: (previous, current) =>
+              previous.bookingSuccess != current.bookingSuccess ||
+              previous.errorMessage != current.errorMessage,
+          listener: (context, state) {
+            if (state.bookingSuccess) {
+              final order = state.selectedOrder;
+              if (order?.paymentMethod == PaymentMethodType.electric.apiValue) {
+                context.read<PaymentsBloc>().add(
+                  PayForOrder(
+                    orderId: order!.id,
+                    darkMode: Theme.of(context).brightness == Brightness.dark,
+                  ),
+                );
+              } else {
+                AppSnackBar.showSuccess(
+                  context: context,
+                  title: AppLocalizations.of(context)!.success,
+                  message: AppLocalizations.of(
+                    context,
+                  )!.booking_successful_message,
+                );
+                _completeBooking();
+              }
+            } else if (state.errorMessage != null) {
+              AppSnackBar.showError(
+                context: context,
+                title: AppLocalizations.of(context)!.error,
+                message: _localizedBookingError(context, state.errorMessage!),
+              );
+            }
+          },
+        ),
+        BlocListener<PaymentsBloc, PaymentsState>(
+          listenWhen: (previous, current) => previous.stage != current.stage,
+          listener: (context, state) {
+            final l = AppLocalizations.of(context)!;
+            if (state.stage == PaymentStage.succeeded) {
+              AppSnackBar.showSuccess(
+                context: context,
+                title: l.success,
+                message: l.payment_confirmed,
+              );
+              _openCreatedOrder(
+                state.order?.id ??
+                    context.read<BookingsBloc>().state.selectedOrder!.id,
+              );
+            } else if (state.stage == PaymentStage.pendingConfirmation) {
+              AppSnackBar.showWarning(
+                context: context,
+                title: l.payment_processing,
+                message: l.payment_processing_message,
+              );
+              _openCreatedOrder(
+                state.order?.id ??
+                    context.read<BookingsBloc>().state.selectedOrder!.id,
+              );
+            } else if (state.stage == PaymentStage.cancelled) {
+              AppSnackBar.showWarning(
+                context: context,
+                title: l.payment_cancelled,
+                message: l.payment_cancelled_message,
+              );
+              _openCreatedOrder(
+                state.order?.id ??
+                    context.read<BookingsBloc>().state.selectedOrder!.id,
+              );
+            } else if (state.stage == PaymentStage.failed) {
+              AppSnackBar.showError(
+                context: context,
+                title: l.payment_failed,
+                message: state.errorMessage?.trim().isNotEmpty == true
+                    ? state.errorMessage!
+                    : l.payment_failed_message,
+              );
+              _openCreatedOrder(
+                state.order?.id ??
+                    context.read<BookingsBloc>().state.selectedOrder!.id,
+              );
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         appBar: customAppBar(
           AppLocalizations.of(context)!.booking_details,
@@ -302,28 +386,52 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
           ),
           child: SafeArea(
             top: false,
-            child: BlocBuilder<BookingsBloc, BookingsState>(
-              buildWhen: (previous, current) =>
-                  previous.isBookingOrder != current.isBookingOrder,
-              builder: (context, state) => CustomElevatedButton(
-                text: state.isBookingOrder
-                    ? AppLocalizations.of(context)!.booking_in_progress
-                    : AppLocalizations.of(context)!.confirm_booking,
-                buttonTextStyle: Styles.textStyle12.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-                buttonStyle: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all(theme.primary),
-                  shape: WidgetStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.r),
-                    ),
+            child: BlocBuilder<PaymentsBloc, PaymentsState>(
+              builder: (context, paymentState) =>
+                  BlocBuilder<BookingsBloc, BookingsState>(
+                    builder: (context, state) {
+                      final disabled =
+                          state.isBookingOrder ||
+                          paymentState.isBusy ||
+                          state.bookingSuccess;
+                      final text = switch (paymentState.stage) {
+                        PaymentStage.creatingIntent => AppLocalizations.of(
+                          context,
+                        )!.creating_payment,
+                        PaymentStage.preparingSheet ||
+                        PaymentStage.presentingSheet => AppLocalizations.of(
+                          context,
+                        )!.preparing_payment,
+                        PaymentStage.awaitingBackend => AppLocalizations.of(
+                          context,
+                        )!.payment_processing,
+                        _ when state.isBookingOrder => AppLocalizations.of(
+                          context,
+                        )!.booking_in_progress,
+                        _ => AppLocalizations.of(context)!.confirm_booking,
+                      };
+                      return CustomElevatedButton(
+                        text: text,
+                        buttonTextStyle: Styles.textStyle12.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        buttonStyle: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all(
+                            theme.primary,
+                          ),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.r),
+                            ),
+                          ),
+                          elevation: WidgetStateProperty.all(0),
+                        ),
+                        isDisabled: disabled,
+                        onPressed: _confirmBooking,
+                      );
+                    },
                   ),
-                  elevation: WidgetStateProperty.all(0),
-                ),
-                onPressed: state.isBookingOrder ? null : _confirmBooking,
-              ),
             ),
           ),
         ),
@@ -624,6 +732,11 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                 },
               ),
               SizedBox(height: 16.h),
+              _PaymentMethodSelector(
+                value: _paymentMethod,
+                onChanged: (value) => setState(() => _paymentMethod = value),
+              ),
+              SizedBox(height: 16.h),
               AppTextField(
                 controller: _notesController,
                 label: AppLocalizations.of(context)!.notes_label,
@@ -769,6 +882,80 @@ class OpenPackageCustomizer extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+class _PaymentMethodSelector extends StatelessWidget {
+  const _PaymentMethodSelector({required this.value, required this.onChanged});
+
+  final PaymentMethodType value;
+  final ValueChanged<PaymentMethodType> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l.payment_method,
+          style: Styles.textStyle16.copyWith(
+            fontWeight: FontWeight.bold,
+            color: colors.onSurface,
+          ),
+        ),
+        SizedBox(height: 10.h),
+        for (final method in PaymentMethodType.values)
+          Padding(
+            padding: EdgeInsets.only(bottom: 8.h),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(14.r),
+              onTap: () => onChanged(method),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: method == value
+                      ? colors.primary.withValues(alpha: isDark ? 0.18 : 0.10)
+                      : colors.surface,
+                  borderRadius: BorderRadius.circular(14.r),
+                  border: Border.all(
+                    color: method == value
+                        ? colors.primary
+                        : colors.onSurfaceVariant,
+                    width: method == value ? 1.5 : 1,
+                  ),
+                ),
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  leading: Icon(
+                    method == PaymentMethodType.manual
+                        ? Icons.payments_outlined
+                        : Icons.credit_card_outlined,
+                    color: method == value
+                        ? colors.primary
+                        : colors.onSurfaceVariant,
+                  ),
+                  title: Text(
+                    method == PaymentMethodType.manual
+                        ? l.cash
+                        : l.credit_debit_card,
+                    style: Styles.textStyle16.copyWith(
+                      fontWeight: method == value
+                          ? FontWeight.w600
+                          : FontWeight.normal,
+                      color: colors.onSurface,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

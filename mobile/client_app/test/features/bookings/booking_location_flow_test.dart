@@ -13,6 +13,7 @@ import 'package:client_app/features/bookings/domain/usecases/get_bookings_usecas
 import 'package:client_app/features/bookings/domain/usecases/show_order_usecase.dart';
 import 'package:client_app/features/bookings/presentation/bloc/bookings_bloc.dart';
 import 'package:client_app/features/locations/domain/entities/selected_map_location.dart';
+import 'package:client_app/features/payments/domain/entities/payment_entities.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -32,8 +33,9 @@ void main() {
         'location': 'Al-Mazzeh, Damascus',
         'latitude': 33.5031234,
         'longitude': 36.2556789,
-        'start_time': '2026-08-10 08:00:00',
-        'note': 'Call before arrival',
+          'start_time': '2026-08-10 08:00:00',
+        'payment_method': 'manual',
+          'note': 'Call before arrival',
       });
     });
 
@@ -191,6 +193,7 @@ class _LocationBookingRepo implements BookingsRepo {
     required double longitude,
     required DateTime startTime,
     String? note,
+    required PaymentMethodType paymentMethod,
   }) => throw UnimplementedError();
 
   @override
@@ -202,6 +205,7 @@ class _LocationBookingRepo implements BookingsRepo {
     required DateTime startTime,
     String? note,
     required List<SelectedOpenPackageAttribute> attributes,
+    required PaymentMethodType paymentMethod,
   }) => throw UnimplementedError();
 
   @override

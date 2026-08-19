@@ -36,6 +36,7 @@ void main() {
         'latitude': 33.5138,
         'longitude': 36.2765,
         'start_time': '2026-07-06 14:00:00',
+        'payment_method': 'manual',
         'note': 'Pet hair',
       });
     });

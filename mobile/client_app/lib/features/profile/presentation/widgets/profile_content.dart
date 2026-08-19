@@ -83,7 +83,7 @@ class _ProfileContentState extends State<ProfileContent> {
             CustomTile(
               icon: Icons.payment,
               title: AppLocalizations.of(context)!.payment_history,
-              onTap: () {},
+              onTap: () => GoRouter.of(context).push(AppRouter.kPaymentHistory),
             ),
           ],
         ),

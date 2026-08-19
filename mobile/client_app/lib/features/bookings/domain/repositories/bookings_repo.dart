@@ -1,6 +1,7 @@
 import '../entities/available_day_entity.dart';
 import '../entities/booking_entity.dart';
 import '../entities/open_package_entities.dart';
+import '../../../payments/domain/entities/payment_entities.dart';
 
 class OrderResult {
   final OrderEntity order;
@@ -32,6 +33,7 @@ abstract class BookingsRepo {
     required double longitude,
     required DateTime startTime,
     String? note,
+    required PaymentMethodType paymentMethod,
   });
   Future<OrderResult> bookOpenPackage({
     required int packageId,
@@ -41,6 +43,7 @@ abstract class BookingsRepo {
     required DateTime startTime,
     String? note,
     required List<SelectedOpenPackageAttribute> attributes,
+    required PaymentMethodType paymentMethod,
   }) => throw UnsupportedError('Open Package booking is not implemented');
   Future<OrderEntity> showOrder(int orderId);
   Future<OrderResult> cancelOrder(int orderId);

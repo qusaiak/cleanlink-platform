@@ -11,6 +11,9 @@ class AppConfig {
   static int get timeout =>
       int.parse(dotenv.env[ConfigKeys.timeout] ?? '100000');
 
+  static String get stripePublishableKey =>
+      dotenv.env[ConfigKeys.stripePublishableKey] ?? '';
+
   // Maps
   static String get googleMapsKey => dotenv.env[ConfigKeys.mapsKey] ?? '';
 

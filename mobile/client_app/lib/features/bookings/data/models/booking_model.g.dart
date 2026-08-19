@@ -27,6 +27,13 @@ BookingModel _$BookingModelFromJson(Map<String, dynamic> json) => BookingModel(
   totalPrice: json['total_price'] == null
       ? 0
       : _doubleFromJson(json['total_price']),
+  paymentMethod: json['payment_method'] as String?,
+  paymentStatus: json['payment_status'] as String?,
+  stripePaymentIntentId: json['stripe_payment_intent_id'] as String?,
+  adminShare: _nullableDoubleFromJson(json['admin_share']),
+  companyShare: _nullableDoubleFromJson(json['company_share']),
+  isDoneWithAdmin: json['is_done_with_admin'] as bool?,
+  isCompanyPaid: json['is_company_paid'] as bool?,
   note: json['note'] as String?,
   createdAt: json['created_at'] == null
       ? null
@@ -62,6 +69,13 @@ Map<String, dynamic> _$BookingModelToJson(BookingModel instance) =>
       'duration': instance.duration,
       'travel_buffer_minutes': instance.travelBufferMinutes,
       'total_price': instance.totalPrice,
+      'payment_method': instance.paymentMethod,
+      'payment_status': instance.paymentStatus,
+      'stripe_payment_intent_id': instance.stripePaymentIntentId,
+      'admin_share': instance.adminShare,
+      'company_share': instance.companyShare,
+      'is_done_with_admin': instance.isDoneWithAdmin,
+      'is_company_paid': instance.isCompanyPaid,
       'note': instance.note,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),

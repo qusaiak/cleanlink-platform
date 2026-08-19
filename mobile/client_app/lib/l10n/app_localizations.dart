@@ -2081,7 +2081,7 @@ abstract class AppLocalizations {
   /// No description provided for @sp.
   ///
   /// In en, this message translates to:
-  /// **'S.P'**
+  /// **'\$'**
   String get sp;
 
   /// No description provided for @working_hours.
@@ -2953,6 +2953,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'On the Way'**
   String get on_the_way;
+
+  /// No description provided for @payment_method.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get payment_method;
+
+  /// No description provided for @cash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get cash;
+
+  /// No description provided for @credit_debit_card.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit / Debit Card'**
+  String get credit_debit_card;
+
+  /// No description provided for @creating_payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating payment...'**
+  String get creating_payment;
+
+  /// No description provided for @preparing_payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing secure payment...'**
+  String get preparing_payment;
+
+  /// No description provided for @payment_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment cancelled'**
+  String get payment_cancelled;
+
+  /// No description provided for @payment_cancelled_message.
+  ///
+  /// In en, this message translates to:
+  /// **'The booking was created, but card payment was cancelled.'**
+  String get payment_cancelled_message;
+
+  /// No description provided for @payment_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment failed'**
+  String get payment_failed;
+
+  /// No description provided for @payment_failed_message.
+  ///
+  /// In en, this message translates to:
+  /// **'The booking was created, but card payment could not be completed.'**
+  String get payment_failed_message;
+
+  /// No description provided for @electronic_payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Electronic payment'**
+  String get electronic_payment;
+
+  /// No description provided for @payment_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Status'**
+  String get payment_status;
+
+  /// No description provided for @pending_payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending payment'**
+  String get pending_payment;
+
+  /// No description provided for @payment_authorized.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment authorized'**
+  String get payment_authorized;
+
+  /// No description provided for @paid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get paid;
+
+  /// No description provided for @refunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get refunded;
+
+  /// No description provided for @pay_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay Now'**
+  String get pay_now;
+
+  /// No description provided for @payment_processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirming payment...'**
+  String get payment_processing;
+
+  /// No description provided for @payment_processing_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Stripe completed the payment step. The server is still confirming the payment status.'**
+  String get payment_processing_message;
+
+  /// No description provided for @payment_confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment was confirmed by the server.'**
+  String get payment_confirmed;
+
+  /// No description provided for @payment_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Details'**
+  String get payment_details;
+
+  /// No description provided for @payment_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get payment_amount;
+
+  /// No description provided for @payment_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment ID'**
+  String get payment_id;
+
+  /// No description provided for @order_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Order ID'**
+  String get order_id;
+
+  /// No description provided for @company_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Company'**
+  String get company_label;
+
+  /// No description provided for @package_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Package'**
+  String get package_label;
+
+  /// No description provided for @booking_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking date'**
+  String get booking_date;
+
+  /// No description provided for @payment_reference.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment reference'**
+  String get payment_reference;
+
+  /// No description provided for @no_payments.
+  ///
+  /// In en, this message translates to:
+  /// **'No payments yet'**
+  String get no_payments;
+
+  /// No description provided for @no_payments_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your booking payments will appear here.'**
+  String get no_payments_message;
 }
 
 class _AppLocalizationsDelegate

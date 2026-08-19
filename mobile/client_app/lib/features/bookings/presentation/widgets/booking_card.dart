@@ -32,6 +32,18 @@ class BookingCard extends StatelessWidget {
     }
   }
 
+  String _paymentStatus(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (booking.paymentStatusNormalized) {
+      'pending' => l10n.pending_payment,
+      'held' => l10n.payment_authorized,
+      'paid' || 'captured' => l10n.paid,
+      'refunded' => l10n.refunded,
+      'failed' => l10n.payment_failed,
+      _ => booking.paymentStatus ?? '—',
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
@@ -110,6 +122,11 @@ class BookingCard extends StatelessWidget {
                 icon: Icons.location_on_outlined,
                 text: booking.location,
               ),
+              if (booking.isElectricPayment)
+                BookingInfoChip(
+                  icon: Icons.credit_card_outlined,
+                  text: _paymentStatus(context),
+                ),
               Row(
                 children: [
                   Expanded(

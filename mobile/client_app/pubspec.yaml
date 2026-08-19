@@ -50,6 +50,7 @@ dependencies:
   geolocator: ^14.0.2
   geocoding: ^4.0.0
   permission_handler: 12.0.3
+  flutter_stripe: ^14.0.0
 
 dev_dependencies:
   flutter_test:
@@ -71,7 +72,7 @@ flutter_launcher_icons:
   image_path: "assets/icons/app_icon.png"
 
   # Android adaptive icon
-  adaptive_icon_background: "#000000"
+  adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: "assets/icons/app_icon_foreground.png"
 
 

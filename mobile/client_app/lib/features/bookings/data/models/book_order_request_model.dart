@@ -1,4 +1,5 @@
 import '../../domain/entities/open_package_entities.dart';
+import '../../../payments/domain/entities/payment_entities.dart';
 
 class BookOrderRequestModel {
   final int packageId;
@@ -8,6 +9,7 @@ class BookOrderRequestModel {
   final String startTime;
   final String? note;
   final List<SelectedOpenPackageAttribute>? attributes;
+  final PaymentMethodType paymentMethod;
   const BookOrderRequestModel({
     required this.packageId,
     required this.location,
@@ -16,6 +18,7 @@ class BookOrderRequestModel {
     required this.startTime,
     this.note,
     this.attributes,
+    this.paymentMethod = PaymentMethodType.manual,
   });
   Map<String, dynamic> toJson() => {
     'package_id': packageId,
@@ -23,6 +26,7 @@ class BookOrderRequestModel {
     'latitude': latitude,
     'longitude': longitude,
     'start_time': startTime,
+    'payment_method': paymentMethod.apiValue,
     if (note != null) 'note': note,
     if (attributes != null)
       'attributes': attributes!.map((item) => item.toJson()).toList(),

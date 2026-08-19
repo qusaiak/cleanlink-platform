@@ -54,7 +54,7 @@ class ApiConfig {
   /// read BEFORE [init] — or after a detection failure — still yields a usable
   /// URL rather than an empty string that would fail every request with
   /// "No host specified in URI".
-  static String _baseUrl = _normalize(_hostUrlFor(isPhysicalDevice: false));
+  static String _baseUrl = "https://toward-filters-christ-liquid.trycloudflare.com/";
 
   /// Non-null once [init] has been started; makes repeated calls idempotent
   /// (and safe to await concurrently) instead of re-probing the device.
@@ -96,7 +96,7 @@ class ApiConfig {
   static Future<void> init() => _initialization ??= _init();
 
   static Future<void> _init() async {
-    _baseUrl = _normalize(await _resolve());
+    _baseUrl = "https://toward-filters-christ-liquid.trycloudflare.com/";
     if (kDebugMode) {
       // Printed once, before the first request, so the address the device is
       // REALLY calling is a fact on the console rather than an assumption.

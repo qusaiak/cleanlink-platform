@@ -30,6 +30,8 @@ import 'package:client_app/features/profile/presentation/pages/contact_us_page.d
 import 'package:client_app/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:client_app/features/profile/presentation/pages/help_center_page.dart';
 import 'package:client_app/features/profile/presentation/pages/profile_page.dart';
+import 'package:client_app/features/payments/presentation/bloc/payment_history_bloc.dart';
+import 'package:client_app/features/payments/presentation/pages/payment_history_page.dart';
 import 'package:client_app/features/search/presentation/pages/search_page.dart';
 import 'package:client_app/features/services/presentation/pages/offers_page.dart';
 import 'package:client_app/features/services/presentation/pages/service_details_page.dart';
@@ -97,6 +99,7 @@ class AppRouter {
   static const kOrderDetails = '/orders/:orderId';
   static String orderDetailsPath(int orderId) => '/orders/$orderId';
   static const kProfile = '/profile';
+  static const kPaymentHistory = '/payments';
 
   /// ===============================
   /// NAV KEYS
@@ -183,6 +186,15 @@ class AppRouter {
         path: kChangePassword,
         pageBuilder: (context, state) =>
             slideTransitionHorizontal(const ChangePasswordPage()),
+      ),
+      GoRoute(
+        path: kPaymentHistory,
+        pageBuilder: (context, state) => slideTransitionHorizontal(
+          BlocProvider<PaymentHistoryBloc>(
+            create: (_) => sl(),
+            child: const PaymentHistoryPage(),
+          ),
+        ),
       ),
       GoRoute(
         path: kContactUs,

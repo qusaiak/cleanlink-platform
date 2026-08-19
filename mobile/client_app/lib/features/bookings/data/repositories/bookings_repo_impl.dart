@@ -10,6 +10,7 @@ import '../models/book_order_request_model.dart';
 import '../models/open_package_models.dart';
 import '../../domain/entities/open_package_entities.dart';
 import '../../../../core/utils/map_address_normalizer.dart';
+import '../../../payments/domain/entities/payment_entities.dart';
 
 class BookingsRepoImpl implements BookingsRepo {
   final BookingsApiService api;
@@ -103,6 +104,7 @@ class BookingsRepoImpl implements BookingsRepo {
     required double longitude,
     required DateTime startTime,
     String? note,
+    required PaymentMethodType paymentMethod,
   }) async {
     return _book(
       packageId: packageId,
@@ -113,6 +115,7 @@ class BookingsRepoImpl implements BookingsRepo {
       note: note,
       isOpenPackage: false,
       attributes: const [],
+      paymentMethod: paymentMethod,
     );
   }
 
@@ -125,6 +128,7 @@ class BookingsRepoImpl implements BookingsRepo {
     required DateTime startTime,
     String? note,
     required List<SelectedOpenPackageAttribute> attributes,
+    required PaymentMethodType paymentMethod,
   }) => _book(
     packageId: packageId,
     location: location,
@@ -134,6 +138,7 @@ class BookingsRepoImpl implements BookingsRepo {
     note: note,
     isOpenPackage: true,
     attributes: attributes,
+    paymentMethod: paymentMethod,
   );
 
   Future<OrderResult> _book({
@@ -145,6 +150,7 @@ class BookingsRepoImpl implements BookingsRepo {
     required String? note,
     required bool isOpenPackage,
     required List<SelectedOpenPackageAttribute> attributes,
+    required PaymentMethodType paymentMethod,
   }) async {
     try {
       final body = BookOrderRequestModel(
@@ -155,6 +161,7 @@ class BookingsRepoImpl implements BookingsRepo {
         startTime: DateFormat('yyyy-MM-dd HH:mm:ss').format(startTime),
         note: note?.trim().isEmpty == true ? null : note?.trim(),
         attributes: isOpenPackage ? attributes : null,
+        paymentMethod: paymentMethod,
       );
       final response =
           (isOpenPackage

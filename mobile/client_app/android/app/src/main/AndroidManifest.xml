@@ -18,7 +18,8 @@
         android:label="CleanLink"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true">
         <!-- usesCleartextTraffic allows plain HTTP (e.g. http://localhost:8000)
              during development. Remove or restrict via a network security config
              before shipping a production release. -->

@@ -1,5 +1,6 @@
 import '../repositories/bookings_repo.dart';
 import '../entities/open_package_entities.dart';
+import '../../../payments/domain/entities/payment_entities.dart';
 
 class BookOrderUseCase {
   final BookingsRepo repository;
@@ -13,6 +14,7 @@ class BookOrderUseCase {
     String? note,
     bool isOpenPackage = false,
     List<SelectedOpenPackageAttribute> attributes = const [],
+    PaymentMethodType paymentMethod = PaymentMethodType.manual,
   }) => isOpenPackage
       ? repository.bookOpenPackage(
           packageId: packageId,
@@ -22,6 +24,7 @@ class BookOrderUseCase {
           startTime: startTime,
           note: note,
           attributes: attributes,
+          paymentMethod: paymentMethod,
         )
       : repository.bookOrder(
           packageId: packageId,
@@ -30,5 +33,6 @@ class BookOrderUseCase {
           longitude: longitude,
           startTime: startTime,
           note: note,
+          paymentMethod: paymentMethod,
         );
 }
