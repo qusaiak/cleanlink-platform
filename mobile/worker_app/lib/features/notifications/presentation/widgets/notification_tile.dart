@@ -64,105 +64,106 @@ class NotificationTile extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppRadius.lg),
         child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 42.w,
-              height: 42.w,
-              decoration: BoxDecoration(
-                color: ui.color.withValues(alpha: 0.12),
-                shape: BoxShape.circle,
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 42.w,
+                height: 42.w,
+                decoration: BoxDecoration(
+                  color: ui.color.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(ui.icon, color: ui.color, size: 22.r),
               ),
-              child: Icon(ui.icon, color: ui.color, size: 22.r),
-            ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          notification.title,
-                          style: Styles.textStyle14.copyWith(
-                            fontWeight:
-                                unread ? FontWeight.bold : FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      if (unread)
-                        Container(
-                          width: 8.w,
-                          height: 8.w,
-                          margin: EdgeInsetsDirectional.only(start: 6.w),
-                          decoration: BoxDecoration(
-                            color: theme.primary,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                    ],
-                  ),
-                  SizedBox(height: 4.h),
-                  // The full body — never truncated or hidden behind a tap.
-                  Text(
-                    notification.body,
-                    style: Styles.textStyle12.copyWith(
-                      color: theme.onSurfaceVariant,
-                    ),
-                  ),
-                  // Extra context for a client request (where / when).
-                  if (notification.type ==
-                          AppNotificationType.clientRequest &&
-                      (notification.location != null ||
-                          notification.scheduledAt != null)) ...[
-                    SizedBox(height: 8.h),
-                    Wrap(
-                      spacing: 12.w,
-                      runSpacing: 4.h,
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        if (notification.location != null)
-                          _meta(
-                            theme,
-                            Icons.location_on_rounded,
-                            notification.location!,
+                        Expanded(
+                          child: Text(
+                            notification.title,
+                            style: Styles.textStyle14.copyWith(
+                              fontWeight: unread
+                                  ? FontWeight.bold
+                                  : FontWeight.w600,
+                            ),
                           ),
-                        if (notification.scheduledAt != null)
-                          _meta(
-                            theme,
-                            Icons.schedule_rounded,
-                            '${formatTaskDate(notification.scheduledAt!, localeCode)} · '
-                            '${formatTaskTime(notification.scheduledAt!)}',
+                        ),
+                        if (unread)
+                          Container(
+                            width: 8.w,
+                            height: 8.w,
+                            margin: EdgeInsetsDirectional.only(start: 6.w),
+                            decoration: BoxDecoration(
+                              color: theme.primary,
+                              shape: BoxShape.circle,
+                            ),
                           ),
                       ],
                     ),
-                  ],
-                  SizedBox(height: 6.h),
-                  Text(
-                    '${l.notification_received} '
-                    '${formatTaskDate(notification.createdAt, localeCode)} · '
-                    '${formatTaskTime(notification.createdAt)}',
-                    style: Styles.textStyle11.copyWith(
-                      color: theme.onSurfaceVariant.withValues(alpha: 0.7),
+                    SizedBox(height: 4.h),
+                    // The full body — never truncated or hidden behind a tap.
+                    Text(
+                      notification.body,
+                      style: Styles.textStyle12.copyWith(
+                        color: theme.onSurfaceVariant,
+                      ),
                     ),
-                  ),
-                  // "Mark as read" exists only while the notification is
-                  // unread; once read (or already read) there's no button.
-                  if (unread) ...[
-                    SizedBox(height: 8.h),
-                    Align(
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: _markAsReadButton(theme, l),
+                    // Extra context for a client request (where / when).
+                    if (notification.type ==
+                            AppNotificationType.clientRequest &&
+                        (notification.location != null ||
+                            notification.scheduledAt != null)) ...[
+                      SizedBox(height: 8.h),
+                      Wrap(
+                        spacing: 12.w,
+                        runSpacing: 4.h,
+                        children: [
+                          if (notification.location != null)
+                            _meta(
+                              theme,
+                              Icons.location_on_rounded,
+                              notification.location!,
+                            ),
+                          if (notification.scheduledAt != null)
+                            _meta(
+                              theme,
+                              Icons.schedule_rounded,
+                              '${formatTaskDate(notification.scheduledAt!, localeCode)} · '
+                              '${formatTaskTime(notification.scheduledAt!)}',
+                            ),
+                        ],
+                      ),
+                    ],
+                    SizedBox(height: 6.h),
+                    Text(
+                      '${l.notification_received} '
+                      '${formatTaskDate(notification.createdAt, localeCode)} · '
+                      '${formatTaskTime(notification.createdAt)}',
+                      style: Styles.textStyle11.copyWith(
+                        color: theme.onSurfaceVariant.withValues(alpha: 0.7),
+                      ),
                     ),
+                    // "Mark as read" exists only while the notification is
+                    // unread; once read (or already read) there's no button.
+                    if (unread) ...[
+                      SizedBox(height: 8.h),
+                      Align(
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: _markAsReadButton(theme, l),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -203,10 +204,7 @@ class NotificationTile extends StatelessWidget {
       children: [
         Icon(icon, size: 13.r, color: theme.primary),
         SizedBox(width: 3.w),
-        Text(
-          text,
-          style: Styles.textStyle11.copyWith(color: theme.primary),
-        ),
+        Text(text, style: Styles.textStyle11.copyWith(color: theme.primary)),
       ],
     );
   }

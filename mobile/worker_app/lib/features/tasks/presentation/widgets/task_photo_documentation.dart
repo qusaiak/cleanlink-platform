@@ -233,7 +233,10 @@ class TaskPhotoDocumentation extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 4.h,
+                  ),
                   child: Align(
                     alignment: AlignmentDirectional.centerStart,
                     child: Text(
@@ -253,8 +256,10 @@ class TaskPhotoDocumentation extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading:
-                      Icon(Icons.photo_library_rounded, color: theme.primary),
+                  leading: Icon(
+                    Icons.photo_library_rounded,
+                    color: theme.primary,
+                  ),
                   title: Text(l.choose_from_gallery, style: Styles.textStyle14),
                   onTap: () {
                     Navigator.of(sheetContext).pop();
@@ -277,8 +282,10 @@ class TaskPhotoDocumentation extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
     try {
       final picker = ImagePicker();
-      final XFile? image =
-          await picker.pickImage(source: source, imageQuality: 80);
+      final XFile? image = await picker.pickImage(
+        source: source,
+        imageQuality: 80,
+      );
       if (image == null) return;
       onPicked(isBefore, image.path);
       if (context.mounted) {

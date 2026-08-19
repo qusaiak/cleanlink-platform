@@ -37,9 +37,7 @@ class IntroView extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: Text(
               title,
-              style: Styles.textStyle18.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+              style: Styles.textStyle18.copyWith(fontWeight: FontWeight.w500),
               textAlign: TextAlign.center,
               maxLines: 3,
             ),

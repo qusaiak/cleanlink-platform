@@ -53,7 +53,8 @@ class WorkerTaskCard extends StatelessWidget {
     final dateText = formatTaskDate(task.scheduledAt, localeCode);
 
     // A start-side accent strip highlights tasks the worker is actively on.
-    final showAccent = task.status == TaskStatus.onTheWay ||
+    final showAccent =
+        task.status == TaskStatus.onTheWay ||
         task.status == TaskStatus.inProgress ||
         task.status == TaskStatus.paused;
 
@@ -85,7 +86,11 @@ class WorkerTaskCard extends StatelessWidget {
                   SizedBox(height: 12.h),
                   _locationRow(theme),
                   if (task.durationLabel.isNotEmpty)
-                    _infoRow(theme, Icons.timelapse_rounded, task.durationLabel),
+                    _infoRow(
+                      theme,
+                      Icons.timelapse_rounded,
+                      task.durationLabel,
+                    ),
                   _infoRow(theme, Icons.calendar_today_rounded, dateText),
                   _priceChip(theme, l),
                   _actions(context, theme, l),
@@ -131,7 +136,11 @@ class WorkerTaskCard extends StatelessWidget {
         color: ui.background,
         borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
-      child: Icon(serviceTypeIcon(task.serviceType), color: ui.color, size: 22.r),
+      child: Icon(
+        serviceTypeIcon(task.serviceType),
+        color: ui.color,
+        size: 22.r,
+      ),
     );
   }
 
@@ -157,14 +166,18 @@ class WorkerTaskCard extends StatelessWidget {
                   name,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: Styles.textStyle16.copyWith(fontWeight: FontWeight.bold),
+                  style: Styles.textStyle16.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               if (task.leaderId.isNotEmpty) ...[
                 SizedBox(width: 6.w),
                 Text(
                   '#${task.leaderId}',
-                  style: Styles.textStyle12.copyWith(color: theme.onSurfaceVariant),
+                  style: Styles.textStyle12.copyWith(
+                    color: theme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ],
@@ -327,5 +340,4 @@ class WorkerTaskCard extends StatelessWidget {
       ),
     );
   }
-
 }

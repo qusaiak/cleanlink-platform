@@ -8,11 +8,7 @@ import '../../../../config/theme/styles.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class OtpResendTimer extends StatefulWidget {
-  const OtpResendTimer({
-    super.key,
-    required this.onResend,
-    this.seconds = 30,
-  });
+  const OtpResendTimer({super.key, required this.onResend, this.seconds = 30});
 
   final Future<void> Function() onResend;
   final int seconds;

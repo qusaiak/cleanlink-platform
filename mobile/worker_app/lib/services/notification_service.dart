@@ -94,12 +94,12 @@ class NotificationService {
       await _messaging.requestPermission();
 
       // Print the token so it can be copied for a test push (harmless in debug).
-      _messaging.getToken().then((t) => log('FCM token: $t')).catchError(
-        (Object e) {
-          log('FCM getToken failed: $e');
-          return null;
-        },
-      );
+      _messaging.getToken().then((t) => log('FCM token: $t')).catchError((
+        Object e,
+      ) {
+        log('FCM getToken failed: $e');
+        return null;
+      });
 
       // Re-register whenever FCM rotates the token.
       _messaging.onTokenRefresh.listen((_) => registerToken());
@@ -233,8 +233,9 @@ class NotificationService {
   Future<void> _markAsRead(String notificationId) async {
     if (!_markedRead.add(notificationId)) return; // already marked this session
     try {
-      final result =
-          await sl<MarkNotificationReadUseCase>()(params: notificationId);
+      final result = await sl<MarkNotificationReadUseCase>()(
+        params: notificationId,
+      );
       result.fold(
         (failure) => log('mark-as-read failed: ${failure.message}'),
         (_) {},

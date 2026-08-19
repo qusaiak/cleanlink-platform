@@ -183,7 +183,9 @@ class WorkerProfileModel extends WorkerProfile {
     // The real API wraps every resource in a top-level "data" envelope (see
     // LoginModel.fromJson); the fake/in-memory source hands over a flat map.
     // Accept both so this parses correctly regardless of the source.
-    final data = json['data'] is Map ? json['data'] as Map<String, dynamic> : json;
+    final data = json['data'] is Map
+        ? json['data'] as Map<String, dynamic>
+        : json;
 
     return WorkerProfileModel(
       id: (data['id'] ?? data['user_id']).toString(),
@@ -191,15 +193,14 @@ class WorkerProfileModel extends WorkerProfile {
       role: (data['role'] ?? '').toString(),
       // 'image' is the worker-profile table's column name; 'avatarUrl' /
       // 'avatar_url' cover the other shapes the app has parsed historically.
-      avatarUrl: (data['avatarUrl'] ?? data['avatar_url'] ?? data['image'] ?? '')
-          .toString(),
+      avatarUrl:
+          (data['avatarUrl'] ?? data['avatar_url'] ?? data['image'] ?? '')
+              .toString(),
       isVerified: data['isVerified'] ?? data['is_verified'] ?? false,
       employeeId: (data['employeeId'] ?? data['employee_id'] ?? '').toString(),
       email: (data['email'] ?? '').toString(),
       rating: _toDouble(data['rating']),
-      completedTasks: _toInt(
-        data['completedTasks'] ?? data['completed_tasks'],
-      ),
+      completedTasks: _toInt(data['completedTasks'] ?? data['completed_tasks']),
       availability: availabilityFromCode(data['availability']?.toString()),
       address: (data['address'] ?? '').toString(),
       phone: (data['phone'] ?? '').toString(),

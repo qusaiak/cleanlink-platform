@@ -14,6 +14,9 @@ enum AuthStatus {
   noInternet,
   loggedOut,
   changePassword,
+  loadingChangePassword,
+  successChangePassword,
+  errorChangePassword,
 }
 
 class AuthState extends Equatable {

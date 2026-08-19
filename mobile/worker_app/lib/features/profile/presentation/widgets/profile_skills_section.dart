@@ -154,9 +154,7 @@ class ProfileSkillsSection extends StatelessWidget {
           Flexible(
             child: Text(
               l.profile_skills_loading,
-              style: Styles.textStyle12.copyWith(
-                color: theme.onSurfaceVariant,
-              ),
+              style: Styles.textStyle12.copyWith(color: theme.onSurfaceVariant),
             ),
           ),
         ],

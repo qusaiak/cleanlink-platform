@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -63,16 +62,12 @@ class LoginBody extends StatelessWidget {
                   : () {
                       if (f.loginFormKey.currentState!.validate()) {
                         bloc.add(
-                          Login(
-                            f.loginEmail.text.trim(),
-                            f.loginPassword.text,
-                          ),
+                          Login(f.loginEmail.text.trim(), f.loginPassword.text),
                         );
                       }
                     },
             ),
             SizedBox(height: 14.h),
-
           ],
         ),
       ),

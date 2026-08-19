@@ -26,9 +26,5 @@ class ProfileState {
   }
 
   @override
-  List<Object?> get props => [
-    status,
-    isLight,
-    languageCode,
-  ];
+  List<Object?> get props => [status, isLight, languageCode];
 }

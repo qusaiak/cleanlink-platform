@@ -61,8 +61,10 @@ class _TaskDetailsView extends StatelessWidget {
             curr.status == TaskDetailStatus.failure,
         listener: (context, state) {
           if (state.status == TaskDetailStatus.success) {
-            final statusLabel =
-                TaskStatusUi.of(context, state.task.status).label;
+            final statusLabel = TaskStatusUi.of(
+              context,
+              state.task.status,
+            ).label;
             showAppSnackBar(
               context,
               message: l.task_status_updated_message(statusLabel),
@@ -101,8 +103,7 @@ class _TaskDetailsView extends StatelessWidget {
                         TaskProgressStepper(current: state.task.status),
                         // The photo pickers exist ONLY while marking the task
                         // done (the API accepts images with no other status).
-                        if (state.task.isTeamLeader &&
-                            state.isMarkingDone) ...[
+                        if (state.task.isTeamLeader && state.isMarkingDone) ...[
                           SizedBox(height: 22.h),
                           TaskPhotoDocumentation(
                             beforeExisting: state.task.beforePhotos,

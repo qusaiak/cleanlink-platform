@@ -85,6 +85,8 @@
   "auth_change_password_title": "Change password",
   "auth_change_password_subtitle": "Update your password to keep your account safe",
   "auth_update_password": "Update password",
+  "password_changed_successfully": "Password changed successfully",
+  "account": "Account",
   "auth_full_name": "Full name",
   "auth_full_name_hint": "Enter your full name",
   "auth_gender": "Gender",

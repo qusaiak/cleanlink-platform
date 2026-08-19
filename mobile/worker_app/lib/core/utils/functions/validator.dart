@@ -1,4 +1,4 @@
-  import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart';
 import '../../../l10n/app_localizations.dart';
 
 /// Centralised validators used across the whole app.
@@ -107,8 +107,9 @@ class PasswordStrength {
     if (RegExp(r'[A-Z]').hasMatch(password)) s += 0.2;
     if (RegExp(r'[a-z]').hasMatch(password)) s += 0.1;
     if (RegExp(r'\d').hasMatch(password)) s += 0.15;
-    if (RegExp(r'[!@#\$%\^&\*\(\)_\-\+=\[\]\{\};:,\.<>\?/\\|`~"]')
-        .hasMatch(password)) {
+    if (RegExp(
+      r'[!@#\$%\^&\*\(\)_\-\+=\[\]\{\};:,\.<>\?/\\|`~"]',
+    ).hasMatch(password)) {
       s += 0.15;
     }
     return s.clamp(0, 1).toDouble();

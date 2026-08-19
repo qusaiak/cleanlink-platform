@@ -572,6 +572,18 @@ abstract class AppLocalizations {
   /// **'Update password'**
   String get auth_update_password;
 
+  /// No description provided for @password_changed_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed successfully'**
+  String get password_changed_successfully;
+
+  /// No description provided for @account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get account;
+
   /// No description provided for @auth_full_name.
   ///
   /// In en, this message translates to:

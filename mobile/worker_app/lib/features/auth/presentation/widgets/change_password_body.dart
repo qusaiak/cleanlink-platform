@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -77,9 +76,17 @@ class ChangePasswordBody extends StatelessWidget {
             SizedBox(height: 28.h),
             AppPrimaryButton(
               label: l.auth_update_password,
-              // loading: state.isLoading,
-              // onPressed: bloc.submitChangePassword,
-              onPressed: () {},
+              loading: state.status == AuthStatus.loadingChangePassword,
+              onPressed: () {
+                if (!f.changeFormKey.currentState!.validate()) return;
+                bloc.add(
+                  SubmitChangePassword(
+                    oldPassword: f.changeOldPassword.text,
+                    newPassword: f.changeNewPassword.text,
+                    newPasswordConfirmation: f.changeConfirmPassword.text,
+                  ),
+                );
+              },
             ),
             SizedBox(height: 24.h),
           ],

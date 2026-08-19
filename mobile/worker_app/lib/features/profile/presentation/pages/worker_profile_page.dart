@@ -89,7 +89,10 @@ class _WorkerProfileView extends StatelessWidget {
                 showAppSnackBar(context, message: l.profile_updated_message);
                 break;
               case WorkerProfileStatus.skillAttached:
-                showAppSnackBar(context, message: l.profile_skill_added_message);
+                showAppSnackBar(
+                  context,
+                  message: l.profile_skill_added_message,
+                );
                 break;
               case WorkerProfileStatus.skillDetached:
                 showAppSnackBar(context, message: l.skills_removed_message);
@@ -133,7 +136,8 @@ class _WorkerProfileView extends StatelessWidget {
             // A photo save shows its loading UI on the avatar (preview +
             // spinner), so the blocking full-screen overlay is used only for
             // the text-field edits.
-            final saving = state.status == WorkerProfileStatus.savingField &&
+            final saving =
+                state.status == WorkerProfileStatus.savingField &&
                 state.pendingImage == null;
 
             return Stack(
@@ -159,9 +163,9 @@ class _WorkerProfileView extends StatelessWidget {
                       updatingTo: state.status == WorkerProfileStatus.updating
                           ? state.updatingTo
                           : null,
-                      onChanged: (a) => context
-                          .read<WorkerProfileBloc>()
-                          .add(ChangeAvailability(a)),
+                      onChanged: (a) => context.read<WorkerProfileBloc>().add(
+                        ChangeAvailability(a),
+                      ),
                     ),
                     SizedBox(height: 16.h),
                     Row(
@@ -327,7 +331,10 @@ class _WorkerProfileView extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 4.h,
+                  ),
                   child: Align(
                     alignment: AlignmentDirectional.centerStart,
                     child: Text(
@@ -347,8 +354,10 @@ class _WorkerProfileView extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading:
-                      Icon(Icons.photo_library_rounded, color: theme.primary),
+                  leading: Icon(
+                    Icons.photo_library_rounded,
+                    color: theme.primary,
+                  ),
                   title: Text(l.choose_from_gallery, style: Styles.textStyle14),
                   onTap: () {
                     Navigator.of(sheetContext).pop();
@@ -371,8 +380,10 @@ class _WorkerProfileView extends StatelessWidget {
   ) async {
     try {
       final picker = ImagePicker();
-      final XFile? image =
-          await picker.pickImage(source: source, imageQuality: 80);
+      final XFile? image = await picker.pickImage(
+        source: source,
+        imageQuality: 80,
+      );
       if (image == null) return;
       // Keep it as an XFile (no File/path conversion) so the multipart upload
       // and the local preview both stay web-compatible. Image-only path — it
@@ -408,9 +419,9 @@ class _WorkerProfileView extends StatelessWidget {
               text: l.retry,
               width: 160.w,
               height: 46.h,
-              onPressed: () => context
-                  .read<WorkerProfileBloc>()
-                  .add(const LoadWorkerProfile()),
+              onPressed: () => context.read<WorkerProfileBloc>().add(
+                const LoadWorkerProfile(),
+              ),
               buttonTextStyle: Styles.textStyle14.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
@@ -461,7 +472,11 @@ class _EditableStat extends StatelessWidget {
               onTap: onEdit,
               child: Padding(
                 padding: EdgeInsets.all(5.r),
-                child: Icon(Icons.edit_outlined, size: 15.r, color: Colors.white),
+                child: Icon(
+                  Icons.edit_outlined,
+                  size: 15.r,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),

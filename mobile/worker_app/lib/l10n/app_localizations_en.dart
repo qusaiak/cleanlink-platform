@@ -260,6 +260,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_update_password => 'Update password';
 
   @override
+  String get password_changed_successfully => 'Password changed successfully';
+
+  @override
+  String get account => 'Account';
+
+  @override
   String get auth_full_name => 'Full name';
 
   @override

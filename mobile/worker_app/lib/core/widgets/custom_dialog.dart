@@ -61,17 +61,19 @@ class CustomDialog extends StatelessWidget {
                   imagePath: Assets.images.logo.appLogo.path,
                   width: 40.w,
                 ),
-                title!.isNotEmpty ? Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.h),
-                  child: Text(
-                    title ?? '',
-                    style: Styles.textStyle12.copyWith(
-                      color: theme.onSurface,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    maxLines: 100,
-                  ),
-                ) : SizedBox.shrink(),
+                title!.isNotEmpty
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10.h),
+                        child: Text(
+                          title ?? '',
+                          style: Styles.textStyle12.copyWith(
+                            color: theme.onSurface,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 100,
+                        ),
+                      )
+                    : SizedBox.shrink(),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 5.h),
                   child: Text(

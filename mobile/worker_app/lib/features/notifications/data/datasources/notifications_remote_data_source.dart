@@ -10,10 +10,8 @@ import '../models/app_notification_model.dart';
 ///
 /// Implementations talk to the network and either return a model or throw a
 /// [DioException] on failure; the repository turns those into
-/// `Either<Failure, T>`. Three implementations are provided:
-///  - [NotificationsRemoteDataSourceImpl]  — real Dio calls (production path).
-///  - `FakeNotificationsRemoteDataSource`   — in-memory mock used today.
-///  - `FallbackNotificationsRemoteDataSource` — live-with-fallback wrapper.
+/// `Either<Failure, T>`. The production implementation is
+/// [NotificationsRemoteDataSourceImpl] (real Dio calls).
 abstract class NotificationsRemoteDataSource {
   Future<List<AppNotificationModel>> getNotifications();
 
@@ -86,7 +84,8 @@ class NotificationsRemoteDataSourceImpl
       if (node is List) return node;
       if (node is! Map) return null;
 
-      final next = node['notifications'] ??
+      final next =
+          node['notifications'] ??
           node['data'] ??
           node['items'] ??
           node['results'];
@@ -158,11 +157,20 @@ class NotificationsRemoteDataSourceImpl
 
   @override
   Future<List<AppNotificationModel>> markAllAsRead() async {
-    final response = await dio.patch(
-      ApiUrlParameters.markAllNotificationsRead,
-    );
-    _logResponse(response);
-    return _parseList(response.data);
+    // The backend has NO bulk "mark all read" endpoint, so this fetches the
+    // feed and marks each currently-unread item read one by one, then returns
+    // the refreshed list. Individual failures are logged but don't abort the
+    // batch — a best-effort "mark all" is better than none.
+    final current = await getNotifications();
+    final unread = current.where((n) => !n.isRead);
+    for (final n in unread) {
+      try {
+        await markAsRead(n.id);
+      } catch (error, stackTrace) {
+        _log('mark-all: failed to mark ${n.id} ($error)', stackTrace);
+      }
+    }
+    return getNotifications();
   }
 
   // ---- debug logging (kept for testing; compiled out of release builds) ----

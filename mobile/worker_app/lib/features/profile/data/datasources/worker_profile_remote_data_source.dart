@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -30,22 +29,13 @@ abstract class WorkerProfileRemoteDataSource {
     WorkerAvailability? status,
   });
 
-  /// Updates ONLY the profile photo, in two steps:
-  ///  1. the existing multipart upload, which stores the file and returns its
-  ///     stored path;
-  ///  2. [persistProfileImage], which pins that path onto the worker profile.
-  ///
-  /// [image] is the picked file (kept as an [XFile] so it stays
-  /// web-compatible). Returns the profile as confirmed by step 2.
+  /// Updates ONLY the profile photo via the dedicated
+  /// `POST /api/worker-profiles/update-image` endpoint, sending the picked
+  /// [image] as a multipart file (the backend validates `image` as
+  /// `required|image`). Returns the full worker profile the server echoes
+  /// (with `profile` and `worker_profile` loaded), which becomes the new
+  /// source of truth for the avatar.
   Future<WorkerProfileModel> updateProfileImage(XFile image);
-
-  /// Persists an ALREADY-UPLOADED photo on the worker profile:
-  /// `POST /api/worker-profiles/update-image` with the JSON body
-  /// `{"image": <storedImagePath>}` and nothing else.
-  ///
-  /// [storedImagePath] is the path the upload step returned and MUST be passed
-  /// through byte-for-byte (backslashes included).
-  Future<WorkerProfileModel> persistProfileImage(String storedImagePath);
 
   /// The skills DICTIONARY (`GET /api/skills`) — every assignable skill, with
   /// the names already localized by the server from the `Accept-Language`
@@ -76,9 +66,7 @@ class WorkerProfileRemoteDataSourceImpl
     // shared Dio interceptor attaches (saved from the login flow); nothing
     // else is sent.
     final response = await dio.get(ApiUrlParameters.workerProfilesMe);
-    return WorkerProfileModel.fromMeJson(
-      response.data as Map<String, dynamic>,
-    );
+    return WorkerProfileModel.fromMeJson(response.data as Map<String, dynamic>);
   }
 
   @override
@@ -121,132 +109,44 @@ class WorkerProfileRemoteDataSourceImpl
 
   @override
   Future<WorkerProfileModel> updateProfileImage(XFile image) async {
-    // ---- STEP 1: the upload. THIS is the call that changes the photo. ----
-    //
-    // The SAME /api/worker-profiles endpoint, as multipart/form-data (a file
-    // can't ride inside a JSON body) carrying ONLY the image — no other profile
-    // fields. Sent as POST + `_method=PUT`: Laravel/PHP does NOT populate
-    // files/fields for a real PUT with a multipart body, so the framework's
-    // method-spoofing is used — the PUT route still matches and the file
-    // arrives correctly.
+    // POST /api/worker-profiles/update-image — the DEDICATED image endpoint.
+    // The backend validates `image` as `required|image|mimes:jpeg,png,jpg,svg`,
+    // stores it on the `profile_images` disk, updates `profiles.image`, and
+    // returns the full worker with `profile` + `worker_profile` loaded — the
+    // same nested shape as `/me`, so `fromMeJson` parses it.
     //
     // The XFile is attached from its bytes (`fromBytes`, not `fromFile`) so it
     // also works on web. Bearer token added by the shared Dio interceptor.
     final formData = FormData.fromMap({
-      '_method': 'PUT',
       'image': MultipartFile.fromBytes(
         await image.readAsBytes(),
         filename: image.name,
       ),
     });
-    final upload = await dio.post(
-      ApiUrlParameters.workerProfiles,
+    final response = await dio.post(
+      ApiUrlParameters.workerProfilesUpdateImage,
       data: formData,
       options: Options(validateStatus: _isSuccessStatus),
     );
 
-    // Raw status + body, so the real response shape is confirmed rather than
-    // guessed when this is being diagnosed.
-    log('updateProfileImage upload → status=${upload.statusCode} '
-        'body=${upload.data}');
-
-    // ======================================================================
-    // Past this line the photo IS already updated on the server. NOTHING below
-    // may throw: every remaining step is about DISCOVERING THE NEW URL, and a
-    // failure to read it is not a failure to upload. Reporting one as the other
-    // is what showed an error on a request that had actually succeeded.
-    // ======================================================================
-
-    // ---- STEP 2: pin the stored path onto the profile (best effort). ----
-    final storedPath = _readStoredPath(upload);
-    if (storedPath.isNotEmpty) {
-      final persisted = await _tryPersistProfileImage(storedPath);
-      if (persisted != null && persisted.avatarUrl.isNotEmpty) return persisted;
-    }
-
-    // ---- STEP 3: the upload response may already carry the full profile. ----
-    final fromUpload = await _tryParse(
-      'upload response',
-      () => WorkerProfileModel.fromMeJson(
-        Map<String, dynamic>.from(upload.data as Map),
-      ),
+    log(
+      'updateProfileImage → status=${response.statusCode} '
+      'body=${response.data}',
     );
-    if (fromUpload != null && fromUpload.avatarUrl.isNotEmpty) return fromUpload;
 
-    // ---- STEP 4: nothing usable came back (empty/204 body, unknown shape) →
-    // read the profile once so the new URL comes from the source of truth. ----
-    final refetched = await _tryParse('profile re-fetch', getProfile);
-    if (refetched != null) return refetched;
-
-    // Even the re-fetch failed. The upload still succeeded, so this reports
-    // "updated, URL unknown" — the caller keeps the current URL and busts its
-    // cache, which refreshes the picture anyway.
-    log('updateProfileImage: photo updated but the new URL could not be read');
-    return WorkerProfileModel.avatarOnly('');
-  }
-
-  @override
-  Future<WorkerProfileModel> persistProfileImage(String storedImagePath) async {
-    // JSON body with EXACTLY one key. The path is handed to Dio as a plain Dart
-    // string and Dio's JSON encoder escapes it (a `\` becomes `\\` on the
-    // wire, and exactly once) — building the JSON by hand here is what would
-    // double-escape it. `contentType` is pinned so this can never inherit a
-    // multipart content type from a preceding upload.
-    final response = await dio.post(
-      ApiUrlParameters.workerProfilesUpdateImage,
-      data: <String, dynamic>{'image': storedImagePath},
-      options: Options(
-        contentType: Headers.jsonContentType,
-        validateStatus: _isSuccessStatus,
-      ),
-    );
-    log('persistProfileImage → status=${response.statusCode} '
-        'body=${response.data}');
-
-    return WorkerProfileModel.fromImageUpdateJson(
-      response.data,
-      sentPath: storedImagePath,
-    );
-  }
-
-  /// The stored path the server just wrote, taken verbatim from the upload
-  /// response — the exact string step 2 echoes back. Reading it is parsing, not
-  /// networking, so a surprise in the shape yields an empty string (and a log),
-  /// never an exception.
-  String _readStoredPath(Response<dynamic> upload) {
+    // The server echoes the full worker; parse it. If the body is ever empty
+    // or unparseable, re-fetch the profile so the new URL still comes from the
+    // source of truth rather than reporting a failure on a successful upload.
     try {
-      return WorkerProfileModel.rawImageFrom(upload.data);
+      return WorkerProfileModel.fromMeJson(
+        Map<String, dynamic>.from(response.data as Map),
+      );
     } catch (e) {
-      log('updateProfileImage: could not read the stored path: $e');
-      return '';
-    }
-  }
-
-  /// Runs the `update-image` follow-up. Its failure is reported HERE and
-  /// swallowed: the photo is already saved, so a broken follow-up must not be
-  /// surfaced as "the upload failed".
-  Future<WorkerProfileModel?> _tryPersistProfileImage(String storedPath) async {
-    try {
-      return await persistProfileImage(storedPath);
-    } on DioException catch (e) {
-      log('updateProfileImage: update-image follow-up failed '
-          '(photo already uploaded) → status=${e.response?.statusCode} '
-          'body=${e.response?.data}');
-      return null;
-    } catch (e) {
-      log('updateProfileImage: update-image follow-up threw: $e');
-      return null;
-    }
-  }
-
-  /// Runs [parse], turning any failure into `null` plus a log line, so a
-  /// parsing problem can never be mistaken for a network failure.
-  Future<T?> _tryParse<T>(String label, FutureOr<T> Function() parse) async {
-    try {
-      return await parse();
-    } catch (e) {
-      log('updateProfileImage: $label unusable: $e');
-      return null;
+      log(
+        'updateProfileImage: response unparseable ($e) — re-fetching '
+        'profile',
+      );
+      return getProfile();
     }
   }
 
@@ -337,7 +237,12 @@ class WorkerProfileRemoteDataSourceImpl
       try {
         final response = await _send(
           description,
-          () => _perform(attempt: attempt, path: path, isDelete: isDelete, body: body),
+          () => _perform(
+            attempt: attempt,
+            path: path,
+            isDelete: isDelete,
+            body: body,
+          ),
         );
 
         // This shape is the contract — every later call goes straight to it.
@@ -419,8 +324,9 @@ class WorkerProfileRemoteDataSourceImpl
     return dio.delete(
       path,
       data: body,
-      queryParameters:
-          attempt.transport == _SkillsTransport.query ? body : null,
+      queryParameters: attempt.transport == _SkillsTransport.query
+          ? body
+          : null,
       options: options,
     );
   }

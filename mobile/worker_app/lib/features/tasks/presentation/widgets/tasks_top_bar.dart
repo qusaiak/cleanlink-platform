@@ -12,7 +12,6 @@ import '../../../notifications/presentation/widgets/notification_bell.dart';
 import '../../../profile/presentation/bloc/worker_profile_bloc.dart';
 import '../../../profile/presentation/widgets/worker_availability_ui.dart';
 import '../../../profile/presentation/widgets/worker_status_badge.dart';
-import '../../../search/presentation/widgets/service_search_field.dart';
 
 /// Top bar of the daily-tasks screen. Bundles the sidebar (menu) button, the
 /// worker's account (profile button), the notifications bell with its live
@@ -42,7 +41,11 @@ class TasksTopBar extends StatelessWidget {
               // Opens the sidebar (Profile / Settings).
               IconButton(
                 onPressed: () => Scaffold.of(context).openDrawer(),
-                icon: Icon(Icons.menu_rounded, color: theme.primary, size: 24.r),
+                icon: Icon(
+                  Icons.menu_rounded,
+                  color: theme.primary,
+                  size: 24.r,
+                ),
                 visualDensity: VisualDensity.compact,
               ),
               SizedBox(width: 2.w),
@@ -56,20 +59,13 @@ class TasksTopBar extends StatelessWidget {
                   // Refresh the badge on return (a notification may have been
                   // read on the feed).
                   if (context.mounted) {
-                    context
-                        .read<NotificationsBloc>()
-                        .add(const LoadNotifications(silent: true));
+                    context.read<NotificationsBloc>().add(
+                      const LoadNotifications(silent: true),
+                    );
                   }
                 },
               ),
             ],
-          ),
-          SizedBox(height: 12.h),
-          // Services search — general / custom in one field. Submitting opens
-          // the results screen with the chosen query.
-          ServiceSearchField(
-            onSearch: (query) =>
-                context.push(AppRouter.kSearch, extra: query),
           ),
           SizedBox(height: 4.h),
           // Screen title.

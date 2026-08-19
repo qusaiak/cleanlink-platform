@@ -54,10 +54,7 @@ class AuthPhoneField extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CustomImageView(
-              imagePath: Assets.icons.syria.path,
-              width: 25.w,
-            ),
+            CustomImageView(imagePath: Assets.icons.syria.path, width: 25.w),
             SizedBox(width: 6.w),
             Text(
               initialCountry.dialCode,

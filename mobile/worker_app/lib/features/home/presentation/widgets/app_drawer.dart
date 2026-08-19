@@ -41,8 +41,10 @@ class AppDrawer extends StatelessWidget {
                     final avatarUrl = profile?.avatarUrl ?? '';
                     // Ring colour mirrors the worker's availability status.
                     final ringColor = profile != null
-                        ? WorkerAvailabilityUi.of(context, profile.availability)
-                            .color
+                        ? WorkerAvailabilityUi.of(
+                            context,
+                            profile.availability,
+                          ).color
                         : theme.primary;
 
                     return Row(
@@ -56,8 +58,9 @@ class AppDrawer extends StatelessWidget {
                           child: NetworkAvatar(
                             avatarUrl: avatarUrl,
                             radius: 24.r,
-                            backgroundColor:
-                                theme.primary.withValues(alpha: 0.12),
+                            backgroundColor: theme.primary.withValues(
+                              alpha: 0.12,
+                            ),
                             iconColor: theme.primary,
                           ),
                         ),

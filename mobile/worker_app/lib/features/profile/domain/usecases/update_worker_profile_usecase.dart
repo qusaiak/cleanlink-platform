@@ -27,8 +27,14 @@ class UpdateProfileParams extends Equatable {
   });
 
   @override
-  List<Object?> get props =>
-      [fullname, email, address, phone, experienceYears, status];
+  List<Object?> get props => [
+    fullname,
+    email,
+    address,
+    phone,
+    experienceYears,
+    status,
+  ];
 }
 
 /// Updates editable account fields (name / email / address / phone / photo).

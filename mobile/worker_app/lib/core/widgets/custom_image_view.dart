@@ -42,20 +42,14 @@ class CustomImageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return alignment != null
-        ? Align(
-            alignment: alignment!,
-            child: _buildWidget(),
-          )
+        ? Align(alignment: alignment!, child: _buildWidget())
         : _buildWidget();
   }
 
   Widget _buildWidget() {
     return Padding(
       padding: margin ?? EdgeInsets.zero,
-      child: InkWell(
-        onTap: onTap,
-        child: _buildCircleImage(),
-      ),
+      child: InkWell(onTap: onTap, child: _buildCircleImage()),
     );
   }
 
@@ -112,10 +106,7 @@ class CustomImageView extends StatelessWidget {
               color: color,
             );
           } else {
-            return const Icon(
-              Icons.error,
-              color: AppColor.primaryLight,
-            );
+            return const Icon(Icons.error, color: AppColor.primaryLight);
           }
         case ImageType.network:
           return CachedNetworkImage(
@@ -129,7 +120,7 @@ class CustomImageView extends StatelessWidget {
                     placeHolder!,
                     height: height,
                     width: width,
-              fit: BoxFit.cover,
+                    fit: BoxFit.cover,
                     color: color,
                   )
                 : AppShimmerBox(
@@ -137,10 +128,8 @@ class CustomImageView extends StatelessWidget {
                     height: height ?? 40,
                     radius: radius?.topLeft.x ?? 8,
                   ),
-            errorWidget: (context, url, error) => const Icon(
-              Icons.error,
-              color: AppColor.primaryLight,
-            ),
+            errorWidget: (context, url, error) =>
+                const Icon(Icons.error, color: AppColor.primaryLight),
           );
         case ImageType.png:
         default:

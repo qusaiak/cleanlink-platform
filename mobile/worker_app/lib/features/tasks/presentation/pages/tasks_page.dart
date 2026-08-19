@@ -32,7 +32,8 @@ class TasksPage extends StatelessWidget {
           create: (_) => sl<TasksBloc>()..add(const LoadDailyTasks()),
         ),
         BlocProvider<WorkerProfileBloc>(
-          create: (_) => sl<WorkerProfileBloc>()..add(const LoadWorkerProfile()),
+          create: (_) =>
+              sl<WorkerProfileBloc>()..add(const LoadWorkerProfile()),
         ),
         BlocProvider<NotificationsBloc>(
           create: (_) => sl<NotificationsBloc>()

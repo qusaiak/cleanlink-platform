@@ -9,9 +9,7 @@ import '../models/task_model.dart';
 ///
 /// Implementations talk to the network and either return a model or throw a
 /// [DioException] on failure; the repository is responsible for turning those
-/// into `Either<Failure, T>`. Two implementations are provided:
-///  - [TasksRemoteDataSourceImpl]  — real Dio calls (wired when the API exists).
-///  - `FakeTasksRemoteDataSource`   — in-memory mock used today.
+/// into `Either<Failure, T>`.
 abstract class TasksRemoteDataSource {
   Future<DailyTasksModel> getDailyTasks();
 
@@ -92,7 +90,7 @@ class TasksRemoteDataSourceImpl implements TasksRemoteDataSource {
     String? imageBeforePath,
     String? imageAfterPath,
   }) async {
-    // POST /api/tasks/{order_id}/update-status with
+    // POST /api/tasks/{task_id}/update-status with
     // `{status, image_before, image_after}`. When photos ride along (only
     // ever at `done`) the body goes multipart so the files upload; otherwise
     // plain JSON with the image fields empty, exactly as the contract shows.

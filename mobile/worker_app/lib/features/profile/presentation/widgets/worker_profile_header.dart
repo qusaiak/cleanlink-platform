@@ -77,7 +77,11 @@ class WorkerProfileHeader extends StatelessWidget {
                     shape: BoxShape.circle,
                     border: Border.all(color: theme.surface, width: 2),
                   ),
-                  child: Icon(Icons.check_rounded, size: 14.r, color: Colors.white),
+                  child: Icon(
+                    Icons.check_rounded,
+                    size: 14.r,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             // Edit-photo badge — opens the camera/gallery picker.

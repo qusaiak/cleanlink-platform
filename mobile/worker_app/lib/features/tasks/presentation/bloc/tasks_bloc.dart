@@ -92,9 +92,8 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     // list); only the failure branch needs handling here.
     final result = await getDailyTasks();
     result.fold(
-      (failure) => emit(
-        state.copyWith(status: TasksStatus.error, error: failure),
-      ),
+      (failure) =>
+          emit(state.copyWith(status: TasksStatus.error, error: failure)),
       (_) {},
     );
   }

@@ -50,7 +50,9 @@ class SkillsPayload {
   /// real JSON array of NUMBERS — never `["4"]` and never a stringified array,
   /// both of which fail Laravel's `integer` / `exists` rules.
   Map<String, dynamic> body(List<int> skillIds) => {
-    field: asArray ? List<int>.of(skillIds) : (skillIds.isEmpty ? null : skillIds.first),
+    field: asArray
+        ? List<int>.of(skillIds)
+        : (skillIds.isEmpty ? null : skillIds.first),
   };
 
   /// Human-readable shape for the logs, e.g. `{"skill_ids": [<int>]}`.

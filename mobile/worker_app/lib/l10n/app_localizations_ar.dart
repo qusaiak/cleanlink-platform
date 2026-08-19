@@ -256,6 +256,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get auth_update_password => 'تحديث كلمة المرور';
 
   @override
+  String get password_changed_successfully => 'تم تغيير كلمة المرور بنجاح';
+
+  @override
+  String get account => 'الحساب';
+
+  @override
   String get auth_full_name => 'الاسم الكامل';
 
   @override

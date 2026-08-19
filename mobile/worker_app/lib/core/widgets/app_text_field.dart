@@ -103,8 +103,10 @@ class AppTextField extends StatelessWidget {
             ),
             border: _border(theme.onSurface.withValues(alpha: 0.3)),
             enabledBorder: _border(theme.onSurface.withValues(alpha: 0.3)),
-            focusedBorder:
-                _border(AppColor.primaryColor.withValues(alpha: 0.9), width: 1.4),
+            focusedBorder: _border(
+              AppColor.primaryColor.withValues(alpha: 0.9),
+              width: 1.4,
+            ),
             errorBorder: _border(AppColor.errorDark, width: 1),
             focusedErrorBorder: _border(AppColor.errorDark, width: 1.4),
             errorStyle: Styles.textStyle11.copyWith(

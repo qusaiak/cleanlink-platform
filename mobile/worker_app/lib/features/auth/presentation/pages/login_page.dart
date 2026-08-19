@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -23,7 +22,9 @@ class LoginPage extends StatelessWidget {
           // ("ServerFailure{errorMessage: ...}"), which buried the backend's
           // actual reason. This is the app's standard failure-message resolver.
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(localizedFailureMessage(context, state.error))),
+            SnackBar(
+              content: Text(localizedFailureMessage(context, state.error)),
+            ),
           );
         }
       },

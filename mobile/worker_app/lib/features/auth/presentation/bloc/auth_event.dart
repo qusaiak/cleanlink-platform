@@ -51,3 +51,21 @@ class ChangePasswordView extends AuthEvent {
   @override
   List<Object> get props => [currentTextFormField];
 }
+
+/// Submit the change-password form. The three field values are carried on the
+/// event so the bloc never reads the controllers directly (they belong to the
+/// form widget's lifecycle).
+class SubmitChangePassword extends AuthEvent {
+  final String oldPassword;
+  final String newPassword;
+  final String newPasswordConfirmation;
+
+  const SubmitChangePassword({
+    required this.oldPassword,
+    required this.newPassword,
+    required this.newPasswordConfirmation,
+  });
+
+  @override
+  List<Object> get props => [oldPassword, newPassword, newPasswordConfirmation];
+}

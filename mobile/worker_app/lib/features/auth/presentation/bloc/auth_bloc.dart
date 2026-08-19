@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
@@ -9,6 +8,7 @@ import '../../../../core/error/failure.dart';
 import '../../../../core/session/login_session.dart';
 import '../../../../services/notification_service.dart';
 import '../../../auth/domain/entities/login_client_entity.dart';
+import '../../../auth/domain/repositories/auth_repo.dart';
 import '../../../auth/domain/usecases/login_usecase.dart';
 import 'auth_form_controllers.dart';
 
@@ -17,28 +17,33 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUsecase loginUsecase;
+  final AuthRepository authRepository;
 
   /// Persists the bearer token. Async and AWAITED (see [onLogin]) so the token
   /// is stored before login is reported as successful.
   final Future<void> Function(String token) onTokenReceived;
 
-  AuthBloc({required this.loginUsecase, required this.onTokenReceived})
-    : forms = AuthFormControllers(),
-      super(
-        const AuthState().copyWith(
-          status: AuthStatus.initial,
-          isPasswordVis: false,
-          isOldPasswordVis: false,
-          isNewPasswordVis: false,
-          isConfirmPasswordVis: false,
-          isLoadingLogin: false,
-          isLoadingRegister: false,
-          isVerifyAccountLoading: false,
-          isRequestResendVerificationCodeLoading: false,
-        ),
-      ) {
+  AuthBloc({
+    required this.loginUsecase,
+    required this.authRepository,
+    required this.onTokenReceived,
+  }) : forms = AuthFormControllers(),
+       super(
+         const AuthState().copyWith(
+           status: AuthStatus.initial,
+           isPasswordVis: false,
+           isOldPasswordVis: false,
+           isNewPasswordVis: false,
+           isConfirmPasswordVis: false,
+           isLoadingLogin: false,
+           isLoadingRegister: false,
+           isVerifyAccountLoading: false,
+           isRequestResendVerificationCodeLoading: false,
+         ),
+       ) {
     on<Login>(onLogin);
     on<ChangePasswordView>(onChangePasswordView);
+    on<SubmitChangePassword>(onSubmitChangePassword);
   }
 
   final AuthFormControllers forms;
@@ -165,6 +170,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           isConfirmPasswordVis: !state.isConfirmPasswordVis!,
         ),
       );
+    }
+  }
+
+  /// Submits the change-password form. Emits loading → success/error, carrying
+  /// the server's own failure message on error (the repository maps
+  /// `DioException` → `Failure` with the body's `message`).
+  Future<void> onSubmitChangePassword(
+    SubmitChangePassword event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(status: AuthStatus.loadingChangePassword, error: null));
+
+    final result = await authRepository.changePassword(
+      oldPassword: event.oldPassword,
+      newPassword: event.newPassword,
+      newPasswordConfirmation: event.newPasswordConfirmation,
+    );
+
+    final failure = result.fold<Failure?>((f) => f, (_) => null);
+    if (failure != null) {
+      emit(
+        state.copyWith(status: AuthStatus.errorChangePassword, error: failure),
+      );
+    } else {
+      emit(state.copyWith(status: AuthStatus.successChangePassword));
+      // Reset to the visual-toggle status so the screen doesn't stay on
+      // "success" forever (which would re-show the success snackbar on rebuild).
+      emit(state.copyWith(status: AuthStatus.changePassword));
     }
   }
 }

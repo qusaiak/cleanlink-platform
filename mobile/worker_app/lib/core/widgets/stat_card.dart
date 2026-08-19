@@ -27,8 +27,9 @@ class StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
-    final Color background =
-        filled ? theme.primary : theme.primary.withValues(alpha: 0.08);
+    final Color background = filled
+        ? theme.primary
+        : theme.primary.withValues(alpha: 0.08);
     final Color foreground = filled ? Colors.white : theme.primary;
 
     return Container(

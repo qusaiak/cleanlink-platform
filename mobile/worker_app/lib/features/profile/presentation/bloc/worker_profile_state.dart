@@ -87,7 +87,9 @@ class WorkerProfileState extends Equatable {
   /// worker's own skills, compared by `id`. This is what the "add" list offers,
   /// so an already-owned skill is never presented for attaching again.
   List<WorkerSkill> get availableSkills {
-    final owned = {for (final s in profile?.skills ?? const <WorkerSkill>[]) s.id};
+    final owned = {
+      for (final s in profile?.skills ?? const <WorkerSkill>[]) s.id,
+    };
     return allSkills.where((s) => !owned.contains(s.id)).toList();
   }
 

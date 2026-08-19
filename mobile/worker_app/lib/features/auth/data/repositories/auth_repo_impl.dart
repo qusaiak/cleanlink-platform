@@ -19,14 +19,28 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, LoginEntity>> login({
     required String email,
     required String password,
-  }) => _guard('login', () => apiService.login(email: email, password: password));
+  }) =>
+      _guard('login', () => apiService.login(email: email, password: password));
 
   @override
-  Future<Either<Failure, Unit>> logout() =>
-      _guard('logout', () async {
-        await apiService.logout();
-        return unit;
-      });
+  Future<Either<Failure, Unit>> logout() => _guard('logout', () async {
+    await apiService.logout();
+    return unit;
+  });
+
+  @override
+  Future<Either<Failure, Unit>> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String newPasswordConfirmation,
+  }) => _guard('changePassword', () async {
+    await apiService.changePassword(
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+      newPasswordConfirmation: newPasswordConfirmation,
+    );
+    return unit;
+  });
 
   /// Runs [action] and maps every failure mode onto a distinct [Failure],
   /// LOGGING the real cause (with its stack) on the way out.

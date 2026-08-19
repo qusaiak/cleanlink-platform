@@ -132,10 +132,8 @@ class WorkerProfileBloc extends Bloc<WorkerProfileEvent, WorkerProfileState> {
   /// Active = at least one task not completed and not cancelled — the same
   /// derivation the daily-tasks header uses for "remaining", so the two agree.
   bool _hasActiveOrder(DailyTasks daily) => daily.tasks.any(
-        (t) =>
-            t.status != TaskStatus.completed &&
-            t.status != TaskStatus.cancelled,
-      );
+    (t) => t.status != TaskStatus.completed && t.status != TaskStatus.cancelled,
+  );
 
   Future<void> _onLoad(
     LoadWorkerProfile event,
@@ -253,7 +251,9 @@ class WorkerProfileBloc extends Bloc<WorkerProfileEvent, WorkerProfileState> {
             profile: merged,
           ),
         );
-        emit(state.copyWith(status: WorkerProfileStatus.loaded, profile: merged));
+        emit(
+          state.copyWith(status: WorkerProfileStatus.loaded, profile: merged),
+        );
       },
     );
   }
@@ -302,7 +302,9 @@ class WorkerProfileBloc extends Bloc<WorkerProfileEvent, WorkerProfileState> {
             profile: merged,
           ),
         );
-        emit(state.copyWith(status: WorkerProfileStatus.loaded, profile: merged));
+        emit(
+          state.copyWith(status: WorkerProfileStatus.loaded, profile: merged),
+        );
       },
     );
   }
@@ -365,7 +367,9 @@ class WorkerProfileBloc extends Bloc<WorkerProfileEvent, WorkerProfileState> {
       // still changed at the previous URL — so that URL is reused and refreshed
       // by the eviction + cache-buster below.
       final serverAvatar = updated?.avatarUrl ?? '';
-      final baseAvatar = serverAvatar.isNotEmpty ? serverAvatar : previousAvatar;
+      final baseAvatar = serverAvatar.isNotEmpty
+          ? serverAvatar
+          : previousAvatar;
 
       // Drop every cached copy of what is on screen now, then hand the widgets
       // a URL they have never seen. Either alone is unreliable; together the

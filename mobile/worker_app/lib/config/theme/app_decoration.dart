@@ -63,7 +63,9 @@ abstract class AppShadow {
   static List<BoxShadow> floating(Brightness brightness) {
     return [
       BoxShadow(
-        color: Colors.black.withValues(alpha: brightness == Brightness.dark ? 0.4 : 0.12),
+        color: Colors.black.withValues(
+          alpha: brightness == Brightness.dark ? 0.4 : 0.12,
+        ),
         blurRadius: 28,
         offset: const Offset(0, 12),
       ),
@@ -89,33 +91,33 @@ class AppDecoration {
   }
 
   static PinTheme get defaultPinTheme => PinTheme(
-        width: 56.w,
-        height: 56.w,
-        textStyle: Styles.textStyle18.copyWith(color: Colors.white),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColor.gray500),
-          borderRadius: BorderRadius.circular(AppRadius.xxl),
-        ),
-      );
+    width: 56.w,
+    height: 56.w,
+    textStyle: Styles.textStyle18.copyWith(color: Colors.white),
+    decoration: BoxDecoration(
+      border: Border.all(color: AppColor.gray500),
+      borderRadius: BorderRadius.circular(AppRadius.xxl),
+    ),
+  );
 
   static PinTheme get focusedPinTheme => PinTheme(
-        width: 56.w,
-        height: 56.w,
-        textStyle: Styles.textStyle18.copyWith(color: AppColor.primaryColor),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColor.primaryLight, width: 1.5),
-          borderRadius: BorderRadius.circular(AppRadius.xxl),
-        ),
-      );
+    width: 56.w,
+    height: 56.w,
+    textStyle: Styles.textStyle18.copyWith(color: AppColor.primaryColor),
+    decoration: BoxDecoration(
+      border: Border.all(color: AppColor.primaryLight, width: 1.5),
+      borderRadius: BorderRadius.circular(AppRadius.xxl),
+    ),
+  );
 
   static PinTheme get submittedPinTheme => PinTheme(
-        width: 56.w,
-        height: 56.h,
-        textStyle: Styles.textStyle18.copyWith(color: AppColor.primaryColor),
-        decoration: BoxDecoration(
-          color: AppColor.primarySoft,
-          border: Border.all(color: AppColor.primaryLight),
-          borderRadius: BorderRadius.circular(AppRadius.xxl),
-        ),
-      );
+    width: 56.w,
+    height: 56.h,
+    textStyle: Styles.textStyle18.copyWith(color: AppColor.primaryColor),
+    decoration: BoxDecoration(
+      color: AppColor.primarySoft,
+      border: Border.all(color: AppColor.primaryLight),
+      borderRadius: BorderRadius.circular(AppRadius.xxl),
+    ),
+  );
 }

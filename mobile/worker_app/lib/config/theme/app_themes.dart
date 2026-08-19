@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:worker_app/config/theme/styles.dart';
@@ -92,11 +91,15 @@ ThemeData lightTheme() {
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       border: OutlineInputBorder(
         borderRadius: AppRadius.input,
-        borderSide: BorderSide(color: AppColor.onSurfaceLight.withValues(alpha: 0.3)),
+        borderSide: BorderSide(
+          color: AppColor.onSurfaceLight.withValues(alpha: 0.3),
+        ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: AppRadius.input,
-        borderSide: BorderSide(color: AppColor.onSurfaceLight.withValues(alpha: 0.3)),
+        borderSide: BorderSide(
+          color: AppColor.onSurfaceLight.withValues(alpha: 0.3),
+        ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: AppRadius.input,
@@ -231,15 +234,22 @@ ThemeData darkTheme() {
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       border: OutlineInputBorder(
         borderRadius: AppRadius.input,
-        borderSide: BorderSide(color: AppColor.onSurfaceDark.withValues(alpha: 0.2)),
+        borderSide: BorderSide(
+          color: AppColor.onSurfaceDark.withValues(alpha: 0.2),
+        ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: AppRadius.input,
-        borderSide: BorderSide(color: AppColor.onSurfaceDark.withValues(alpha: 0.2)),
+        borderSide: BorderSide(
+          color: AppColor.onSurfaceDark.withValues(alpha: 0.2),
+        ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: AppRadius.input,
-        borderSide: const BorderSide(color: AppColor.primaryColorLighter, width: 1.4),
+        borderSide: const BorderSide(
+          color: AppColor.primaryColorLighter,
+          width: 1.4,
+        ),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: AppRadius.input,
@@ -291,12 +301,14 @@ AppBarTheme appBarLightTheme() {
     surfaceTintColor: Colors.transparent,
     centerTitle: false,
     iconTheme: const IconThemeData(color: AppColor.primaryColor, size: 22),
-    actionsIconTheme: const IconThemeData(color: AppColor.primaryColor, size: 22),
+    actionsIconTheme: const IconThemeData(
+      color: AppColor.primaryColor,
+      size: 22,
+    ),
     titleTextStyle: Styles.textStyle18.copyWith(
       color: AppColor.primaryColor,
       fontWeight: FontWeight.bold,
-      fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily
-          .cairo,
+      fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily.cairo,
     ),
   );
 }
@@ -310,13 +322,18 @@ AppBarTheme appBarDarkTheme() {
     shadowColor: Colors.black.withValues(alpha: 0.4),
     surfaceTintColor: Colors.transparent,
     centerTitle: false,
-    iconTheme: const IconThemeData(color: AppColor.primaryColorLighter, size: 22),
-    actionsIconTheme: const IconThemeData(color: AppColor.primaryColorLighter, size: 22),
+    iconTheme: const IconThemeData(
+      color: AppColor.primaryColorLighter,
+      size: 22,
+    ),
+    actionsIconTheme: const IconThemeData(
+      color: AppColor.primaryColorLighter,
+      size: 22,
+    ),
     titleTextStyle: Styles.textStyle18.copyWith(
       color: AppColor.primaryColorLighter,
       fontWeight: FontWeight.bold,
-      fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily
-          .cairo,
+      fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily.cairo,
     ),
   );
 }
@@ -330,7 +347,9 @@ BottomNavigationBarThemeData bottomNavigationBarThemeDataLight() {
       size: 24,
       color: AppColor.primaryColor,
     ),
-    selectedLabelStyle: Styles.textStyle12.copyWith(fontWeight: FontWeight.w600),
+    selectedLabelStyle: Styles.textStyle12.copyWith(
+      fontWeight: FontWeight.w600,
+    ),
     selectedItemColor: AppColor.primaryColor,
     unselectedIconTheme: const IconThemeData(
       size: 24,
@@ -351,7 +370,9 @@ BottomNavigationBarThemeData bottomNavigationBarThemeDataDark() {
       size: 24,
       color: AppColor.primaryColorLighter,
     ),
-    selectedLabelStyle: Styles.textStyle12.copyWith(fontWeight: FontWeight.w600),
+    selectedLabelStyle: Styles.textStyle12.copyWith(
+      fontWeight: FontWeight.w600,
+    ),
     selectedItemColor: AppColor.primaryColorLighter,
     unselectedIconTheme: const IconThemeData(
       size: 24,

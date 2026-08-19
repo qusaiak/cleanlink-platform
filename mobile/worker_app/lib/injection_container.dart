@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:dio/dio.dart';
@@ -7,9 +6,11 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import 'config/language/app_language_info.dart';
 import 'config/routes/app_router.dart';
+import 'config/theme/app_theme_info.dart';
 import 'core/config/api_config.dart';
 import 'core/network/http_headers.dart';
 import 'core/network/network_info.dart';
+import 'core/session/app_startup.dart';
 import 'core/session/login_session.dart';
 import 'features/auth/data/datasources/auth_api_service.dart';
 import 'features/auth/data/repositories/auth_repo_impl.dart';
@@ -17,8 +18,6 @@ import 'features/auth/domain/repositories/auth_repo.dart';
 import 'features/auth/domain/usecases/login_usecase.dart';
 import 'features/auth/domain/usecases/logout_usecase.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
-import 'features/profile/data/datasources/fake_worker_profile_remote_data_source.dart';
-import 'features/profile/data/datasources/fallback_worker_profile_remote_data_source.dart';
 import 'features/profile/data/datasources/worker_profile_remote_data_source.dart';
 import 'features/profile/data/repositories/worker_profile_repository_impl.dart';
 import 'features/profile/domain/repositories/worker_profile_repository.dart';
@@ -31,8 +30,6 @@ import 'features/profile/domain/usecases/update_profile_image_usecase.dart';
 import 'features/profile/domain/usecases/update_worker_profile_usecase.dart';
 import 'features/profile/presentation/bloc/profile_bloc.dart';
 import 'features/profile/presentation/bloc/worker_profile_bloc.dart';
-import 'features/tasks/data/datasources/fake_tasks_remote_data_source.dart';
-import 'features/tasks/data/datasources/fallback_tasks_remote_data_source.dart';
 import 'features/tasks/data/datasources/tasks_remote_data_source.dart';
 import 'features/tasks/data/repositories/tasks_repository_impl.dart';
 import 'features/tasks/domain/repositories/tasks_repository.dart';
@@ -41,8 +38,6 @@ import 'features/tasks/domain/usecases/get_task_by_id_usecase.dart';
 import 'features/tasks/domain/usecases/update_task_status_usecase.dart';
 import 'features/tasks/domain/usecases/watch_daily_tasks_usecase.dart';
 import 'features/tasks/presentation/bloc/tasks_bloc.dart';
-import 'features/notifications/data/datasources/fake_notifications_remote_data_source.dart';
-import 'features/notifications/data/datasources/fallback_notifications_remote_data_source.dart';
 import 'features/notifications/data/datasources/notifications_remote_data_source.dart';
 import 'features/notifications/data/repositories/notifications_repository_impl.dart';
 import 'features/notifications/domain/repositories/notifications_repository.dart';
@@ -50,31 +45,8 @@ import 'features/notifications/domain/usecases/get_notifications_usecase.dart';
 import 'features/notifications/domain/usecases/mark_all_notifications_read_usecase.dart';
 import 'features/notifications/domain/usecases/mark_notification_read_usecase.dart';
 import 'features/notifications/presentation/bloc/notifications_bloc.dart';
-import 'features/search/data/datasources/fake_search_remote_data_source.dart';
-import 'features/search/data/datasources/fallback_search_remote_data_source.dart';
-import 'features/search/data/datasources/search_remote_data_source.dart';
-import 'features/search/data/repositories/search_repository_impl.dart';
-import 'features/search/domain/repositories/search_repository.dart';
-import 'features/search/domain/usecases/search_services_usecase.dart';
-import 'features/search/presentation/bloc/search_bloc.dart';
 
 final sl = GetIt.instance;
-
-/// Master switch for how feature data is sourced.
-///
-/// `true`  → ONLY in-memory fake data sources; the network is never touched
-///           (handy for pure UI work).
-/// `false` → live-with-fallback: every feature tries the real Dio-backed source
-///           first (GET/POST against [ApiConfig.baseUrl] → the backend's
-///           database) and, whenever the server is unreachable, transparently
-///           falls back to the in-memory data — so the data stays as it is
-///           today until the backend is actually running.
-///
-/// Default `false`: the app pulls live data from the database when the backend
-/// is up and reachable, and otherwise shows the current data unchanged. The
-/// base URL is resolved automatically by [ApiConfig] (or overridden with
-/// `--dart-define=BASE_URL=...`); an [authToken] is added after login.
-const bool kUseMockData = false;
 
 /// Bearer token sent with authenticated requests.
 ///
@@ -112,6 +84,11 @@ Future<void> clearSession() async {
 
 Future<void> initializeDependencies() async {
   await AppLanguageInfo.initialize();
+  // Load the persisted theme and the one-time onboarding flag before anything
+  // reads them (MaterialApp reads the theme synchronously; the splash reads the
+  // onboarding flag to decide the first screen).
+  await AppThemeInfo.initialize();
+  await AppStartup.initialize();
 
   // Restore the persisted session (token, identity, cached avatar) BEFORE any
   // dependency that could issue a request is registered, so the first
@@ -124,6 +101,7 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<AuthBloc>(
     () => AuthBloc(
       loginUsecase: sl(),
+      authRepository: sl(),
       // Async on purpose: the bloc AWAITS this, so the token is live *and*
       // written to storage before login is reported as successful (i.e. before
       // the screen navigates or any authenticated call goes out).
@@ -159,19 +137,14 @@ Future<void> initializeDependencies() async {
       markAllRead: sl(),
     ),
   );
-  sl.registerFactory<SearchBloc>(() => SearchBloc(searchServices: sl()));
 
   /// =========================
   /// AUTH FEATURE
   /// =========================
   sl.registerLazySingleton(() => LoginUsecase(sl()));
   sl.registerLazySingleton(() => LogoutUsecase(sl()));
-  sl.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(sl()),
-  );
-  sl.registerLazySingleton<AuthApiService>(
-    () => AuthApiServiceImpl(sl()),
-  );
+  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
+  sl.registerLazySingleton<AuthApiService>(() => AuthApiServiceImpl(sl()));
 
   /// =========================
   /// TASKS FEATURE
@@ -185,16 +158,11 @@ Future<void> initializeDependencies() async {
     () => TasksRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
-  // Pure mock when [kUseMockData]; otherwise live-with-fallback (real Dio data
-  // straight from the backend/database, in-memory data when it's unreachable).
-  // Singleton so the in-memory edits persist for the session.
+  // Real backend only. Singleton so the derived day/stats cache in the
+  // repository persists for the session; failures surface as proper
+  // error/empty states (no silent fallback to fabricated data).
   sl.registerLazySingleton<TasksRemoteDataSource>(
-    () => kUseMockData
-        ? FakeTasksRemoteDataSource()
-        : FallbackTasksRemoteDataSource(
-            primary: TasksRemoteDataSourceImpl(sl()),
-            fallback: FakeTasksRemoteDataSource(),
-          ),
+    () => TasksRemoteDataSourceImpl(sl()),
   );
 
   /// =========================
@@ -208,15 +176,11 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton(() => AttachSkillsUseCase(sl()));
   sl.registerLazySingleton(() => DetachSkillsUseCase(sl()));
   sl.registerLazySingleton<WorkerProfileRepository>(
-    () => WorkerProfileRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
+    () =>
+        WorkerProfileRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
   sl.registerLazySingleton<WorkerProfileRemoteDataSource>(
-    () => kUseMockData
-        ? FakeWorkerProfileRemoteDataSource()
-        : FallbackWorkerProfileRemoteDataSource(
-            primary: WorkerProfileRemoteDataSourceImpl(sl()),
-            fallback: FakeWorkerProfileRemoteDataSource(),
-          ),
+    () => WorkerProfileRemoteDataSourceImpl(sl()),
   );
 
   /// =========================
@@ -226,44 +190,22 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton(() => MarkNotificationReadUseCase(sl()));
   sl.registerLazySingleton(() => MarkAllNotificationsReadUseCase(sl()));
   sl.registerLazySingleton<NotificationsRepository>(
-    () => NotificationsRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
+    () =>
+        NotificationsRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
-  // Pure mock when [kUseMockData]; otherwise live-with-fallback. Singleton so
-  // the in-memory read-state persists for the session.
+  // Real backend only. Singleton so the read-state cache persists for the
+  // session.
   sl.registerLazySingleton<NotificationsRemoteDataSource>(
-    () => kUseMockData
-        ? FakeNotificationsRemoteDataSource()
-        : FallbackNotificationsRemoteDataSource(
-            primary: NotificationsRemoteDataSourceImpl(sl()),
-            fallback: FakeNotificationsRemoteDataSource(),
-          ),
-  );
-
-  /// =========================
-  /// SEARCH FEATURE
-  /// =========================
-  sl.registerLazySingleton(() => SearchServicesUseCase(sl()));
-  sl.registerLazySingleton<SearchRepository>(
-    () => SearchRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
-  );
-  sl.registerLazySingleton<SearchRemoteDataSource>(
-    () => kUseMockData
-        ? FakeSearchRemoteDataSource()
-        : FallbackSearchRemoteDataSource(
-            primary: SearchRemoteDataSourceImpl(sl()),
-            fallback: FakeSearchRemoteDataSource(),
-          ),
+    () => NotificationsRemoteDataSourceImpl(sl()),
   );
 
   /// =========================
   /// CORE
   /// =========================
-  // Always reports "connected" so the repository guard never short-circuits to
-  // a ConnectionFailure: the data-source layer now owns the live/offline
-  // decision (live data when the backend is reachable, current data when it's
-  // not). [NetworkInfoImpl] + [InternetConnectionChecker] remain available for
-  // any feature that wants a real connectivity probe.
-  sl.registerLazySingleton<NetworkInfo>(() => _AlwaysConnectedNetworkInfo());
+  // Real connectivity probe: when the device is offline the repositories
+  // short-circuit to a [ConnectionFailure] (a proper "no internet" state)
+  // instead of hanging on a request that can't complete.
+  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
 
   /// =========================
   /// EXTERNAL
@@ -354,7 +296,8 @@ Dio _buildDio() {
       // (snackbar / fallback data source) instead of moving the user.
       onError: (DioException err, handler) {
         final isUnauthorized = err.response?.statusCode == 401;
-        final skipRedirect = err.requestOptions.extra[kSkipAuthRedirect] == true;
+        final skipRedirect =
+            err.requestOptions.extra[kSkipAuthRedirect] == true;
 
         if (isUnauthorized && !skipRedirect) {
           // The session is genuinely gone: drop it (memory + storage) and send
@@ -368,9 +311,7 @@ Dio _buildDio() {
     ),
   );
 
-  dio.interceptors.add(
-    LogInterceptor(requestBody: true, responseBody: true),
-  );
+  dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
 
   return dio;
 }
@@ -385,10 +326,4 @@ void _goToLogin() {
     return;
   }
   AppRouter.router.go(AppRouter.kLogin);
-}
-
-/// Always-connected [NetworkInfo] used only during the mock-data phase.
-class _AlwaysConnectedNetworkInfo implements NetworkInfo {
-  @override
-  Future<bool> get isConnected async => true;
 }

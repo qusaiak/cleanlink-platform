@@ -155,6 +155,6 @@ abstract class AppColor {
 
   static Color shimmerHighlightFor(Brightness brightness) =>
       brightness == Brightness.dark
-          ? shimmerHighlightColorDark
-          : shimmerHighlightColor;
+      ? shimmerHighlightColorDark
+      : shimmerHighlightColor;
 }

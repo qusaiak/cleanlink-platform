@@ -43,8 +43,7 @@ class SaveProfileField extends WorkerProfileEvent {
   });
 
   @override
-  List<Object?> get props =>
-      [fullname, email, address, phone, experienceYears];
+  List<Object?> get props => [fullname, email, address, phone, experienceYears];
 }
 
 /// Update ONLY the profile photo. The picked [image] ([XFile]) is uploaded as

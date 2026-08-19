@@ -36,7 +36,10 @@ class SkillModel extends WorkerSkill {
   /// [languageCode] is the language the payload was fetched in — it only
   /// matters for shape 1 (`name`), to decide which field the localized string
   /// belongs in. Defaults to the app's current language.
-  factory SkillModel.fromJson(Map<String, dynamic> json, {String? languageCode}) {
+  factory SkillModel.fromJson(
+    Map<String, dynamic> json, {
+    String? languageCode,
+  }) {
     final locale = languageCode ?? AppLanguageInfo.languageCode;
 
     // Shape 2 first: when the pair is present it is strictly richer than

@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -30,28 +28,24 @@ class CustomDotsIndicator extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: contents.asMap().entries.map(
-            (entry) {
-          final index = entry.key;
-          return GestureDetector(
-            onTap: () => onDotTap(index),
-            child: Container(
-              width: currentIndex != index ? width : selectedWidth,
-              height: height,
-              margin: EdgeInsets.symmetric(horizontal: spaceBetweenDots),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: AppColor.primaryColor,
-                  width: 0.5.w,
-                ),
-                shape: BoxShape.circle,
-                color:
-                currentIndex == index ? AppColor.primaryColor : Colors.transparent,
-              ),
+      children: contents.asMap().entries.map((entry) {
+        final index = entry.key;
+        return GestureDetector(
+          onTap: () => onDotTap(index),
+          child: Container(
+            width: currentIndex != index ? width : selectedWidth,
+            height: height,
+            margin: EdgeInsets.symmetric(horizontal: spaceBetweenDots),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColor.primaryColor, width: 0.5.w),
+              shape: BoxShape.circle,
+              color: currentIndex == index
+                  ? AppColor.primaryColor
+                  : Colors.transparent,
             ),
-          );
-        },
-      ).toList(),
+          ),
+        );
+      }).toList(),
     );
   }
 }

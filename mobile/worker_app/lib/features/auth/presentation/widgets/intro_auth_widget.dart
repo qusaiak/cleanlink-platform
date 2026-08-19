@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -20,9 +19,7 @@ class IntroAuthWidget extends StatelessWidget {
             width: 100.h,
             height: 100.h,
           ),
-          SizedBox(
-            height: 100.h,
-          ),
+          SizedBox(height: 100.h),
         ],
       ),
     );

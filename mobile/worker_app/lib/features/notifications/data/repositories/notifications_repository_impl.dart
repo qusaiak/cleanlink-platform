@@ -63,9 +63,9 @@ class NotificationsRepositoryImpl implements NotificationsRepository {
 
   @override
   Future<Either<Failure, Unit>> markAsRead(String id) => _guard(() async {
-        await remoteDataSource.markAsRead(id);
-        return unit;
-      });
+    await remoteDataSource.markAsRead(id);
+    return unit;
+  });
 
   @override
   Future<Either<Failure, List<AppNotification>>> markAllAsRead() =>

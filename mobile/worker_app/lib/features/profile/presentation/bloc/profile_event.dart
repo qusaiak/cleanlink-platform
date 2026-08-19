@@ -10,4 +10,3 @@ abstract class ProfileEvent extends Equatable {
 class ChangeThemeEvent extends ProfileEvent {}
 
 class ChangeLanguageEvent extends ProfileEvent {}
-

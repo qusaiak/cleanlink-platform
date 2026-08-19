@@ -46,8 +46,9 @@ class EditFieldDialog extends StatefulWidget {
 
 class _EditFieldDialogState extends State<EditFieldDialog> {
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _controller =
-      TextEditingController(text: widget.initialValue);
+  late final TextEditingController _controller = TextEditingController(
+    text: widget.initialValue,
+  );
 
   /// True once this dialog has fired a save and is awaiting the bloc's result,
   /// so it only reacts to its own request (not a stale success/failure).
@@ -103,7 +104,9 @@ class _EditFieldDialogState extends State<EditFieldDialog> {
         backgroundColor: theme.surface,
         surfaceTintColor: theme.surface,
         insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
         child: Padding(
           padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 16.h),
           child: Form(
@@ -114,7 +117,9 @@ class _EditFieldDialogState extends State<EditFieldDialog> {
               children: [
                 Text(
                   widget.title,
-                  style: Styles.textStyle16.copyWith(fontWeight: FontWeight.bold),
+                  style: Styles.textStyle16.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: 16.h),
                 AppTextField(
@@ -176,8 +181,9 @@ class _EditFieldDialogState extends State<EditFieldDialog> {
                         ),
                         buttonStyle: ElevatedButton.styleFrom(
                           backgroundColor: theme.primary,
-                          disabledBackgroundColor:
-                              theme.primary.withValues(alpha: 0.6),
+                          disabledBackgroundColor: theme.primary.withValues(
+                            alpha: 0.6,
+                          ),
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.r),

@@ -32,8 +32,9 @@ class DailyTasksModel extends DailyTasks {
       );
     }
 
-    final completed =
-        tasks.where((t) => t.status == TaskStatus.completed).length;
+    final completed = tasks
+        .where((t) => t.status == TaskStatus.completed)
+        .length;
     final remaining = tasks
         .where(
           (t) =>

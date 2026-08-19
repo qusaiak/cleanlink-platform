@@ -54,11 +54,13 @@ class TaskModel extends Task {
     // Both `GET /api/tasks` (list) and `GET /api/tasks/{id}` (detail) nest
     // `service` the same way: `order.package.service`. A top-level `service`
     // key is kept as a fallback for older/flat payloads (e.g. the mock data).
-    final service = (package['service'] as Map<String, dynamic>?) ??
+    final service =
+        (package['service'] as Map<String, dynamic>?) ??
         (json['service'] as Map<String, dynamic>?) ??
         const {};
     // The provider's photo lives under `service.company.image`.
-    final company = (service['company'] as Map<String, dynamic>?) ??
+    final company =
+        (service['company'] as Map<String, dynamic>?) ??
         (json['company'] as Map<String, dynamic>?) ??
         const {};
     final workgroup = (json['workgroup'] as Map<String, dynamic>?) ?? const {};
@@ -77,34 +79,40 @@ class TaskModel extends Task {
         : (package['details_ar'] ?? package['details']);
 
     return TaskModel(
-      // The task is addressed by its `workgroup_id` on the API: the routes
-      // `GET /api/tasks/{id}` and `POST /api/tasks/{id}/update-status` resolve
-      // the task by workgroup (see `Task::getRouteKeyName()` on the backend),
-      // because the payload never exposes the task's own primary key. Both the
-      // list and the detail responses carry `workgroup_id` at the top level.
+      // The API routes `GET /api/tasks/{task}` and
+      // `POST /api/tasks/{task}/update-status` bind by the task's OWN primary
+      // key (`Task` has no custom route key). So `json['id']` (the task id) is
+      // preferred here. As of the current backend, `TaskResource` does NOT
+      // expose that id — see the BACKEND ISSUE reported for `TaskResource`:
+      // until it is added, this falls back to `workgroup_id`, which cannot
+      // correctly resolve the task for detail/status calls.
       // (`requestNumber` below keeps the human-facing order id for display.)
-      id: (idOverride ??
-                  json['workgroup_id'] ??
+      id:
+          (idOverride ??
                   json['id'] ??
+                  json['task_id'] ??
+                  json['workgroup_id'] ??
                   json['order_id'] ??
                   order['id'])
               ?.toString() ??
           '',
-      requestNumber: (json['requestNumber'] ??
-              json['request_number'] ??
-              json['order_id'] ??
-              order['id'] ??
-              '')
-          .toString(),
+      requestNumber:
+          (json['requestNumber'] ??
+                  json['request_number'] ??
+                  json['order_id'] ??
+                  order['id'] ??
+                  '')
+              .toString(),
       title: (json['title'] ?? serviceTitle ?? '').toString(),
       serviceType: _serviceTypeFromCode(
         (json['serviceType'] ?? json['service_type'])?.toString(),
       ),
-      customerName: (json['customerName'] ??
-              json['customer_name'] ??
-              client['fullname'] ??
-              _clientLabel(order['client_id']))
-          .toString(),
+      customerName:
+          (json['customerName'] ??
+                  json['customer_name'] ??
+                  client['fullname'] ??
+                  _clientLabel(order['client_id']))
+              .toString(),
       location: (json['location'] ?? order['location'] ?? '').toString(),
       imageUrl: ApiUrlParameters.resolveImageUrl(
         (service['image'] ??
@@ -117,22 +125,22 @@ class TaskModel extends Task {
       companyImageUrl: ApiUrlParameters.resolveImageUrl(
         (company['image'] ?? '').toString(),
       ),
-      companyName: (json['companyName'] ??
-              json['company_name'] ??
-              workgroup['name'] ??
-              '')
-          .toString(),
-      packageName: (json['packageName'] ??
-              json['package_name'] ??
-              packageTitle ??
-              '')
-          .toString(),
+      companyName:
+          (json['companyName'] ??
+                  json['company_name'] ??
+                  workgroup['name'] ??
+                  '')
+              .toString(),
+      packageName:
+          (json['packageName'] ?? json['package_name'] ?? packageTitle ?? '')
+              .toString(),
       price: _toDouble(json['price'] ?? order['total_price']),
       currency: (json['currency'] ?? '\$').toString(),
-      durationLabel: (json['durationLabel'] ??
-              json['duration_label'] ??
-              _durationLabel(order['duration']))
-          .toString(),
+      durationLabel:
+          (json['durationLabel'] ??
+                  json['duration_label'] ??
+                  _durationLabel(order['duration']))
+              .toString(),
       includedItems: _stringList(
         json['includedItems'] ?? json['included_items'] ?? packageDetails,
       ),
@@ -151,7 +159,9 @@ class TaskModel extends Task {
       status: _statusFromCode((json['status'] ?? order['status'])?.toString()),
       isUrgent: json['isUrgent'] ?? json['is_urgent'] ?? false,
       details: (json['details'] ?? order['note'] ?? '').toString(),
-      requiredTools: _stringList(json['requiredTools'] ?? json['required_tools']),
+      requiredTools: _stringList(
+        json['requiredTools'] ?? json['required_tools'],
+      ),
       beforePhotos: _photoList(
         json['beforePhotos'] ?? json['before_photos'] ?? json['image_before'],
       ),
@@ -162,9 +172,15 @@ class TaskModel extends Task {
         json['serviceRating'] ?? json['service_rating'] ?? service['rating'],
       ),
       isTeamLeader: _isLeader(leader['id']),
-      leaderName: (json['leaderName'] ?? json['leader_name'] ?? leader['fullname'] ?? '')
-          .toString(),
-      leaderId: (json['leaderId'] ?? json['leader_id'] ?? leader['id'])?.toString() ?? '',
+      leaderName:
+          (json['leaderName'] ??
+                  json['leader_name'] ??
+                  leader['fullname'] ??
+                  '')
+              .toString(),
+      leaderId:
+          (json['leaderId'] ?? json['leader_id'] ?? leader['id'])?.toString() ??
+          '',
     );
   }
 

@@ -6,10 +6,7 @@ import '../../config/theme/colors.dart';
 
 enum ToastState { success, error, warning }
 
-void showToast({
-  required String text,
-  required ToastState state,
-}) =>
+void showToast({required String text, required ToastState state}) =>
     Fluttertoast.showToast(
       msg: text,
       toastLength: Toast.LENGTH_LONG,

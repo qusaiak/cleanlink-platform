@@ -69,8 +69,15 @@ class TaskInfoCard extends StatelessWidget {
             ],
           ),
           if (task.title.isNotEmpty || task.serviceRating > 0) ...[
-            Divider(height: 28.h, color: theme.onSurface.withValues(alpha: 0.08)),
-            _label(theme, Icons.cleaning_services_outlined, l.task_service_section),
+            Divider(
+              height: 28.h,
+              color: theme.onSurface.withValues(alpha: 0.08),
+            ),
+            _label(
+              theme,
+              Icons.cleaning_services_outlined,
+              l.task_service_section,
+            ),
             SizedBox(height: 8.h),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +88,9 @@ class TaskInfoCard extends StatelessWidget {
                       task.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: Styles.textStyle14.copyWith(fontWeight: FontWeight.w600),
+                      style: Styles.textStyle14.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 if (task.serviceRating > 0) ...[
@@ -92,7 +101,10 @@ class TaskInfoCard extends StatelessWidget {
             ),
           ],
           if (task.packageName.isNotEmpty || task.includedItems.isNotEmpty) ...[
-            Divider(height: 28.h, color: theme.onSurface.withValues(alpha: 0.08)),
+            Divider(
+              height: 28.h,
+              color: theme.onSurface.withValues(alpha: 0.08),
+            ),
             _label(theme, Icons.local_offer_outlined, l.task_package_label),
             SizedBox(height: 8.h),
             if (task.packageName.isNotEmpty)
@@ -215,14 +227,18 @@ class TaskInfoCard extends StatelessWidget {
                     task.leaderName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Styles.textStyle12.copyWith(color: theme.onSurfaceVariant),
+                    style: Styles.textStyle12.copyWith(
+                      color: theme.onSurfaceVariant,
+                    ),
                   ),
                 ),
                 if (task.leaderId.isNotEmpty) ...[
                   SizedBox(width: 6.w),
                   Text(
                     '#${task.leaderId}',
-                    style: Styles.textStyle12.copyWith(color: theme.onSurfaceVariant),
+                    style: Styles.textStyle12.copyWith(
+                      color: theme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ],
@@ -241,8 +257,11 @@ class TaskInfoCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.check_circle_rounded,
-              size: 18.r, color: AppColor.successColor),
+          Icon(
+            Icons.check_circle_rounded,
+            size: 18.r,
+            color: AppColor.successColor,
+          ),
           SizedBox(width: 8.w),
           Expanded(
             child: Text(
@@ -295,5 +314,4 @@ class TaskInfoCard extends StatelessWidget {
       ],
     );
   }
-
 }

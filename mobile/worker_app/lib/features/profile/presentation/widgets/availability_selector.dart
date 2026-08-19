@@ -88,8 +88,9 @@ class AvailabilitySelector extends StatelessWidget {
           color: isSelected ? ui.color.withValues(alpha: 0.08) : theme.surface,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color:
-                isSelected ? ui.color : theme.onSurface.withValues(alpha: 0.1),
+            color: isSelected
+                ? ui.color
+                : theme.onSurface.withValues(alpha: 0.1),
             width: isSelected ? 1.6 : 1,
           ),
         ),
@@ -97,11 +98,7 @@ class AvailabilitySelector extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (isUpdating)
-              SizedBox(
-                width: 14.r,
-                height: 14.r,
-                child: spinKitApp(ui.color),
-              )
+              SizedBox(width: 14.r, height: 14.r, child: spinKitApp(ui.color))
             else
               Container(
                 width: 10.w,

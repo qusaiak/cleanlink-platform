@@ -34,6 +34,11 @@ class ApiUrlParameters {
   /// bearer token saved at login; no body or query params.
   static const String authMe = '/api/auth/me';
 
+  /// PUT → change the signed-in worker's password. Body:
+  /// `{old_password, new_password, new_password_confirmation}`.
+  /// Authenticated by the bearer token the shared Dio interceptor attaches.
+  static const String changePassword = '/api/auth/change-password';
+
   /// GET → the signed-in worker's full profile including
   /// `worker_profile.skills`. Same auth mechanism as [authMe] (bearer token
   /// only); supersedes it as the profile screen's source.
@@ -50,15 +55,11 @@ class ApiUrlParameters {
   /// a task from a search result or a notification (which only carry an id).
   static String taskById(String taskId) => '/api/tasks/$taskId';
 
-  /// POST `/api/tasks/{order_id}/update-status` → advance a task's lifecycle
+  /// POST `/api/tasks/{task_id}/update-status` → advance a task's lifecycle
   /// status. Body: `{status: pending|on_way|handling|done, image_before,
   /// image_after}` — the two images may only be sent when `status` is `done`
   /// (multipart in that case; empty strings otherwise).
-  static String taskStatus(String orderId) =>
-      '/api/tasks/$orderId/update-status';
-
-  /// GET → the signed-in worker's profile.
-  static const String workerProfile = '/api/worker/profile';
+  static String taskStatus(String taskId) => '/api/tasks/$taskId/update-status';
 
   /// PUT → update the signed-in worker's profile. ALL fields are optional and
   /// only the changed ones are sent; the request body mixes the three tables:
@@ -70,15 +71,16 @@ class ApiUrlParameters {
   /// re-fetch. Authenticated by the shared Dio bearer-token interceptor.
   static const String workerProfiles = '/api/worker-profiles';
 
-  /// POST → persists an ALREADY-UPLOADED photo on the worker profile.
+  /// POST → updates the signed-in worker's profile photo via the DEDICATED
+  /// image endpoint.
   ///
-  /// JSON only — the body carries exactly one key:
-  /// `{"image": "storage\\app\\public\\task_images\\<file>.jpg"}`, whose value is
-  /// the stored path the upload step returned, sent back verbatim (no
-  /// trimming, no escaping, no backslash→slash conversion; the JSON escaping is
-  /// Dio's job). No multipart, no file bytes, no other fields.
-  /// The response carries the updated profile/image, which becomes the new
-  /// source of truth for the avatar. Bearer-token authenticated.
+  /// Multipart/form-data only — the body carries exactly one field:
+  /// `image` (the file bytes). The backend validates it as
+  /// `required|image|mimes:jpeg,png,jpg,svg|max:2048`, stores it on the
+  /// `profile_images` disk, updates `profiles.image`, and returns the full
+  /// worker with `profile` + `worker_profile` loaded (same nested shape as
+  /// `/me`), which becomes the new source of truth for the avatar.
+  /// Bearer-token authenticated.
   static const String workerProfilesUpdateImage =
       '/api/worker-profiles/update-image';
 
@@ -114,14 +116,10 @@ class ApiUrlParameters {
   /// explicitly and falls back to a `skill_ids[]=` query parameter.
   static const String detachSkills = '/api/worker/detach-skills';
 
-  /// Update the worker's status (available/offline ONLY — `busy` is set by the
-  /// system when a task is assigned and can never be sent manually).
-  ///
-  /// PLACEHOLDER — the real endpoint has not been provided yet. When it is,
-  /// set the path here (and adjust the HTTP verb in
-  /// `WorkerProfileRemoteDataSourceImpl.updateAvailability` if needed); no
-  /// other code has to change.
-  static const String workerStatusUpdate = '/api/worker-profiles/status';
+  // NOTE: there is no dedicated "worker status" endpoint on the backend.
+  // Availability (available/off) is changed through [workerProfiles]
+  // (PUT /api/worker-profiles) with a `status` field — see
+  // `WorkerProfileRemoteDataSourceImpl.updateAvailability`.
 
   /// GET → the worker's notifications feed (newest first), each item shaped
   /// `{id, title, body, is_read, created_at, data: {type, order_id, status}}`.
@@ -135,18 +133,9 @@ class ApiUrlParameters {
   static String markNotificationRead(String id) =>
       '/api/notifications/$id/mark-as-read';
 
-  /// PATCH → mark every notification read.
-  static const String markAllNotificationsRead =
-      '/api/worker/notifications/read-all';
-
-  /// GET → search services / job requests.
-  ///
-  /// Query params:
-  ///  - `mode`  → `general` (free-text across everything) or `custom`.
-  ///  - `field` → when custom: `service_name` | `client_name` | `location` |
-  ///              `time`.
-  ///  - `q`     → the search term.
-  static const String searchServices = '/api/worker/services/search';
+  /// GET → count of unread notifications: `{data: {unread_count}}`.
+  static const String notificationsUnreadCount =
+      '/api/notifications/unread-count';
 
   /// Makes a media URL coming back from the API (e.g. `service.image`,
   /// `company.image`) actually reachable from this client.

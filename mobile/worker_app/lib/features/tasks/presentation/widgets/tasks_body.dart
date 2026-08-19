@@ -147,7 +147,8 @@ class TasksBody extends StatelessWidget {
               padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 14.h),
               child: WorkerTaskCard(
                 task: task,
-                isActing: state.status == TasksStatus.actionLoading &&
+                isActing:
+                    state.status == TasksStatus.actionLoading &&
                     state.actingTaskId == task.id,
                 // Fetch the task's private detail (GET /api/tasks/{id}) and open
                 // the detail screen. A status change there writes through the
@@ -367,11 +368,7 @@ class _SkeletonTaskCard extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 8.w),
-              AppShimmerBox(
-                width: 64.w,
-                height: 20.h,
-                radius: AppRadius.pill,
-              ),
+              AppShimmerBox(width: 64.w, height: 20.h, radius: AppRadius.pill),
             ],
           ),
           SizedBox(height: 16.h),
@@ -384,17 +381,11 @@ class _SkeletonTaskCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: AppShimmerBox(
-                  height: 48.h,
-                  radius: AppRadius.sm,
-                ),
+                child: AppShimmerBox(height: 48.h, radius: AppRadius.sm),
               ),
               SizedBox(width: 12.w),
               Expanded(
-                child: AppShimmerBox(
-                  height: 48.h,
-                  radius: AppRadius.sm,
-                ),
+                child: AppShimmerBox(height: 48.h, radius: AppRadius.sm),
               ),
             ],
           ),

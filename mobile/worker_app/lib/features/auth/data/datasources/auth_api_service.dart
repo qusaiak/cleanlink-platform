@@ -9,6 +9,15 @@ abstract class AuthApiService {
   /// POST /api/auth/logout — no body; the bearer token is added by the shared
   /// Dio interceptor.
   Future<void> logout();
+
+  /// PUT /api/auth/change-password — body:
+  /// `{old_password, new_password, new_password_confirmation}`.
+  /// Authenticated by the bearer token the shared Dio interceptor attaches.
+  Future<void> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String newPasswordConfirmation,
+  });
 }
 
 class AuthApiServiceImpl implements AuthApiService {
@@ -31,16 +40,37 @@ class AuthApiServiceImpl implements AuthApiService {
     // jsonEncode, no double encoding). The email is trimmed because a trailing
     // space from the keyboard's autocomplete is a silent 422; the password
     // never is — whitespace can be part of it.
-    final response = await _postWithRetry(
-      ApiUrlParameters.login,
-      {'email': email.trim(), 'password': password},
-    );
+    final response = await _postWithRetry(ApiUrlParameters.login, {
+      'email': email.trim(),
+      'password': password,
+    });
     return LoginModel.fromResponse(response);
   }
 
   @override
   Future<void> logout() async {
     await dio.post(ApiUrlParameters.logout);
+  }
+
+  @override
+  Future<void> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String newPasswordConfirmation,
+  }) async {
+    await dio.put(
+      ApiUrlParameters.changePassword,
+      data: {
+        'old_password': oldPassword,
+        'new_password': newPassword,
+        'new_password_confirmation': newPasswordConfirmation,
+      },
+      options: Options(
+        contentType: Headers.jsonContentType,
+        responseType: ResponseType.json,
+        headers: const {'Accept': 'application/json'},
+      ),
+    );
   }
 
   /// POSTs [data] to [path], retrying with a short linear backoff while the

@@ -75,9 +75,9 @@ class _NotificationsView extends StatelessWidget {
             return RefreshIndicator(
               // Silent: the RefreshIndicator is already the loading signal —
               // no need to swap the list for the skeleton.
-              onRefresh: () async => context
-                  .read<NotificationsBloc>()
-                  .add(const LoadNotifications(silent: true)),
+              onRefresh: () async => context.read<NotificationsBloc>().add(
+                const LoadNotifications(silent: true),
+              ),
               child: ListView.separated(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
@@ -89,18 +89,18 @@ class _NotificationsView extends StatelessWidget {
                   return NotificationTile(
                     notification: n,
                     isMarkingRead: state.markingReadIds.contains(n.id),
-                    onMarkRead: () => context
-                        .read<NotificationsBloc>()
-                        .add(MarkNotificationRead(n.id)),
+                    onMarkRead: () => context.read<NotificationsBloc>().add(
+                      MarkNotificationRead(n.id),
+                    ),
                     // Tapping marks it read and opens the linked task's detail,
                     // through the same entry point FCM taps use. Only task
                     // notifications (those carrying an order id) are tappable.
                     onTap: orderId == null || orderId.isEmpty
                         ? null
                         : () {
-                            context
-                                .read<NotificationsBloc>()
-                                .add(MarkNotificationRead(n.id));
+                            context.read<NotificationsBloc>().add(
+                              MarkNotificationRead(n.id),
+                            );
                             NotificationService.instance
                                 .openTaskFromNotification(orderId);
                           },
@@ -183,8 +183,7 @@ class _NotificationsView extends StatelessWidget {
             Text(
               l.notifications_empty_subtitle,
               textAlign: TextAlign.center,
-              style:
-                  Styles.textStyle12.copyWith(color: theme.onSurfaceVariant),
+              style: Styles.textStyle12.copyWith(color: theme.onSurfaceVariant),
             ),
           ],
         ),
@@ -204,17 +203,16 @@ class _NotificationsView extends StatelessWidget {
             Text(
               l.notifications_load_failed,
               textAlign: TextAlign.center,
-              style:
-                  Styles.textStyle14.copyWith(color: theme.onSurfaceVariant),
+              style: Styles.textStyle14.copyWith(color: theme.onSurfaceVariant),
             ),
             SizedBox(height: 20.h),
             CustomElevatedButton(
               text: l.retry,
               width: 160.w,
               height: 46.h,
-              onPressed: () => context
-                  .read<NotificationsBloc>()
-                  .add(const LoadNotifications()),
+              onPressed: () => context.read<NotificationsBloc>().add(
+                const LoadNotifications(),
+              ),
               buttonTextStyle: Styles.textStyle14.copyWith(
                 color: theme.onPrimary,
                 fontWeight: FontWeight.w600,
@@ -222,9 +220,7 @@ class _NotificationsView extends StatelessWidget {
               buttonStyle: ElevatedButton.styleFrom(
                 backgroundColor: theme.primary,
                 elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: AppRadius.button,
-                ),
+                shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
               ),
             ),
           ],

@@ -91,7 +91,10 @@ class ServerFailure extends Failure {
         '(address=${underlying.address?.host}:${underlying.port}, '
         'osError=${underlying.osError})',
       );
-      return const ServerFailure('No Internet Connection', ErrorCode.noInternet);
+      return const ServerFailure(
+        'No Internet Connection',
+        ErrorCode.noInternet,
+      );
     }
     if (underlying is HandshakeException) {
       // TLS negotiation failed — a self-signed/expired certificate, or an
@@ -114,8 +117,10 @@ class ServerFailure extends Failure {
     if (underlying is FormatException) {
       // The server answered but the body was unreadable — log the raw payload,
       // never crash on it.
-      log('DioException wraps FormatException: ${underlying.message} '
-          '→ ${e.response?.data}');
+      log(
+        'DioException wraps FormatException: ${underlying.message} '
+        '→ ${e.response?.data}',
+      );
       return ServerFailure(
         parseApiError(e.response?.data),
         ErrorCode.badResponseFormat,
@@ -183,7 +188,7 @@ class ServerFailure extends Failure {
   factory ServerFailure.fromResponse(dynamic response, {int? statusCode}) {
     final code = response is Map
         ? (response['ErrorCode'] ?? response['status'] ?? statusCode)
-              ?.toString() ??
+                  ?.toString() ??
               ''
         : statusCode?.toString() ?? '';
 

@@ -85,6 +85,8 @@
   "auth_change_password_title": "تغيير كلمة المرور",
   "auth_change_password_subtitle": "حدّث كلمة المرور للحفاظ على حسابك آمناً",
   "auth_update_password": "تحديث كلمة المرور",
+  "password_changed_successfully": "تم تغيير كلمة المرور بنجاح",
+  "account": "الحساب",
   "auth_full_name": "الاسم الكامل",
   "auth_full_name_hint": "أدخل اسمك الكامل",
   "auth_gender": "الجنس",

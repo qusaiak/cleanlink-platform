@@ -64,12 +64,15 @@ class TasksRepositoryImpl implements TasksRepository {
       for (final t in daily.tasks)
         t.id == updated.id ? _mergeStatus(t, updated) : t,
     ];
-    final completed =
-        tasks.where((t) => t.status == TaskStatus.completed).length;
+    final completed = tasks
+        .where((t) => t.status == TaskStatus.completed)
+        .length;
     final remaining = tasks
-        .where((t) =>
-            t.status != TaskStatus.completed &&
-            t.status != TaskStatus.cancelled)
+        .where(
+          (t) =>
+              t.status != TaskStatus.completed &&
+              t.status != TaskStatus.cancelled,
+        )
         .length;
     return DailyTasks(
       stats: TaskStats(
@@ -87,11 +90,10 @@ class TasksRepositoryImpl implements TasksRepository {
   /// (notably the client name). Empty photo lists from the response are treated
   /// as "unchanged" so existing photos are never dropped.
   Task _mergeStatus(Task existing, Task updated) => existing.copyWith(
-        status: updated.status,
-        beforePhotos:
-            updated.beforePhotos.isEmpty ? null : updated.beforePhotos,
-        afterPhotos: updated.afterPhotos.isEmpty ? null : updated.afterPhotos,
-      );
+    status: updated.status,
+    beforePhotos: updated.beforePhotos.isEmpty ? null : updated.beforePhotos,
+    afterPhotos: updated.afterPhotos.isEmpty ? null : updated.afterPhotos,
+  );
 
   /// Shared guard that runs [action] only when online and maps thrown errors
   /// to the appropriate [Failure].

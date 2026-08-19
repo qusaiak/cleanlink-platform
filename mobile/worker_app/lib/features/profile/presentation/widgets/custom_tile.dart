@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -49,12 +48,16 @@ class CustomTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Styles.textStyle12.copyWith(color: colorScheme.onSurface),
+                    style: Styles.textStyle12.copyWith(
+                      color: colorScheme.onSurface,
+                    ),
                   ),
                   if (subtitle != null)
                     Text(
                       subtitle!,
-                      style: Styles.textStyle11.copyWith(color: colorScheme.onSurfaceVariant),
+                      style: Styles.textStyle11.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                     ),
                 ],
               ),

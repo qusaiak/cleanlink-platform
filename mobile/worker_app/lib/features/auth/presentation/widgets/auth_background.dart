@@ -15,9 +15,7 @@ class AuthBackground extends StatelessWidget {
       backgroundColor: isDark
           ? AppColor.backgroundColorDark
           : AppColor.backgroundColorLight,
-      body: SafeArea(
-        child: child,
-      ),
+      body: SafeArea(child: child),
     );
   }
 }

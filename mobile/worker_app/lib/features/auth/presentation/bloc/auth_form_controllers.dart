@@ -18,7 +18,8 @@ class AuthFormControllers {
   final TextEditingController registerPhone = TextEditingController();
   final TextEditingController registerPassword = TextEditingController();
   final TextEditingController registerConfirmPassword = TextEditingController();
-  final TextEditingController registerBirthDateDisplay = TextEditingController();
+  final TextEditingController registerBirthDateDisplay =
+      TextEditingController();
   final FocusNode registerNameFocus = FocusNode();
   final FocusNode registerPhoneFocus = FocusNode();
   final FocusNode registerPasswordFocus = FocusNode();

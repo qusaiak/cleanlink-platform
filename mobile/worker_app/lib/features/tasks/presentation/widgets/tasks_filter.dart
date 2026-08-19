@@ -46,7 +46,11 @@ class TasksSectionHeader extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
             child: Row(
               children: [
-                Icon(Icons.filter_list_rounded, size: 18.r, color: theme.primary),
+                Icon(
+                  Icons.filter_list_rounded,
+                  size: 18.r,
+                  color: theme.primary,
+                ),
                 SizedBox(width: 4.w),
                 Text(
                   l.tasks_filter,

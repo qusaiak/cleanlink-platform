@@ -40,10 +40,12 @@ class TaskDetailState extends Equatable {
   }) {
     return TaskDetailState(
       task: task ?? this.task,
-      newBeforePhotos:
-          clearNewPhotos ? const [] : (newBeforePhotos ?? this.newBeforePhotos),
-      newAfterPhotos:
-          clearNewPhotos ? const [] : (newAfterPhotos ?? this.newAfterPhotos),
+      newBeforePhotos: clearNewPhotos
+          ? const []
+          : (newBeforePhotos ?? this.newBeforePhotos),
+      newAfterPhotos: clearNewPhotos
+          ? const []
+          : (newAfterPhotos ?? this.newAfterPhotos),
       status: status ?? this.status,
       // Error is intentionally not carried over: it's only set on failure.
       error: error,

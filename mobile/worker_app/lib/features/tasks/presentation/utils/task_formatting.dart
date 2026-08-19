@@ -13,13 +13,33 @@ String formatTaskTime(DateTime dt) {
 }
 
 const List<String> _enMonths = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ];
 
 const List<String> _arMonths = [
-  'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
-  'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر',
+  'يناير',
+  'فبراير',
+  'مارس',
+  'أبريل',
+  'مايو',
+  'يونيو',
+  'يوليو',
+  'أغسطس',
+  'سبتمبر',
+  'أكتوبر',
+  'نوفمبر',
+  'ديسمبر',
 ];
 
 /// Formats a [DateTime] as `day month-name year` using localized month names,
@@ -32,7 +52,8 @@ String formatTaskDate(DateTime dt, String localeCode) {
 /// Formats a booking [price] with its [currency] symbol, dropping a trailing
 /// ".0" so whole amounts read "$75" rather than "$75.0".
 String formatTaskPrice(double price, String currency) {
-  final amount =
-      price == price.roundToDouble() ? price.toStringAsFixed(0) : price.toString();
+  final amount = price == price.roundToDouble()
+      ? price.toStringAsFixed(0)
+      : price.toString();
   return '$currency$amount';
 }

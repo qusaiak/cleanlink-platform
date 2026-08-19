@@ -9,21 +9,21 @@ part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc()
-      : super(
-    ProfileState(
-      status: ProfileStatus.initial,
-      isLight: AppThemeInfo.isLight,
-      languageCode: AppLanguageInfo.languageCode,
-    ),
-  ) {
+    : super(
+        ProfileState(
+          status: ProfileStatus.initial,
+          isLight: AppThemeInfo.isLight,
+          languageCode: AppLanguageInfo.languageCode,
+        ),
+      ) {
     on<ChangeThemeEvent>(_onChangeTheme);
     on<ChangeLanguageEvent>(_onChangeLanguage);
   }
 
   Future<void> _onChangeTheme(
-      ChangeThemeEvent event,
-      Emitter<ProfileState> emit,
-      ) async {
+    ChangeThemeEvent event,
+    Emitter<ProfileState> emit,
+  ) async {
     await AppThemeInfo.toggleTheme();
 
     emit(
@@ -35,9 +35,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   Future<void> _onChangeLanguage(
-      ChangeLanguageEvent event,
-      Emitter<ProfileState> emit,
-      ) async {
+    ChangeLanguageEvent event,
+    Emitter<ProfileState> emit,
+  ) async {
     String languageCode = AppLanguageInfo.languageCode;
 
     languageCode = languageCode == "en" ? "ar" : "en";
@@ -60,5 +60,4 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       ),
     );
   }
-
 }

@@ -62,8 +62,9 @@ Future<Task?> openTaskById(
     (failure) async {
       showAppSnackBar(
         context,
-        message:
-            failure.message.isNotEmpty ? failure.message : l.task_open_failed,
+        message: failure.message.isNotEmpty
+            ? failure.message
+            : l.task_open_failed,
         type: SnackBarType.error,
       );
       return null;

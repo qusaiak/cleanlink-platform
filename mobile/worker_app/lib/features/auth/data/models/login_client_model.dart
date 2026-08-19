@@ -69,8 +69,8 @@ class LoginModel extends LoginEntity {
       phone: profile['phone']?.toString(),
       // The token also gets read from the outer object, for the shape where the
       // envelope carries it next to `user`.
-      accessToken:
-          (data['access_token'] ?? json['access_token'] ?? '').toString(),
+      accessToken: (data['access_token'] ?? json['access_token'] ?? '')
+          .toString(),
     );
   }
 

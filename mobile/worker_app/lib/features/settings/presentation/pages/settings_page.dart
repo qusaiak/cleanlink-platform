@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../core/widgets/custom_appbar.dart';
 import '../../../../core/widgets/custom_dialog.dart';
@@ -78,6 +80,24 @@ class SettingsPage extends StatelessWidget {
                             size: 15,
                           ),
                         ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16.h),
+                SectionCard(
+                  title: l.account,
+                  children: [
+                    // Change password — opens the dedicated change-password
+                    // screen (PUT /api/auth/change-password).
+                    CustomTile(
+                      icon: Icons.lock_outline_rounded,
+                      title: l.auth_change_password_title,
+                      onTap: () => context.push(AppRouter.kChangePassword),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        color: theme.primary,
+                        size: 15,
                       ),
                     ),
                   ],
