@@ -37,7 +37,6 @@ class CustomPinPut extends StatelessWidget {
   }
 }
 
-// ignore: strict_top_level_inference
 AppBar appbarWithBackButton(context, theme) {
   return AppBar(
     elevation: 0,
@@ -48,31 +47,3 @@ AppBar appbarWithBackButton(context, theme) {
   );
 }
 
-// ignore: strict_top_level_inference
-// Widget radioListTitle(theme, context, value, selectedValue, title) {
-//   return Row(
-//     children: [
-//       Radio(
-//         value: value,
-//         groupValue: selectedValue,
-//         onChanged: (val) {
-//           BlocProvider.of<AuthBloc>(context).add(SelectGender(value));
-//         },
-//         activeColor: theme.primary,
-//         fillColor: WidgetStateProperty.resolveWith(
-//               (states) {
-//             if (states.contains(WidgetState.selected)) {
-//               return theme.primary;
-//             }
-//             return Colors.grey;
-//           },
-//         ),
-
-//       ),
-//       Text(
-//         title,
-//         style: Styles.textStyle14.copyWith(color: theme.onSurface),
-//       ),
-//     ],
-//   );
-// }

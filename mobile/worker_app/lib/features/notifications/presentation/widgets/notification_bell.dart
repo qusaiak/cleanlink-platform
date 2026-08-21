@@ -6,11 +6,6 @@ import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/colors.dart';
 import '../bloc/notifications_bloc.dart';
 
-/// The top-bar notifications button: a bell with a live unread badge driven by
-/// [NotificationsBloc]. Tapping it calls [onTap] (navigates to the feed).
-///
-/// Must be placed under a [NotificationsBloc] provider (supplied at the
-/// tasks-screen level).
 class NotificationBell extends StatelessWidget {
   final VoidCallback onTap;
 

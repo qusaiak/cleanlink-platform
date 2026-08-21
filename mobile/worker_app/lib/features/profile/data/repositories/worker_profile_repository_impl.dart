@@ -8,8 +8,6 @@ import '../../domain/entities/worker_profile.dart';
 import '../../domain/repositories/worker_profile_repository.dart';
 import '../datasources/worker_profile_remote_data_source.dart';
 
-/// Concrete [WorkerProfileRepository]: connectivity guard + Dio→Failure mapping,
-/// mirroring `TasksRepositoryImpl`.
 class WorkerProfileRepositoryImpl implements WorkerProfileRepository {
   final WorkerProfileRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;

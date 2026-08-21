@@ -1,9 +1,5 @@
 part of 'tasks_bloc.dart';
 
-/// High-level state of the daily-tasks screen.
-///
-/// The `action*` values are transient and used to drive snackbars from a
-/// `BlocListener` after a worker action, without losing the loaded list.
 enum TasksStatus {
   initial,
   loading,
@@ -14,47 +10,63 @@ enum TasksStatus {
   actionFailure,
 }
 
-/// Which worker action produced an [TasksStatus.actionSuccess]/`actionFailure`,
-/// so the UI picks the correct localized message. [onWay] = heading to the
-/// location, [start] = starting the handling step.
-enum TaskActionType { onWay, start, complete, cancel, accept, updateStatus }
+enum SummaryStatus { initial, loading, loaded, error }
+
+enum TaskActionType { onWay, start, complete, accept, updateStatus }
 
 class TasksState extends Equatable {
   final TasksStatus status;
   final DailyTasks? daily;
+  final TodayTaskSummary? summary;
+  final SummaryStatus summaryStatus;
+  final Failure? summaryError;
 
-  /// Active status filter; `null` means "show all".
   final TaskStatus? filter;
   final Failure? error;
 
-  /// The last action and the task it targeted (for the snackbar + per-card
-  /// loading spinner).
   final TaskActionType? lastAction;
   final String? actingTaskId;
 
   const TasksState({
     this.status = TasksStatus.initial,
     this.daily,
+    this.summary,
+    this.summaryStatus = SummaryStatus.initial,
+    this.summaryError,
     this.filter,
     this.error,
     this.lastAction,
     this.actingTaskId,
   });
 
-  /// Tasks after applying [filter] (all of them when [filter] is null).
   List<Task> get visibleTasks {
     final all = daily?.tasks ?? const <Task>[];
-    if (filter == null) return all;
-    return all.where((t) => t.status == filter).toList();
+    final visible = filter == null
+        ? List<Task>.from(all)
+        : all.where((task) => task.status == filter).toList();
+    visible.sort((a, b) {
+      if (filter == TaskStatus.completed) {
+        return b.scheduledAt.compareTo(a.scheduledAt);
+      }
+      if (filter == null && a.status != b.status) {
+        return TaskStatusProgression.sequence
+            .indexOf(a.status)
+            .compareTo(TaskStatusProgression.sequence.indexOf(b.status));
+      }
+      return a.scheduledAt.compareTo(b.scheduledAt);
+    });
+    return visible;
   }
 
-  // Sentinel so copyWith can distinguish "leave filter unchanged" from
-  // "set filter to null (= all)".
   static const Object _undefined = Object();
 
   TasksState copyWith({
     TasksStatus? status,
     DailyTasks? daily,
+    TodayTaskSummary? summary,
+    SummaryStatus? summaryStatus,
+    Failure? summaryError,
+    bool clearSummaryError = false,
     Object? filter = _undefined,
     Failure? error,
     TaskActionType? lastAction,
@@ -63,6 +75,11 @@ class TasksState extends Equatable {
     return TasksState(
       status: status ?? this.status,
       daily: daily ?? this.daily,
+      summary: summary ?? this.summary,
+      summaryStatus: summaryStatus ?? this.summaryStatus,
+      summaryError: clearSummaryError
+          ? null
+          : (summaryError ?? this.summaryError),
       filter: filter == _undefined ? this.filter : filter as TaskStatus?,
       error: error ?? this.error,
       lastAction: lastAction ?? this.lastAction,
@@ -74,6 +91,9 @@ class TasksState extends Equatable {
   List<Object?> get props => [
     status,
     daily,
+    summary,
+    summaryStatus,
+    summaryError,
     filter,
     error,
     lastAction,

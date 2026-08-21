@@ -11,14 +11,6 @@ import '../../../../core/widgets/custom_outlined_button.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../bloc/worker_profile_bloc.dart';
 
-/// A dialog that edits a single profile field and saves it through
-/// [WorkerProfileBloc].
-///
-/// It dispatches the event returned by [buildEvent], then watches the bloc: the
-/// Save button shows a spinner and is disabled while the request is in flight,
-/// the dialog closes on success, and any server (validation) error is shown
-/// inline so the worker can correct and retry. Cancelling / leaving the value
-/// unchanged closes without a round-trip.
 class EditFieldDialog extends StatefulWidget {
   final String title;
   final String label;
@@ -26,8 +18,6 @@ class EditFieldDialog extends StatefulWidget {
   final TextInputType keyboardType;
   final FormFieldValidator<String>? validator;
 
-  /// Builds the [SaveProfileField] event from the entered value (e.g.
-  /// `(v) => SaveProfileField(email: v)`).
   final SaveProfileField Function(String value) buildEvent;
 
   const EditFieldDialog({
@@ -50,8 +40,6 @@ class _EditFieldDialogState extends State<EditFieldDialog> {
     text: widget.initialValue,
   );
 
-  /// True once this dialog has fired a save and is awaiting the bloc's result,
-  /// so it only reacts to its own request (not a stale success/failure).
   bool _submitting = false;
   String? _serverError;
 
@@ -65,7 +53,7 @@ class _EditFieldDialogState extends State<EditFieldDialog> {
     if (_submitting) return;
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final value = _controller.text.trim();
-    // Treat "no change" as a cancel so we don't fire a needless save.
+
     if (value == widget.initialValue.trim()) {
       Navigator.of(context).pop();
       return;
@@ -82,9 +70,6 @@ class _EditFieldDialogState extends State<EditFieldDialog> {
     final theme = Theme.of(context).colorScheme;
     final l = AppLocalizations.of(context)!;
 
-    // Use a plain [Dialog] (not [AlertDialog]): AlertDialog wraps its content in
-    // an IntrinsicWidth, and a Row with Expanded children can't report an
-    // intrinsic width — which previously crashed this dialog during paint.
     return BlocListener<WorkerProfileBloc, WorkerProfileState>(
       listenWhen: (prev, curr) =>
           curr.status == WorkerProfileStatus.saveFieldSuccess ||
@@ -145,7 +130,7 @@ class _EditFieldDialogState extends State<EditFieldDialog> {
                       child: CustomOutlinedButton(
                         text: l.cancel,
                         height: 44.h,
-                        // Block cancel mid-request to avoid a dangling save.
+
                         isDisabled: _submitting,
                         onPressed: () => Navigator.of(context).pop(),
                         buttonTextStyle: Styles.textStyle14.copyWith(
@@ -165,7 +150,7 @@ class _EditFieldDialogState extends State<EditFieldDialog> {
                       child: CustomElevatedButton(
                         text: l.save,
                         height: 44.h,
-                        // Disabled + spinner on the button while in flight.
+
                         isDisabled: _submitting,
                         onPressed: _save,
                         leftIcon: _submitting
@@ -202,8 +187,6 @@ class _EditFieldDialogState extends State<EditFieldDialog> {
   }
 }
 
-/// Shows an [EditFieldDialog] wired to [bloc]. Resolves when the dialog closes
-/// (after a successful save, or a cancel).
 Future<void> showEditFieldDialog(
   BuildContext context, {
   required WorkerProfileBloc bloc,
@@ -217,8 +200,7 @@ Future<void> showEditFieldDialog(
   return showDialog<void>(
     context: context,
     barrierDismissible: false,
-    // The dialog lives in the root overlay, outside the page's provider, so the
-    // bloc is supplied explicitly.
+
     builder: (_) => BlocProvider.value(
       value: bloc,
       child: EditFieldDialog(

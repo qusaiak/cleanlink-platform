@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Centralised validators used across the whole app.
 class AppValidators {
   const AppValidators._();
 
@@ -91,7 +90,6 @@ class AppValidators {
   }
 }
 
-/// Computes a password strength score [0..1] using length and character classes.
 class PasswordStrength {
   const PasswordStrength._();
 

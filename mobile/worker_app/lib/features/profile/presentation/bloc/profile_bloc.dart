@@ -44,14 +44,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     await AppLanguageInfo.setLanguageCode(languageCode);
 
-    // Re-register the FCM token so the backend localises push notifications to
-    // the new language. Fire-and-forget; no-ops when not logged in.
     NotificationService.instance.registerToken();
-
-    // sl<ClientWrapper>().updateHeader(
-    //   HttpHeader.acceptLanguage,
-    //   languageCode.toUpperCase(),
-    // );
 
     emit(
       state.copyWith(

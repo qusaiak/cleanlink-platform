@@ -12,25 +12,15 @@ import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/worker_profile.dart';
 import 'worker_availability_ui.dart';
 
-/// Avatar (with verified badge), name and role at the top of the profile.
-/// [onEditPhoto] / [onEditName] hang an edit affordance on the photo (camera
-/// badge on the avatar) and the name (pencil beside it).
 class WorkerProfileHeader extends StatelessWidget {
   final WorkerProfile profile;
 
-  /// The status shown in the UI (busy-aware). Drives only the avatar ring
-  /// colour; falls back to the profile's base availability when not provided.
   final WorkerAvailability? effectiveAvailability;
   final VoidCallback? onEditPhoto;
   final VoidCallback? onEditName;
 
-  /// A just-picked photo ([XFile]), shown as an optimistic preview in place of
-  /// the network avatar while it uploads. Null when nothing is being uploaded
-  /// (the saved network image is shown instead).
   final XFile? previewImage;
 
-  /// Whether the [previewImage] is currently uploading — overlays a spinner
-  /// on the preview.
   final bool uploadingPhoto;
 
   const WorkerProfileHeader({
@@ -47,7 +37,7 @@ class WorkerProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
     final l = AppLocalizations.of(context)!;
-    // The avatar ring reflects the worker's current (busy-aware) status colour.
+
     final ringColor = WorkerAvailabilityUi.of(
       context,
       effectiveAvailability ?? profile.availability,
@@ -84,7 +74,7 @@ class WorkerProfileHeader extends StatelessWidget {
                   ),
                 ),
               ),
-            // Edit-photo badge — opens the camera/gallery picker.
+
             if (onEditPhoto != null)
               PositionedDirectional(
                 end: 0,
@@ -111,9 +101,7 @@ class WorkerProfileHeader extends StatelessWidget {
           ],
         ),
         SizedBox(height: 12.h),
-        // Name + edit pencil. The status badge that used to sit beside the
-        // name was removed — status now lives only in its own "Current status"
-        // section below.
+
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -125,7 +113,7 @@ class WorkerProfileHeader extends StatelessWidget {
               ),
             ),
             SizedBox(width: 8.w),
-            // Edit-name pencil.
+
             if (onEditName != null)
               IconButton(
                 onPressed: onEditName,
@@ -140,20 +128,10 @@ class WorkerProfileHeader extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         _roleBadge(theme, l),
-        // Text(
-        //   profile.role,
-        //   style: Styles.textStyle12.copyWith(color: theme.onSurfaceVariant),
-        // ),
       ],
     );
   }
 
-  /// The circular avatar image. Shows the just-picked file (with a spinner
-  /// while it uploads) when [previewImage] is set, otherwise the saved network
-  /// avatar. Sized to match [NetworkAvatar]'s 48.r radius.
-  ///
-  /// The preview is rendered from the [XFile]'s bytes ([Image.memory]) rather
-  /// than a `dart:io` File, so it works on web as well as mobile.
   Widget _avatar(ColorScheme theme) {
     if (previewImage == null) {
       return NetworkAvatar(
@@ -193,9 +171,6 @@ class WorkerProfileHeader extends StatelessWidget {
     );
   }
 
-  /// Localized "Worker" pill — every account on this app is a worker, so the
-  /// role under the name is always "Worker"; whether they lead a team is
-  /// shown separately in the leader-status row of the info card.
   Widget _roleBadge(ColorScheme theme, AppLocalizations l) {
     final color = theme.primary;
     return Container(

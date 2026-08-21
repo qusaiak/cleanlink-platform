@@ -447,6 +447,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tasks_remaining_today => 'Remaining Today';
 
   @override
+  String get tasks_pending_today => 'Pending Today';
+
+  @override
   String get tasks_completed_label => 'Completed Tasks';
 
   @override
@@ -592,6 +595,89 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get task_leader_no => 'No';
+
+  @override
+  String get task_schedule_section => 'Schedule';
+
+  @override
+  String get task_expected_end => 'Expected end';
+
+  @override
+  String get task_travel_buffer => 'Travel buffer';
+
+  @override
+  String minutes_value(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get task_client_section => 'Client';
+
+  @override
+  String get task_team_section => 'Team';
+
+  @override
+  String get task_team_member => 'Team member';
+
+  @override
+  String get task_you_badge => 'You';
+
+  @override
+  String get task_leader_badge => 'Leader';
+
+  @override
+  String get task_payment_section => 'Payment';
+
+  @override
+  String get task_payment_method => 'Method';
+
+  @override
+  String get task_payment_status => 'Status';
+
+  @override
+  String get payment_method_manual => 'Cash';
+
+  @override
+  String get payment_method_electric => 'Electronic payment';
+
+  @override
+  String get payment_status_pending => 'Pending';
+
+  @override
+  String get payment_status_held => 'Authorized';
+
+  @override
+  String get payment_status_paid => 'Paid';
+
+  @override
+  String get payment_status_captured => 'Captured';
+
+  @override
+  String get payment_status_failed => 'Failed';
+
+  @override
+  String get task_notes_section => 'Notes';
+
+  @override
+  String get task_location_section => 'Location';
+
+  @override
+  String get task_view_map => 'View map';
+
+  @override
+  String get task_navigate => 'Navigate';
+
+  @override
+  String get task_map_unavailable => 'Map coordinates are unavailable';
+
+  @override
+  String get task_service_details => 'Service & package';
+
+  @override
+  String get task_minimum_workers => 'Minimum workers';
+
+  @override
+  String get today_summary_unavailable => 'Today\'s summary is unavailable';
 
   @override
   String get visual_documentation => 'Visual Documentation';

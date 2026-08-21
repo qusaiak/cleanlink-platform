@@ -1,3 +1,6 @@
+import java.util.Properties
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -6,6 +9,23 @@ plugins {
     // Reads google-services.json to configure Firebase (FCM).
     id("com.google.gms.google-services")
 }
+
+val envProperties = Properties()
+// `rootProject` is the Android subproject. Resolve from its directory
+// explicitly so Gradle always reads the Flutter project's local config.
+val envFile = rootProject.projectDir.parentFile.resolve(".env")
+
+if (envFile.exists()) {
+    envFile.inputStream().use { input ->
+        envProperties.load(input)
+    }
+}
+
+val mapsApiKey = envProperties
+    .getProperty("GOOGLE_MAPS_API_KEY", "")
+    .trim()
+    .removeSurrounding("\"")
+    .removeSurrounding("'")
 
 android {
     namespace = "com.example.worker_app"
@@ -19,10 +39,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
-    }
-
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.worker_app"
@@ -32,6 +48,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {
@@ -40,6 +57,12 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 

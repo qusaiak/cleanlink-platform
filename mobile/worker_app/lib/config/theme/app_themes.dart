@@ -218,9 +218,7 @@ ThemeData darkTheme() {
       dragHandleColor: AppColor.gray600,
       shape: RoundedRectangleBorder(borderRadius: AppRadius.sheet),
     ),
-    // Inverse surface (light-on-dark), mirroring the light theme's
-    // dark-on-light snackbar so it still pops as a floating toast instead of
-    // blending into the surrounding dark screen.
+
     snackBarTheme: SnackBarThemeData(
       backgroundColor: AppColor.gray200,
       contentTextStyle: Styles.textStyle14.copyWith(color: AppColor.gray900),
@@ -293,18 +291,11 @@ ThemeData darkTheme() {
 
 AppBarTheme appBarLightTheme() {
   return AppBarTheme(
-    backgroundColor: AppColor.surfaceLight,
-    foregroundColor: AppColor.onSurfaceLight,
+    backgroundColor: AppColor.backgroundColorLight,
+    foregroundColor: Colors.black,
     elevation: 0,
-    scrolledUnderElevation: 3,
-    shadowColor: AppColor.primaryColorDarker.withValues(alpha: 0.10),
-    surfaceTintColor: Colors.transparent,
     centerTitle: false,
-    iconTheme: const IconThemeData(color: AppColor.primaryColor, size: 22),
-    actionsIconTheme: const IconThemeData(
-      color: AppColor.primaryColor,
-      size: 22,
-    ),
+    iconTheme: const IconThemeData(color: AppColor.primaryColor),
     titleTextStyle: Styles.textStyle18.copyWith(
       color: AppColor.primaryColor,
       fontWeight: FontWeight.bold,
@@ -315,23 +306,13 @@ AppBarTheme appBarLightTheme() {
 
 AppBarTheme appBarDarkTheme() {
   return AppBarTheme(
-    backgroundColor: AppColor.surfaceContainerHighDark,
-    foregroundColor: AppColor.onSurfaceDark,
+    backgroundColor: AppColor.backgroundColorDark,
+    foregroundColor: Colors.black,
     elevation: 0,
-    scrolledUnderElevation: 3,
-    shadowColor: Colors.black.withValues(alpha: 0.4),
-    surfaceTintColor: Colors.transparent,
     centerTitle: false,
-    iconTheme: const IconThemeData(
-      color: AppColor.primaryColorLighter,
-      size: 22,
-    ),
-    actionsIconTheme: const IconThemeData(
-      color: AppColor.primaryColorLighter,
-      size: 22,
-    ),
+    iconTheme: const IconThemeData(color: Colors.white),
     titleTextStyle: Styles.textStyle18.copyWith(
-      color: AppColor.primaryColorLighter,
+      color: AppColor.onSurfaceDark,
       fontWeight: FontWeight.bold,
       fontFamily: AppLanguageInfo.isEn ? FontFamily.poppins : FontFamily.cairo,
     ),

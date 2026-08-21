@@ -6,13 +6,8 @@ import '../models/login_client_model.dart';
 abstract class AuthApiService {
   Future<LoginModel> login({required String email, required String password});
 
-  /// POST /api/auth/logout — no body; the bearer token is added by the shared
-  /// Dio interceptor.
   Future<void> logout();
 
-  /// PUT /api/auth/change-password — body:
-  /// `{old_password, new_password, new_password_confirmation}`.
-  /// Authenticated by the bearer token the shared Dio interceptor attaches.
   Future<void> changePassword({
     required String oldPassword,
     required String newPassword,
@@ -25,9 +20,6 @@ class AuthApiServiceImpl implements AuthApiService {
 
   AuthApiServiceImpl(this.dio);
 
-  /// How many extra attempts a login gets when the FIRST one fails purely for
-  /// transport reasons (cold server / cold socket). Credentials errors, 4xx and
-  /// 5xx are never retried — only transport failures are.
   static const int _maxRetries = 2;
 
   @override
@@ -35,11 +27,6 @@ class AuthApiServiceImpl implements AuthApiService {
     required String email,
     required String password,
   }) async {
-    // Exactly the two keys the API expects, lower-case snake-free names, sent
-    // as a Dart map so Dio JSON-encodes the body itself (no hand-rolled
-    // jsonEncode, no double encoding). The email is trimmed because a trailing
-    // space from the keyboard's autocomplete is a silent 422; the password
-    // never is — whitespace can be part of it.
     final response = await _postWithRetry(ApiUrlParameters.login, {
       'email': email.trim(),
       'password': password,
@@ -73,13 +60,6 @@ class AuthApiServiceImpl implements AuthApiService {
     );
   }
 
-  /// POSTs [data] to [path], retrying with a short linear backoff while the
-  /// failure is a pure transport failure (connect/send/receive timeout, socket
-  /// error). This is what makes the very first request of a session — against a
-  /// server that still has to warm up — reliable instead of a coin flip.
-  ///
-  /// A response that arrives (any status) is returned/thrown immediately: a
-  /// wrong password must never be retried.
   Future<Response<dynamic>> _postWithRetry(
     String path,
     Map<String, dynamic> data,
@@ -91,9 +71,7 @@ class AuthApiServiceImpl implements AuthApiService {
         return await dio.post(
           path,
           data: data,
-          // Pinned per-request as well as on the shared client, so this call
-          // can never inherit a different content type (e.g. multipart left
-          // over from an upload) and always asks Laravel for JSON.
+
           options: Options(
             contentType: Headers.jsonContentType,
             responseType: ResponseType.json,
@@ -110,8 +88,6 @@ class AuthApiServiceImpl implements AuthApiService {
     throw lastError!;
   }
 
-  /// True for failures where the request never produced a server response, so
-  /// replaying it is safe and likely to succeed.
   bool _isTransient(DioException e) {
     if (e.response != null) return false;
     switch (e.type) {

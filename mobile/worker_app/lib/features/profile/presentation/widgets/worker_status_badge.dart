@@ -5,13 +5,9 @@ import '../../../../config/theme/styles.dart';
 import '../../domain/entities/worker_profile.dart';
 import 'worker_availability_ui.dart';
 
-/// A compact availability pill (coloured dot + optional label) shown next to
-/// the worker's name. It reflects the current [availability] and updates
-/// whenever the status changes, since it's rebuilt from the profile bloc state.
 class WorkerStatusBadge extends StatelessWidget {
   final WorkerAvailability availability;
 
-  /// When false only the coloured dot is shown (tight spaces like the top bar).
   final bool showLabel;
 
   const WorkerStatusBadge({

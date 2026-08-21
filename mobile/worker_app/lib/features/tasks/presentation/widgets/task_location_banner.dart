@@ -1,74 +1,86 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/theme/app_decoration.dart';
+import '../../../../config/theme/styles.dart';
+import '../../../../config/routes/app_router.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/task.dart';
 
-/// Header banner for the task-detail screen: the service provider's company
-/// photo (`service.company.image`). Falls back to a decorative gradient with
-/// map/location icons when the company has no photo. Tapping it still opens
-/// the device maps app at the task's location.
 class TaskLocationBanner extends StatelessWidget {
-  final Task task;
-
   const TaskLocationBanner({super.key, required this.task});
 
-  Future<void> _openMaps() async {
-    final uri = Uri.parse(
-      'https://www.google.com/maps/search/?api=1&query='
-      '${Uri.encodeComponent(task.location)}',
-    );
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
+  final Task task;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
-    final hasImage = task.companyImageUrl.isNotEmpty;
+    final colors = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context)!;
 
-    return GestureDetector(
-      onTap: _openMaps,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18.r),
-        child: Container(
-          height: 150.h,
-          // Gradient base: acts as the fallback if there is no subject image
-          // or it fails to load.
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [theme.primary, theme.primary.withValues(alpha: 0.7)],
-            ),
+    return Container(
+      padding: EdgeInsets.all(18.w),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(22.r),
+        border: Border.all(color: colors.outlineVariant),
+        boxShadow: AppShadow.card(Theme.of(context).brightness),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l.task_location_section,
+            style: Styles.textStyle16.copyWith(fontWeight: FontWeight.w700),
           ),
-          child: Stack(
-            fit: StackFit.expand,
-            alignment: Alignment.center,
+          SizedBox(height: 14.h),
+          Row(
             children: [
-              // The company's photo.
-              if (hasImage)
-                CachedNetworkImage(
-                  imageUrl: task.companyImageUrl,
-                  fit: BoxFit.cover,
-                  placeholder: (_, __) => const SizedBox.shrink(),
-                  // On failure, fall back to the gradient base.
-                  errorWidget: (_, __, ___) => const SizedBox.shrink(),
+              Container(
+                width: 48.r,
+                height: 48.r,
+                decoration: BoxDecoration(
+                  color: colors.primaryContainer,
+                  borderRadius: BorderRadius.circular(15.r),
                 ),
-              // When there's no image, keep the decorative map/location icons.
-              if (!hasImage) ...[
-                Icon(
-                  Icons.map_rounded,
-                  size: 64.r,
-                  color: Colors.white.withValues(alpha: 0.25),
+                child: Icon(
+                  Icons.location_on_outlined,
+                  color: colors.primary,
+                  size: 24.r,
                 ),
-                Icon(Icons.location_on, size: 34.r, color: Colors.white),
-              ],
+              ),
+              SizedBox(width: 13.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      task.location,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: Styles.textStyle14.copyWith(
+                        color: colors.onSurface,
+                        fontWeight: FontWeight.w600,
+                        height: 1.35,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
-        ),
+          SizedBox(height: 14.h),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              onPressed: task.latitude == null || task.longitude == null
+                  ? null
+                  : () => context.push(AppRouter.kTaskMap, extra: task),
+              icon: const Icon(Icons.map_outlined),
+              label: Text(l.task_view_map),
+            ),
+          ),
+        ],
       ),
     );
   }

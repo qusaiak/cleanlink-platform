@@ -9,8 +9,6 @@ import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/custom_image_view.dart';
 
-/// Phone-number input with an inline country-code prefix. Formats the local
-/// part as the user types using a 3-3-3 grouping (e.g. 953 524 651).
 class AuthPhoneField extends StatelessWidget {
   const AuthPhoneField({
     super.key,
@@ -73,7 +71,6 @@ class AuthPhoneField extends StatelessWidget {
   }
 }
 
-/// Groups digits as `xxx xxx xxx` and caps at 9 digits.
 class _PhoneNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
@@ -97,9 +94,7 @@ class _PhoneNumberFormatter extends TextInputFormatter {
   }
 }
 
-/// Strips formatting to return digits only.
 String stripPhone(String value) => value.replaceAll(RegExp(r'\D'), '');
 
-/// Returns the full dial-code prefixed number.
 String fullPhone(Country country, String localPart) =>
     '${country.dialCode}${stripPhone(localPart)}';

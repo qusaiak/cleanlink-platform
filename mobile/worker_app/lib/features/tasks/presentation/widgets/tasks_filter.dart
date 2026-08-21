@@ -7,9 +7,6 @@ import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/task.dart';
 import 'task_status_ui.dart';
 
-/// Section header above the task list: the "Task List" title and a "Filter"
-/// button that opens a status-filter bottom sheet. A small dot on the button
-/// indicates an active (non-"all") filter.
 class TasksSectionHeader extends StatelessWidget {
   final TaskStatus? activeFilter;
   final ValueChanged<TaskStatus?> onFilterSelected;
@@ -79,8 +76,6 @@ class TasksSectionHeader extends StatelessWidget {
   }
 }
 
-/// Opens a bottom sheet listing "All" + every [TaskStatus] so the worker can
-/// filter the list. Calls [onSelected] with the chosen status (null = all).
 void showTaskFilterSheet(
   BuildContext context, {
   required TaskStatus? current,
@@ -94,7 +89,6 @@ void showTaskFilterSheet(
     backgroundColor: theme.surface,
     shape: RoundedRectangleBorder(borderRadius: AppRadius.sheet),
     builder: (sheetContext) {
-      // "All" is represented by null; the rest map 1:1 to TaskStatus.
       final entries = <MapEntry<TaskStatus?, String>>[
         MapEntry(null, l.filter_all),
         for (final s in TaskStatus.values)
@@ -128,8 +122,7 @@ void showTaskFilterSheet(
                   ),
                 ),
               ),
-              // Scrollable so the options never overflow on shorter screens
-              // (the sheet only grows to fit its content thanks to shrinkWrap).
+
               Flexible(
                 child: SingleChildScrollView(
                   child: Column(

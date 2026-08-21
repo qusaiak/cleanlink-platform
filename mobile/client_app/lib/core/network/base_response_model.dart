@@ -14,7 +14,6 @@ class BaseResponseModel<T> {
     this.data,
   });
 
-  /// Treats any 2xx code as a success.
   bool get isSuccess => status >= 200 && status < 300;
 
   factory BaseResponseModel.fromJson(

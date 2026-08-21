@@ -4,14 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/theme/colors.dart';
 import '../widgets/custom_tile.dart';
 
-/// Grouped card with the worker's job id, email, phone, address and
-/// leader-status rows.
-/// Reuses the existing [CustomTile] (icon + title + subtitle). The email,
-/// phone and address rows show an edit button so the worker can update the
-/// value — [onEditEmail] / [onEditPhone] / [onEditAddress] are invoked when
-/// the matching edit button is tapped. The job id and leader rows are
-/// read-only; the leader row ([leaderLabel] + [leaderValue]) states plainly
-/// whether this worker leads a team, e.g. "Leader" / "Not a Leader".
 class CustomInfoTileCard extends StatelessWidget {
   final String jobIdLabel;
   final String jobId;
@@ -60,7 +52,6 @@ class CustomInfoTileCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Job id is the account id — read-only.
           CustomTile(
             icon: Icons.badge_outlined,
             title: jobIdLabel,
@@ -92,8 +83,7 @@ class CustomInfoTileCard extends StatelessWidget {
             trailing: _editButton(onEditAddress),
           ),
           Divider(height: 8.h, color: dividerColor),
-          // Leader status — "Leader" for workgroup leaders, "Not a Leader"
-          // for everyone else.
+
           CustomTile(
             icon: isLeader
                 ? Icons.workspace_premium_outlined
@@ -107,7 +97,6 @@ class CustomInfoTileCard extends StatelessWidget {
     );
   }
 
-  /// Pencil button shown on the trailing edge of each editable row.
   Widget _editButton(VoidCallback? onPressed) {
     return IconButton(
       onPressed: onPressed,

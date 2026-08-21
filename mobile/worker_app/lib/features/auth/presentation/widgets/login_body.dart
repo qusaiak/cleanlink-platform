@@ -51,7 +51,6 @@ class LoginBody extends StatelessWidget {
               label: l.auth_password_label,
               hint: l.auth_password_hint,
               textInputAction: TextInputAction.done,
-              // onFieldSubmitted: (_) => bloc.submitLogin(),
             ),
             SizedBox(height: 30.h),
             AppPrimaryButton(

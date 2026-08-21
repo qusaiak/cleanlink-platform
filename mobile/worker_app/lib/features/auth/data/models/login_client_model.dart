@@ -14,17 +14,6 @@ class LoginModel extends LoginEntity {
     required super.accessToken,
   });
 
-  /// Builds the model from the raw login [response].
-  ///
-  /// Everything the response can legitimately vary in is tolerated: the status
-  /// may be any 2xx (200 **or** 201), the payload may or may not be wrapped in
-  /// the `data` envelope, `profile` may be missing, and `id` may arrive as a
-  /// number or a string. The ONE thing that is genuinely required is
-  /// `access_token` — without it there is no session, so its absence (or a
-  /// non-JSON body, e.g. an HTML error page) is reported as a proper
-  /// [DioException] instead of blowing up as a cast error deep inside the
-  /// parser, where it used to escape the repository's `on DioException` catch
-  /// and leave the button spinning forever.
   factory LoginModel.fromResponse(Response<dynamic> response) {
     final body = response.data;
     if (body is! Map) {
@@ -67,8 +56,7 @@ class LoginModel extends LoginEntity {
       profileImage: profile['image']?.toString(),
       address: profile['address']?.toString(),
       phone: profile['phone']?.toString(),
-      // The token also gets read from the outer object, for the shape where the
-      // envelope carries it next to `user`.
+
       accessToken: (data['access_token'] ?? json['access_token'] ?? '')
           .toString(),
     );

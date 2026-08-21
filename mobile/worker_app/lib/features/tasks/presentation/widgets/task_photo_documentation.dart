@@ -8,20 +8,14 @@ import '../../../../core/utils/functions/build_app_snack_bar.dart';
 import '../../../../core/widgets/custom_image_view.dart';
 import '../../../../l10n/app_localizations.dart';
 
-/// "Visual documentation" section: two slots (before / after) where the worker
-/// attaches photos via camera or gallery (uses image_picker). Already-uploaded
-/// photos are shown for context; newly-picked ones can be removed before
-/// submitting.
 class TaskPhotoDocumentation extends StatelessWidget {
   final List<String> beforeExisting;
   final List<String> afterExisting;
   final List<String> beforeNew;
   final List<String> afterNew;
 
-  /// Called with the picked file path for the given slot.
   final void Function(bool isBefore, String path) onPicked;
 
-  /// Called to remove a not-yet-uploaded photo at [index] from the slot.
   final void Function(bool isBefore, int index) onRemoveNew;
 
   const TaskPhotoDocumentation({
@@ -116,7 +110,7 @@ class TaskPhotoDocumentation extends StatelessWidget {
             ),
           ),
         ),
-        // Removable thumbnails for the not-yet-uploaded photos.
+
         if (picked.isNotEmpty) _pickedStrip(theme, isBefore, picked),
       ],
     );
@@ -149,7 +143,7 @@ class TaskPhotoDocumentation extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           CustomImageView(imagePath: path, fit: BoxFit.cover),
-          // "add more" affordance + count badge.
+
           PositionedDirectional(
             end: 6.w,
             bottom: 6.h,
@@ -216,7 +210,6 @@ class TaskPhotoDocumentation extends StatelessWidget {
     );
   }
 
-  /// Bottom sheet to choose the photo source, then pick and report it back.
   void _showSourceSheet(BuildContext context, bool isBefore) {
     final theme = Theme.of(context).colorScheme;
     final l = AppLocalizations.of(context)!;
@@ -303,7 +296,6 @@ class TaskPhotoDocumentation extends StatelessWidget {
   }
 }
 
-/// Paints a rounded dashed border (the design's photo-slot outline).
 class _DashedBorderPainter extends CustomPainter {
   final Color color;
   final double radius;

@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
 
-/// A subtle text-only link used for "Forgot password?", "Sign in" etc.
 class AuthLinkButton extends StatelessWidget {
   const AuthLinkButton({
     super.key,

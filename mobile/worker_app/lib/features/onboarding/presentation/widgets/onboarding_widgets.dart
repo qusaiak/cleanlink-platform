@@ -19,7 +19,6 @@ class SkipButton extends StatelessWidget {
       right: 20.0.w,
       child: TextButton(
         onPressed: () async {
-          // Persist so onboarding is never shown again, then go to Login.
           await AppStartup.completeOnboarding();
           router.go(AppRouter.kLogin);
         },

@@ -4,8 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/functions/validator.dart';
 import '../../../../core/widgets/app_text_field.dart';
 
-/// Password input with a built-in show/hide toggle. Delegates rendering to
-/// [AppTextField] so it stays visually consistent with the rest of the app.
 class AuthPasswordField extends StatefulWidget {
   const AuthPasswordField({
     super.key,
@@ -29,8 +27,6 @@ class AuthPasswordField extends StatefulWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final ValueChanged<String>? onChanged;
 
-  /// When true and no [validator] is supplied the field uses the strong
-  /// password rule (8+ chars, uppercase, digit).
   final bool useStrongValidator;
 
   @override

@@ -4,9 +4,6 @@ import '../../../../config/theme/colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/worker_profile.dart';
 
-/// Presentation metadata for a [WorkerAvailability]: localized [label] + the
-/// indicator [color]. Colours come from the project palette
-/// (success / warning / grey) — not the design's literal colours.
 class WorkerAvailabilityUi {
   final String label;
   final Color color;

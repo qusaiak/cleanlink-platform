@@ -1,38 +1,18 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../core/utils/functions/spinkit.dart';
-import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/task.dart';
 import '../utils/task_formatting.dart';
 import 'task_status_badge.dart';
 import 'task_status_ui.dart';
 
-/// A single task in the daily list.
-///
-/// Shows exactly the public attributes of a worker-tasks-log entry: image,
-/// the workgroup leader's full name + id (the public payload carries no
-/// client name), location, status, order duration, total price and date —
-/// plus one action: advancing the task to the single next status of the
-/// strict `pending → on_way → handling → done` sequence (via [onAdvance],
-/// leader only). Going backward or skipping a step is never offered.
-/// Tapping the location row (rather than a separate button) opens it in the
-/// device's maps app via [onNavigate].
-///
-/// The layout uses logical start/end + EdgeInsetsDirectional so it mirrors
-/// automatically between Arabic (RTL) and English (LTR).
 class WorkerTaskCard extends StatelessWidget {
-  final Task task;
-  final bool isActing;
-  final VoidCallback onTap;
-  final VoidCallback onAdvance;
-  final VoidCallback onNavigate;
-
   const WorkerTaskCard({
     super.key,
     required this.task,
@@ -42,300 +22,287 @@ class WorkerTaskCard extends StatelessWidget {
     required this.onNavigate,
   });
 
+  final Task task;
+  final bool isActing;
+  final VoidCallback onTap;
+  final VoidCallback onAdvance;
+  final VoidCallback onNavigate;
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
-    final ui = TaskStatusUi.of(context, task.status);
+    final colors = Theme.of(context).colorScheme;
+    final statusUi = TaskStatusUi.of(context, task.status);
     final l = AppLocalizations.of(context)!;
-    final localeCode = Localizations.localeOf(context).languageCode;
+    final locale = Localizations.localeOf(context).languageCode;
+    final title = task.title.isNotEmpty ? task.title : task.customerName;
 
-    // Date formatting (e.g. "24 May 2024") via the shared dependency-free helper.
-    final dateText = formatTaskDate(task.scheduledAt, localeCode);
-
-    // A start-side accent strip highlights tasks the worker is actively on.
-    final showAccent =
-        task.status == TaskStatus.onTheWay ||
-        task.status == TaskStatus.inProgress ||
-        task.status == TaskStatus.paused;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppRadius.xl),
-        child: Stack(
-          children: [
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: theme.surface,
-                borderRadius: BorderRadius.circular(AppRadius.xl),
-                border: Border.all(
-                  color: theme.onSurface.withValues(alpha: 0.06),
-                ),
-              ),
-              padding: EdgeInsetsDirectional.only(
-                start: showAccent ? 20.w : 16.w,
-                end: 16.w,
-                top: 16.h,
-                bottom: 16.h,
-              ),
-              child: Column(
+    return Material(
+      color: colors.surface,
+      borderRadius: BorderRadius.circular(22.r),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(22.r),
+        child: Container(
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22.r),
+            border: Border.all(
+              color: colors.outlineVariant.withValues(alpha: 0.65),
+            ),
+            boxShadow: AppShadow.card(Theme.of(context).brightness),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _header(theme, ui),
-                  SizedBox(height: 12.h),
-                  _locationRow(theme),
-                  if (task.durationLabel.isNotEmpty)
-                    _infoRow(
-                      theme,
-                      Icons.timelapse_rounded,
-                      task.durationLabel,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15.r),
+                    child: Container(
+                      width: 48.r,
+                      height: 48.r,
+                      decoration: BoxDecoration(
+                        color: statusUi.background,
+                        borderRadius: BorderRadius.circular(15.r),
+                      ),
+                      child: task.imageUrl.isEmpty
+                          ? Icon(
+                              Icons.cleaning_services_outlined,
+                              color: statusUi.color,
+                              size: 23.r,
+                            )
+                          : CachedNetworkImage(
+                              imageUrl: task.imageUrl,
+                              fit: BoxFit.cover,
+                              errorWidget: (_, __, ___) => Icon(
+                                Icons.cleaning_services_outlined,
+                                color: statusUi.color,
+                              ),
+                            ),
                     ),
-                  _infoRow(theme, Icons.calendar_today_rounded, dateText),
-                  _priceChip(theme, l),
-                  _actions(context, theme, l),
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Styles.textStyle16.copyWith(
+                            color: colors.onSurface,
+                            fontWeight: FontWeight.w700,
+                            height: 1.25,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          l.task_request_number(task.requestNumber),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Styles.textStyle11.copyWith(
+                            color: colors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  TaskStatusBadge(status: task.status),
                 ],
               ),
-            ),
-            if (showAccent)
-              PositionedDirectional(
-                start: 0,
-                top: 0,
-                bottom: 0,
-                child: Container(width: 5.w, color: ui.color),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Leading 44×44 box: the task's subject photo from the internet when
-  /// available, otherwise a coloured service-type icon (also used as the
-  /// loading/error placeholder so the layout never jumps).
-  Widget _leadingThumb(TaskStatusUi ui) {
-    if (task.imageUrl.isEmpty) return _iconBox(ui);
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(AppRadius.sm),
-      child: CachedNetworkImage(
-        imageUrl: task.imageUrl,
-        width: 44.w,
-        height: 44.w,
-        fit: BoxFit.cover,
-        placeholder: (_, __) => _iconBox(ui),
-        errorWidget: (_, __, ___) => _iconBox(ui),
-      ),
-    );
-  }
-
-  Widget _iconBox(TaskStatusUi ui) {
-    return Container(
-      width: 44.w,
-      height: 44.w,
-      decoration: BoxDecoration(
-        color: ui.background,
-        borderRadius: BorderRadius.circular(AppRadius.sm),
-      ),
-      child: Icon(
-        serviceTypeIcon(task.serviceType),
-        color: ui.color,
-        size: 22.r,
-      ),
-    );
-  }
-
-  /// Header: image, the workgroup leader's full name (+ id) and the status
-  /// badge — the leader's name/id stand in for the (unavailable) client name.
-  Widget _header(ColorScheme theme, TaskStatusUi ui) {
-    // Show the CLIENT's name (`order.client.fullname`, parsed into
-    // `customerName`), not the worker/leader. `customerName` is null-safe: the
-    // model falls back to `Client #<id>` when the client name is absent, so
-    // this never renders an empty string.
-    final name = task.customerName;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _leadingThumb(ui),
-        SizedBox(width: 12.w),
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Flexible(
-                child: Text(
-                  name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: Styles.textStyle16.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              SizedBox(height: 16.h),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 13.h),
+                decoration: BoxDecoration(
+                  color: colors.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.schedule_rounded,
+                      color: colors.primary,
+                      size: 20.r,
+                    ),
+                    SizedBox(width: 9.w),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          formatTaskTime(task.scheduledAt),
+                          style: Styles.textStyle16.copyWith(
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        Text(
+                          formatTaskDate(task.scheduledAt, locale),
+                          style: Styles.textStyle11.copyWith(
+                            color: colors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(width: 12.w),
+                    Container(
+                      width: 1,
+                      height: 36.h,
+                      color: colors.outlineVariant,
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: InkWell(
+                        onTap: onNavigate,
+                        borderRadius: BorderRadius.circular(10.r),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 3.h),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.location_on_outlined,
+                                color: colors.primary,
+                                size: 19.r,
+                              ),
+                              SizedBox(width: 7.w),
+                              Expanded(
+                                child: Text(
+                                  task.location,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Styles.textStyle11.copyWith(
+                                    color: colors.onSurfaceVariant,
+                                    height: 1.35,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              if (task.leaderId.isNotEmpty) ...[
-                SizedBox(width: 6.w),
-                Text(
-                  '#${task.leaderId}',
-                  style: Styles.textStyle12.copyWith(
-                    color: theme.onSurfaceVariant,
-                  ),
+              if (task.customerName.isNotEmpty ||
+                  task.companyName.isNotEmpty ||
+                  task.price > 0) ...[
+                SizedBox(height: 13.h),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.person_outline_rounded,
+                      color: colors.onSurfaceVariant,
+                      size: 18.r,
+                    ),
+                    SizedBox(width: 7.w),
+                    Expanded(
+                      child: Text(
+                        task.customerName.isNotEmpty
+                            ? task.customerName
+                            : task.companyName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Styles.textStyle12.copyWith(
+                          color: colors.onSurfaceVariant,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    if (task.isTeamLeader)
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColor.warningSoft,
+                          borderRadius: BorderRadius.circular(AppRadius.pill),
+                        ),
+                        child: Icon(
+                          Icons.workspace_premium_outlined,
+                          color: AppColor.warningColor,
+                          size: 16.r,
+                        ),
+                      ),
+                    if (task.price > 0) ...[
+                      SizedBox(width: 8.w),
+                      Text(
+                        formatTaskPrice(task.price, task.currency),
+                        style: Styles.textStyle14.copyWith(
+                          color: colors.primary,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ],
+              _ActionArea(task: task, isActing: isActing, onAdvance: onAdvance),
             ],
           ),
         ),
-        SizedBox(width: 8.w),
-        TaskStatusBadge(status: task.status),
-      ],
-    );
-  }
-
-  /// A pill showing the order's total price, e.g. "$75".
-  /// Only shown when the booking carries a price.
-  Widget _priceChip(ColorScheme theme, AppLocalizations l) {
-    if (task.price <= 0) return const SizedBox.shrink();
-
-    return Padding(
-      padding: EdgeInsets.only(top: 10.h),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
-        decoration: BoxDecoration(
-          color: theme.primary.withValues(alpha: 0.10),
-          borderRadius: BorderRadius.circular(AppRadius.xxl),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.payments_outlined, size: 14.r, color: theme.primary),
-            SizedBox(width: 6.w),
-            Flexible(
-              child: Text(
-                '${l.task_price_label}: ${formatTaskPrice(task.price, task.currency)}',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Styles.textStyle12.copyWith(
-                  color: theme.primary,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
+}
 
-  Widget _infoRow(ColorScheme theme, IconData icon, String text) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 3.h),
-      child: Row(
-        children: [
-          Icon(icon, size: 16.r, color: theme.onSurfaceVariant),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: Text(
-              text,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Styles.textStyle12.copyWith(color: theme.onSurfaceVariant),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+class _ActionArea extends StatelessWidget {
+  const _ActionArea({
+    required this.task,
+    required this.isActing,
+    required this.onAdvance,
+  });
 
-  /// Same layout as [_infoRow], but tappable: opens the task's location in
-  /// the device's maps app (reusing [onNavigate], previously wired to a
-  /// separate "go to location" button). The primary-coloured, underlined
-  /// text is the visual cue that this row — not just the text glyphs — is
-  /// interactive.
-  Widget _locationRow(ColorScheme theme) {
-    return InkWell(
-      onTap: onNavigate,
-      borderRadius: BorderRadius.circular(AppRadius.xs),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 3.h),
-        child: Row(
-          children: [
-            Icon(Icons.location_on_outlined, size: 16.r, color: theme.primary),
-            SizedBox(width: 8.w),
-            Expanded(
-              child: Text(
-                task.location,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Styles.textStyle12.copyWith(
-                  color: theme.primary,
-                  decoration: TextDecoration.underline,
-                  decorationColor: theme.primary,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  final Task task;
+  final bool isActing;
+  final VoidCallback onAdvance;
 
-  /// Builds the single sequential action for the current [Task.status] —
-  /// advance to the next step (leader only) — or a spinner while [isActing].
-  /// The strict sequence means there is never more than one legal action.
-  Widget _actions(BuildContext context, ColorScheme theme, AppLocalizations l) {
-    // End of the sequence (or a legacy paused/cancelled task), or a
-    // non-leader crew member → nothing to act on.
+  @override
+  Widget build(BuildContext context) {
     final next = task.status.next;
-    if (next == null || !task.isTeamLeader) return const SizedBox.shrink();
-
-    if (isActing) {
-      return Padding(
-        padding: EdgeInsets.only(top: 14.h),
-        child: SizedBox(
-          height: 48.h,
-          child: Center(child: spinKitApp(theme.primary)),
-        ),
-      );
+    if (next == null || !task.isTeamLeader || task.id.isEmpty) {
+      return const SizedBox.shrink();
     }
 
-    final isDoneStep = next == TaskStatus.completed;
+    final colors = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context)!;
+    final isCompletion = next == TaskStatus.completed;
+    final buttonColor = isCompletion ? AppColor.successColor : colors.primary;
+
     return Padding(
-      padding: EdgeInsets.only(top: 14.h),
-      child: Row(
-        children: [
-          Expanded(
-            child: _filledButton(
-              isDoneStep ? AppColor.successColor : theme.primary,
-              l.task_advance_to(TaskStatusUi.of(context, next).label),
-              isDoneStep
-                  ? Icons.check_circle_outline_rounded
-                  : Icons.arrow_forward_rounded,
-              onAdvance,
+      padding: EdgeInsets.only(top: 15.h),
+      child: SizedBox(
+        width: double.infinity,
+        height: 46.h,
+        child: FilledButton.icon(
+          onPressed: isActing ? null : onAdvance,
+          style: FilledButton.styleFrom(
+            backgroundColor: buttonColor,
+            disabledBackgroundColor: buttonColor.withValues(alpha: 0.5),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14.r),
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _filledButton(
-    Color color,
-    String text,
-    IconData icon,
-    VoidCallback onPressed,
-  ) {
-    return CustomElevatedButton(
-      text: text,
-      height: 48.h,
-      onPressed: onPressed,
-      leftIcon: Icon(icon, color: Colors.white, size: 18.r),
-      buttonTextStyle: Styles.textStyle14.copyWith(
-        color: Colors.white,
-        fontWeight: FontWeight.w600,
-      ),
-      buttonStyle: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.sm),
+          icon: isActing
+              ? SizedBox.square(
+                  dimension: 24.r,
+                  child: spinKitApp(colors.onPrimary),
+                )
+              : Icon(
+                  isCompletion
+                      ? Icons.check_rounded
+                      : Icons.arrow_forward_rounded,
+                  size: 18.r,
+                ),
+          label: Text(
+            l.task_advance_to(TaskStatusUi.of(context, next).label),
+            style: Styles.textStyle12.copyWith(
+              color: colors.onPrimary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ),
       ),
     );

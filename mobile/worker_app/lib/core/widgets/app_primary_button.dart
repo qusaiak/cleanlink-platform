@@ -41,8 +41,7 @@ class _AppPrimaryButtonState extends State<AppPrimaryButton> {
     final disabled =
         !widget.enabled || widget.loading || widget.onPressed == null;
     final radius = BorderRadius.circular(AppRadius.md);
-    // Disabled fill follows the theme brightness (a light gray block would
-    // glare on the dark theme's surfaces).
+
     final disabledColor = Theme.of(context).brightness == Brightness.dark
         ? AppColor.gray700
         : AppColor.gray300;

@@ -4,8 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/functions/validator.dart';
 import '../../../../core/widgets/app_text_field.dart';
 
-/// Email input. Delegates rendering to [AppTextField] so it stays visually
-/// consistent with the rest of the app.
 class AuthEmailField extends StatelessWidget {
   const AuthEmailField({
     super.key,

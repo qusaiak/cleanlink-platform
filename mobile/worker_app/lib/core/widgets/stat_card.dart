@@ -4,12 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../config/theme/app_decoration.dart';
 import '../../config/theme/styles.dart';
 
-/// A compact summary card (label + big value + icon) used in summary rows
-/// such as the daily-tasks header and the worker profile stats.
-///
-/// [filled] renders the primary-coloured highlight variant (white text);
-/// otherwise a soft tinted card. Colours derive from the theme's primary
-/// (teal) — the design's blue is only a layout reference.
 class StatCard extends StatelessWidget {
   final String label;
   final String value;

@@ -8,12 +8,6 @@ class MyBlocObserver extends BlocObserver {
     debugPrint('onCreate -- ${bloc.runtimeType}');
   }
 
-  // @override
-  // void onChange(BlocBase bloc, Change change) {
-  //   super.onChange(bloc, change);
-  //   debugPrint('onChange -- ${bloc.runtimeType}, $change');
-  // }
-
   @override
   void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
     debugPrint('onError -- ${bloc.runtimeType}, $error');

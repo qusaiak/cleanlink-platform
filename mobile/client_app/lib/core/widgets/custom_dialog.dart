@@ -104,7 +104,6 @@ class CustomDialog extends StatelessWidget {
                       buttonStyle: OutlinedButton.styleFrom(
                         backgroundColor: Colors.white,
                         side: BorderSide(color: theme.primary, width: 2),
-                        // Border color and width
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6.r),
                         ),

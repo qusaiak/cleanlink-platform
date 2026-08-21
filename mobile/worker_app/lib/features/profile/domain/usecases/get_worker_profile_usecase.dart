@@ -5,7 +5,6 @@ import '../../../../core/usecases/usecase.dart';
 import '../entities/worker_profile.dart';
 import '../repositories/worker_profile_repository.dart';
 
-/// Loads the signed-in worker's profile.
 class GetWorkerProfileUseCase
     implements UseCase<Either<Failure, WorkerProfile>, NoParams> {
   final WorkerProfileRepository repository;

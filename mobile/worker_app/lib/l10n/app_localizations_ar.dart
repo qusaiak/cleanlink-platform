@@ -442,6 +442,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tasks_remaining_today => 'المتبقي اليوم';
 
   @override
+  String get tasks_pending_today => 'المهام المعلقة اليوم';
+
+  @override
   String get tasks_completed_label => 'المهام المنجزة';
 
   @override
@@ -586,6 +589,89 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get task_leader_no => 'لا';
+
+  @override
+  String get task_schedule_section => 'الجدول الزمني';
+
+  @override
+  String get task_expected_end => 'وقت الانتهاء المتوقع';
+
+  @override
+  String get task_travel_buffer => 'وقت الانتقال';
+
+  @override
+  String minutes_value(int minutes) {
+    return '$minutes دقيقة';
+  }
+
+  @override
+  String get task_client_section => 'العميل';
+
+  @override
+  String get task_team_section => 'فريق العمل';
+
+  @override
+  String get task_team_member => 'عضو الفريق';
+
+  @override
+  String get task_you_badge => 'أنت';
+
+  @override
+  String get task_leader_badge => 'القائد';
+
+  @override
+  String get task_payment_section => 'الدفع';
+
+  @override
+  String get task_payment_method => 'الطريقة';
+
+  @override
+  String get task_payment_status => 'الحالة';
+
+  @override
+  String get payment_method_manual => 'نقداً';
+
+  @override
+  String get payment_method_electric => 'دفع إلكتروني';
+
+  @override
+  String get payment_status_pending => 'قيد الانتظار';
+
+  @override
+  String get payment_status_held => 'تم الحجز';
+
+  @override
+  String get payment_status_paid => 'مدفوع';
+
+  @override
+  String get payment_status_captured => 'تم التحصيل';
+
+  @override
+  String get payment_status_failed => 'فشل';
+
+  @override
+  String get task_notes_section => 'ملاحظات';
+
+  @override
+  String get task_location_section => 'الموقع';
+
+  @override
+  String get task_view_map => 'عرض الخريطة';
+
+  @override
+  String get task_navigate => 'بدء التنقل';
+
+  @override
+  String get task_map_unavailable => 'إحداثيات الخريطة غير متاحة';
+
+  @override
+  String get task_service_details => 'الخدمة والباقة';
+
+  @override
+  String get task_minimum_workers => 'الحد الأدنى للعمال';
+
+  @override
+  String get today_summary_unavailable => 'ملخص اليوم غير متاح';
 
   @override
   String get visual_documentation => 'التوثيق المرئي';

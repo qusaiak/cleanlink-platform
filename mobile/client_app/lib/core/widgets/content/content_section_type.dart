@@ -3,6 +3,5 @@ enum ContentSectionType {
   services,
   categories,
   regions,
-  // providers,
   offers,
 }

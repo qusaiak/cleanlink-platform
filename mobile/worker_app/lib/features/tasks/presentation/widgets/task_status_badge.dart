@@ -6,8 +6,6 @@ import '../../../../config/theme/styles.dart';
 import '../../domain/entities/task.dart';
 import 'task_status_ui.dart';
 
-/// Small pill showing a task's current [status] (e.g. "Assigned",
-/// "In Progress"). Colours come from [TaskStatusUi] → the project palette.
 class TaskStatusBadge extends StatelessWidget {
   final TaskStatus status;
 

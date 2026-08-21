@@ -5,18 +5,15 @@ import 'package:pinput/pinput.dart';
 import 'colors.dart';
 import 'styles.dart';
 
-/// Consistent corner-radius scale used across the app instead of ad-hoc
-/// `BorderRadius.circular(...)` literals (previously 8/12/14/16/18/20 were
-/// all used near-interchangeably for "rounded card").
 abstract class AppRadius {
   const AppRadius();
 
-  static double get xs => 8.r; // chips, small icon containers
-  static double get sm => 12.r; // list tiles, inputs
-  static double get md => 14.r; // buttons, text fields
-  static double get lg => 16.r; // pill badges, tiles
-  static double get xl => 18.r; // cards
-  static double get xxl => 20.r; // dialogs, bottom sheets, OTP fields
+  static double get xs => 8.r;
+  static double get sm => 12.r;
+  static double get md => 14.r;
+  static double get lg => 16.r;
+  static double get xl => 18.r;
+  static double get xxl => 20.r;
   static double get pill => 999;
 
   static BorderRadius get chip => BorderRadius.circular(xs);
@@ -28,11 +25,6 @@ abstract class AppRadius {
   static BorderRadius get dialog => BorderRadius.circular(xxl);
 }
 
-/// Soft, brand-tinted elevation shadows. Light mode uses a faint
-/// teal-tinted shadow for depth; dark mode leans on lighter surface tiers
-/// ([AppColor.surfaceContainerDark] etc.) rather than shadows, so its shadow
-/// is only used where something needs to float above its background (e.g.
-/// dialogs, sheets).
 abstract class AppShadow {
   const AppShadow();
 
@@ -74,15 +66,12 @@ abstract class AppShadow {
 }
 
 class AppDecoration {
-  /// Brand gradient for primary CTAs / highlighted surfaces.
   static const Gradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: AppColor.primaryGradientColors,
   );
 
-  /// A soft tinted "badge" background — solid color at low opacity instead
-  /// of a solid fill, used for status chips and inline alerts.
   static BoxDecoration softBadge(Color color, {double radius = 999}) {
     return BoxDecoration(
       color: color.withValues(alpha: 0.12),

@@ -98,13 +98,13 @@ abstract class AppLocalizations {
     Locale('en'),
   ];
 
-  /// The current Language
+  /// No description provided for @language.
   ///
   /// In en, this message translates to:
   /// **'English'**
   String get language;
 
-  /// A programmer greeting
+  /// No description provided for @helloWorld.
   ///
   /// In en, this message translates to:
   /// **'Hello World!'**
@@ -932,6 +932,12 @@ abstract class AppLocalizations {
   /// **'Remaining Today'**
   String get tasks_remaining_today;
 
+  /// No description provided for @tasks_pending_today.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Today'**
+  String get tasks_pending_today;
+
   /// No description provided for @tasks_completed_label.
   ///
   /// In en, this message translates to:
@@ -1207,6 +1213,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No'**
   String get task_leader_no;
+
+  /// No description provided for @task_schedule_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get task_schedule_section;
+
+  /// No description provided for @task_expected_end.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected end'**
+  String get task_expected_end;
+
+  /// No description provided for @task_travel_buffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel buffer'**
+  String get task_travel_buffer;
+
+  /// No description provided for @minutes_value.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String minutes_value(int minutes);
+
+  /// No description provided for @task_client_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Client'**
+  String get task_client_section;
+
+  /// No description provided for @task_team_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Team'**
+  String get task_team_section;
+
+  /// No description provided for @task_team_member.
+  ///
+  /// In en, this message translates to:
+  /// **'Team member'**
+  String get task_team_member;
+
+  /// No description provided for @task_you_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get task_you_badge;
+
+  /// No description provided for @task_leader_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Leader'**
+  String get task_leader_badge;
+
+  /// No description provided for @task_payment_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get task_payment_section;
+
+  /// No description provided for @task_payment_method.
+  ///
+  /// In en, this message translates to:
+  /// **'Method'**
+  String get task_payment_method;
+
+  /// No description provided for @task_payment_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get task_payment_status;
+
+  /// No description provided for @payment_method_manual.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get payment_method_manual;
+
+  /// No description provided for @payment_method_electric.
+  ///
+  /// In en, this message translates to:
+  /// **'Electronic payment'**
+  String get payment_method_electric;
+
+  /// No description provided for @payment_status_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get payment_status_pending;
+
+  /// No description provided for @payment_status_held.
+  ///
+  /// In en, this message translates to:
+  /// **'Authorized'**
+  String get payment_status_held;
+
+  /// No description provided for @payment_status_paid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get payment_status_paid;
+
+  /// No description provided for @payment_status_captured.
+  ///
+  /// In en, this message translates to:
+  /// **'Captured'**
+  String get payment_status_captured;
+
+  /// No description provided for @payment_status_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get payment_status_failed;
+
+  /// No description provided for @task_notes_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get task_notes_section;
+
+  /// No description provided for @task_location_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get task_location_section;
+
+  /// No description provided for @task_view_map.
+  ///
+  /// In en, this message translates to:
+  /// **'View map'**
+  String get task_view_map;
+
+  /// No description provided for @task_navigate.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigate'**
+  String get task_navigate;
+
+  /// No description provided for @task_map_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Map coordinates are unavailable'**
+  String get task_map_unavailable;
+
+  /// No description provided for @task_service_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Service & package'**
+  String get task_service_details;
+
+  /// No description provided for @task_minimum_workers.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum workers'**
+  String get task_minimum_workers;
+
+  /// No description provided for @today_summary_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s summary is unavailable'**
+  String get today_summary_unavailable;
 
   /// No description provided for @visual_documentation.
   ///

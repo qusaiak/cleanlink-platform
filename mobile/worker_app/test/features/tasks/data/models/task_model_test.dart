@@ -43,7 +43,8 @@ void main() {
             "min_duration": 120,
             "max_duration": 180,
             "price": "50.00",
-            "image": "http://localhost:8000/storage/services/standard_apartment.jpg",
+            "image":
+                "http://localhost:8000/storage/services/standard_apartment.jpg",
             "discount": "0.00",
             "is_favorite": false,
           },
@@ -60,6 +61,20 @@ void main() {
           "email": "ahmed.ali@example.com",
           "role": "worker",
         },
+        "workers": [
+          {
+            "id": 9,
+            "fullname": "Ahmed Ali",
+            "email": "ahmed.ali@example.com",
+            "role": "worker",
+          },
+          {
+            "id": 10,
+            "fullname": "Omar Hassan",
+            "email": "omar.hassan@example.com",
+            "role": "worker",
+          },
+        ],
       },
     };
 
@@ -69,28 +84,36 @@ void main() {
       expect(task.id, '2');
       expect(task.requestNumber, '2'); // derived from order_id
       expect(task.title, 'Standard Apartment Cleaning');
-      expect(task.customerName, 'Client #6'); // no client name in payload
+      expect(task.customerName, ''); // no client relation/name in payload
       expect(task.location, 'Damascus, Mezzeh Street, Al-Jalaa Building 2');
       expect(task.companyName, 'Crew Team 1 (EcoClean Pro Solutions)');
       expect(task.packageName, 'Studio Package');
       expect(task.price, 110.0); // order.total_price (string) -> double
-      expect(task.durationLabel, '30 mins');
+      expect(task.durationLabel, '30');
       expect(task.includedItems, ['Ideal for spaces under 60m²']);
-      expect(task.imageUrl,
-          'http://localhost:8000/storage/services/standard_apartment.jpg');
+      expect(
+        Uri.parse(task.imageUrl).path,
+        '/storage/services/standard_apartment.jpg',
+      );
       expect(task.scheduledAt, DateTime.parse('2026-07-05T08:00:00.000000Z'));
       expect(task.status, TaskStatus.onTheWay); // "on_way" code
-      expect(task.details,
-          'Generated automatically by system mock testing sequence.');
+      expect(task.teamMembers.map((member) => member.name), [
+        'Ahmed Ali',
+        'Omar Hassan',
+      ]);
+      expect(
+        task.details,
+        'Generated automatically by system mock testing sequence.',
+      );
     });
   });
 
   group('TaskModel.fromJson — real GET /api/tasks/{id} detail response', () {
     // Verbatim `data` object from the real `GET /api/tasks/2` response. Note
-    // there is deliberately NO top-level "id" field, and package/service use
-    // unified `name`/`details` + numeric prices instead of the list's
-    // localized `name_en`/`name_ar` + string prices.
+    // The corrected backend uses the same task ID and workgroup shape for the
+    // list and detail endpoints.
     final json = {
+      "id": 2,
       "order_id": 2,
       "workgroup_id": 1,
       "status": "on_way",
@@ -129,7 +152,8 @@ void main() {
             "min_duration": 120,
             "max_duration": 180,
             "price": 50,
-            "image": "http://localhost:8000/storage/services/standard_apartment.jpg",
+            "image":
+                "http://localhost:8000/storage/services/standard_apartment.jpg",
             "discount": 0,
             "is_favorite": false,
           },
@@ -146,11 +170,24 @@ void main() {
           "email": "ahmed.ali@example.com",
           "role": "worker",
         },
+        "workers": [
+          {
+            "id": 9,
+            "fullname": "Ahmed Ali",
+            "email": "ahmed.ali@example.com",
+            "role": "worker",
+          },
+          {
+            "id": 10,
+            "fullname": "Omar Hassan",
+            "email": "omar.hassan@example.com",
+            "role": "worker",
+          },
+        ],
       },
     };
 
-    test('maps every field, using the injected id since the body has none',
-        () {
+    test('maps every field and accepts an explicit route id override', () {
       final task = TaskModel.fromJson(json, idOverride: '2');
 
       expect(task.id, '2'); // came from idOverride, not the JSON body
@@ -158,16 +195,21 @@ void main() {
       expect(task.title, 'Standard Apartment Cleaning');
       expect(task.packageName, 'Studio Package');
       expect(task.price, 110.0); // numeric order.total_price -> double
-      expect(task.includedItems,
-          ['Ideal for spaces under 60m²', 'Includes 2 rooms and 1 bathroom']);
+      expect(task.includedItems, [
+        'Ideal for spaces under 60m²',
+        'Includes 2 rooms and 1 bathroom',
+      ]);
       expect(task.status, TaskStatus.onTheWay);
       expect(task.companyName, 'Crew Team 1 (EcoClean Pro Solutions)');
+      expect(task.teamMembers, hasLength(2));
     });
 
-    test('falls back to an empty id when neither override nor body has one',
-        () {
-      final task = TaskModel.fromJson(json);
-      expect(task.id, '');
-    });
+    test(
+      'uses the task id returned by the backend when no override is given',
+      () {
+        final task = TaskModel.fromJson(json);
+        expect(task.id, '2');
+      },
+    );
   });
 }

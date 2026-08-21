@@ -7,11 +7,6 @@ import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/worker_profile.dart';
 import 'worker_availability_ui.dart';
 
-/// "Current Status" card.
-///
-/// The worker may switch manually ONLY between Available and Off, so the card
-/// is a two-segment toggle — `busy` is never offered. When the worker is
-/// (derived) busy, the toggle is replaced by a read-only Busy row with a lock.
 class AvailabilitySelector extends StatelessWidget {
   final WorkerAvailability selected;
   final WorkerAvailability? updatingTo;
@@ -24,7 +19,6 @@ class AvailabilitySelector extends StatelessWidget {
     required this.onChanged,
   });
 
-  /// The only two statuses the worker can pick manually.
   static const _options = [
     WorkerAvailability.available,
     WorkerAvailability.off,
@@ -68,7 +62,6 @@ class AvailabilitySelector extends StatelessWidget {
     );
   }
 
-  /// One side of the Available/Offline toggle.
   Widget _segment(
     BuildContext context,
     ColorScheme theme,
@@ -79,7 +72,6 @@ class AvailabilitySelector extends StatelessWidget {
     final isUpdating = availability == updatingTo;
 
     return GestureDetector(
-      // While a change is saving, the whole toggle ignores taps.
       onTap: updatingTo != null ? null : () => onChanged(availability),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
@@ -127,8 +119,6 @@ class AvailabilitySelector extends StatelessWidget {
     );
   }
 
-  /// Shown while the system holds the worker busy: a locked, non-interactive
-  /// Busy row — no manual change is possible until the task is released.
   Widget _busyReadOnly(BuildContext context, ColorScheme theme) {
     final ui = WorkerAvailabilityUi.of(context, WorkerAvailability.busy);
 

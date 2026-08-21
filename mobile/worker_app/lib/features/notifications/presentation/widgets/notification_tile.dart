@@ -8,19 +8,11 @@ import '../../../tasks/presentation/utils/task_formatting.dart';
 import '../../domain/entities/app_notification.dart';
 import 'app_notification_ui.dart';
 
-/// A single notification row: type icon, the full title + body (always
-/// completely visible — nothing is collapsed behind a tap), time, and an
-/// unread dot. Unread tiles get a subtle tinted background and a
-/// "Mark as read" button that calls the mark-as-read endpoint via
-/// [onMarkRead]; while the request runs ([isMarkingRead]) the button shows a
-/// small spinner. Read notifications show no button.
 class NotificationTile extends StatelessWidget {
   final AppNotification notification;
   final bool isMarkingRead;
   final VoidCallback onMarkRead;
 
-  /// Tapping the row opens the linked task and marks the notification read.
-  /// Null for notifications that don't link anywhere.
   final VoidCallback? onTap;
 
   const NotificationTile({
@@ -39,8 +31,6 @@ class NotificationTile extends StatelessWidget {
     final localeCode = Localizations.localeOf(context).languageCode;
     final unread = !notification.isRead;
 
-    // An unread task assignment is the feed's headline event — it gets an
-    // accent outline on top of the usual unread tint so it stands out.
     final highlightAssignment =
         unread && notification.type == AppNotificationType.taskAssigned;
 
@@ -48,9 +38,7 @@ class NotificationTile extends StatelessWidget {
       color: unread
           ? theme.primary.withValues(alpha: 0.06)
           : Colors.transparent,
-      // A single [shape] carries both the rounding and the optional accent
-      // outline — [Material] asserts if [shape] and [borderRadius] are set
-      // together, so the corner radius lives inside the shape here.
+
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.lg),
         side: highlightAssignment
@@ -107,14 +95,14 @@ class NotificationTile extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 4.h),
-                    // The full body — never truncated or hidden behind a tap.
+
                     Text(
                       notification.body,
                       style: Styles.textStyle12.copyWith(
                         color: theme.onSurfaceVariant,
                       ),
                     ),
-                    // Extra context for a client request (where / when).
+
                     if (notification.type ==
                             AppNotificationType.clientRequest &&
                         (notification.location != null ||
@@ -149,8 +137,7 @@ class NotificationTile extends StatelessWidget {
                         color: theme.onSurfaceVariant.withValues(alpha: 0.7),
                       ),
                     ),
-                    // "Mark as read" exists only while the notification is
-                    // unread; once read (or already read) there's no button.
+
                     if (unread) ...[
                       SizedBox(height: 8.h),
                       Align(

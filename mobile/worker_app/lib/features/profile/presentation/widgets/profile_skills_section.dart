@@ -7,37 +7,17 @@ import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/worker_profile.dart';
 import 'skill_chip.dart';
 
-/// The skills card: the worker's own skills, and underneath them the skills
-/// they can still add.
-///
-/// Both lists act IMMEDIATELY — one tap on a chip attaches or detaches it.
-/// There is no "manage" button, no edit mode and no confirmation step, so there
-/// is no mode flag anywhere in this widget: every chip is always live.
-///
-/// While a given skill's request is in flight its own chip shows a spinner and
-/// stops responding ([pendingSkillIds]); every other chip stays tappable.
-///
-/// Names resolve from `name_ar` / `name_en` against the ambient locale, so the
-/// owned chips re-localize with the app language without a request; the
-/// dictionary below them is re-fetched by the bloc instead, because the server
-/// is what localizes it.
 class ProfileSkillsSection extends StatelessWidget {
-  /// Skills the worker already has.
   final List<WorkerSkill> skills;
 
-  /// Skills that can still be added (dictionary − owned).
   final List<WorkerSkill> availableSkills;
 
-  /// The dictionary is being fetched.
   final bool loadingSkills;
 
-  /// Ids whose attach/detach request is in flight right now.
   final Set<int> pendingSkillIds;
 
-  /// Attach this skill — fired by a single tap on an "add" chip.
   final ValueChanged<WorkerSkill> onAddSkill;
 
-  /// Detach this skill — fired by a single tap on an owned chip.
   final ValueChanged<WorkerSkill> onRemoveSkill;
 
   const ProfileSkillsSection({
@@ -64,9 +44,7 @@ class ProfileSkillsSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(18.r),
         border: Border.all(color: theme.onSurface.withValues(alpha: 0.06)),
       ),
-      // Measures the real content width and hands it to every chip, which is
-      // what allows a long Arabic name to wrap instead of being clipped (a Wrap
-      // gives its children unbounded width — see [SkillChip.maxWidth]).
+
       child: LayoutBuilder(
         builder: (context, constraints) {
           final chipMaxWidth = constraints.maxWidth;
@@ -94,7 +72,6 @@ class ProfileSkillsSection extends StatelessWidget {
               ),
               SizedBox(height: 10.h),
 
-              // ---- The worker's own skills: tap to remove. ----
               if (skills.isEmpty)
                 Text(
                   l.profile_no_skills,
@@ -122,7 +99,6 @@ class ProfileSkillsSection extends StatelessWidget {
               Divider(color: theme.onSurface.withValues(alpha: 0.06)),
               SizedBox(height: 10.h),
 
-              // ---- Everything still addable: tap to add. ----
               Text(
                 l.skills_available_title,
                 style: Styles.textStyle12.copyWith(
@@ -163,8 +139,6 @@ class ProfileSkillsSection extends StatelessWidget {
 
     if (availableSkills.isEmpty) {
       return Text(
-        // "everything assigned" and "the dictionary is empty" are different
-        // situations and read differently to the worker.
         skills.isEmpty
             ? l.skills_empty_dictionary
             : l.profile_all_skills_assigned,

@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget spinKitApp(Color color) {
-  return SpinKitFadingCircle(color: color, size: 35);
+  return SizedBox(
+    width: 30.r,
+    height: 30.r,
+    child: CircularProgressIndicator.adaptive(
+      strokeWidth: 3,
+      valueColor: AlwaysStoppedAnimation<Color>(color),
+      backgroundColor: color.withValues(alpha: 0.15),
+    ),
+  );
 }

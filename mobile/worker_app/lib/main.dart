@@ -4,15 +4,14 @@ import 'package:flutter/material.dart';
 
 import 'app.dart';
 import 'core/config/api_config.dart';
+import 'core/config/local_config.dart';
 import 'injection_container.dart';
 import 'services/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Resolves the API host (emulator alias / localhost / LAN IP) exactly once,
-  // BEFORE anything can build an HTTP client from it. Device detection is
-  // async, so it has to be awaited here — every later read is synchronous.
+  await LocalConfig.load();
   await ApiConfig.init();
 
   await Firebase.initializeApp();

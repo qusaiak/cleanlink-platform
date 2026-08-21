@@ -6,9 +6,6 @@ import '../../../../core/usecases/usecase.dart';
 import '../entities/worker_profile.dart';
 import '../repositories/worker_profile_repository.dart';
 
-/// Fields the worker can edit inline on the profile screen. Only the non-null
-/// ones are sent to the backend. (The photo is handled separately by
-/// [UpdateProfileImageUseCase].)
 class UpdateProfileParams extends Equatable {
   final String? fullname;
   final String? email;
@@ -37,7 +34,6 @@ class UpdateProfileParams extends Equatable {
   ];
 }
 
-/// Updates editable account fields (name / email / address / phone / photo).
 class UpdateWorkerProfileUseCase
     implements UseCase<Either<Failure, WorkerProfile>, UpdateProfileParams> {
   final WorkerProfileRepository repository;

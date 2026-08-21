@@ -11,7 +11,7 @@ import 'custom_image_view.dart';
 import 'custom_outlined_button.dart';
 
 class CustomDialog extends StatelessWidget {
-  CustomDialog({
+  const CustomDialog({
     super.key,
     required this.title,
     required this.body,
@@ -23,14 +23,14 @@ class CustomDialog extends StatelessWidget {
     this.doneButtonText,
   });
 
-  String? title;
-  String? body;
-  VoidCallback? onTap;
-  VoidCallback? onCancel;
+  final String? title;
+  final String? body;
+  final VoidCallback? onTap;
+  final VoidCallback? onCancel;
   final bool isTwoButtons;
   final bool isBackButtonDismiss;
-  String? cancelButtonText;
-  String? doneButtonText;
+  final String? cancelButtonText;
+  final String? doneButtonText;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class CustomDialog extends StatelessWidget {
                   imagePath: Assets.images.logo.appLogo.path,
                   width: 40.w,
                 ),
-                title!.isNotEmpty
+                (title?.isNotEmpty ?? false)
                     ? Padding(
                         padding: EdgeInsets.symmetric(vertical: 10.h),
                         child: Text(
@@ -127,9 +127,7 @@ class CustomDialog extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: AppRadius.button,
                         ),
-                        // The theme's 14.h vertical padding is taller than
-                        // this 25.h button, which clipped the label away
-                        // entirely (the "Done" button looked empty).
+
                         padding: EdgeInsets.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),

@@ -4,8 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../l10n/app_localizations.dart';
 
-/// Top header of the daily-tasks screen: the menu button and the screen title.
-/// The functional control is the status filter below.
 class TasksHeader extends StatelessWidget {
   const TasksHeader({super.key});
 
@@ -21,7 +19,6 @@ class TasksHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              // Opens the sidebar (Profile / Settings).
               _iconButton(
                 theme,
                 Icons.menu_rounded,

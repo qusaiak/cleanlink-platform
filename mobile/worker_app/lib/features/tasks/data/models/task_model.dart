@@ -3,10 +3,6 @@ import '../../../../config/language/app_language_info.dart';
 import '../../../../core/session/login_session.dart';
 import '../../domain/entities/task.dart';
 
-/// Data-layer representation of [Task]. Extends the entity so it can be used
-/// anywhere a [Task] is expected, while adding JSON (de)serialization for the
-/// API. Enum values are mapped to/from stable string codes shared with the
-/// backend contract.
 class TaskModel extends Task {
   const TaskModel({
     required super.id,
@@ -34,31 +30,35 @@ class TaskModel extends Task {
     super.isTeamLeader,
     super.leaderName,
     super.leaderId,
+    super.workgroupId,
+    super.workgroupName,
+    super.teamMembers,
+    super.endAt,
+    super.durationMinutes,
+    super.travelBufferMinutes,
+    super.latitude,
+    super.longitude,
+    super.serviceDescription,
+    super.packageDetails,
+    super.minimumWorkers,
+    super.customerEmail,
+    super.customerPhone,
+    super.paymentMethod,
+    super.paymentStatus,
+    super.orderStatus,
+    super.createdAt,
+    super.updatedAt,
   });
 
-  /// Builds a [TaskModel] from either the flat contract (used by the mock
-  /// data source, camelCase/snake_case keys) or the real worker-tasks-log
-  /// contract, which nests the booking under `order` (with
-  /// `order.package.service`) and the crew under `workgroup`. That real
-  /// contract has two shapes in practice: the `GET /api/tasks` list gives
-  /// localized `name_en`/`name_ar`/`details_en`/`details_ar`, while the
-  /// `GET /api/tasks/{id}` detail gives a single unlocalized `name`/`details`
-  /// — both are handled here.
-  ///
-  /// [idOverride] is used when the caller already knows the task's id (e.g.
-  /// the id it requested `/api/tasks/{id}` with) because the detail endpoint's
-  /// response body doesn't include the task's own `id` field at all.
   factory TaskModel.fromJson(Map<String, dynamic> json, {String? idOverride}) {
     final order = (json['order'] as Map<String, dynamic>?) ?? const {};
     final package = (order['package'] as Map<String, dynamic>?) ?? const {};
-    // Both `GET /api/tasks` (list) and `GET /api/tasks/{id}` (detail) nest
-    // `service` the same way: `order.package.service`. A top-level `service`
-    // key is kept as a fallback for older/flat payloads (e.g. the mock data).
+
     final service =
         (package['service'] as Map<String, dynamic>?) ??
         (json['service'] as Map<String, dynamic>?) ??
         const {};
-    // The provider's photo lives under `service.company.image`.
+
     final company =
         (service['company'] as Map<String, dynamic>?) ??
         (json['company'] as Map<String, dynamic>?) ??
@@ -66,6 +66,8 @@ class TaskModel extends Task {
     final workgroup = (json['workgroup'] as Map<String, dynamic>?) ?? const {};
     final client = (order['client'] as Map<String, dynamic>?) ?? const {};
     final leader = (workgroup['leader'] as Map<String, dynamic>?) ?? const {};
+    final leaderId = (workgroup['leader_id'] ?? leader['id'])?.toString() ?? '';
+    final teamMembers = _teamMembers(workgroup, leader, leaderId);
 
     final useEn = AppLanguageInfo.isEn;
     final serviceTitle = useEn
@@ -79,23 +81,7 @@ class TaskModel extends Task {
         : (package['details_ar'] ?? package['details']);
 
     return TaskModel(
-      // The API routes `GET /api/tasks/{task}` and
-      // `POST /api/tasks/{task}/update-status` bind by the task's OWN primary
-      // key (`Task` has no custom route key). So `json['id']` (the task id) is
-      // preferred here. As of the current backend, `TaskResource` does NOT
-      // expose that id — see the BACKEND ISSUE reported for `TaskResource`:
-      // until it is added, this falls back to `workgroup_id`, which cannot
-      // correctly resolve the task for detail/status calls.
-      // (`requestNumber` below keeps the human-facing order id for display.)
-      id:
-          (idOverride ??
-                  json['id'] ??
-                  json['task_id'] ??
-                  json['workgroup_id'] ??
-                  json['order_id'] ??
-                  order['id'])
-              ?.toString() ??
-          '',
+      id: (idOverride ?? json['id'] ?? json['task_id'])?.toString() ?? '',
       requestNumber:
           (json['requestNumber'] ??
                   json['request_number'] ??
@@ -111,7 +97,7 @@ class TaskModel extends Task {
           (json['customerName'] ??
                   json['customer_name'] ??
                   client['fullname'] ??
-                  _clientLabel(order['client_id']))
+                  '')
               .toString(),
       location: (json['location'] ?? order['location'] ?? '').toString(),
       imageUrl: ApiUrlParameters.resolveImageUrl(
@@ -135,7 +121,7 @@ class TaskModel extends Task {
           (json['packageName'] ?? json['package_name'] ?? packageTitle ?? '')
               .toString(),
       price: _toDouble(json['price'] ?? order['total_price']),
-      currency: (json['currency'] ?? '\$').toString(),
+      currency: (json['currency'] ?? '').toString(),
       durationLabel:
           (json['durationLabel'] ??
                   json['duration_label'] ??
@@ -153,9 +139,7 @@ class TaskModel extends Task {
                 .toString(),
           ) ??
           DateTime.fromMillisecondsSinceEpoch(0),
-      // The task's own `status` (e.g. "done") is authoritative; the order's
-      // `status` (e.g. "completed") is only a fallback for payloads that
-      // don't carry a task-level status.
+
       status: _statusFromCode((json['status'] ?? order['status'])?.toString()),
       isUrgent: json['isUrgent'] ?? json['is_urgent'] ?? false,
       details: (json['details'] ?? order['note'] ?? '').toString(),
@@ -171,16 +155,38 @@ class TaskModel extends Task {
       serviceRating: _toDouble(
         json['serviceRating'] ?? json['service_rating'] ?? service['rating'],
       ),
-      isTeamLeader: _isLeader(leader['id']),
+      isTeamLeader: _isLeader(leaderId),
       leaderName:
           (json['leaderName'] ??
                   json['leader_name'] ??
                   leader['fullname'] ??
                   '')
               .toString(),
-      leaderId:
-          (json['leaderId'] ?? json['leader_id'] ?? leader['id'])?.toString() ??
-          '',
+      leaderId: (json['leaderId'] ?? json['leader_id'] ?? leaderId).toString(),
+      workgroupId: (json['workgroup_id'] ?? workgroup['id'])?.toString() ?? '',
+      workgroupName: (workgroup['name'] ?? '').toString(),
+      teamMembers: teamMembers,
+      endAt: _date(order['end_time']),
+      durationMinutes: _toIntOrNull(order['duration']),
+      travelBufferMinutes: _toIntOrNull(order['travel_buffer_minutes']),
+      latitude: _toDoubleOrNull(order['latitude']),
+      longitude: _toDoubleOrNull(order['longitude']),
+      serviceDescription: (service['description'] ?? '').toString(),
+      packageDetails: _stringList(packageDetails),
+      minimumWorkers: _toIntOrNull(package['minimum_workers']),
+      customerEmail: (client['email'] ?? '').toString(),
+      customerPhone:
+          (client['phone'] ??
+                  (client['profile'] is Map
+                      ? client['profile']['phone']
+                      : null) ??
+                  '')
+              .toString(),
+      paymentMethod: (order['payment_method'] ?? '').toString(),
+      paymentStatus: (order['payment_status'] ?? '').toString(),
+      orderStatus: (order['status'] ?? '').toString(),
+      createdAt: _date(json['created_at']),
+      updatedAt: _date(json['updated_at']),
     );
   }
 
@@ -210,10 +216,28 @@ class TaskModel extends Task {
     'isTeamLeader': isTeamLeader,
     'leaderName': leaderName,
     'leaderId': leaderId,
+    'workgroupId': workgroupId,
+    'workgroupName': workgroupName,
+    'teamMembers': teamMembers
+        .map((member) => {'id': member.id, 'name': member.name})
+        .toList(),
+    'endAt': endAt?.toIso8601String(),
+    'durationMinutes': durationMinutes,
+    'travelBufferMinutes': travelBufferMinutes,
+    'latitude': latitude,
+    'longitude': longitude,
+    'serviceDescription': serviceDescription,
+    'packageDetails': packageDetails,
+    'minimumWorkers': minimumWorkers,
+    'customerEmail': customerEmail,
+    'customerPhone': customerPhone,
+    'paymentMethod': paymentMethod,
+    'paymentStatus': paymentStatus,
+    'orderStatus': orderStatus,
+    'createdAt': createdAt?.toIso8601String(),
+    'updatedAt': updatedAt?.toIso8601String(),
   };
 
-  /// Builds a model from a domain [Task] (used by the fake data source and
-  /// when echoing locally-updated tasks back through the layers).
   factory TaskModel.fromEntity(Task task) => TaskModel(
     id: task.id,
     requestNumber: task.requestNumber,
@@ -240,32 +264,81 @@ class TaskModel extends Task {
     isTeamLeader: task.isTeamLeader,
     leaderName: task.leaderName,
     leaderId: task.leaderId,
+    workgroupId: task.workgroupId,
+    workgroupName: task.workgroupName,
+    teamMembers: task.teamMembers,
+    endAt: task.endAt,
+    durationMinutes: task.durationMinutes,
+    travelBufferMinutes: task.travelBufferMinutes,
+    latitude: task.latitude,
+    longitude: task.longitude,
+    serviceDescription: task.serviceDescription,
+    packageDetails: task.packageDetails,
+    minimumWorkers: task.minimumWorkers,
+    customerEmail: task.customerEmail,
+    customerPhone: task.customerPhone,
+    paymentMethod: task.paymentMethod,
+    paymentStatus: task.paymentStatus,
+    orderStatus: task.orderStatus,
+    createdAt: task.createdAt,
+    updatedAt: task.updatedAt,
   );
 
-  // ---- enum <-> string code mapping (kept here so the contract is in one place) ----
+  static List<TaskTeamMember> _teamMembers(
+    Map<String, dynamic> workgroup,
+    Map<String, dynamic> leader,
+    String leaderId,
+  ) {
+    final rawWorkers = workgroup['workers'];
+    final workers = rawWorkers is List
+        ? rawWorkers.whereType<Map>()
+        : const <Map>[];
+    final result = <TaskTeamMember>[
+      for (final raw in workers)
+        _member(Map<String, dynamic>.from(raw), leaderId),
+    ];
+    if (leader.isNotEmpty && !result.any((member) => member.id == leaderId)) {
+      result.insert(0, _member(leader, leaderId));
+    }
+    result.sort((a, b) {
+      if (a.isLeader != b.isLeader) return a.isLeader ? -1 : 1;
+      if (a.isCurrentWorker != b.isCurrentWorker) {
+        return a.isCurrentWorker ? -1 : 1;
+      }
+      return a.name.compareTo(b.name);
+    });
+    return result;
+  }
+
+  static TaskTeamMember _member(Map<String, dynamic> json, String leaderId) {
+    final id = json['id']?.toString() ?? '';
+    final profile = json['profile'] is Map
+        ? Map<String, dynamic>.from(json['profile'] as Map)
+        : const <String, dynamic>{};
+    return TaskTeamMember(
+      id: id,
+      name: (json['fullname'] ?? '').toString(),
+      email: (json['email'] ?? '').toString(),
+      imageUrl: ApiUrlParameters.resolveImageUrl(
+        (profile['image'] ?? json['image'] ?? '').toString(),
+      ),
+      isLeader: id.isNotEmpty && id == leaderId,
+      isCurrentWorker:
+          id.isNotEmpty && id == (LoginSession.employeeId ?? '').toString(),
+    );
+  }
 
   static List<String> _stringList(dynamic value) {
     if (value is List) return value.map((e) => e.toString()).toList();
     return const [];
   }
 
-  /// Wraps a single nullable photo URL (as returned by `image_before`/
-  /// `image_after`) into a list, or passes an already-a-list value through.
   static List<String> _photoList(dynamic value) {
     if (value is List) return value.map((e) => e.toString()).toList();
     if (value == null) return const [];
     return [value.toString()];
   }
 
-  /// The task log only carries the customer's `client_id`, not their name, so
-  /// this is the best label available until the backend includes the client.
-  static String _clientLabel(dynamic clientId) {
-    if (clientId == null) return '';
-    return 'Client #$clientId';
-  }
-
-  /// Whether the signed-in worker (from [LoginSession.employeeId], set on
-  /// login) is the workgroup's [leaderId].
   static bool _isLeader(dynamic leaderId) {
     final currentWorkerId = LoginSession.employeeId;
     if (leaderId == null || currentWorkerId == null) return false;
@@ -274,7 +347,7 @@ class TaskModel extends Task {
 
   static String _durationLabel(dynamic minutes) {
     if (minutes == null) return '';
-    return '$minutes mins';
+    return minutes.toString();
   }
 
   static double _toDouble(dynamic value) {
@@ -283,24 +356,33 @@ class TaskModel extends Task {
     return 0;
   }
 
+  static double? _toDoubleOrNull(dynamic value) {
+    if (value == null || value.toString().isEmpty) return null;
+    if (value is num) return value.toDouble();
+    return double.tryParse(value.toString());
+  }
+
+  static int? _toIntOrNull(dynamic value) {
+    if (value == null || value.toString().isEmpty) return null;
+    if (value is num) return value.toInt();
+    return int.tryParse(value.toString());
+  }
+
+  static DateTime? _date(dynamic value) =>
+      DateTime.tryParse(value?.toString() ?? '');
+
   static TaskStatus _statusFromCode(String? code) {
     switch (code) {
       case 'on_the_way':
       case 'on_way':
         return TaskStatus.onTheWay;
-      // "handling" is the backend's code for a task being executed.
+
       case 'handling':
       case 'in_progress':
         return TaskStatus.inProgress;
-      case 'paused':
-        return TaskStatus.paused;
-      // The backend marks a finished task "done" (its order becomes
-      // "completed") — both map to the same UI status.
       case 'done':
       case 'completed':
         return TaskStatus.completed;
-      case 'cancelled':
-        return TaskStatus.cancelled;
       case 'pending':
       case 'assigned':
       default:
@@ -308,9 +390,6 @@ class TaskModel extends Task {
     }
   }
 
-  /// The backend's status codes: the update-status contract accepts exactly
-  /// `pending | on_way | handling | done`. `paused`/`cancelled` are legacy
-  /// UI-only statuses that the progression logic never sends.
   static String statusCode(TaskStatus status) {
     switch (status) {
       case TaskStatus.assigned:
@@ -319,12 +398,8 @@ class TaskModel extends Task {
         return 'on_way';
       case TaskStatus.inProgress:
         return 'handling';
-      case TaskStatus.paused:
-        return 'paused';
       case TaskStatus.completed:
         return 'done';
-      case TaskStatus.cancelled:
-        return 'cancelled';
     }
   }
 

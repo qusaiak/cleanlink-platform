@@ -22,7 +22,6 @@ class ContentHorizontalList extends StatelessWidget {
     ContentSectionType.services: 120.w,
     ContentSectionType.categories: 120.w,
     ContentSectionType.regions: 250.w,
-    // ContentSectionType.providers: 140,
     ContentSectionType.offers: 200.w,
   };
 
@@ -31,7 +30,6 @@ class ContentHorizontalList extends StatelessWidget {
     ContentSectionType.services: 320.w,
     ContentSectionType.categories: 120.w,
     ContentSectionType.regions: 320.w,
-    // ContentSectionType.providers: 140,
     ContentSectionType.offers: 300.w,
   };
 
@@ -40,7 +38,6 @@ class ContentHorizontalList extends StatelessWidget {
     ContentSectionType.services: Icons.cleaning_services,
     ContentSectionType.categories: Icons.category,
     ContentSectionType.regions: Icons.location_on,
-    // ContentSectionType.providers: Icons.person,
     ContentSectionType.offers: Icons.local_offer,
   };
 

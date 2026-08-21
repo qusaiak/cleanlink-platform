@@ -9,11 +9,8 @@ abstract class AuthRepository {
     required String password,
   });
 
-  /// Logs the worker out on the server (`POST /api/auth/logout`). Local session
-  /// clearing is handled by the caller regardless of the outcome.
   Future<Either<Failure, Unit>> logout();
 
-  /// Changes the worker's password (`PUT /api/auth/change-password`).
   Future<Either<Failure, Unit>> changePassword({
     required String oldPassword,
     required String newPassword,

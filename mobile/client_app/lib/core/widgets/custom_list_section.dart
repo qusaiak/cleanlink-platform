@@ -10,7 +10,6 @@ class CustomListSection extends StatelessWidget {
     required this.itemCount,
     required this.itemBuilder,
 
-    /// Required only for horizontal lists
     this.itemExtent,
 
     this.iconData,
@@ -26,7 +25,6 @@ class CustomListSection extends StatelessWidget {
   final int itemCount;
   final Widget Function(BuildContext context, int index) itemBuilder;
 
-  /// Height for horizontal / width for vertical if needed
   final double? itemExtent;
 
   final IconData? iconData;

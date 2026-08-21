@@ -16,9 +16,6 @@ class LoginUsecase extends UseCase<Either<Failure, LoginEntity>, LoginParams> {
     final email = params?.email.trim() ?? '';
     final password = params?.password ?? '';
 
-    // Never send a null/empty credential: Laravel would answer 422 and the
-    // round-trip tells the worker nothing the app doesn't already know. Same
-    // client-side guard pattern as [UpdateTaskStatusUseCase].
     if (email.isEmpty || password.isEmpty) {
       return Future.value(
         const Left(

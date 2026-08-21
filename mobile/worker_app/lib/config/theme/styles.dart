@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// Shared text styles.
-///
-/// NOTE: these styles intentionally do NOT set [TextStyle.overflow]. A style-
-/// level `TextOverflow.ellipsis` forces every Text using it to render on a
-/// single line (wrapping is disabled when an ellipsis is set without
-/// maxLines), which silently truncated labels like "Completed Tasks".
-/// Widgets that want truncation must pass `maxLines`/`overflow` on the Text.
 abstract class Styles {
   static TextStyle textStyle8 = TextStyle(
     fontSize: 8.sp,

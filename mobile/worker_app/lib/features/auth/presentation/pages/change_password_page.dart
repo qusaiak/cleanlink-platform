@@ -27,7 +27,7 @@ class ChangePasswordPage extends StatelessWidget {
               message: l.password_changed_successfully,
               type: SnackBarType.success,
             );
-            // Clear the form fields after a successful change.
+
             final bloc = context.read<AuthBloc>();
             bloc.forms.changeOldPassword.clear();
             bloc.forms.changeNewPassword.clear();

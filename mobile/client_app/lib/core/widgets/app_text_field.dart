@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../config/theme/colors.dart';
 import '../../config/theme/styles.dart';
 
-/// Glass-morphism styled text field shared across the whole app.
 class AppTextField extends StatelessWidget {
   const AppTextField({
     super.key,

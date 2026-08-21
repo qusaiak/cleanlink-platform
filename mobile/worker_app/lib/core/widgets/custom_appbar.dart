@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../config/theme/app_theme_info.dart';
+import '../../config/theme/colors.dart';
 
 PreferredSizeWidget customAppBar(
   String title,
@@ -27,6 +28,14 @@ PreferredSizeWidget customAppBar(
           )
         : null,
     centerTitle: false,
+    backgroundColor: AppThemeInfo.isLight
+        ? AppColor.backgroundColorLight
+        : AppColor.backgroundColorDark,
+    scrolledUnderElevation: 0,
+    shadowColor: AppColor.transparent,
+    foregroundColor: AppColor.transparent,
+    surfaceTintColor: AppColor.transparent,
+    elevation: 0,
     title: Text(title, style: TextStyle(color: color)),
     actions: actions,
   );

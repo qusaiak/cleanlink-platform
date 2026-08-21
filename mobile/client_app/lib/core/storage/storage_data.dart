@@ -30,7 +30,6 @@ enum StorageData<T> implements Storable {
   // Search
   recentSearchesList(clearOnLogout: true),
 
-  // Backend-owned user data caches
   clientLocations(clearOnLogout: true);
 
   const StorageData({this.secure = false, this.clearOnLogout = false});

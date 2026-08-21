@@ -17,10 +17,6 @@ class LoginPage extends StatelessWidget {
           context.go(AppRouter.kHome);
         } else if (state.status == AuthStatus.errorLogin &&
             state.error != null) {
-          // Same SnackBar, same styling — only the message resolution changed:
-          // `Failure.toString()` printed the wrapper class
-          // ("ServerFailure{errorMessage: ...}"), which buried the backend's
-          // actual reason. This is the app's standard failure-message resolver.
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(localizedFailureMessage(context, state.error)),

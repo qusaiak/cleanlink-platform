@@ -1,12 +1,6 @@
 {
   "language": "English",
-  "@language": {
-    "description": "The current Language"
-  },
   "helloWorld": "Hello World!",
-  "@helloWorld": {
-    "description": "A programmer greeting"
-  },
   "welcome": "Welcome",
   "help_text_1": "Choose your service and schedule a cleaning with just a few taps.",
   "help_text_2": "Our experienced cleaners deliver high-quality and reliable service.",
@@ -35,7 +29,6 @@
   "did_not_receive_code": "Didn't receive code? ",
   "resend_code": "Resend code",
   "error_connection": "Please check your internet connection",
-  "error_connection_timeout": "Connection timed out. Please try again.",
   "creating_account": "Creating account...",
   "verify_account": "Account Verification",
   "verifying": "Verifying...",
@@ -100,13 +93,17 @@
   "auth_otp_subtitle": "We sent a 6-digit code to {phone}",
   "@auth_otp_subtitle": {
     "placeholders": {
-      "phone": { "type": "String" }
+      "phone": {
+        "type": "String"
+      }
     }
   },
   "auth_otp_resend_in": "Resend code in {seconds}s",
   "@auth_otp_resend_in": {
     "placeholders": {
-      "seconds": { "type": "int" }
+      "seconds": {
+        "type": "int"
+      }
     }
   },
   "auth_otp_resend": "Resend code",
@@ -130,11 +127,11 @@
   "appearance": "Appearance",
   "notification_setting": "Push Notifications",
   "my_profile": "My Profile",
-  "contact_us_title":"We're here to help",
-  "contact_us_body":"Send us your issue and we'll get back to you.",
+  "contact_us_title": "We're here to help",
+  "contact_us_body": "Send us your issue and we'll get back to you.",
   "mobile_number": "Mobile Number",
   "title": "Title",
-  "email":"Email",
+  "email": "Email",
   "description": "Description",
   "send": "Send",
   "optional": "Optional",
@@ -153,9 +150,9 @@
   "categories": "Categories",
   "popular_companies": "Popular Companies",
   "popular_services": "Popular Services",
-
   "tasks_title": "My Daily Tasks",
   "tasks_remaining_today": "Remaining Today",
+  "tasks_pending_today": "Pending Today",
   "tasks_completed_label": "Completed Tasks",
   "tasks_list_title": "Task List",
   "tasks_filter": "Filter",
@@ -163,7 +160,9 @@
   "task_request_number": "Request #{number}",
   "@task_request_number": {
     "placeholders": {
-      "number": { "type": "String" }
+      "number": {
+        "type": "String"
+      }
     }
   },
   "task_status_assigned": "Assigned",
@@ -186,7 +185,9 @@
   "task_status_updated_message": "Status updated to {status}",
   "@task_status_updated_message": {
     "placeholders": {
-      "status": { "type": "String" }
+      "status": {
+        "type": "String"
+      }
     }
   },
   "task_action_failed_message": "Action failed. Please try again",
@@ -195,13 +196,14 @@
   "task_advance_to": "Move to: {status}",
   "@task_advance_to": {
     "placeholders": {
-      "status": { "type": "String" }
+      "status": {
+        "type": "String"
+      }
     }
   },
   "task_on_way_message": "You're on your way to the location",
   "invalid_status_transition_message": "The task status must advance one step in order (Assigned → On the way → In Progress → Completed); going backward or skipping a step isn't allowed",
   "images_only_when_done_message": "Before/after photos can only be uploaded when completing the task",
-
   "task_management_title": "Task Management",
   "task_details_section": "Task Details",
   "task_required_tools": "Required Tools",
@@ -218,6 +220,34 @@
   "task_leader_section": "Team Leader",
   "task_leader_yes": "Yes",
   "task_leader_no": "No",
+  "task_schedule_section": "Schedule",
+  "task_expected_end": "Expected end",
+  "task_travel_buffer": "Travel buffer",
+  "minutes_value": "{minutes} min",
+  "@minutes_value": {"placeholders": {"minutes": {"type": "int"}}},
+  "task_client_section": "Client",
+  "task_team_section": "Team",
+  "task_team_member": "Team member",
+  "task_you_badge": "You",
+  "task_leader_badge": "Leader",
+  "task_payment_section": "Payment",
+  "task_payment_method": "Method",
+  "task_payment_status": "Status",
+  "payment_method_manual": "Cash",
+  "payment_method_electric": "Electronic payment",
+  "payment_status_pending": "Pending",
+  "payment_status_held": "Authorized",
+  "payment_status_paid": "Paid",
+  "payment_status_captured": "Captured",
+  "payment_status_failed": "Failed",
+  "task_notes_section": "Notes",
+  "task_location_section": "Location",
+  "task_view_map": "View map",
+  "task_navigate": "Navigate",
+  "task_map_unavailable": "Map coordinates are unavailable",
+  "task_service_details": "Service & package",
+  "task_minimum_workers": "Minimum workers",
+  "today_summary_unavailable": "Today's summary is unavailable",
   "visual_documentation": "Visual Documentation",
   "photo_before": "Photo before start",
   "photo_after": "Photo after completion",
@@ -228,7 +258,6 @@
   "choose_from_gallery": "Choose from gallery",
   "photo_added_message": "Photo added",
   "photo_pick_failed_message": "Couldn't add the photo",
-
   "current_status": "Current Status",
   "availability_available": "Available",
   "availability_busy": "Busy",
@@ -257,10 +286,11 @@
   "availability_updated_message": "Your status changed to {status}",
   "@availability_updated_message": {
     "placeholders": {
-      "status": { "type": "String" }
+      "status": {
+        "type": "String"
+      }
     }
   },
-
   "notifications_title": "Notifications",
   "notifications_mark_all_read": "Mark all read",
   "notifications_empty_title": "No notifications yet",
@@ -268,7 +298,6 @@
   "notifications_load_failed": "Failed to load notifications",
   "notification_received": "Received",
   "notification_mark_as_read": "Mark as read",
-
   "search_title": "Search",
   "search_mode_general": "General",
   "search_mode_custom": "Custom",
@@ -280,7 +309,9 @@
   "search_custom_hint": "Search by {field}…",
   "@search_custom_hint": {
     "placeholders": {
-      "field": { "type": "String" }
+      "field": {
+        "type": "String"
+      }
     }
   },
   "search_hint_prompt": "Search services by name, client, location or time.",
@@ -289,7 +320,9 @@
   "price_amount": "{amount} SAR",
   "@price_amount": {
     "placeholders": {
-      "amount": { "type": "String" }
+      "amount": {
+        "type": "String"
+      }
     }
   },
   "greeting_hello": "Hello,",

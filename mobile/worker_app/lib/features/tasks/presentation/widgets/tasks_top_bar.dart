@@ -13,17 +13,6 @@ import '../../../profile/presentation/bloc/worker_profile_bloc.dart';
 import '../../../profile/presentation/widgets/worker_availability_ui.dart';
 import '../../../profile/presentation/widgets/worker_status_badge.dart';
 
-/// Top bar of the daily-tasks screen. Bundles the sidebar (menu) button, the
-/// worker's account (profile button), the notifications bell with its live
-/// unread badge, and the services search field.
-///
-/// The profile button and the sidebar header both read the same
-/// [WorkerProfileBloc], so the account shown is identical in both places, and
-/// both open the same [WorkerProfilePage].
-///
-/// Must be placed under [WorkerProfileBloc] + [NotificationsBloc] providers
-/// (supplied at the tasks-screen level) and below the [Scaffold] (for the
-/// drawer).
 class TasksTopBar extends StatelessWidget {
   const TasksTopBar({super.key});
 
@@ -38,7 +27,6 @@ class TasksTopBar extends StatelessWidget {
         children: [
           Row(
             children: [
-              // Opens the sidebar (Profile / Settings).
               IconButton(
                 onPressed: () => Scaffold.of(context).openDrawer(),
                 icon: Icon(
@@ -49,15 +37,13 @@ class TasksTopBar extends StatelessWidget {
                 visualDensity: VisualDensity.compact,
               ),
               SizedBox(width: 2.w),
-              // Profile button → opens the worker's profile (same account as
-              // the sidebar). Avatar + name come from the WorkerProfileBloc.
+
               Expanded(child: _ProfileButton()),
               SizedBox(width: 8.w),
               NotificationBell(
                 onTap: () async {
                   await context.push(AppRouter.kNotifications);
-                  // Refresh the badge on return (a notification may have been
-                  // read on the feed).
+
                   if (context.mounted) {
                     context.read<NotificationsBloc>().add(
                       const LoadNotifications(silent: true),
@@ -68,7 +54,7 @@ class TasksTopBar extends StatelessWidget {
             ],
           ),
           SizedBox(height: 4.h),
-          // Screen title.
+
           Align(
             alignment: AlignmentDirectional.centerStart,
             child: Padding(
@@ -88,8 +74,6 @@ class TasksTopBar extends StatelessWidget {
   }
 }
 
-/// The worker's account chip in the top bar (avatar + name). Tapping opens the
-/// profile screen.
 class _ProfileButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -100,7 +84,7 @@ class _ProfileButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(30.r),
       onTap: () async {
         await context.push(AppRouter.kProfile);
-        // Reflect any availability/profile change made on the profile screen.
+
         if (context.mounted) {
           context.read<WorkerProfileBloc>().add(const LoadWorkerProfile());
         }
@@ -110,8 +94,7 @@ class _ProfileButton extends StatelessWidget {
           final profile = state.profile;
           final name = profile?.name ?? l.my_profile;
           final avatarUrl = profile?.avatarUrl ?? '';
-          // The avatar ring reflects the worker's availability: it changes
-          // colour (green / amber / grey) as their status changes.
+
           final ringColor = profile != null
               ? WorkerAvailabilityUi.of(context, profile.availability).color
               : theme.primary;
@@ -155,7 +138,7 @@ class _ProfileButton extends StatelessWidget {
                             ),
                           ),
                         ),
-                        // Live availability dot beside the name.
+
                         if (profile != null) ...[
                           SizedBox(width: 6.w),
                           WorkerStatusBadge(

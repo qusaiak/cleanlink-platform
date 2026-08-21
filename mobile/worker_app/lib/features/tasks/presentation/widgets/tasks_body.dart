@@ -1,38 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../core/utils/functions/build_app_snack_bar.dart';
 import '../../../../core/utils/functions/localized_failure_message.dart';
-import '../../../../core/widgets/app_shimmer.dart';
+import '../../../../core/utils/functions/spinkit.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
-import '../../../../core/widgets/stat_card.dart';
+import '../../../../core/widgets/network_avatar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../notifications/presentation/bloc/notifications_bloc.dart';
+import '../../../profile/domain/entities/worker_profile.dart';
+import '../../../profile/presentation/bloc/worker_profile_bloc.dart';
+import '../../../profile/presentation/widgets/worker_availability_ui.dart';
 import '../../domain/entities/task.dart';
 import '../bloc/tasks_bloc.dart';
 import '../utils/open_task.dart';
-import 'tasks_filter.dart';
-import 'tasks_top_bar.dart';
+import '../utils/task_formatting.dart';
+import 'task_status_ui.dart';
 import 'worker_task_card.dart';
 
-/// Body of the daily-tasks screen. Listens to [TasksBloc] to:
-///  - show success/failure snackbars after worker actions, and
-///  - render loading / error / content states for the list.
 class TasksBody extends StatelessWidget {
   const TasksBody({super.key});
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
 
     return BlocConsumer<TasksBloc, TasksState>(
-      // Only react to the transient action outcomes for snackbars.
-      listenWhen: (prev, curr) =>
-          curr.status == TasksStatus.actionSuccess ||
-          curr.status == TasksStatus.actionFailure,
+      listenWhen: (previous, current) =>
+          current.status == TasksStatus.actionSuccess ||
+          current.status == TasksStatus.actionFailure,
       listener: (context, state) {
         if (state.status == TasksStatus.actionSuccess) {
           showAppSnackBar(
@@ -49,13 +52,10 @@ class TasksBody extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        // First load with nothing yet → shimmer skeleton list, shaped like
-        // the real task cards so the transition into content is seamless.
         if (state.status == TasksStatus.loading && state.daily == null) {
-          return const _TasksLoadingSkeleton();
+          return Center(child: spinKitApp(colors.primary));
         }
 
-        // Load failed and we have nothing to show → error + retry.
         if (state.status == TasksStatus.error && state.daily == null) {
           return _ErrorView(
             message: state.error?.message ?? l.tasks_load_failed,
@@ -64,128 +64,152 @@ class TasksBody extends StatelessWidget {
           );
         }
 
-        // A background auto-refresh (push / notification) keeps the loaded
-        // list on screen; a thin bar signals it non-blockingly.
-        final refreshing =
-            state.status == TasksStatus.loading && state.daily != null;
-
-        return Column(
-          children: [
-            SizedBox(
-              height: 2.h,
-              child: refreshing ? const LinearProgressIndicator() : null,
-            ),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: () async =>
-                    context.read<TasksBloc>().add(const LoadDailyTasks()),
-                child: _content(context, state, l),
-              ),
-            ),
-          ],
+        return RefreshIndicator.adaptive(
+          color: colors.primary,
+          onRefresh: () async {
+            final bloc = context.read<TasksBloc>();
+            bloc
+              ..add(const LoadDailyTasks())
+              ..add(const LoadTodayTaskSummary());
+            await bloc.stream.firstWhere(
+              (next) =>
+                  next.status != TasksStatus.loading &&
+                  next.summaryStatus != SummaryStatus.loading,
+            );
+          },
+          child: _DashboardContent(state: state),
         );
       },
     );
   }
 
-  Widget _content(BuildContext context, TasksState state, AppLocalizations l) {
-    final stats = state.daily?.stats;
+  String _successMessage(BuildContext context, TasksState state) {
+    final l = AppLocalizations.of(context)!;
+    switch (state.lastAction) {
+      case TaskActionType.onWay:
+        return l.task_on_way_message;
+      case TaskActionType.start:
+        return l.task_started_message;
+      case TaskActionType.complete:
+        return l.task_completed_message;
+      case TaskActionType.accept:
+        return l.task_accepted_message;
+      case TaskActionType.updateStatus:
+      case null:
+        return l.task_completed_message;
+    }
+  }
+}
+
+class _DashboardContent extends StatelessWidget {
+  const _DashboardContent({required this.state});
+
+  final TasksState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final tasks = state.visibleTasks;
+    final refreshing = state.status == TasksStatus.loading;
 
-    return ListView(
+    return CustomScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.zero,
-      children: [
-        SizedBox(height: 8.h),
-        const TasksTopBar(),
-        SizedBox(height: 12.h),
-
-        // Summary stat cards.
-        if (stats != null)
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Row(
-              children: [
-                Expanded(
-                  child: StatCard(
-                    label: l.tasks_remaining_today,
-                    value: '${stats.remainingToday}',
-                    icon: Icons.pending_actions_rounded,
-                  ),
+      slivers: [
+        SliverToBoxAdapter(
+          child: Column(
+            children: [
+              if (refreshing)
+                const LinearProgressIndicator(minHeight: 2)
+              else
+                SizedBox(height: 2.h),
+              const _WorkerHomeHeader(),
+              SizedBox(height: 20.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: _SummarySection(state: state),
+              ),
+              SizedBox(height: 24.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        l.tasks_list_title,
+                        style: Styles.textStyle18.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    if (state.filter != null)
+                      Text(
+                        TaskStatusUi.of(context, state.filter!).label,
+                        style: Styles.textStyle12.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                  ],
                 ),
-                SizedBox(width: 14.w),
-                Expanded(
-                  child: StatCard(
-                    label: l.tasks_completed_label,
-                    value: '${stats.completed} / ${stats.total}',
-                    icon: Icons.check_circle_rounded,
-                    filled: true,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        SizedBox(height: 22.h),
-
-        // Section header + filter.
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: TasksSectionHeader(
-            activeFilter: state.filter,
-            onFilterSelected: (status) =>
-                context.read<TasksBloc>().add(FilterTasksByStatus(status)),
+              ),
+              SizedBox(height: 12.h),
+              _StatusFilters(selected: state.filter),
+              SizedBox(height: 18.h),
+            ],
           ),
         ),
-        SizedBox(height: 12.h),
-
-        // The list (or an empty state).
         if (tasks.isEmpty)
-          _EmptyView(l: l)
+          SliverFillRemaining(hasScrollBody: false, child: _EmptyView(l: l))
         else
-          ...tasks.map(
-            (task) => Padding(
-              padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 14.h),
-              child: WorkerTaskCard(
-                task: task,
-                isActing:
-                    state.status == TasksStatus.actionLoading &&
-                    state.actingTaskId == task.id,
-                // Fetch the task's private detail (GET /api/tasks/{id}) and open
-                // the detail screen. A status change there writes through the
-                // repository (the single source of truth), so this card updates
-                // on its own — no list reload needed (unlike a notification tap).
-                onTap: () =>
-                    openTaskById(context, task.id, refreshTasksOnReturn: false),
-                onAdvance: () => _advance(context, task),
-                onNavigate: () => _openMaps(task.location),
-              ),
+          SliverPadding(
+            padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 32.h),
+            sliver: SliverList.separated(
+              itemCount: tasks.length,
+              separatorBuilder: (_, __) => SizedBox(height: 14.h),
+              itemBuilder: (context, index) {
+                final task = tasks[index];
+                return WorkerTaskCard(
+                  task: task,
+                  isActing:
+                      state.status == TasksStatus.actionLoading &&
+                      state.actingTaskId == task.id,
+                  onTap: () async {
+                    final updated = await context.push<Task>(
+                      AppRouter.kTaskDetails,
+                      extra: task,
+                    );
+                    if (updated != null && context.mounted) {
+                      context.read<TasksBloc>()
+                        ..add(const LoadDailyTasks())
+                        ..add(const LoadTodayTaskSummary());
+                    }
+                  },
+                  onAdvance: () => _advance(context, task),
+                  onNavigate: () => _openMaps(task),
+                );
+              },
             ),
           ),
-
-        // Bottom breathing room so the FAB / nav bar don't overlap content.
-        SizedBox(height: 90.h),
       ],
     );
   }
 
-  /// Advances [task] one step along the strict
-  /// `pending → on_way → handling → done` sequence.
-  ///
-  /// The final step is special: before/after photos may only be uploaded with
-  /// `done`, so instead of firing the request blindly the card opens the task
-  /// detail screen, where the leader can attach them and confirm. Every other
-  /// step is a plain status change fired from the list.
   Future<void> _advance(BuildContext context, Task task) async {
+    if (task.id.isEmpty) {
+      showAppSnackBar(
+        context,
+        message: AppLocalizations.of(context)!.task_open_failed,
+        type: SnackBarType.error,
+      );
+      return;
+    }
     final next = task.status.next;
     if (next == null) return;
-
     if (next == TaskStatus.completed) {
-      // The `done` step needs before/after photos, so it's completed on the
-      // detail screen; the repository propagates the change back to this list.
       await openTaskById(context, task.id, refreshTasksOnReturn: false);
       return;
     }
-
+    if (!context.mounted) return;
     context.read<TasksBloc>().add(
       ChangeTaskStatus(
         taskId: task.id,
@@ -198,31 +222,12 @@ class TasksBody extends StatelessWidget {
     );
   }
 
-  /// Resolves the localized success message for the last performed action.
-  String _successMessage(BuildContext context, TasksState state) {
-    final l = AppLocalizations.of(context)!;
-    switch (state.lastAction) {
-      case TaskActionType.onWay:
-        return l.task_on_way_message;
-      case TaskActionType.start:
-        return l.task_started_message;
-      case TaskActionType.complete:
-        return l.task_completed_message;
-      case TaskActionType.accept:
-        return l.task_accepted_message;
-      case TaskActionType.cancel:
-        return l.task_cancelled_message;
-      case TaskActionType.updateStatus:
-      case null:
-        return l.task_completed_message;
-    }
-  }
-
-  /// Opens the device maps app at the task location (uses url_launcher).
-  Future<void> _openMaps(String location) async {
+  Future<void> _openMaps(Task task) async {
+    final destination = task.latitude != null && task.longitude != null
+        ? '${task.latitude},${task.longitude}'
+        : Uri.encodeComponent(task.location);
     final uri = Uri.parse(
-      'https://www.google.com/maps/search/?api=1&query='
-      '${Uri.encodeComponent(location)}',
+      'https://www.google.com/maps/dir/?api=1&destination=$destination',
     );
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -230,34 +235,356 @@ class TasksBody extends StatelessWidget {
   }
 }
 
-/// Empty-list placeholder.
-class _EmptyView extends StatelessWidget {
-  final AppLocalizations l;
+class _DashboardHero extends StatelessWidget {
+  const _DashboardHero({required this.pending, required this.done});
 
-  const _EmptyView({required this.l});
+  final int pending;
+  final int done;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 48.h),
+    final l = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
+    final colors = Theme.of(context).colorScheme;
+
+    return Column(
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 38.r,
+              height: 38.r,
+              decoration: BoxDecoration(
+                color: colors.primaryContainer,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Icon(
+                Icons.calendar_month_outlined,
+                color: colors.primary,
+                size: 20.r,
+              ),
+            ),
+            SizedBox(width: 10.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l.tasks_title,
+                    style: Styles.textStyle14.copyWith(
+                      color: colors.onSurface,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Text(
+                    formatTaskDate(DateTime.now(), locale),
+                    style: Styles.textStyle11.copyWith(
+                      color: colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 14.h),
+        Row(
+          children: [
+            Expanded(
+              child: _HeroMetric(
+                icon: Icons.pending_actions_outlined,
+                value: '$pending',
+                label: l.tasks_pending_today,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: _HeroMetric(
+                icon: Icons.task_alt_rounded,
+                value: '$done',
+                label: l.tasks_completed_label,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _SummarySection extends StatelessWidget {
+  const _SummarySection({required this.state});
+
+  final TasksState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context)!;
+    final summary = state.summary;
+    if (summary != null) {
+      return _DashboardHero(pending: summary.pending, done: summary.done);
+    }
+    if (state.summaryStatus == SummaryStatus.error) {
+      return Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: colors.errorContainer,
+          borderRadius: BorderRadius.circular(18.r),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.cloud_off_outlined, color: colors.onErrorContainer),
+            SizedBox(width: 10.w),
+            Expanded(
+              child: Text(
+                l.tasks_load_failed,
+                style: Styles.textStyle12.copyWith(
+                  color: colors.onErrorContainer,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () =>
+                  context.read<TasksBloc>().add(const LoadTodayTaskSummary()),
+              child: Text(l.retry),
+            ),
+          ],
+        ),
+      );
+    }
+    return SizedBox(
+      height: 126.h,
+      child: Center(child: spinKitApp(colors.primary)),
+    );
+  }
+}
+
+class _WorkerHomeHeader extends StatelessWidget {
+  const _WorkerHomeHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
+    return BlocBuilder<WorkerProfileBloc, WorkerProfileState>(
+      builder: (context, state) {
+        final profile = state.profile;
+        final availability =
+            state.effectiveAvailability ??
+            profile?.availability ??
+            WorkerAvailability.off;
+        final availabilityUi = WorkerAvailabilityUi.of(context, availability);
+
+        return Padding(
+          padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 0),
+          child: Row(
+            children: [
+              InkWell(
+                onTap: () => _openProfile(context),
+                borderRadius: BorderRadius.circular(40.r),
+                child: Container(
+                  padding: EdgeInsets.all(2.r),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colors.primary,
+                  ),
+                  child: NetworkAvatar(
+                    avatarUrl: profile?.avatarUrl ?? '',
+                    radius: 25.r,
+                    backgroundColor: colors.primaryContainer,
+                    iconColor: colors.primary,
+                  ),
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: InkWell(
+                  onTap: () => _openProfile(context),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        l.greeting_hello,
+                        style: Styles.textStyle11.copyWith(
+                          color: colors.onSurfaceVariant,
+                        ),
+                      ),
+                      Text(
+                        profile?.name ?? l.my_profile,
+                        style: Styles.textStyle16.copyWith(
+                          color: colors.onSurface,
+                          fontWeight: FontWeight.w700,
+                          height: 1.2,
+                        ),
+                      ),
+                      SizedBox(height: 3.h),
+                      Row(
+                        children: [
+                          Container(
+                            width: 7.r,
+                            height: 7.r,
+                            decoration: BoxDecoration(
+                              color: availabilityUi.color,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          SizedBox(width: 5.w),
+                          Flexible(
+                            child: Text(
+                              availabilityUi.label,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Styles.textStyle11.copyWith(
+                                color: availabilityUi.color,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              const _HomeNotificationsButton(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _openProfile(BuildContext context) async {
+    await context.push(AppRouter.kProfile);
+    if (context.mounted) {
+      context.read<WorkerProfileBloc>().add(const LoadWorkerProfile());
+    }
+  }
+}
+
+class _HomeNotificationsButton extends StatelessWidget {
+  const _HomeNotificationsButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final unread = context.select<NotificationsBloc, int>(
+      (bloc) => bloc.state.unreadCount,
+    );
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          width: 42.r,
+          height: 42.r,
+          decoration: BoxDecoration(
+            color: colors.onSurface.withValues(alpha: 0.08),
+            shape: BoxShape.circle,
+          ),
+          child: IconButton(
+            padding: EdgeInsets.zero,
+            onPressed: () async {
+              await context.push(AppRouter.kNotifications);
+              if (context.mounted) {
+                context.read<NotificationsBloc>().add(
+                  const LoadNotifications(silent: true),
+                );
+              }
+            },
+            icon: Icon(
+              Icons.notifications_none_outlined,
+              color: colors.primary,
+              size: 24.r,
+            ),
+          ),
+        ),
+        if (unread > 0)
+          PositionedDirectional(
+            end: -2.w,
+            top: -2.h,
+            child: Container(
+              constraints: BoxConstraints(minWidth: 18.r, minHeight: 18.r),
+              padding: EdgeInsets.symmetric(horizontal: 4.w),
+              decoration: BoxDecoration(
+                color: colors.error,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(color: colors.surface, width: 1.2),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                unread > 99 ? '99+' : '$unread',
+                style: Styles.textStyle8.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _HeroMetric extends StatelessWidget {
+  const _HeroMetric({
+    required this.icon,
+    required this.value,
+    required this.label,
+  });
+
+  final IconData icon;
+  final String value;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Container(
+      constraints: BoxConstraints(minHeight: 122.h),
+      padding: EdgeInsets.all(15.w),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: colors.outlineVariant),
+        boxShadow: AppShadow.card(Theme.of(context).brightness),
+      ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.task_alt_rounded,
-            size: 56.r,
-            color: theme.primary.withValues(alpha: 0.4),
+          Row(
+            children: [
+              Container(
+                width: 36.r,
+                height: 36.r,
+                decoration: BoxDecoration(
+                  color: colors.primaryContainer,
+                  borderRadius: BorderRadius.circular(11.r),
+                ),
+                child: Icon(icon, color: colors.primary, size: 20.r),
+              ),
+              const Spacer(),
+              Text(
+                value,
+                style: Styles.textStyle22.copyWith(
+                  color: colors.onSurface,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 14.h),
           Text(
-            l.tasks_empty_title,
-            style: Styles.textStyle16.copyWith(fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 6.h),
-          Text(
-            l.tasks_empty_subtitle,
-            textAlign: TextAlign.center,
-            style: Styles.textStyle12.copyWith(color: theme.onSurfaceVariant),
+            label,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: Styles.textStyle12.copyWith(
+              color: colors.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+              height: 1.3,
+            ),
           ),
         ],
       ),
@@ -265,46 +592,100 @@ class _EmptyView extends StatelessWidget {
   }
 }
 
-/// Full-screen error with a retry button (used when the first load fails).
-class _ErrorView extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
+class _StatusFilters extends StatelessWidget {
+  const _StatusFilters({required this.selected});
 
-  const _ErrorView({required this.message, required this.onRetry});
+  final TaskStatus? selected;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
     final l = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
+    final entries = <MapEntry<TaskStatus?, String>>[
+      MapEntry(null, l.filter_all),
+      for (final status in TaskStatus.values)
+        MapEntry(status, TaskStatusUi.of(context, status).label),
+    ];
+
+    return SizedBox(
+      height: 38.h,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        itemCount: entries.length,
+        separatorBuilder: (_, __) => SizedBox(width: 8.w),
+        itemBuilder: (context, index) {
+          final entry = entries[index];
+          final active = entry.key == selected;
+          final accent = entry.key == null
+              ? colors.primary
+              : TaskStatusUi.of(context, entry.key!).color;
+          return ChoiceChip(
+            selected: active,
+            showCheckmark: false,
+            label: Text(entry.value),
+            labelStyle: Styles.textStyle12.copyWith(
+              color: active ? colors.onPrimary : colors.onSurfaceVariant,
+              fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+            ),
+            backgroundColor: colors.surface,
+            selectedColor: accent,
+            side: BorderSide(
+              color: active
+                  ? accent
+                  : colors.outlineVariant.withValues(alpha: 0.7),
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppRadius.pill),
+            ),
+            onSelected: (_) =>
+                context.read<TasksBloc>().add(FilterTasksByStatus(entry.key)),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _EmptyView extends StatelessWidget {
+  const _EmptyView({required this.l});
+
+  final AppLocalizations l;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 32.w),
+        padding: EdgeInsets.fromLTRB(32.w, 20.h, 32.w, 64.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.cloud_off_rounded, size: 56.r, color: theme.error),
-            SizedBox(height: 16.h),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: Styles.textStyle14.copyWith(color: theme.onSurfaceVariant),
-            ),
-            SizedBox(height: 20.h),
-            CustomElevatedButton(
-              text: l.retry,
-              width: 160.w,
-              height: 46.h,
-              onPressed: onRetry,
-              buttonTextStyle: Styles.textStyle14.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
+            Container(
+              width: 76.r,
+              height: 76.r,
+              decoration: BoxDecoration(
+                color: colors.primaryContainer,
+                shape: BoxShape.circle,
               ),
-              buttonStyle: ElevatedButton.styleFrom(
-                backgroundColor: theme.primary,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                ),
+              child: Icon(
+                Icons.task_alt_rounded,
+                size: 34.r,
+                color: colors.primary,
+              ),
+            ),
+            SizedBox(height: 18.h),
+            Text(
+              l.tasks_empty_title,
+              style: Styles.textStyle18.copyWith(fontWeight: FontWeight.w700),
+            ),
+            SizedBox(height: 7.h),
+            Text(
+              l.tasks_empty_subtitle,
+              textAlign: TextAlign.center,
+              style: Styles.textStyle12.copyWith(
+                color: colors.onSurfaceVariant,
+                height: 1.5,
               ),
             ),
           ],
@@ -314,82 +695,44 @@ class _ErrorView extends StatelessWidget {
   }
 }
 
-/// Shimmering placeholder for the initial task-list load. Shaped to roughly
-/// match [WorkerTaskCard] (leading thumb + name + status badge, a couple of
-/// info lines, an action row) so the swap to real content doesn't jump.
-class _TasksLoadingSkeleton extends StatelessWidget {
-  const _TasksLoadingSkeleton();
+class _ErrorView extends StatelessWidget {
+  const _ErrorView({required this.message, required this.onRetry});
+
+  final String message;
+  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-      physics: const AlwaysScrollableScrollPhysics(),
-      itemCount: 5,
-      itemBuilder: (context, index) => Padding(
-        padding: EdgeInsets.only(bottom: 14.h),
-        child: const _SkeletonTaskCard(),
-      ),
-    );
-  }
-}
-
-class _SkeletonTaskCard extends StatelessWidget {
-  const _SkeletonTaskCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
-
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: theme.surface,
-        borderRadius: BorderRadius.circular(AppRadius.xl),
-        border: Border.all(color: theme.onSurface.withValues(alpha: 0.06)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppShimmerBox(width: 44.w, height: 44.w, radius: AppRadius.sm),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppShimmerBox(width: 120.w, height: 14.h),
-                    SizedBox(height: 8.h),
-                    AppShimmerBox(width: 70.w, height: 10.h),
-                  ],
-                ),
+    final colors = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context)!;
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 32.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.cloud_off_rounded, size: 58.r, color: colors.error),
+            SizedBox(height: 18.h),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: Styles.textStyle14.copyWith(
+                color: colors.onSurfaceVariant,
               ),
-              SizedBox(width: 8.w),
-              AppShimmerBox(width: 64.w, height: 20.h, radius: AppRadius.pill),
-            ],
-          ),
-          SizedBox(height: 16.h),
-          AppShimmerBox(width: 180.w, height: 12.h),
-          SizedBox(height: 8.h),
-          AppShimmerBox(width: 140.w, height: 12.h),
-          SizedBox(height: 8.h),
-          AppShimmerBox(width: 110.w, height: 12.h),
-          SizedBox(height: 16.h),
-          Row(
-            children: [
-              Expanded(
-                child: AppShimmerBox(height: 48.h, radius: AppRadius.sm),
+            ),
+            SizedBox(height: 22.h),
+            CustomElevatedButton(
+              text: l.retry,
+              width: 160.w,
+              height: 48.h,
+              onPressed: onRetry,
+              buttonTextStyle: Styles.textStyle14.copyWith(
+                color: colors.onPrimary,
+                fontWeight: FontWeight.w600,
               ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: AppShimmerBox(height: 48.h, radius: AppRadius.sm),
-              ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

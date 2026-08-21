@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../../config/theme/colors.dart';
 import '../../domain/entities/app_notification.dart';
 
-/// Presentation metadata for an [AppNotificationType]: the icon + accent colour
-/// used by the tile. Colours come from the project palette — not literal design
-/// colours.
 class AppNotificationUi {
   final IconData icon;
   final Color color;

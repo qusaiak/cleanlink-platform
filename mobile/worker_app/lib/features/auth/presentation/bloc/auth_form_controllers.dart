@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 
-/// Text controllers, [FocusNode]s, and [FormState] keys for auth screens.
-/// Owned by [AuthBloc] and disposed in [AuthBloc.close].
 class AuthFormControllers {
   AuthFormControllers();
 
-  // ── Login ─────────────────────────────────────────────────────────────────
   final GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
   final TextEditingController loginEmail = TextEditingController();
   final TextEditingController loginPassword = TextEditingController();
   final FocusNode loginEmailFocus = FocusNode();
   final FocusNode loginPasswordFocus = FocusNode();
 
-  // ── Register ────────────────────────────────────────────────────────────────
   final GlobalKey<FormState> registerFormKey = GlobalKey<FormState>();
   final TextEditingController registerName = TextEditingController();
   final TextEditingController registerPhone = TextEditingController();
@@ -25,11 +21,9 @@ class AuthFormControllers {
   final FocusNode registerPasswordFocus = FocusNode();
   final FocusNode registerConfirmFocus = FocusNode();
 
-  // ── OTP ───────────────────────────────────────────────────────────────────
   final TextEditingController otpCode = TextEditingController();
   final FocusNode otpFocus = FocusNode();
 
-  // ── Change password ─────────────────────────────────────────────────────────
   final GlobalKey<FormState> changeFormKey = GlobalKey<FormState>();
   final TextEditingController changeOldPassword = TextEditingController();
   final TextEditingController changeNewPassword = TextEditingController();

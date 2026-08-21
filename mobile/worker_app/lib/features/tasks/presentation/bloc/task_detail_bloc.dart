@@ -3,26 +3,42 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/task.dart';
+import '../../domain/usecases/get_task_by_id_usecase.dart';
 import '../../domain/usecases/update_task_status_usecase.dart';
 
 part 'task_detail_event.dart';
 part 'task_detail_state.dart';
 
-/// Drives the task-detail screen: attaching before/after photos and advancing
-/// the task to the single next status of the strict
-/// `pending → on_way → handling → done` sequence.
-///
-/// Constructed with the [Task] to display (passed via navigation) plus the
-/// use case (from `get_it`), so it has a fully-formed initial state without
-/// a separate "load" round-trip.
 class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
   final UpdateTaskStatusUseCase updateTaskStatus;
+  final GetTaskByIdUseCase getTaskById;
 
-  TaskDetailBloc({required Task task, required this.updateTaskStatus})
-    : super(TaskDetailState(task: task)) {
+  TaskDetailBloc({
+    required Task task,
+    required this.updateTaskStatus,
+    required this.getTaskById,
+  }) : super(TaskDetailState(task: task)) {
+    on<LoadTaskDetails>(_onLoad);
     on<PhotoAdded>(_onPhotoAdded);
     on<PhotoRemoved>(_onPhotoRemoved);
     on<AdvanceStatusSubmitted>(_onSubmitted);
+    if (task.id.isNotEmpty) add(const LoadTaskDetails());
+  }
+
+  Future<void> _onLoad(
+    LoadTaskDetails event,
+    Emitter<TaskDetailState> emit,
+  ) async {
+    if (state.task.id.isEmpty) return;
+    emit(state.copyWith(status: TaskDetailStatus.loading));
+    final result = await getTaskById(params: state.task.id);
+    result.fold(
+      (failure) => emit(
+        state.copyWith(status: TaskDetailStatus.loadFailure, error: failure),
+      ),
+      (task) =>
+          emit(state.copyWith(status: TaskDetailStatus.loaded, task: task)),
+    );
   }
 
   void _onPhotoAdded(PhotoAdded event, Emitter<TaskDetailState> emit) {
@@ -66,15 +82,11 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
     AdvanceStatusSubmitted event,
     Emitter<TaskDetailState> emit,
   ) async {
-    // The only status offered is the next one in the sequence; nothing to do
-    // at the end of it (or for legacy paused/cancelled tasks).
     final target = state.nextStatus;
     if (target == null) return;
 
     emit(state.copyWith(status: TaskDetailStatus.submitting));
 
-    // Photos ride along ONLY on the `done` step (contract rule 4); the UI
-    // hides the pickers on every other step, and the use case re-validates.
     final sendPhotos = target == TaskStatus.completed;
     final result = await updateTaskStatus(
       params: UpdateTaskStatusParams(
@@ -90,16 +102,22 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
       ),
     );
 
-    result.fold(
-      (failure) => emit(
-        state.copyWith(status: TaskDetailStatus.failure, error: failure),
-      ),
-      (updatedTask) => emit(
-        state.copyWith(
-          status: TaskDetailStatus.success,
-          task: updatedTask,
-          clearNewPhotos: true,
-        ),
+    Failure? failure;
+    Task? updated;
+    result.fold((value) => failure = value, (value) => updated = value);
+    if (failure != null) {
+      emit(state.copyWith(status: TaskDetailStatus.failure, error: failure));
+      return;
+    }
+
+    var latest = updated!;
+    final refreshed = await getTaskById(params: latest.id);
+    refreshed.fold((_) {}, (task) => latest = task);
+    emit(
+      state.copyWith(
+        status: TaskDetailStatus.success,
+        task: latest,
+        clearNewPhotos: true,
       ),
     );
   }

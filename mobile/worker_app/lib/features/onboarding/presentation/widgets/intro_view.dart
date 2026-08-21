@@ -14,25 +14,18 @@ class IntroView extends StatelessWidget {
     return SafeArea(
       child: Column(
         children: [
-          /// 📌 TOP IMAGE ONLY
-          /// Flexible so it takes the available height instead of a fixed
-          /// 600.h, which overflowed the column on shorter screens.
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(24.r),
-                child: Image.asset(
-                  imageUrl,
-                  fit: BoxFit.contain, // important: no cropping
-                ),
+                child: Image.asset(imageUrl, fit: BoxFit.contain),
               ),
             ),
           ),
 
           SizedBox(height: 24.h),
 
-          /// 📌 TITLE
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: Text(
@@ -43,8 +36,6 @@ class IntroView extends StatelessWidget {
             ),
           ),
 
-          /// Bottom breathing room so the title clears the overlaid dots
-          /// indicator and the "next" button.
           SizedBox(height: 90.h),
         ],
       ),

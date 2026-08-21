@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/styles.dart';
 
-/// Title and subtitle pair shown beneath the auth logo on every page.
 class AuthHeader extends StatelessWidget {
   const AuthHeader({
     super.key,
@@ -18,7 +17,7 @@ class AuthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context)!.colorScheme;
+    var theme = Theme.of(context).colorScheme;
     final textAlign = alignment == CrossAxisAlignment.start
         ? TextAlign.start
         : TextAlign.center;

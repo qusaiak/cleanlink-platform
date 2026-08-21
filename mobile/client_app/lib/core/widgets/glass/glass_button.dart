@@ -33,7 +33,6 @@ class GlassButton extends StatelessWidget {
 
   Widget _filled() {
     if (label == null) {
-      // Icon-only button
       return ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -65,7 +64,6 @@ class GlassButton extends StatelessWidget {
 
   Widget _outlined() {
     if (label == null) {
-      // Icon-only outlined button
       return OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(

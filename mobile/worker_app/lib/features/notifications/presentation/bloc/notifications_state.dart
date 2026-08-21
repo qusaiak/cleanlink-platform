@@ -1,8 +1,5 @@
 part of 'notifications_bloc.dart';
 
-/// [markReadFailure] is transient: emitted (with [NotificationsState.error])
-/// when a mark-as-read request fails so the page can show a snackbar, then
-/// immediately followed by [loaded].
 enum NotificationsStatus { initial, loading, loaded, error, markReadFailure }
 
 class NotificationsState extends Equatable {
@@ -10,8 +7,6 @@ class NotificationsState extends Equatable {
   final List<AppNotification> notifications;
   final Failure? error;
 
-  /// Ids whose mark-as-read request is currently in flight — drives the small
-  /// loading indicator on that notification's button.
   final Set<String> markingReadIds;
 
   const NotificationsState({
@@ -21,7 +16,6 @@ class NotificationsState extends Equatable {
     this.markingReadIds = const {},
   });
 
-  /// Number of unread notifications — drives the top-bar badge.
   int get unreadCount => notifications.where((n) => !n.isRead).length;
 
   NotificationsState copyWith({

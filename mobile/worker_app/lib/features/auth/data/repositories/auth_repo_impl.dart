@@ -42,18 +42,6 @@ class AuthRepositoryImpl implements AuthRepository {
     return unit;
   });
 
-  /// Runs [action] and maps every failure mode onto a distinct [Failure],
-  /// LOGGING the real cause (with its stack) on the way out.
-  ///
-  /// Each `catch` is deliberately specific, and none of them swallows anything:
-  ///  - [DioException]  → the server's own message when it answered, or a
-  ///    transport code when it never did (see `ServerFailure.fromDioError`).
-  ///  - [SocketException]  → no route to the host / connection refused. This is
-  ///    what a backend that isn't running looks like.
-  ///  - [TimeoutException] → a timeout raised outside Dio's own machinery.
-  ///  - [FormatException]  → the body could not be read as JSON.
-  ///  - anything else → reported as-is rather than hidden behind a generic
-  ///    string, so an unexpected bug is still visible in the message and log.
   Future<Either<Failure, T>> _guard<T>(
     String operation,
     Future<T> Function() action,

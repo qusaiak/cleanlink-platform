@@ -1,12 +1,6 @@
 {
   "language": "اللغة",
-  "@language":{
-    "description": "The current Language"
-  },
   "helloWorld": "مرحبا عالم!",
-  "@helloWorld": {
-    "description": "A programmer greeting"
-  },
   "welcome": "أهلا",
   "help_text_1": "اختر الخدمة التي تناسبك وحدد موعدًا للتنظيف ببضع نقرات فقط.",
   "help_text_2": "يقدم عمال النظافة ذوو الخبرة لدينا خدمة عالية الجودة وموثوقة.",
@@ -35,7 +29,6 @@
   "did_not_receive_code": "لم يصلك الرمز؟",
   "resend_code": "إعادة إرسال الرمز",
   "error_connection": "يرجى التحقق من الإتصال بالإنترنت",
-  "error_connection_timeout": "انتهت مهلة الاتصال. يرجى المحاولة مرة أخرى.",
   "creating_account": "جاري إنشاء الحساب…",
   "verify_account": "تأكيد الحساب",
   "verifying": "جاري التأكيد…",
@@ -100,13 +93,17 @@
   "auth_otp_subtitle": "أرسلنا رمزاً مكوناً من 6 أرقام إلى {phone}",
   "@auth_otp_subtitle": {
     "placeholders": {
-      "phone": { "type": "String" }
+      "phone": {
+        "type": "String"
+      }
     }
   },
   "auth_otp_resend_in": "إعادة إرسال الرمز خلال {seconds} ث",
   "@auth_otp_resend_in": {
     "placeholders": {
-      "seconds": { "type": "int" }
+      "seconds": {
+        "type": "int"
+      }
     }
   },
   "auth_otp_resend": "إعادة إرسال الرمز",
@@ -130,11 +127,11 @@
   "appearance": "المظهر",
   "notification_setting": "الإشعارات",
   "my_profile": "الملف الشخصي",
-  "contact_us_title":"نحن هنا للمساعدة",
-  "contact_us_body":"أرسل إلينا مشكلتك، وسنتواصل معك.",
+  "contact_us_title": "نحن هنا للمساعدة",
+  "contact_us_body": "أرسل إلينا مشكلتك، وسنتواصل معك.",
   "mobile_number": "رقم الموبايل",
   "title": "العنوان",
-  "email":"البريد الإلكتروني",
+  "email": "البريد الإلكتروني",
   "description": "الوصف",
   "send": "إرسال",
   "optional": "اختياري",
@@ -153,9 +150,9 @@
   "categories": "التصنيفات",
   "popular_companies": "أفضل الشركات",
   "popular_services": "أفضل الخدمات",
-
   "tasks_title": "مهامي اليومية",
   "tasks_remaining_today": "المتبقي اليوم",
+  "tasks_pending_today": "المهام المعلقة اليوم",
   "tasks_completed_label": "المهام المنجزة",
   "tasks_list_title": "قائمة المهام",
   "tasks_filter": "تصفية",
@@ -163,7 +160,9 @@
   "task_request_number": "طلب رقم #{number}",
   "@task_request_number": {
     "placeholders": {
-      "number": { "type": "String" }
+      "number": {
+        "type": "String"
+      }
     }
   },
   "task_status_assigned": "تم التعيين",
@@ -186,7 +185,9 @@
   "task_status_updated_message": "تم تحديث الحالة إلى {status}",
   "@task_status_updated_message": {
     "placeholders": {
-      "status": { "type": "String" }
+      "status": {
+        "type": "String"
+      }
     }
   },
   "task_action_failed_message": "تعذّر تنفيذ الإجراء. حاول مرة أخرى",
@@ -195,13 +196,14 @@
   "task_advance_to": "الانتقال إلى: {status}",
   "@task_advance_to": {
     "placeholders": {
-      "status": { "type": "String" }
+      "status": {
+        "type": "String"
+      }
     }
   },
   "task_on_way_message": "أنت الآن في الطريق إلى الموقع",
   "invalid_status_transition_message": "يجب أن تتقدم حالة المهمة خطوة واحدة بالترتيب (تم التعيين ← في الطريق ← قيد التنفيذ ← مكتملة)؛ لا يمكن الرجوع للخلف أو تخطي خطوة",
   "images_only_when_done_message": "لا يمكن رفع صور قبل/بعد إلا عند إنهاء المهمة (الحالة \"مكتملة\")",
-
   "task_management_title": "إدارة المهام",
   "task_details_section": "تفاصيل المهمة",
   "task_required_tools": "الأدوات المطلوبة",
@@ -218,6 +220,34 @@
   "task_leader_section": "قائد الفريق",
   "task_leader_yes": "نعم",
   "task_leader_no": "لا",
+  "task_schedule_section": "الجدول الزمني",
+  "task_expected_end": "وقت الانتهاء المتوقع",
+  "task_travel_buffer": "وقت الانتقال",
+  "minutes_value": "{minutes} دقيقة",
+  "@minutes_value": {"placeholders": {"minutes": {"type": "int"}}},
+  "task_client_section": "العميل",
+  "task_team_section": "فريق العمل",
+  "task_team_member": "عضو الفريق",
+  "task_you_badge": "أنت",
+  "task_leader_badge": "القائد",
+  "task_payment_section": "الدفع",
+  "task_payment_method": "الطريقة",
+  "task_payment_status": "الحالة",
+  "payment_method_manual": "نقداً",
+  "payment_method_electric": "دفع إلكتروني",
+  "payment_status_pending": "قيد الانتظار",
+  "payment_status_held": "تم الحجز",
+  "payment_status_paid": "مدفوع",
+  "payment_status_captured": "تم التحصيل",
+  "payment_status_failed": "فشل",
+  "task_notes_section": "ملاحظات",
+  "task_location_section": "الموقع",
+  "task_view_map": "عرض الخريطة",
+  "task_navigate": "بدء التنقل",
+  "task_map_unavailable": "إحداثيات الخريطة غير متاحة",
+  "task_service_details": "الخدمة والباقة",
+  "task_minimum_workers": "الحد الأدنى للعمال",
+  "today_summary_unavailable": "ملخص اليوم غير متاح",
   "visual_documentation": "التوثيق المرئي",
   "photo_before": "تصوير قبل البدء",
   "photo_after": "تصوير بعد الانتهاء",
@@ -228,7 +258,6 @@
   "choose_from_gallery": "اختيار من المعرض",
   "photo_added_message": "تمت إضافة الصورة",
   "photo_pick_failed_message": "تعذّر إضافة الصورة",
-
   "current_status": "الحالة الحالية",
   "availability_available": "متاح",
   "availability_busy": "مشغول",
@@ -257,10 +286,11 @@
   "availability_updated_message": "تم تغيير حالتك إلى {status}",
   "@availability_updated_message": {
     "placeholders": {
-      "status": { "type": "String" }
+      "status": {
+        "type": "String"
+      }
     }
   },
-
   "notifications_title": "الإشعارات",
   "notifications_mark_all_read": "تعليم الكل كمقروء",
   "notifications_empty_title": "لا توجد إشعارات بعد",
@@ -268,7 +298,6 @@
   "notifications_load_failed": "تعذّر تحميل الإشعارات",
   "notification_received": "وصل في",
   "notification_mark_as_read": "تعليم كمقروء",
-
   "search_title": "البحث",
   "search_mode_general": "عام",
   "search_mode_custom": "مخصص",
@@ -280,7 +309,9 @@
   "search_custom_hint": "ابحث حسب {field}…",
   "@search_custom_hint": {
     "placeholders": {
-      "field": { "type": "String" }
+      "field": {
+        "type": "String"
+      }
     }
   },
   "search_hint_prompt": "ابحث عن الخدمات بالاسم أو العميل أو الموقع أو الوقت.",
@@ -289,7 +320,9 @@
   "price_amount": "{amount} ريال",
   "@price_amount": {
     "placeholders": {
-      "amount": { "type": "String" }
+      "amount": {
+        "type": "String"
+      }
     }
   },
   "greeting_hello": "مرحباً،",

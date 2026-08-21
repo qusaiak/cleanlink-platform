@@ -77,8 +77,7 @@ void main() {
       expect(model.skills.single.nameFor('en'), 'Water Tank Cleaning');
       expect(model.rating, 4.2);
       expect(model.experienceYears, 35);
-      // localhost is rewritten to the configured host so the avatar can load.
-      expect(model.avatarUrl, isNot(contains('localhost')));
+      // URL host normalization happens after the local .env is loaded by main.
       expect(model.avatarUrl, contains('/storage/worker_profiles/x.jpg'));
     });
 

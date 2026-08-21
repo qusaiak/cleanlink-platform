@@ -10,13 +10,6 @@ import '../../../../injection_container.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/usecases/logout_usecase.dart';
 
-/// Shows the logout confirmation dialog and runs the full logout flow.
-///
-/// On confirm it calls `POST /api/auth/logout` (the bearer token is attached by
-/// the shared Dio interceptor), then — whatever the outcome — clears the local
-/// session ([clearSession]) and navigates to login with the entire navigation
-/// stack removed. A failed request therefore can never leave the worker stuck
-/// signed in; it just surfaces a brief non-blocking toast.
 Future<void> showLogoutDialog(BuildContext context) {
   return showDialog<void>(
     context: context,
@@ -36,19 +29,15 @@ class _LogoutDialogState extends State<_LogoutDialog> {
   bool _loading = false;
 
   Future<void> _confirm() async {
-    // Guard against duplicate taps while the request is in flight.
     if (_loading) return;
     final l = AppLocalizations.of(context)!;
     final navigator = Navigator.of(context);
     setState(() => _loading = true);
 
-    // Server logout — resolved before the session (and the locator) is cleared.
     final result = await sl<LogoutUsecase>()();
 
-    // Always drop the local session, success or failure.
     await clearSession();
 
-    // Close the dialog and replace the whole stack with login (no back).
     navigator.pop();
     AppRouter.router.go(AppRouter.kLogin);
 
@@ -63,7 +52,6 @@ class _LogoutDialogState extends State<_LogoutDialog> {
     final l = AppLocalizations.of(context)!;
 
     return PopScope(
-      // Block the back button while logging out.
       canPop: !_loading,
       child: AlertDialog(
         backgroundColor: theme.surface,

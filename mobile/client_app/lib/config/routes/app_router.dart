@@ -412,11 +412,6 @@ class AppRouter {
 
       final authenticated = await SharedStorage.authenticated;
 
-      debugPrint('''
-Location: $location
-Onboarding: $onboardingDone
-Auth: $authenticated
-''');
 
       /// FIRST RUN
       if (!onboardingDone && location != kOnboarding) {

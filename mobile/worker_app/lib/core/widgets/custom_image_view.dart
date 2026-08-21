@@ -4,10 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../config/theme/colors.dart';
-import 'app_shimmer.dart';
+import '../utils/functions/spinkit.dart';
 
 class CustomImageView extends StatelessWidget {
-  ///[imagePath] is required parameter for showing image
   final String? imagePath;
   final double? height;
   final double? width;
@@ -21,8 +20,6 @@ class CustomImageView extends StatelessWidget {
   final BoxBorder? border;
   final Gradient? gradient;
 
-  ///a [CustomImageView] it can be used for showing any type of images
-  /// it will shows the placeholder image if image is not found on network image
   const CustomImageView({
     super.key,
     this.imagePath,
@@ -53,7 +50,6 @@ class CustomImageView extends StatelessWidget {
     );
   }
 
-  ///build the image with border radius
   _buildCircleImage() {
     if (radius != null) {
       return ClipRRect(
@@ -65,7 +61,6 @@ class CustomImageView extends StatelessWidget {
     }
   }
 
-  ///build the image with border and border radius style
   _buildImageWithBorder() {
     if (border != null) {
       return Container(
@@ -123,10 +118,10 @@ class CustomImageView extends StatelessWidget {
                     fit: BoxFit.cover,
                     color: color,
                   )
-                : AppShimmerBox(
+                : SizedBox(
                     width: width,
                     height: height ?? 40,
-                    radius: radius?.topLeft.x ?? 8,
+                    child: Center(child: spinKitApp(AppColor.primaryColor)),
                   ),
             errorWidget: (context, url, error) =>
                 const Icon(Icons.error, color: AppColor.primaryLight),
@@ -143,7 +138,6 @@ class CustomImageView extends StatelessWidget {
       }
     }
     return ClipRRect(
-      // borderRadius: BorderRadius.circular(10.r),
       child: Image.asset(
         placeHolder!,
         height: height,

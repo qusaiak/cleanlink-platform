@@ -12,11 +12,6 @@ import '../../../profile/presentation/bloc/profile_bloc.dart';
 import '../../../profile/presentation/widgets/custom_tile.dart';
 import '../../../profile/presentation/widgets/section_card.dart';
 
-/// Settings screen reached from the home drawer.
-///
-/// Lets the worker switch the app theme (light/dark) and language (Arabic/
-/// English). Both are driven by the root-provided [ProfileBloc] — the same
-/// events the app already uses to rebuild [MaterialApp]'s theme and locale.
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
@@ -26,7 +21,7 @@ class SettingsPage extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: theme.secondaryContainer,
+      backgroundColor: theme.surfaceContainerLowest,
       appBar: customAppBar(
         l.setting_title,
         Icons.arrow_back_ios_new_rounded,
@@ -44,7 +39,6 @@ class SettingsPage extends StatelessWidget {
                 SectionCard(
                   title: l.appearance,
                   children: [
-                    // Theme — tap to flip light/dark instantly.
                     CustomTile(
                       icon: Icons.settings_brightness,
                       title: l.appearance,
@@ -57,7 +51,7 @@ class SettingsPage extends StatelessWidget {
                         color: theme.primary,
                       ),
                     ),
-                    // Language — confirm, then toggle Arabic/English.
+
                     CustomTile(
                       icon: Icons.language,
                       title: l.app_lang,
@@ -88,8 +82,6 @@ class SettingsPage extends StatelessWidget {
                 SectionCard(
                   title: l.account,
                   children: [
-                    // Change password — opens the dedicated change-password
-                    // screen (PUT /api/auth/change-password).
                     CustomTile(
                       icon: Icons.lock_outline_rounded,
                       title: l.auth_change_password_title,

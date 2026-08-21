@@ -42,7 +42,6 @@ class _OnboardingBodyState extends State<OnboardingBody> {
       ),
     ];
 
-    // Pre-cache the images
     for (var content in contents) {
       precacheImage(AssetImage(content.imageUrl), context);
     }
@@ -89,7 +88,6 @@ class _OnboardingBodyState extends State<OnboardingBody> {
               MoveNextPage(
                 onTap: () async {
                   if (state.current == 2) {
-                    // Persist so onboarding is never shown again.
                     await AppStartup.completeOnboarding();
                     router.go(AppRouter.kLogin);
                   } else {

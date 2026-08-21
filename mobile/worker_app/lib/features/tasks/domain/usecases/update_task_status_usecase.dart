@@ -1,4 +1,3 @@
-// Hide dartz's own `Task` so it doesn't clash with our domain [Task] entity.
 import 'package:dartz/dartz.dart' hide Task;
 import 'package:equatable/equatable.dart';
 
@@ -7,11 +6,6 @@ import '../../../../core/usecases/usecase.dart';
 import '../entities/task.dart';
 import '../repositories/tasks_repository.dart';
 
-/// Parameters for [UpdateTaskStatusUseCase].
-///
-/// [currentStatus] is the task's status right now — it lets the use case
-/// verify the transition is legal BEFORE any request is sent. The image paths
-/// are the local files for the before/after documentation photos.
 class UpdateTaskStatusParams extends Equatable {
   final String taskId;
   final TaskStatus currentStatus;
@@ -37,18 +31,6 @@ class UpdateTaskStatusParams extends Equatable {
   ];
 }
 
-/// Transitions a task to a new lifecycle status. Every status change funnels
-/// through here, so the contract's client-side rules are enforced in one
-/// place, before any request goes out:
-///
-///  1. The flow is strictly sequential (`pending → on_way → handling → done`):
-///     the only accepted [UpdateTaskStatusParams.newStatus] is the single next
-///     step — never backward, never skipping.
-///  2. Before/after images may ride along ONLY when the status being sent is
-///     `done`.
-///
-/// Violations return a [ValidationFailure] (mapped to a localized message in
-/// the UI) without touching the network.
 class UpdateTaskStatusUseCase
     implements UseCase<Either<Failure, Task>, UpdateTaskStatusParams> {
   final TasksRepository repository;

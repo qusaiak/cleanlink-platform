@@ -6,24 +6,18 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/utils/functions/build_app_snack_bar.dart';
 import '../../../../core/utils/functions/localized_failure_message.dart';
 import '../../../../core/widgets/app_primary_button.dart';
-import '../../../../core/widgets/custom_appbar.dart';
+import '../../../../config/theme/styles.dart';
 import '../../../../injection_container.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/task.dart';
 import '../bloc/task_detail_bloc.dart';
-import '../widgets/task_info_card.dart';
+import '../widgets/task_header_card.dart';
+import '../widgets/task_details_sections.dart';
 import '../widgets/task_location_banner.dart';
 import '../widgets/task_photo_documentation.dart';
 import '../widgets/task_progress_stepper.dart';
 import '../widgets/task_status_ui.dart';
 
-/// Screen 3 — full task detail.
-///
-/// Receives the [task] (via navigation) and provides a [TaskDetailBloc] built
-/// with it plus the use case from `get_it`. Shows the strict progress stepper
-/// (`pending → on_way → handling → done`) and a single button that advances
-/// only to the next allowed status; the before/after photo pickers appear
-/// exclusively on the final (`done`) step, matching the API contract.
 class TaskDetailsPage extends StatelessWidget {
   final Task task;
 
@@ -32,7 +26,8 @@ class TaskDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<TaskDetailBloc>(
-      create: (_) => TaskDetailBloc(task: task, updateTaskStatus: sl()),
+      create: (_) =>
+          TaskDetailBloc(task: task, updateTaskStatus: sl(), getTaskById: sl()),
       child: const _TaskDetailsView(),
     );
   }
@@ -47,13 +42,16 @@ class _TaskDetailsView extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: theme.secondaryContainer,
-      appBar: customAppBar(
-        l.task_management_title,
-        Icons.arrow_back_ios_new_rounded,
-        null,
-        () => context.pop(),
-        theme.primary,
+      backgroundColor: theme.surfaceContainerLowest,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => context.pop(),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+        ),
+        title: Text(
+          l.task_management_title,
+          style: Styles.textStyle18.copyWith(fontWeight: FontWeight.w700),
+        ),
       ),
       body: BlocConsumer<TaskDetailBloc, TaskDetailState>(
         listenWhen: (prev, curr) =>
@@ -69,8 +67,7 @@ class _TaskDetailsView extends StatelessWidget {
               context,
               message: l.task_status_updated_message(statusLabel),
             );
-            // Return to the list, handing back the updated task so the list
-            // (the single source of truth) reflects the new status at once.
+
             context.pop(state.task);
           } else if (state.status == TaskDetailStatus.failure) {
             showAppSnackBar(
@@ -90,31 +87,96 @@ class _TaskDetailsView extends StatelessWidget {
               children: [
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 16.h),
+                    padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TaskLocationBanner(task: state.task),
-                        SizedBox(height: 16.h),
-                        TaskInfoCard(task: state.task),
-                        SizedBox(height: 22.h),
-                        // Progress through the strict sequence — visible to the
-                        // whole crew; only the leader can advance it below.
-                        TaskProgressStepper(current: state.task.status),
-                        // The photo pickers exist ONLY while marking the task
-                        // done (the API accepts images with no other status).
-                        if (state.task.isTeamLeader && state.isMarkingDone) ...[
-                          SizedBox(height: 22.h),
-                          TaskPhotoDocumentation(
-                            beforeExisting: state.task.beforePhotos,
-                            afterExisting: state.task.afterPhotos,
-                            beforeNew: state.newBeforePhotos,
-                            afterNew: state.newAfterPhotos,
-                            onPicked: (isBefore, path) => bloc.add(
-                              PhotoAdded(path: path, isBefore: isBefore),
+                        if (state.status == TaskDetailStatus.loading)
+                          const LinearProgressIndicator(minHeight: 2),
+                        if (state.status == TaskDetailStatus.loadFailure) ...[
+                          Container(
+                            padding: EdgeInsets.all(14.w),
+                            decoration: BoxDecoration(
+                              color: theme.errorContainer,
+                              borderRadius: BorderRadius.circular(16.r),
                             ),
-                            onRemoveNew: (isBefore, index) => bloc.add(
-                              PhotoRemoved(index: index, isBefore: isBefore),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    localizedFailureMessage(
+                                      context,
+                                      state.error,
+                                    ),
+                                    style: Styles.textStyle12.copyWith(
+                                      color: theme.onErrorContainer,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      bloc.add(const LoadTaskDetails()),
+                                  child: Text(l.retry),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 16.h),
+                        ],
+                        TaskHeaderCard(task: state.task),
+                        SizedBox(height: 16.h),
+                        TaskProgressStepper(current: state.task.status),
+                        SizedBox(height: 16.h),
+                        TaskScheduleCard(task: state.task),
+                        if (state.task.location.isNotEmpty) ...[
+                          SizedBox(height: 16.h),
+                          TaskLocationBanner(task: state.task),
+                        ],
+                        SizedBox(height: 16.h),
+                        TaskServicePackageCard(task: state.task),
+                        if (state.task.customerName.isNotEmpty) ...[
+                          SizedBox(height: 16.h),
+                          TaskClientCard(task: state.task),
+                        ],
+                        if (state.task.teamMembers.isNotEmpty ||
+                            state.task.leaderName.isNotEmpty) ...[
+                          SizedBox(height: 16.h),
+                          TaskTeamCard(task: state.task),
+                        ],
+                        if (state.task.price > 0 ||
+                            state.task.paymentMethod.isNotEmpty ||
+                            state.task.paymentStatus.isNotEmpty) ...[
+                          SizedBox(height: 16.h),
+                          TaskPaymentCard(task: state.task),
+                        ],
+                        if (state.task.details.trim().isNotEmpty) ...[
+                          SizedBox(height: 16.h),
+                          TaskNotesCard(task: state.task),
+                        ],
+
+                        if (state.task.beforePhotos.isNotEmpty ||
+                            state.task.afterPhotos.isNotEmpty ||
+                            (state.task.isTeamLeader &&
+                                state.isMarkingDone)) ...[
+                          SizedBox(height: 16.h),
+                          Container(
+                            padding: EdgeInsets.all(18.w),
+                            decoration: BoxDecoration(
+                              color: theme.surface,
+                              borderRadius: BorderRadius.circular(22.r),
+                              border: Border.all(color: theme.outlineVariant),
+                            ),
+                            child: TaskPhotoDocumentation(
+                              beforeExisting: state.task.beforePhotos,
+                              afterExisting: state.task.afterPhotos,
+                              beforeNew: state.newBeforePhotos,
+                              afterNew: state.newAfterPhotos,
+                              onPicked: (isBefore, path) => bloc.add(
+                                PhotoAdded(path: path, isBefore: isBefore),
+                              ),
+                              onRemoveNew: (isBefore, index) => bloc.add(
+                                PhotoRemoved(index: index, isBefore: isBefore),
+                              ),
                             ),
                           ),
                         ],
@@ -122,20 +184,31 @@ class _TaskDetailsView extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Pinned advance button — leader only, and only while there is
-                // a next status to move to.
-                if (state.task.isTeamLeader && next != null)
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 12.h),
-                    child: AppPrimaryButton(
-                      label: l.task_advance_to(
-                        TaskStatusUi.of(context, next).label,
+
+                if (state.task.isTeamLeader &&
+                    state.task.id.isNotEmpty &&
+                    next != null)
+                  Container(
+                    padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 12.h),
+                    decoration: BoxDecoration(
+                      color: theme.surface,
+                      border: Border(
+                        top: BorderSide(color: theme.outlineVariant),
                       ),
-                      icon: next == TaskStatus.completed
-                          ? Icons.check_circle_outline_rounded
-                          : Icons.arrow_forward_rounded,
-                      loading: state.status == TaskDetailStatus.submitting,
-                      onPressed: () => bloc.add(const AdvanceStatusSubmitted()),
+                    ),
+                    child: SafeArea(
+                      top: false,
+                      child: AppPrimaryButton(
+                        label: l.task_advance_to(
+                          TaskStatusUi.of(context, next).label,
+                        ),
+                        icon: next == TaskStatus.completed
+                            ? Icons.check_circle_outline_rounded
+                            : Icons.arrow_forward_rounded,
+                        loading: state.status == TaskDetailStatus.submitting,
+                        onPressed: () =>
+                            bloc.add(const AdvanceStatusSubmitted()),
+                      ),
                     ),
                   ),
               ],

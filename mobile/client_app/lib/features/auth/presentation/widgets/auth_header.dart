@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/styles.dart';
 
-/// Title and subtitle pair shown beneath the auth logo on every page.
 class AuthHeader extends StatelessWidget {
   const AuthHeader({
     super.key,

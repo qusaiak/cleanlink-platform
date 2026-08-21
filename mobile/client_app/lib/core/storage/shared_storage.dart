@@ -29,16 +29,12 @@ abstract class SharedStorage {
         final parsedValue = value;
         return parsedValue as T?;
       } on PlatformException catch (e) {
-        // Handle decryption errors (e.g., BadPaddingException)
-        // This can happen when encryption keys change or data is corrupted
         debugPrint(
           'Error reading secure storage for key ${key.storableKey}: $e',
         );
-        // Delete the corrupted key
         try {
           await _secureStorage!.delete(key: key.storableKey);
         } catch (_) {
-          // Ignore deletion errors
         }
         return null;
       }
@@ -47,8 +43,6 @@ abstract class SharedStorage {
     return _sharedPreferences?.get(key.storableKey) as T?;
   }
 
-  /// Reads a boolean preference while remaining compatible with values saved
-  /// as strings or integers by older application versions.
   static Future<bool?> getBool(Storable key) async {
     final value = await get<Object>(key);
     return parseBool(value);
@@ -103,7 +97,6 @@ abstract class SharedStorage {
       try {
         return await _secureStorage?.containsKey(key: key.storableKey) ?? false;
       } on PlatformException catch (_) {
-        // If there's an error checking the key, assume it doesn't exist
         return false;
       }
     }
@@ -138,7 +131,6 @@ abstract class SharedStorage {
     try {
       return await _secureStorage!.read(key: _sessionIdKey);
     } on PlatformException catch (_) {
-      // Handle decryption errors
       try {
         await _secureStorage!.delete(key: _sessionIdKey);
       } catch (_) {}

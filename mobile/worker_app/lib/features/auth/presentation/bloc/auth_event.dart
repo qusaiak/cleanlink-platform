@@ -52,9 +52,6 @@ class ChangePasswordView extends AuthEvent {
   List<Object> get props => [currentTextFormField];
 }
 
-/// Submit the change-password form. The three field values are carried on the
-/// event so the bloc never reads the controllers directly (they belong to the
-/// form widget's lifecycle).
 class SubmitChangePassword extends AuthEvent {
   final String oldPassword;
   final String newPassword;

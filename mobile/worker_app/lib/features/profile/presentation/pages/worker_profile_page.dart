@@ -1,34 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/app_decoration.dart';
 import '../../../../core/utils/functions/build_app_snack_bar.dart';
 import '../../../../core/utils/functions/localized_failure_message.dart';
 import '../../../../core/utils/functions/spinkit.dart';
 import '../../../../core/utils/functions/validator.dart';
-import '../../../../core/widgets/custom_appbar.dart';
+import '../../../../core/widgets/custom_dialog.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/stat_card.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../injection_container.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../auth/presentation/widgets/logout_dialog.dart';
+import '../bloc/profile_bloc.dart';
 import '../bloc/worker_profile_bloc.dart';
 import '../widgets/availability_selector.dart';
 import '../widgets/edit_field_dialog.dart';
 import '../widgets/profile_skills_section.dart';
+import '../widgets/custom_tile.dart';
+import '../widgets/section_card.dart';
 import '../widgets/worker_availability_ui.dart';
 import '../widgets/worker_profile_header.dart';
 import 'custom_info_tile_card.dart';
 
-/// Screen 2 — the worker's profile: avatar/name/role, availability selector,
-/// rating + experience stats, skills, and job id / email / phone / address
-/// rows. Name, email, address, phone and the photo are editable via the
-/// pencil / camera buttons; everything else is read-only.
-///
-/// Provides a feature-scoped [WorkerProfileBloc] from `get_it` and loads on
-/// open. Kept independent from the settings screen ([ProfilePage]).
 class WorkerProfilePage extends StatelessWidget {
   const WorkerProfilePage({super.key});
 
@@ -52,13 +51,16 @@ class _WorkerProfileView extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: theme.secondaryContainer,
-      appBar: customAppBar(
-        l.profile,
-        Icons.arrow_back_ios_new_rounded, // pushed from the home drawer
-        null,
-        () => Navigator.of(context).maybePop(),
-        theme.primary,
+      backgroundColor: theme.surfaceContainerLowest,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).maybePop(),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+        ),
+        title: Text(
+          l.account,
+          style: Styles.textStyle18.copyWith(fontWeight: FontWeight.w700),
+        ),
       ),
       body: SafeArea(
         top: false,
@@ -98,8 +100,6 @@ class _WorkerProfileView extends StatelessWidget {
                 showAppSnackBar(context, message: l.skills_removed_message);
                 break;
               case WorkerProfileStatus.skillsFailure:
-                // The API's own wording, verbatim; the skills-specific line is
-                // used only when the server sent nothing usable at all.
                 showAppSnackBar(
                   context,
                   message: localizedFailureMessage(
@@ -123,8 +123,6 @@ class _WorkerProfileView extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            // Until the profile is loaded (initial/loading), show a spinner;
-            // if the first load failed, show the error + retry.
             if (state.profile == null) {
               if (state.status == WorkerProfileStatus.error) {
                 return _error(context, l, theme);
@@ -133,9 +131,7 @@ class _WorkerProfileView extends StatelessWidget {
             }
 
             final profile = state.profile!;
-            // A photo save shows its loading UI on the avatar (preview +
-            // spinner), so the blocking full-screen overlay is used only for
-            // the text-field edits.
+
             final saving =
                 state.status == WorkerProfileStatus.savingField &&
                 state.pendingImage == null;
@@ -156,8 +152,6 @@ class _WorkerProfileView extends StatelessWidget {
                     ),
                     SizedBox(height: 24.h),
                     AvailabilitySelector(
-                      // Busy-aware: shows the locked "Busy" row when derived
-                      // busy, otherwise the Available/Off toggle on the base.
                       selected:
                           state.effectiveAvailability ?? profile.availability,
                       updatingTo: state.status == WorkerProfileStatus.updating
@@ -198,7 +192,7 @@ class _WorkerProfileView extends StatelessWidget {
                       availableSkills: state.availableSkills,
                       loadingSkills: state.loadingSkills,
                       pendingSkillIds: state.pendingSkillIds,
-                      // Both act on a single tap — no edit mode, no dialog.
+
                       onAddSkill: (skill) => context
                           .read<WorkerProfileBloc>()
                           .add(AttachSkill(skill.id)),
@@ -226,10 +220,13 @@ class _WorkerProfileView extends StatelessWidget {
                       onEditAddress: () =>
                           _editAddress(context, l, profile.address),
                     ),
+                    SizedBox(height: 16.h),
+                    const _AccountPreferences(),
+                    SizedBox(height: 16.h),
+                    const _LogoutCard(),
                   ],
                 ),
-                // Blocking overlay while an edit is being saved/uploaded, so
-                // the worker can't fire a second edit mid-request.
+
                 if (saving)
                   Positioned.fill(
                     child: ColoredBox(
@@ -245,8 +242,6 @@ class _WorkerProfileView extends StatelessWidget {
     );
   }
 
-  /// Opens the (bloc-aware) edit dialog for the full name. The dialog shows the
-  /// save spinner, closes on success, and surfaces server errors itself.
   void _editName(BuildContext context, AppLocalizations l, String current) {
     showEditFieldDialog(
       context,
@@ -299,7 +294,6 @@ class _WorkerProfileView extends StatelessWidget {
     );
   }
 
-  /// Edits years of experience (non-negative whole number).
   void _editExperience(BuildContext context, AppLocalizations l, int current) {
     showEditFieldDialog(
       context,
@@ -313,8 +307,6 @@ class _WorkerProfileView extends StatelessWidget {
     );
   }
 
-  /// Camera/gallery sheet for the profile photo (same pattern as the task
-  /// photo documentation); the picked file is uploaded as multipart.
   void _editPhoto(BuildContext context, AppLocalizations l) {
     final theme = Theme.of(context).colorScheme;
     final bloc = context.read<WorkerProfileBloc>();
@@ -385,9 +377,7 @@ class _WorkerProfileView extends StatelessWidget {
         imageQuality: 80,
       );
       if (image == null) return;
-      // Keep it as an XFile (no File/path conversion) so the multipart upload
-      // and the local preview both stay web-compatible. Image-only path — it
-      // does NOT go through SaveProfileField, so no other fields are sent.
+
       bloc.add(SaveProfileImage(image));
     } catch (_) {
       if (context.mounted) {
@@ -441,8 +431,120 @@ class _WorkerProfileView extends StatelessWidget {
   }
 }
 
-/// A [StatCard] with a small edit affordance in the corner — used for the
-/// editable "years of experience" stat.
+class _AccountPreferences extends StatelessWidget {
+  const _AccountPreferences();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context)!;
+
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      builder: (context, state) {
+        return SectionCard(
+          title: l.setting_title,
+          children: [
+            CustomTile(
+              icon: state.isLight
+                  ? Icons.light_mode_outlined
+                  : Icons.dark_mode_outlined,
+              title: l.appearance,
+              onTap: () => context.read<ProfileBloc>().add(ChangeThemeEvent()),
+              trailing: Switch.adaptive(
+                value: !state.isLight,
+                activeTrackColor: colors.primary,
+                onChanged: (_) =>
+                    context.read<ProfileBloc>().add(ChangeThemeEvent()),
+              ),
+            ),
+            CustomTile(
+              icon: Icons.language_rounded,
+              title: l.app_lang,
+              onTap: () => _confirmLanguageChange(context, l),
+              trailing: Text(
+                state.languageCode == 'en' ? l.txt_english : l.txt_arabic,
+                style: Styles.textStyle12.copyWith(
+                  color: colors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            CustomTile(
+              icon: Icons.lock_outline_rounded,
+              title: l.auth_change_password_title,
+              onTap: () => context.push(AppRouter.kChangePassword),
+              trailing: Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: colors.onSurfaceVariant,
+                size: 15.r,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _confirmLanguageChange(BuildContext context, AppLocalizations l) {
+    showAdaptiveDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (dialogContext) => CustomDialog(
+        title: l.dialog_change_language_title,
+        body: l.dialog_change_language_body,
+        cancelButtonText: l.cancel,
+        doneButtonText: l.ok,
+        onCancel: () => Navigator.of(dialogContext).pop(),
+        onTap: () {
+          context.read<ProfileBloc>().add(ChangeLanguageEvent());
+          Navigator.of(dialogContext).pop();
+        },
+      ),
+    );
+  }
+}
+
+class _LogoutCard extends StatelessWidget {
+  const _LogoutCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context)!;
+    return Material(
+      color: colors.errorContainer.withValues(alpha: 0.45),
+      borderRadius: BorderRadius.circular(AppRadius.card.topLeft.x),
+      child: InkWell(
+        onTap: () => showLogoutDialog(context),
+        borderRadius: AppRadius.card,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 15.h),
+          child: Row(
+            children: [
+              Icon(Icons.logout_rounded, color: colors.error, size: 22.r),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Text(
+                  l.logout,
+                  style: Styles.textStyle14.copyWith(
+                    color: colors.error,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: colors.error,
+                size: 15.r,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _EditableStat extends StatelessWidget {
   final String label;
   final String value;
