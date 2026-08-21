@@ -103,8 +103,7 @@ class _AboutCompanySectionState extends State<AboutCompanySection> {
                               SizedBox(
                                 height:
                                     Constants.bottomNavigationBarHeight +
-                                    Constants.kMiniPlayerHeight.w +
-                                    16.w,
+                                    71.w,
                               ),
                             ],
                           ),

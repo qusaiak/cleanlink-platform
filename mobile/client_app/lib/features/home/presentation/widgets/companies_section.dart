@@ -2,16 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../config/routes/app_router.dart';
-import '../../../../core/widgets/content/content_horizontal_list.dart';
-import '../../../../core/widgets/content/content_mock_data.dart';
-import '../../../../core/widgets/content/content_section.dart';
-import '../../../../core/widgets/content/content_section_type.dart';
-import '../../../../core/widgets/content/content_view.dart';
 import '../../../../core/widgets/custom_list_section.dart';
-import '../../../../core/widgets/dummy_data.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../companies/data/models/company_model.dart';
-import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../companies/domain/entities/company_entity.dart';
 import 'company_card.dart';
 
@@ -21,7 +13,6 @@ class CompaniesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final companies = CompaniesData.all.take(3).toList();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 4.h),
       child: CustomListSection(
