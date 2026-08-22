@@ -239,7 +239,6 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
 
   void _openCreatedOrder(int orderId) {
     if (!mounted) return;
-    context.read<PaymentsBloc>().add(const ResetPaymentState());
     context.read<BookingsBloc>().add(const ResetBookingStateEvent());
     context.read<BaseBloc>().add(const ChangeBottomNavBarIndex(2));
     AppRouter.router.go(AppRouter.orderDetailsPath(orderId));
@@ -365,6 +364,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
         ),
       ],
       child: Scaffold(
+        backgroundColor: theme.surfaceContainerLowest,
         appBar: customAppBar(
           AppLocalizations.of(context)!.booking_details,
           null,
@@ -441,23 +441,12 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               BlocBuilder<BookingsBloc, BookingsState>(
-                builder: (context, state) {
-                  return AppTextField(
-                    label: AppLocalizations.of(context)!.selected_package_label,
-                    labelStyle: Styles.textStyle16.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    hint: widget.package.name,
-                    suffix: Text(
-                      widget.package.isOpenPackage
-                          ? "${state.openPackageQuote?.totalPrice ?? 0}"
-                          : "${widget.package.price} ${AppLocalizations.of(context)!.sp}",
-                      style: Styles.textStyle14.copyWith(color: theme.primary),
-                      textAlign: TextAlign.center,
-                    ),
-                    readOnly: true,
-                  );
-                },
+                buildWhen: (previous, current) =>
+                    previous.openPackageQuote != current.openPackageQuote,
+                builder: (context, state) => _PackageOverviewCard(
+                  package: widget.package,
+                  quote: state.openPackageQuote,
+                ),
               ),
 
               if (widget.package.isOpenPackage) ...[
@@ -493,13 +482,12 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                 buildWhen: (previous, current) =>
                     previous.selectedLocation != current.selectedLocation,
                 builder: (context, state) => state.selectedLocation == null
-                    ? const SizedBox.shrink()
-                    : Container(
+                    ? Container(
                         margin: EdgeInsets.only(top: 10.h),
                         padding: EdgeInsets.all(12.r),
                         decoration: BoxDecoration(
-                          color: theme.primaryContainer.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(color: theme.primary, width: 1),
                         ),
                         child: Row(
                           children: [
@@ -510,12 +498,17 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                 AppLocalizations.of(
                                   context,
                                 )!.travel_considered_message,
-                                style: Theme.of(context).textTheme.bodySmall,
+                                maxLines: 5,
+                                style: Styles.textStyle11.copyWith(
+                                  color: theme.primary,
+                                  height: 1.45,
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      ),
+                      )
+                    : const SizedBox.shrink(),
               ),
 
               SizedBox(height: 16.h),
@@ -526,10 +519,19 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                     previous.availableDays != current.availableDays ||
                     previous.selectedDay != current.selectedDay ||
                     previous.selectedLocation != current.selectedLocation ||
+                    previous.openPackageQuote != current.openPackageQuote ||
                     previous.slotsFailure != current.slotsFailure,
                 builder: (context, state) {
                   if (state.selectedLocation == null) {
                     return const SizedBox.shrink();
+                  }
+                  if (widget.package.isOpenPackage &&
+                      !state.isOpenPackageConfigurationChecked) {
+                    return _CustomizationRequiredCard(
+                      message: AppLocalizations.of(
+                        context,
+                      )!.customize_before_schedule,
+                    );
                   }
                   if (state.isLoadingSlots) {
                     return Center(
@@ -561,9 +563,13 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                     );
                   }
 
-                  final hasAnySlots = state.availableDays.any(
-                    (day) => day.hasAvailableSlots,
-                  );
+                  final bookableDays = state.availableDays
+                      .where((day) => day.hasAvailableSlots)
+                      .toList(growable: false);
+                  final hasAnySlots = bookableDays.isNotEmpty;
+                  final locale = Localizations.localeOf(
+                    context,
+                  ).toLanguageTag();
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -591,21 +597,19 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                               height: 74.h,
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: state.availableDays.length,
+                                itemCount: bookableDays.length,
                                 separatorBuilder: (_, _) =>
                                     SizedBox(width: 12.w),
                                 itemBuilder: (_, index) {
-                                  final day = state.availableDays[index];
+                                  final day = bookableDays[index];
                                   final selected = day == state.selectedDay;
 
                                   return GestureDetector(
-                                    onTap: day.hasAvailableSlots
-                                        ? () {
-                                            context.read<BookingsBloc>().add(
-                                              SelectDate(day),
-                                            );
-                                          }
-                                        : null,
+                                    onTap: () {
+                                      context.read<BookingsBloc>().add(
+                                        SelectDate(day),
+                                      );
+                                    },
                                     child: Container(
                                       width: 74.w,
                                       decoration: BoxDecoration(
@@ -628,7 +632,10 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            DateFormat("EEE").format(day.date),
+                                            DateFormat(
+                                              "EEE",
+                                              locale,
+                                            ).format(day.date),
                                             style: Styles.textStyle12.copyWith(
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -646,7 +653,10 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                           const SizedBox(height: 4),
 
                                           Text(
-                                            DateFormat("MMM").format(day.date),
+                                            DateFormat(
+                                              "MMM",
+                                              locale,
+                                            ).format(day.date),
                                             style: Styles.textStyle12.copyWith(
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -672,7 +682,8 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                 builder: (context, state) {
                   if (state.isLoadingSlots ||
                       state.slotsFailure != null ||
-                      state.selectedDay == null) {
+                      state.selectedDay == null ||
+                      !state.selectedDay!.hasAvailableSlots) {
                     return const SizedBox.shrink();
                   }
 
@@ -750,6 +761,153 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _PackageOverviewCard extends StatelessWidget {
+  const _PackageOverviewCard({required this.package, required this.quote});
+
+  final PackageEntity package;
+  final OpenPackageQuote? quote;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
+    final amount = package.isOpenPackage ? quote?.totalPrice : package.price;
+    final duration = package.isOpenPackage ? quote?.duration : package.duration;
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.r),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(
+          color: colors.outlineVariant.withValues(alpha: 0.55),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: colors.shadow.withValues(alpha: 0.05),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48.w,
+            height: 48.w,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: colors.primaryContainer,
+              borderRadius: BorderRadius.circular(15.r),
+            ),
+            child: Icon(
+              package.isOpenPackage
+                  ? Icons.tune_rounded
+                  : Icons.cleaning_services_outlined,
+              color: colors.onPrimaryContainer,
+            ),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l.selected_package_label,
+                  style: Styles.textStyle11.copyWith(
+                    color: colors.onSurfaceVariant,
+                  ),
+                ),
+                SizedBox(height: 3.h),
+                Text(
+                  package.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Styles.textStyle16.copyWith(
+                    color: colors.onSurface,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                if (duration != null) ...[
+                  SizedBox(height: 5.h),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.schedule_outlined,
+                        size: 16.sp,
+                        color: colors.onSurfaceVariant,
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        '$duration ${l.track_minutes_short}',
+                        style: Styles.textStyle11.copyWith(
+                          color: colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ],
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 8.h),
+            decoration: BoxDecoration(
+              color: colors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Text(
+              amount == null ? '—' : '${amount.toStringAsFixed(2)} ${l.sp}',
+              style: Styles.textStyle12.copyWith(
+                color: colors.primary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CustomizationRequiredCard extends StatelessWidget {
+  const _CustomizationRequiredCard({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(14.r),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: colors.primary, width: 1),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.tune_rounded, color: colors.primary),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Text(
+              message,
+              maxLines: 5,
+              style: Styles.textStyle12.copyWith(
+                color: colors.primary,
+                height: 1.45,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -925,7 +1083,7 @@ class _PaymentMethodSelector extends StatelessWidget {
                   border: Border.all(
                     color: method == value
                         ? colors.primary
-                        : colors.onSurfaceVariant,
+                        : colors.outlineVariant,
                     width: method == value ? 1.5 : 1,
                   ),
                 ),
@@ -951,10 +1109,49 @@ class _PaymentMethodSelector extends StatelessWidget {
                       color: colors.onSurface,
                     ),
                   ),
+                  trailing: method == value
+                      ? Icon(Icons.check_circle_rounded, color: colors.primary)
+                      : null,
                 ),
               ),
             ),
           ),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 220),
+          child: value != PaymentMethodType.electric
+              ? const SizedBox.shrink()
+              : Container(
+                  key: const ValueKey('electronic-payment-expiry-notice'),
+                  width: double.infinity,
+                  margin: EdgeInsets.only(top: 2.h),
+                  padding: EdgeInsets.all(12.r),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14.r),
+                    border: BoxBorder.all(color: colors.primary, width: 1),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.timer_outlined,
+                        color: colors.primary,
+                        size: 21.sp,
+                      ),
+                      SizedBox(width: 9.w),
+                      Expanded(
+                        child: Text(
+                          l.electronic_payment_expiry_notice,
+                          maxLines: 5,
+                          style: Styles.textStyle11.copyWith(
+                            color: colors.primary,
+                            height: 1.45,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+        ),
       ],
     );
   }

@@ -1472,6 +1472,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get customize_your_service => 'Customize your service';
 
   @override
+  String get customize_before_schedule =>
+      'Customize your service and check the price and duration to see available dates and times.';
+
+  @override
   String get no_attributes_available =>
       'No customization options are available.';
 
@@ -1514,6 +1518,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get credit_debit_card => 'Credit / Debit Card';
+
+  @override
+  String get electronic_payment_expiry_notice =>
+      'Complete the card payment within 10 minutes after the order is created. Otherwise, the order will be cancelled automatically.';
 
   @override
   String get creating_payment => 'Creating payment...';

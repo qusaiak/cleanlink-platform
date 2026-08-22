@@ -18,3 +18,18 @@ class PayForOrder extends PaymentsEvent {
 class ResetPaymentState extends PaymentsEvent {
   const ResetPaymentState();
 }
+
+class _RecheckPaymentStatus extends PaymentsEvent {
+  const _RecheckPaymentStatus({
+    required this.orderId,
+    required this.session,
+    required this.attemptsRemaining,
+  });
+
+  final int orderId;
+  final int session;
+  final int attemptsRemaining;
+
+  @override
+  List<Object?> get props => [orderId, session, attemptsRemaining];
+}

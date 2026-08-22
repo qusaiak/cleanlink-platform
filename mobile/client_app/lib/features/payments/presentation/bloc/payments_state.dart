@@ -17,10 +17,12 @@ class PaymentsState extends Equatable {
     this.stage = PaymentStage.idle,
     this.errorMessage,
     this.order,
+    this.orderId,
   });
   final PaymentStage stage;
   final String? errorMessage;
   final OrderEntity? order;
+  final int? orderId;
 
   bool get isBusy =>
       stage == PaymentStage.creatingIntent ||
@@ -29,5 +31,5 @@ class PaymentsState extends Equatable {
       stage == PaymentStage.awaitingBackend;
 
   @override
-  List<Object?> get props => [stage, errorMessage, order];
+  List<Object?> get props => [stage, errorMessage, order, orderId];
 }

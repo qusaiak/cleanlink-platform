@@ -296,18 +296,29 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
             );
       if (requestId != _slotRequestId) return;
 
+      final bookableDays = days
+          .map(
+            (day) => AvailableDayEntity(
+              date: day.date,
+              slots: day.slots
+                  .map((slot) => slot.trim())
+                  .where((slot) => slot.isNotEmpty)
+                  .toSet()
+                  .toList(growable: false),
+            ),
+          )
+          .where((day) => day.hasAvailableSlots)
+          .toList(growable: false);
+
       AvailableDayEntity? first;
-      for (final day in days) {
-        if (day.hasAvailableSlots) {
-          first = day;
-          break;
-        }
+      if (bookableDays.isNotEmpty) {
+        first = bookableDays.first;
       }
 
       emit(
         state.copyWith(
           isLoadingSlots: false,
-          availableDays: days,
+          availableDays: bookableDays,
           selectedDay: first,
           clearSelectedTime: true,
         ),

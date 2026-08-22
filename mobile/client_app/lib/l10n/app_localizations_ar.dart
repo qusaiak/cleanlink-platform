@@ -1453,6 +1453,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get customize_your_service => 'خصّص خدمتك';
 
   @override
+  String get customize_before_schedule =>
+      'خصّص خدمتك وتحقق من السعر والمدة لعرض التواريخ والأوقات المتاحة.';
+
+  @override
   String get no_attributes_available => 'لا تتوفر خيارات تخصيص.';
 
   @override
@@ -1494,6 +1498,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get credit_debit_card => 'بطاقة ائتمان / خصم';
+
+  @override
+  String get electronic_payment_expiry_notice =>
+      'أكمل الدفع بالبطاقة خلال 10 دقائق من إنشاء الطلب، وإلا فسيتم إلغاء الطلب تلقائياً.';
 
   @override
   String get creating_payment => 'جارٍ إنشاء عملية الدفع...';

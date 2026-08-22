@@ -2888,6 +2888,12 @@ abstract class AppLocalizations {
   /// **'Customize your service'**
   String get customize_your_service;
 
+  /// No description provided for @customize_before_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize your service and check the price and duration to see available dates and times.'**
+  String get customize_before_schedule;
+
   /// No description provided for @no_attributes_available.
   ///
   /// In en, this message translates to:
@@ -2971,6 +2977,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Credit / Debit Card'**
   String get credit_debit_card;
+
+  /// No description provided for @electronic_payment_expiry_notice.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete the card payment within 10 minutes after the order is created. Otherwise, the order will be cancelled automatically.'**
+  String get electronic_payment_expiry_notice;
 
   /// No description provided for @creating_payment.
   ///

@@ -28,7 +28,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<PaymentsBloc>().add(const ResetPaymentState());
+    final payments = context.read<PaymentsBloc>();
+    if (payments.state.orderId != widget.orderId) {
+      payments.add(const ResetPaymentState());
+    }
     context.read<BookingsBloc>().add(ShowOrderEvent(widget.orderId));
   }
 
@@ -294,11 +297,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 : l10n.payment_failed_message,
           );
         }
-        if (paymentState.order != null &&
-            (paymentState.stage == PaymentStage.succeeded ||
-                paymentState.stage == PaymentStage.pendingConfirmation ||
-                paymentState.stage == PaymentStage.cancelled ||
-                paymentState.stage == PaymentStage.failed)) {
+        if (paymentState.stage == PaymentStage.succeeded ||
+            paymentState.stage == PaymentStage.pendingConfirmation ||
+            paymentState.stage == PaymentStage.cancelled ||
+            paymentState.stage == PaymentStage.failed) {
           context.read<BookingsBloc>().add(ShowOrderEvent(widget.orderId));
         }
       },
