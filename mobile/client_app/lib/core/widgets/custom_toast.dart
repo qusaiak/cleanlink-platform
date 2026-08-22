@@ -6,15 +6,22 @@ import '../../config/theme/colors.dart';
 import '../../config/theme/styles.dart';
 import '../../l10n/app_localizations.dart';
 
-void showToast({required String text, required state}) =>
-    Fluttertoast.showToast(
-      msg: text,
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: chooseToastColor(state),
-      textColor: Colors.white,
-      fontSize: 13.sp,
-    );
+Future<bool?> showToast({
+  required String text,
+  required state,
+  bool shortDuration = false,
+}) async {
+  await Fluttertoast.cancel();
+  return Fluttertoast.showToast(
+    msg: text,
+    toastLength: shortDuration ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG,
+    timeInSecForIosWeb: shortDuration ? 1 : 4,
+    gravity: ToastGravity.BOTTOM,
+    backgroundColor: chooseToastColor(state),
+    textColor: Colors.white,
+    fontSize: 13.sp,
+  );
+}
 
 enum ToastState { success, error, warning, info }
 

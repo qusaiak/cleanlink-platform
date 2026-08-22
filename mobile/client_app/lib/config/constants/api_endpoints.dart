@@ -42,6 +42,10 @@ class ApiEndpoints {
   static const String complaintsEndpoint = 'complaints';
   static const String complaintUnreadCountEndpoint = 'complaints/unread-count';
   static const String locationsEndpoint = 'locations';
+  static const String chatConversationsEndpoint = 'chat/conversations';
+  static const String chatConversationEndpoint =
+      'chat/conversations/{conversationId}';
+  static const String chatMessagesEndpoint = 'chat/messages';
 
   static String markNotificationAsReadEndpoint(int notificationId) =>
       'notifications/$notificationId/mark-as-read';

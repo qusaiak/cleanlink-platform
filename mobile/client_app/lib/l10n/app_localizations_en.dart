@@ -1595,4 +1595,98 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no_payments_message => 'Your booking payments will appear here.';
+
+  @override
+  String get cleanlink_assistant => 'CleanLink Assistant';
+
+  @override
+  String get ask_cleanlink => 'Ask CleanLink...';
+
+  @override
+  String get chat_welcome_subtitle =>
+      'Ask about services, companies, locations and your bookings.';
+
+  @override
+  String get assistant_typing => 'CleanLink Assistant is typing...';
+
+  @override
+  String get previous_chats => 'Previous Chats';
+
+  @override
+  String get new_chat => 'New Chat';
+
+  @override
+  String get delete_chat => 'Delete Chat';
+
+  @override
+  String get delete_conversation_title => 'Delete Conversation?';
+
+  @override
+  String get delete_conversation_body =>
+      'This conversation and all its messages will be permanently deleted.';
+
+  @override
+  String get conversation_deleted => 'Conversation deleted successfully.';
+
+  @override
+  String get no_previous_conversations => 'No previous conversations';
+
+  @override
+  String get no_previous_conversations_message =>
+      'Your conversations with CleanLink Assistant will appear here.';
+
+  @override
+  String get suggestion_services => 'What cleaning services are available?';
+
+  @override
+  String get suggestion_nearby => 'Find cleaning companies near me';
+
+  @override
+  String get suggestion_booking => 'What is the status of my latest booking?';
+
+  @override
+  String get suggestion_compare => 'Help me compare cleaning companies';
+
+  @override
+  String get chat_connection_error =>
+      'Unable to reach CleanLink. Check your connection and try again.';
+
+  @override
+  String get chat_message_too_long =>
+      'Messages can contain up to 2000 characters.';
+
+  @override
+  String get chat_load_failed => 'Could not load this conversation';
+
+  @override
+  String get chat_history_load_failed =>
+      'Could not load previous conversations';
+
+  @override
+  String get chat_quota_exceeded =>
+      'The AI assistant has reached its free usage limit for now. Please try again later.';
+
+  @override
+  String get chat_temporarily_unavailable =>
+      'The AI assistant is temporarily unavailable. Please try again in a moment.';
+
+  @override
+  String get chat_provider_connection_error =>
+      'We couldn\'t connect to the AI assistant. Please check your connection and try again.';
+
+  @override
+  String get chat_error =>
+      'We couldn\'t complete your message. Please try again.';
+
+  @override
+  String message_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count messages',
+      one: '1 message',
+      zero: 'No messages',
+    );
+    return '$_temp0';
+  }
 }

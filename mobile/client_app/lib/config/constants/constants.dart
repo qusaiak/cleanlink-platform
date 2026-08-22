@@ -4,5 +4,4 @@ class Constants {
   // Order
   static String orderTypeDescending = "0";
   static String orderTypeAscending = "1";
-
 }

@@ -111,6 +111,13 @@ import 'features/reviews/domain/usecases/get_my_reviews_use_case.dart';
 import 'features/reviews/presentation/bloc/review_bloc.dart';
 import 'features/reviews/presentation/bloc/my_reviews_bloc.dart';
 import 'features/services/domain/usecases/get_offers_usecase.dart';
+import 'features/chat/data/data_sources/chat_api_service.dart';
+import 'features/chat/data/data_sources/chat_remote_data_source.dart';
+import 'features/chat/data/repositories/chat_repository_impl.dart';
+import 'features/chat/domain/repositories/chat_repository.dart';
+import 'features/chat/domain/usecases/chat_usecases.dart';
+import 'features/chat/presentation/bloc/chat_bloc.dart';
+import 'features/chat/presentation/bloc/chat_conversations_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -162,6 +169,10 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<LocationsApiService>(
     () => LocationsApiService(sl()),
   );
+  sl.registerLazySingleton<ChatApiService>(() => ChatApiService(sl()));
+  sl.registerLazySingleton<ChatRemoteDataSource>(
+    () => ChatRemoteDataSourceImpl(sl()),
+  );
   sl.registerLazySingleton<LocationsLocalDataSource>(
     () => const SharedStorageLocationsLocalDataSource(),
   );
@@ -192,6 +203,7 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<LocationsRepository>(
     () => LocationsRepositoryImpl(sl(), sl()),
   );
+  sl.registerLazySingleton<ChatRepository>(() => ChatRepositoryImpl(sl()));
 
   // UseCases
   sl.registerLazySingleton<LoginUseCase>(() => LoginUseCase(sl()));
@@ -308,6 +320,18 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<DeleteLocationUseCase>(
     () => DeleteLocationUseCase(sl()),
   );
+  sl.registerLazySingleton<GetChatConversationsUseCase>(
+    () => GetChatConversationsUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetChatConversationUseCase>(
+    () => GetChatConversationUseCase(sl()),
+  );
+  sl.registerLazySingleton<SendChatMessageUseCase>(
+    () => SendChatMessageUseCase(sl()),
+  );
+  sl.registerLazySingleton<DeleteChatConversationUseCase>(
+    () => DeleteChatConversationUseCase(sl()),
+  );
 
   // Blocs
   sl.registerFactory(() => BaseBloc());
@@ -334,4 +358,6 @@ Future<void> initializeDependencies() async {
   );
   sl.registerFactory(() => PaymentsBloc(sl(), sl(), sl()));
   sl.registerFactory(() => PaymentHistoryBloc(sl(), sl()));
+  sl.registerFactory(() => ChatBloc(sl(), sl(), sl()));
+  sl.registerFactory(() => ChatConversationsBloc(sl(), sl()));
 }

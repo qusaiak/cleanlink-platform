@@ -26,7 +26,7 @@ class ClientLocationModel {
       id: _parseInt(json['id'], field: 'id'),
       userId: _parseInt(json['user_id'], field: 'user_id'),
       address: json['address']?.toString() ?? '',
-      localName: '',
+      localName: json['name']?.toString().trim() ?? '',
       latitude: _parseDouble(json['latitude'], field: 'latitude'),
       longitude: _parseDouble(json['longitude'], field: 'longitude'),
       createdAt: DateTime.tryParse(json['created_at']?.toString() ?? ''),

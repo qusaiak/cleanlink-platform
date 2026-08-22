@@ -3127,6 +3127,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your booking payments will appear here.'**
   String get no_payments_message;
+
+  /// No description provided for @cleanlink_assistant.
+  ///
+  /// In en, this message translates to:
+  /// **'CleanLink Assistant'**
+  String get cleanlink_assistant;
+
+  /// No description provided for @ask_cleanlink.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask CleanLink...'**
+  String get ask_cleanlink;
+
+  /// No description provided for @chat_welcome_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask about services, companies, locations and your bookings.'**
+  String get chat_welcome_subtitle;
+
+  /// No description provided for @assistant_typing.
+  ///
+  /// In en, this message translates to:
+  /// **'CleanLink Assistant is typing...'**
+  String get assistant_typing;
+
+  /// No description provided for @previous_chats.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous Chats'**
+  String get previous_chats;
+
+  /// No description provided for @new_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'New Chat'**
+  String get new_chat;
+
+  /// No description provided for @delete_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Chat'**
+  String get delete_chat;
+
+  /// No description provided for @delete_conversation_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Conversation?'**
+  String get delete_conversation_title;
+
+  /// No description provided for @delete_conversation_body.
+  ///
+  /// In en, this message translates to:
+  /// **'This conversation and all its messages will be permanently deleted.'**
+  String get delete_conversation_body;
+
+  /// No description provided for @conversation_deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversation deleted successfully.'**
+  String get conversation_deleted;
+
+  /// No description provided for @no_previous_conversations.
+  ///
+  /// In en, this message translates to:
+  /// **'No previous conversations'**
+  String get no_previous_conversations;
+
+  /// No description provided for @no_previous_conversations_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your conversations with CleanLink Assistant will appear here.'**
+  String get no_previous_conversations_message;
+
+  /// No description provided for @suggestion_services.
+  ///
+  /// In en, this message translates to:
+  /// **'What cleaning services are available?'**
+  String get suggestion_services;
+
+  /// No description provided for @suggestion_nearby.
+  ///
+  /// In en, this message translates to:
+  /// **'Find cleaning companies near me'**
+  String get suggestion_nearby;
+
+  /// No description provided for @suggestion_booking.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the status of my latest booking?'**
+  String get suggestion_booking;
+
+  /// No description provided for @suggestion_compare.
+  ///
+  /// In en, this message translates to:
+  /// **'Help me compare cleaning companies'**
+  String get suggestion_compare;
+
+  /// No description provided for @chat_connection_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to reach CleanLink. Check your connection and try again.'**
+  String get chat_connection_error;
+
+  /// No description provided for @chat_message_too_long.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages can contain up to 2000 characters.'**
+  String get chat_message_too_long;
+
+  /// No description provided for @chat_load_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load this conversation'**
+  String get chat_load_failed;
+
+  /// No description provided for @chat_history_load_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load previous conversations'**
+  String get chat_history_load_failed;
+
+  /// No description provided for @chat_quota_exceeded.
+  ///
+  /// In en, this message translates to:
+  /// **'The AI assistant has reached its free usage limit for now. Please try again later.'**
+  String get chat_quota_exceeded;
+
+  /// No description provided for @chat_temporarily_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The AI assistant is temporarily unavailable. Please try again in a moment.'**
+  String get chat_temporarily_unavailable;
+
+  /// No description provided for @chat_provider_connection_error.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t connect to the AI assistant. Please check your connection and try again.'**
+  String get chat_provider_connection_error;
+
+  /// No description provided for @chat_error.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t complete your message. Please try again.'**
+  String get chat_error;
+
+  /// No description provided for @message_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No messages} =1{1 message} other{{count} messages}}'**
+  String message_count(int count);
 }
 
 class _AppLocalizationsDelegate

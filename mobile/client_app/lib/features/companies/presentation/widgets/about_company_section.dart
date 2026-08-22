@@ -102,8 +102,7 @@ class _AboutCompanySectionState extends State<AboutCompanySection> {
                               ),
                               SizedBox(
                                 height:
-                                    Constants.bottomNavigationBarHeight +
-                                    71.w,
+                                    Constants.bottomNavigationBarHeight + 71.w,
                               ),
                             ],
                           ),

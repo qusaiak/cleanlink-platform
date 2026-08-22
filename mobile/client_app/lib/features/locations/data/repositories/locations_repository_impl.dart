@@ -19,9 +19,27 @@ List<ClientLocationModel> mergeRemoteLocationsWithLocalNames({
     for (final item in remote)
       item.copyWith(
         address: normalizeGoogleMapAddress(item.address),
-        localName: cachedNames[item.id] ?? '',
+        localName: _mergeLocationName(
+          remoteName: item.localName,
+          cachedName: cachedNames[item.id],
+        ),
       ),
   ];
+}
+
+String _mergeLocationName({required String remoteName, String? cachedName}) {
+  final server = remoteName.trim();
+  final local = cachedName?.trim() ?? '';
+
+  // Older app versions did not send names to Laravel, so the server stored
+  // its default "Home" even when this device had a different local label.
+  if (server.toLowerCase() == 'home' &&
+      local.isNotEmpty &&
+      local.toLowerCase() != 'home') {
+    return local;
+  }
+
+  return server.isNotEmpty ? server : local;
 }
 
 class LocationsRepositoryImpl implements LocationsRepository {
@@ -68,6 +86,7 @@ class LocationsRepositoryImpl implements LocationsRepository {
     try {
       final response = await api.addLocation(
         LocationRequestModel(
+          name: localName.trim().isEmpty ? null : localName.trim(),
           address: normalizeGoogleMapAddress(address),
           latitude: latitude,
           longitude: longitude,
@@ -108,6 +127,7 @@ class LocationsRepositoryImpl implements LocationsRepository {
       final response = await api.updateLocation(
         id,
         LocationRequestModel(
+          name: localName.trim().isEmpty ? null : localName.trim(),
           address: normalizeGoogleMapAddress(address),
           latitude: latitude,
           longitude: longitude,

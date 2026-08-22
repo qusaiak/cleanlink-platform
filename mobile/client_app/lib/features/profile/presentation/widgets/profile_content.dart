@@ -48,6 +48,11 @@ class _ProfileContentState extends State<ProfileContent> {
           title: AppLocalizations.of(context)!.activity,
           children: [
             CustomTile(
+              icon: Icons.auto_awesome_rounded,
+              title: AppLocalizations.of(context)!.cleanlink_assistant,
+              onTap: () => GoRouter.of(context).push(AppRouter.kChat),
+            ),
+            CustomTile(
               icon: Icons.location_on_outlined,
               title: AppLocalizations.of(context)!.my_locations,
               onTap: () => GoRouter.of(context).push(AppRouter.kLocations),

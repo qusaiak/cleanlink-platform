@@ -46,4 +46,3 @@ AppBar appbarWithBackButton(context, theme) {
     surfaceTintColor: Colors.transparent,
   );
 }
-

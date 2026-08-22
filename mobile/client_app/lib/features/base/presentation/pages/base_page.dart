@@ -6,6 +6,7 @@ import '../../../../config/constants/constants.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../profile/presentation/bloc/profile_bloc.dart';
+import '../../../chat/presentation/widgets/chat_floating_button.dart';
 import '../bloc/base_bloc.dart';
 
 class BasePage extends StatefulWidget {
@@ -136,6 +137,8 @@ class _BasePageState extends State<BasePage> with WidgetsBindingObserver {
                 child: widget.navigationShell,
               ),
             ),
+            floatingActionButton: const ChatFloatingButton(),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             bottomNavigationBar: Theme(
               data: Theme.of(context).copyWith(
                 splashColor: Colors.transparent,

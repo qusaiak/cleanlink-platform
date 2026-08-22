@@ -11,6 +11,10 @@ import 'package:client_app/features/auth/domain/entities/pending_registration_da
 import 'package:client_app/features/base/presentation/pages/base_page.dart';
 import 'package:client_app/features/bookings/presentation/pages/my_bookings_page.dart';
 import 'package:client_app/features/bookings/presentation/pages/order_details_page.dart';
+import 'package:client_app/features/chat/presentation/bloc/chat_bloc.dart';
+import 'package:client_app/features/chat/presentation/bloc/chat_conversations_bloc.dart';
+import 'package:client_app/features/chat/presentation/pages/chat_conversations_page.dart';
+import 'package:client_app/features/chat/presentation/pages/chat_page.dart';
 import 'package:client_app/features/companies/presentation/pages/companies_page.dart';
 import 'package:client_app/features/companies/presentation/pages/company_details_page.dart';
 import 'package:client_app/features/complaints/presentation/pages/complaint_details_page.dart';
@@ -100,6 +104,10 @@ class AppRouter {
   static String orderDetailsPath(int orderId) => '/orders/$orderId';
   static const kProfile = '/profile';
   static const kPaymentHistory = '/payments';
+  static const kChat = '/chat';
+  static const kChatConversations = '/chat/conversations';
+  static String chatPath(int conversationId) =>
+      '$kChat?conversationId=$conversationId';
 
   /// ===============================
   /// NAV KEYS
@@ -193,6 +201,28 @@ class AppRouter {
           BlocProvider<PaymentHistoryBloc>(
             create: (_) => sl(),
             child: const PaymentHistoryPage(),
+          ),
+        ),
+      ),
+      GoRoute(
+        path: kChat,
+        pageBuilder: (context, state) => slideTransitionHorizontal(
+          BlocProvider<ChatBloc>(
+            create: (_) => sl(),
+            child: ChatPage(
+              conversationId: int.tryParse(
+                state.uri.queryParameters['conversationId'] ?? '',
+              ),
+            ),
+          ),
+        ),
+      ),
+      GoRoute(
+        path: kChatConversations,
+        pageBuilder: (context, state) => slideTransitionHorizontal(
+          BlocProvider<ChatConversationsBloc>(
+            create: (_) => sl(),
+            child: const ChatConversationsPage(),
           ),
         ),
       ),
@@ -411,7 +441,6 @@ class AppRouter {
       );
 
       final authenticated = await SharedStorage.authenticated;
-
 
       /// FIRST RUN
       if (!onboardingDone && location != kOnboarding) {

@@ -1,7 +1,1 @@
-enum ContentSectionType {
-  companies,
-  services,
-  categories,
-  regions,
-  offers,
-}
+enum ContentSectionType { companies, services, categories, regions, offers }

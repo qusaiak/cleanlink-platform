@@ -34,8 +34,7 @@ abstract class SharedStorage {
         );
         try {
           await _secureStorage!.delete(key: key.storableKey);
-        } catch (_) {
-        }
+        } catch (_) {}
         return null;
       }
     }

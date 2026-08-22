@@ -1575,4 +1575,99 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get no_payments_message => 'ستظهر مدفوعات حجوزاتك هنا.';
+
+  @override
+  String get cleanlink_assistant => 'مساعد كلين لينك';
+
+  @override
+  String get ask_cleanlink => 'اسأل كلين لينك...';
+
+  @override
+  String get chat_welcome_subtitle =>
+      'اسأل عن الخدمات والشركات والمواقع وحجوزاتك.';
+
+  @override
+  String get assistant_typing => 'مساعد كلين لينك يكتب...';
+
+  @override
+  String get previous_chats => 'المحادثات السابقة';
+
+  @override
+  String get new_chat => 'محادثة جديدة';
+
+  @override
+  String get delete_chat => 'حذف المحادثة';
+
+  @override
+  String get delete_conversation_title => 'حذف المحادثة؟';
+
+  @override
+  String get delete_conversation_body =>
+      'سيتم حذف هذه المحادثة وجميع رسائلها نهائياً.';
+
+  @override
+  String get conversation_deleted => 'تم حذف المحادثة بنجاح.';
+
+  @override
+  String get no_previous_conversations => 'لا توجد محادثات سابقة';
+
+  @override
+  String get no_previous_conversations_message =>
+      'ستظهر محادثاتك مع مساعد كلين لينك هنا.';
+
+  @override
+  String get suggestion_services => 'ما خدمات التنظيف المتاحة؟';
+
+  @override
+  String get suggestion_nearby => 'اعثر على شركات تنظيف قريبة مني';
+
+  @override
+  String get suggestion_booking => 'ما حالة حجزي الأخير؟';
+
+  @override
+  String get suggestion_compare => 'ساعدني في مقارنة شركات التنظيف';
+
+  @override
+  String get chat_connection_error =>
+      'تعذر الوصول إلى كلين لينك. تحقق من اتصالك وحاول مجدداً.';
+
+  @override
+  String get chat_message_too_long =>
+      'يمكن أن تحتوي الرسالة على 2000 حرف كحد أقصى.';
+
+  @override
+  String get chat_load_failed => 'تعذر تحميل هذه المحادثة';
+
+  @override
+  String get chat_history_load_failed => 'تعذر تحميل المحادثات السابقة';
+
+  @override
+  String get chat_quota_exceeded =>
+      'وصل مساعد CleanLink إلى حد الاستخدام المجاني حالياً. يرجى المحاولة مرة أخرى لاحقاً.';
+
+  @override
+  String get chat_temporarily_unavailable =>
+      'مساعد CleanLink غير متاح مؤقتاً. يرجى المحاولة مرة أخرى بعد قليل.';
+
+  @override
+  String get chat_provider_connection_error =>
+      'تعذر الاتصال بمساعد CleanLink. تحقق من اتصالك وحاول مرة أخرى.';
+
+  @override
+  String get chat_error => 'تعذر إكمال رسالتك. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String message_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count رسالة',
+      many: '$count رسالة',
+      few: '$count رسائل',
+      two: 'رسالتان',
+      one: 'رسالة واحدة',
+      zero: 'لا توجد رسائل',
+    );
+    return '$_temp0';
+  }
 }

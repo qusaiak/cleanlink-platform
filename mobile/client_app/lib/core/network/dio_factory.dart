@@ -22,7 +22,42 @@ abstract class DioFactory {
     );
 
     dio.interceptors.add(AuthInterceptor());
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          print('================ REQUEST ================');
+          print('METHOD: ${options.method}');
+          print('URL: ${options.uri}');
+          print('HEADERS: ${options.headers}');
+          print('QUERY: ${options.queryParameters}');
+          print('DATA: ${options.data}');
+          print('=========================================');
 
+          handler.next(options);
+        },
+        onResponse: (response, handler) {
+          print('================ RESPONSE ===============');
+          print('STATUS: ${response.statusCode}');
+          print('URL: ${response.requestOptions.uri}');
+          print('DATA: ${response.data}');
+          print('=========================================');
+
+          handler.next(response);
+        },
+        onError: (error, handler) {
+          print('================ ERROR ==================');
+          print('METHOD: ${error.requestOptions.method}');
+          print('URL: ${error.requestOptions.uri}');
+          print('STATUS: ${error.response?.statusCode}');
+          print('REQUEST DATA: ${error.requestOptions.data}');
+          print('RESPONSE DATA: ${error.response?.data}');
+          print('ERROR: ${error.message}');
+          print('=========================================');
+
+          handler.next(error);
+        },
+      ),
+    );
     return dio;
   }
 }
