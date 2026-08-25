@@ -37,7 +37,7 @@ class CustomPinPut extends StatelessWidget {
   }
 }
 
-AppBar appbarWithBackButton(context, theme) {
+AppBar appbarWithBackButton(BuildContext context, ColorScheme theme) {
   return AppBar(
     elevation: 0,
     shadowColor: Colors.transparent,

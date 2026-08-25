@@ -8,6 +8,7 @@ import 'package:client_app/features/services/domain/usecases/get_service_details
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/package_entity.dart';
+import '../../domain/entities/attribute_entity.dart';
 import '../../domain/entities/service_entity.dart';
 import '../../domain/usecases/get_offers_usecase.dart';
 import '../../domain/usecases/get_services_usecase.dart';
@@ -29,6 +30,7 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     on<GetServiceDetailsEvent>(_onGetServiceDetails);
     on<RefreshServiceDetailsEvent>(_onRefreshServiceDetails);
     on<SelectPackageEvent>(_onSelectPackage);
+    on<UpdateServiceOpenPackageAttributeQty>(_onUpdateOpenPackageAttributeQty);
   }
 
   Future<void> _onGetServices(
@@ -156,12 +158,17 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     try {
       final service = await serviceDetailsUseCase(event.id);
 
+      final selectedPackage = service.packages?.isNotEmpty == true
+          ? service.packages!.first
+          : null;
       emit(
         ServiceDetailsLoaded(
           service: service,
-          selectedPackage: service.packages?.isNotEmpty == true
-              ? service.packages!.first
-              : null,
+          selectedPackage: selectedPackage,
+          openPackageAttributeQuantities: _initialAttributeQuantities(
+            selectedPackage,
+            service.attributes ?? const <AttributeEntity>[],
+          ),
         ),
       );
     } on Failure catch (failure) {
@@ -179,7 +186,16 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     final current = state as ServiceDetailsLoaded;
     try {
       final service = await serviceDetailsUseCase(event.id);
-      emit(current.copyWith(service: service));
+      emit(
+        current.copyWith(
+          service: service,
+          openPackageAttributeQuantities: _reconcileAttributeQuantities(
+            current.selectedPackage,
+            service.attributes ?? const <AttributeEntity>[],
+            current.openPackageAttributeQuantities,
+          ),
+        ),
+      );
     } catch (_) {
       // Preserve details and package selection when a background refresh fails.
     }
@@ -189,9 +205,56 @@ class ServicesBloc extends Bloc<ServicesEvent, ServicesState> {
     if (state is ServiceDetailsLoaded) {
       final current = state as ServiceDetailsLoaded;
 
-      emit(current.copyWith(selectedPackage: event.package));
+      emit(
+        current.copyWith(
+          selectedPackage: event.package,
+          openPackageAttributeQuantities: _initialAttributeQuantities(
+            event.package,
+            current.service.attributes ?? const <AttributeEntity>[],
+          ),
+        ),
+      );
     }
   }
+
+  void _onUpdateOpenPackageAttributeQty(
+    UpdateServiceOpenPackageAttributeQty event,
+    Emitter<ServicesState> emit,
+  ) {
+    if (state is! ServiceDetailsLoaded) return;
+    final current = state as ServiceDetailsLoaded;
+    if (current.selectedPackage?.isOpenPackage != true) return;
+    final attribute = (current.service.attributes ?? const <AttributeEntity>[])
+        .where((item) => item.id == event.attributeId)
+        .firstOrNull;
+    if (attribute == null) return;
+
+    final quantities = Map<int, int>.from(
+      current.openPackageAttributeQuantities,
+    );
+    quantities[event.attributeId] = attribute.isBoolean
+        ? (event.qty > 0 ? 1 : 0)
+        : event.qty.clamp(0, 999);
+    emit(current.copyWith(openPackageAttributeQuantities: quantities));
+  }
+
+  static Map<int, int> _initialAttributeQuantities(
+    PackageEntity? package,
+    List<AttributeEntity> attributes,
+  ) => package?.isOpenPackage == true
+      ? {for (final attribute in attributes) attribute.id: 0}
+      : const <int, int>{};
+
+  static Map<int, int> _reconcileAttributeQuantities(
+    PackageEntity? package,
+    List<AttributeEntity> attributes,
+    Map<int, int> current,
+  ) => package?.isOpenPackage == true
+      ? {
+          for (final attribute in attributes)
+            attribute.id: current[attribute.id] ?? 0,
+        }
+      : const <int, int>{};
 
   static void _complete(Completer<void>? completer) {
     if (completer != null && !completer.isCompleted) completer.complete();

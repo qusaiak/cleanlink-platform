@@ -233,7 +233,5 @@ class ServicesData {
     ),
   ];
 
-  static List<ServiceEntity> offers = all
-      .where((e) => e.discount! > 0)
-      .toList();
+  static List<ServiceEntity> offers = all.where((e) => e.discount > 0).toList();
 }

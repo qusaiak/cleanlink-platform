@@ -1,8 +1,6 @@
 import 'package:client_app/config/routes/app_router.dart';
-import 'package:client_app/core/utils/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
 
 class SplashBody extends StatefulWidget {
   const SplashBody({super.key});

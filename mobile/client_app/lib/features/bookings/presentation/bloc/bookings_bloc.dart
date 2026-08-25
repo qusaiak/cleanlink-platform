@@ -202,7 +202,25 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(isBookingOrder: false, errorMessage: _message(e)));
+      final isConflict = e is BookingConflictFailure;
+      final location = state.selectedLocation;
+      final package = state.package;
+      emit(
+        state.copyWith(
+          isBookingOrder: false,
+          errorMessage: isConflict ? 'booking_conflict' : _message(e),
+          clearSelectedTime: isConflict,
+        ),
+      );
+      if (isConflict && location != null && package != null) {
+        add(
+          LoadAvailableSlots(
+            packageId: package.id,
+            latitude: location.latitude,
+            longitude: location.longitude,
+          ),
+        );
+      }
     }
   }
 
@@ -343,7 +361,14 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
     _quoteRequestId++;
     _slotRequestId++;
     final quantities = event.package.isOpenPackage
-        ? {for (final attribute in event.attributes) attribute.id: 0}
+        ? {
+            for (final attribute in event.attributes)
+              attribute.id:
+                  (event.initialAttributeQuantities[attribute.id] ?? 0).clamp(
+                    0,
+                    999,
+                  ),
+          }
         : <int, int>{};
     emit(
       state.copyWith(
@@ -399,6 +424,15 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
       emit(state.copyWith(isCheckingOpenPackagePrice: false));
       return;
     }
+    // if (!state.areAllOpenPackageAttributesConfigured) {
+    //   emit(
+    //     state.copyWith(
+    //       isCheckingOpenPackagePrice: false,
+    //       errorMessage: 'configure_all_open_package_attributes',
+    //     ),
+    //   );
+    //   return;
+    // }
     final requestId = ++_quoteRequestId;
     emit(
       state.copyWith(

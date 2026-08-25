@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 import '../../../companies/domain/entities/manager_entity.dart';
-import 'manager_entity.dart';
 
 class RegionEntity extends Equatable {
   final int id;

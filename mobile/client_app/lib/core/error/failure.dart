@@ -8,6 +8,7 @@ enum AppFailureType {
   forbidden,
   notFound,
   validation,
+  conflict,
   server,
   cancelled,
   unknown,
@@ -46,6 +47,7 @@ abstract class Failure extends Equatable {
       '403' => AppFailureType.forbidden,
       '404' => AppFailureType.notFound,
       '422' => AppFailureType.validation,
+      '409' || 'BOOKING_CONFLICT' => AppFailureType.conflict,
       'CANCELLED' => AppFailureType.cancelled,
       '500' || '502' || '503' || '504' => AppFailureType.server,
       _ => AppFailureType.unknown,
@@ -119,6 +121,14 @@ class ConnectionFailure extends Failure {
   String toString() {
     return 'ConnectionFailure{errorMessage: $message}';
   }
+}
+
+class BookingConflictFailure extends Failure {
+  const BookingConflictFailure(String message)
+    : super(message, 'BOOKING_CONFLICT');
+
+  @override
+  AppFailureType get type => AppFailureType.conflict;
 }
 
 class DatabaseFailure extends Failure {

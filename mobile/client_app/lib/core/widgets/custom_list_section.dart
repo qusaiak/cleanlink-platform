@@ -44,7 +44,7 @@ class CustomListSection extends StatelessWidget {
       physics: physics,
       shrinkWrap: shrinkWrap,
       itemCount: itemCount,
-      separatorBuilder: (_, __) {
+      separatorBuilder: (_, _) {
         if (separator != null) return separator!;
 
         return SizedBox(

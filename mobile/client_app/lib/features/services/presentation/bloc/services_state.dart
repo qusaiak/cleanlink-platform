@@ -187,21 +187,33 @@ class ServiceDetailsLoaded extends ServicesState {
   final ServiceEntity service;
 
   final PackageEntity? selectedPackage;
+  final Map<int, int> openPackageAttributeQuantities;
 
-  const ServiceDetailsLoaded({required this.service, this.selectedPackage});
+  const ServiceDetailsLoaded({
+    required this.service,
+    this.selectedPackage,
+    this.openPackageAttributeQuantities = const {},
+  });
 
   ServiceDetailsLoaded copyWith({
     ServiceEntity? service,
     PackageEntity? selectedPackage,
+    Map<int, int>? openPackageAttributeQuantities,
   }) {
     return ServiceDetailsLoaded(
       service: service ?? this.service,
       selectedPackage: selectedPackage ?? this.selectedPackage,
+      openPackageAttributeQuantities:
+          openPackageAttributeQuantities ?? this.openPackageAttributeQuantities,
     );
   }
 
   @override
-  List<Object?> get props => [service, selectedPackage];
+  List<Object?> get props => [
+    service,
+    selectedPackage,
+    openPackageAttributeQuantities,
+  ];
 }
 
 class ServiceDetailsError extends ServicesState {

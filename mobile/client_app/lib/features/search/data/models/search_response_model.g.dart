@@ -14,11 +14,3 @@ SearchResponseModel _$SearchResponseModelFromJson(Map<String, dynamic> json) =>
           ? null
           : SearchDataModel.fromJson(json['data'] as Map<String, dynamic>),
     );
-
-Map<String, dynamic> _$SearchResponseModelToJson(
-  SearchResponseModel instance,
-) => <String, dynamic>{
-  'status': instance.status,
-  'message': instance.message,
-  'data': instance.data,
-};

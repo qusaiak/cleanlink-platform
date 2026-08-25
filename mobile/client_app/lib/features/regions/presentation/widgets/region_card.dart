@@ -1,10 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/styles.dart';
 import '../../../../core/widgets/custom_image_view.dart';
-import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/region_entity.dart';
 
 class RegionCard extends StatelessWidget {
@@ -16,8 +14,6 @@ class RegionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
-    final l = AppLocalizations.of(context)!;
-
     return Material(
       color: theme.surface,
       borderRadius: BorderRadius.circular(20.r),

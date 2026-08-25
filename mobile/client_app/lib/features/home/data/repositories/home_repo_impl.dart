@@ -13,7 +13,7 @@ class HomeRepoImpl implements HomeRepo {
   Future<HomeEntity> getHome() async {
     try {
       final response = await api.getHome();
-      return response.data.data!.toEntity();
+      return response.data.data.toEntity();
     } on DioException catch (e) {
       throw NetworkExceptions.fromDio(e);
     }

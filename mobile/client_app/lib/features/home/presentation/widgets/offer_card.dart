@@ -1,7 +1,5 @@
-import 'package:client_app/config/routes/app_router.dart';
 import 'package:client_app/config/theme/colors.dart';
 import 'package:client_app/config/theme/styles.dart';
-import 'package:client_app/core/widgets/custom_elevated_button.dart';
 import 'package:client_app/core/widgets/custom_image_view.dart';
 import 'package:client_app/features/services/domain/entities/service_entity.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +19,6 @@ class OfferCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context).colorScheme;
-
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(

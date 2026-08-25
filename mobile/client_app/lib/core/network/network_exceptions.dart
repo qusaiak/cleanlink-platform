@@ -7,7 +7,7 @@ import '../error/failure.dart';
 abstract class NetworkExceptions {
   NetworkExceptions._();
 
-  static ServerFailure fromDio(DioException e) {
+  static Failure fromDio(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
         return const ServerFailure(
@@ -49,7 +49,7 @@ abstract class NetworkExceptions {
     }
   }
 
-  static ServerFailure _fromResponse(Response<dynamic>? response) {
+  static Failure _fromResponse(Response<dynamic>? response) {
     final data = response?.data;
     if (data is Map<String, dynamic>) {
       final message = data['message'] ?? data['ErrorMessage'];
@@ -57,6 +57,12 @@ abstract class NetworkExceptions {
           (response?.statusCode ?? data['status'] ?? data['ErrorCode'] ?? '')
               .toString();
       final fieldErrors = _fieldErrors(data['errors']);
+      if (response?.statusCode == 409 || data['code'] == 'BOOKING_CONFLICT') {
+        return BookingConflictFailure(
+          message?.toString() ??
+              'The selected time is no longer available. Please choose another time.',
+        );
+      }
       if (message != null) {
         return ServerFailure(
           message.toString(),

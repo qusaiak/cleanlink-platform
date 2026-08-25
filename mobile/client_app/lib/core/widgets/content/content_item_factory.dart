@@ -1,14 +1,10 @@
 import 'package:client_app/features/categories/presentation/widgets/category_service_card.dart';
-import 'package:client_app/features/companies/data/models/company_model.dart';
-import 'package:client_app/features/services/data/models/service_model.dart';
 import 'package:client_app/features/home/presentation/widgets/category_item.dart';
 import 'package:client_app/features/home/presentation/widgets/company_card.dart';
 import 'package:client_app/features/home/presentation/widgets/offer_card.dart';
-import 'package:client_app/features/home/presentation/widgets/service_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../features/regions/presentation/widgets/region_card.dart';
-import '../list_item.dart';
 import 'content_section_type.dart';
 
 abstract final class ContentItemFactory {

@@ -89,7 +89,7 @@ class AppDeviceInfo {
 
       String serial = androidInfo.id;
 
-      return const Uuid().v5(Uuid.NAMESPACE_DNS, mSzDevIDShort + serial);
+      return const Uuid().v5(Namespace.dns.value, mSzDevIDShort + serial);
     } else if (Platform.isIOS) {
       final iosInfo = await DeviceInfoPlugin().iosInfo;
       return iosInfo.identifierForVendor!;

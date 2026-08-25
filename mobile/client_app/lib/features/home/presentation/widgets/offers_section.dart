@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:client_app/features/home/presentation/widgets/offer_card.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/colors.dart';
-import '../../../../core/utils/gen/assets.gen.dart';
 import '../../../services/domain/entities/service_entity.dart';
 
 class OffersSection extends StatefulWidget {
@@ -33,15 +31,15 @@ class _OffersSectionState extends State<OffersSection> {
       children: [
         CarouselSlider.builder(
           itemCount: widget.offers.length,
-          itemBuilder: (_, index, __) {
+          itemBuilder: (_, index, _) {
             return ValueListenableBuilder<int>(
               valueListenable: _currentIndex,
-              builder: (_, currentIndex, __) {
+              builder: (_, currentIndex, _) {
                 return OfferCard(
                   offer: widget.offers[index],
                   isActive: currentIndex == index,
                   onTap: () {
-                    GoRouter.of(context)!.push(
+                    GoRouter.of(context).push(
                       AppRouter.kServiceDetails,
                       extra: widget.offers[index].id,
                     );
@@ -74,7 +72,7 @@ class _OffersSectionState extends State<OffersSection> {
 
         ValueListenableBuilder<int>(
           valueListenable: _currentIndex,
-          builder: (_, currentIndex, __) {
+          builder: (_, currentIndex, _) {
             return _DotsIndicator(
               count: widget.offers.length,
               index: currentIndex,

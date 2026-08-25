@@ -1,9 +1,7 @@
-import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../config/routes/app_router.dart';
-import '../../../../config/theme/styles.dart';
 import '../../../../core/session/user_session.dart';
 import '../../../../injection_container.dart';
 

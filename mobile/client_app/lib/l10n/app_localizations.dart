@@ -2282,6 +2282,18 @@ abstract class AppLocalizations {
   /// **'Before & After'**
   String get before_and_after;
 
+  /// No description provided for @before_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Before'**
+  String get before_label;
+
+  /// No description provided for @after_label.
+  ///
+  /// In en, this message translates to:
+  /// **'After'**
+  String get after_label;
+
   /// No description provided for @add_review.
   ///
   /// In en, this message translates to:
@@ -2948,6 +2960,12 @@ abstract class AppLocalizations {
   /// **'Please check price and duration for the current configuration first.'**
   String get please_check_price_duration_again;
 
+  /// No description provided for @configure_all_open_package_attributes.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure every service attribute before checking the price or booking.'**
+  String get configure_all_open_package_attributes;
+
   /// No description provided for @selected_configuration.
   ///
   /// In en, this message translates to:
@@ -3343,6 +3361,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Payment could not be confirmed. Please try again from the booking details.'**
   String get chat_payment_failed;
+
+  /// No description provided for @booking_conflict_message.
+  ///
+  /// In en, this message translates to:
+  /// **'That time was just booked. Please choose another available time.'**
+  String get booking_conflict_message;
 
   /// No description provided for @message_count.
   ///

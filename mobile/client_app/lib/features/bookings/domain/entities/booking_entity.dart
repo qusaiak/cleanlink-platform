@@ -43,7 +43,7 @@ String orderStatusApiValue(OrderStatus status) {
     case OrderStatus.assigned:
       return 'assigned_to_worker';
     case OrderStatus.onTheWay:
-      return 'on_the_way';
+      return 'on_way';
     case OrderStatus.inProcess:
       return 'in_process';
     case OrderStatus.completed:

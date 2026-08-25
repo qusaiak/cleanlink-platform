@@ -386,6 +386,8 @@
   "attributes": "Attributes",
   "booking_in_progress": "Booking...",
   "before_and_after": "Before & After",
+  "before_label": "Before",
+  "after_label": "After",
   "add_review": "Add Review",
   "write_review": "Write a Review",
   "rating_required": "Please select a rating",
@@ -497,6 +499,7 @@
   "check_price_duration": "Check Price & Duration",
   "checking_price_duration": "Checking…",
   "please_check_price_duration_again": "Please check price and duration for the current configuration first.",
+  "configure_all_open_package_attributes": "Configure every service attribute before checking the price or booking.",
   "selected_configuration": "Selected Configuration",
   "on_the_way": "On the Way",
   "payment_method": "Payment Method",
@@ -563,6 +566,7 @@
   "chat_payment_pending": "Complete the secure card payment to confirm your booking.",
   "chat_payment_cancelled": "Payment was cancelled. Your booking is not marked as paid.",
   "chat_payment_failed": "Payment could not be confirmed. Please try again from the booking details.",
+  "booking_conflict_message": "That time was just booked. Please choose another available time.",
   "message_count": "{count, plural, =0{No messages} =1{1 message} other{{count} messages}}",
   "@message_count": {"placeholders": {"count": {"type": "int"}}}
 }

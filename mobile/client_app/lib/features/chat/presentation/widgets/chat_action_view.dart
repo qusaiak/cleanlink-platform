@@ -22,6 +22,9 @@ class ChatActionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (action.type == 'select_location' && action.options.length <= 1) {
+      return const SizedBox.shrink();
+    }
     if (action.summary case final ChatBookingSummary summary) {
       return _SummaryCard(action: action, summary: summary, onSend: onSend);
     }

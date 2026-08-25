@@ -49,7 +49,7 @@ class CustomImageView extends StatelessWidget {
     );
   }
 
-  _buildCircleImage() {
+  dynamic _buildCircleImage() {
     if (radius != null) {
       return ClipRRect(
         borderRadius: radius ?? BorderRadius.zero,
@@ -60,7 +60,7 @@ class CustomImageView extends StatelessWidget {
     }
   }
 
-  _buildImageWithBorder() {
+  Widget _buildImageWithBorder() {
     if (border != null) {
       return Container(
         decoration: BoxDecoration(

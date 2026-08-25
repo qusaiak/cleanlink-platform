@@ -33,7 +33,6 @@ class _CompanyServicesSectionState extends State<CompanyServicesSection> {
         RowTitle(
           iconData: Icons.cleaning_services_rounded,
           title: AppLocalizations.of(context)!.available_services,
-          onTap: () {},
         ),
 
         SizedBox(height: 12.h),

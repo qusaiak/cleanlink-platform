@@ -1,4 +1,3 @@
-import 'package:client_app/features/profile/domain/entities/profile_entity.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../auth/domain/entities/user_entity.dart';

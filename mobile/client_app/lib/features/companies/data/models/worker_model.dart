@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../../auth/data/models/response/user_model.dart';
-import '../../../profile/data/models/profile_model.dart';
 import '../../domain/entities/worker_entity.dart';
 
 part 'worker_model.g.dart';

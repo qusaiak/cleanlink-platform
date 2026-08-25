@@ -24,12 +24,3 @@ SearchDataModel _$SearchDataModelFromJson(Map<String, dynamic> json) =>
           ?.map((e) => ServiceModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
-
-Map<String, dynamic> _$SearchDataModelToJson(SearchDataModel instance) =>
-    <String, dynamic>{
-      'regions': instance.regions,
-      'categories': instance.categories,
-      'companies': instance.companies,
-      'services': instance.services,
-      'offers': instance.offers,
-    };

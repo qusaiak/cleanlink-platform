@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter/material.dart';
-
 class ListItem extends StatelessWidget {
   const ListItem({
     super.key,

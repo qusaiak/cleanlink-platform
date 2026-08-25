@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../regions/presentation/bloc/regions_bloc.dart';
@@ -33,7 +32,6 @@ class SearchFilterBottomSheet extends StatefulWidget {
 }
 
 class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
-  late Availability _availability;
   // late SortOrder _sortOrder;
   int? _regionId;
   late RangeValues _priceRange;
@@ -45,8 +43,6 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
     super.initState();
 
     final state = context.read<SearchBloc>().state;
-
-    _availability = state.availability;
 
     _priceRange = state.priceRange;
 
@@ -177,60 +173,6 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
       style: Styles.textStyle14.copyWith(
         color: theme.onSurface,
         fontWeight: FontWeight.w600,
-      ),
-    );
-  }
-
-  Widget _buildAvailabilityToggle(AppLocalizations l10n, ColorScheme theme) {
-    return Row(
-      children: [
-        _buildAvailabilityChip(
-          label: l10n.search_today,
-          isSelected: _availability == Availability.today,
-          onTap: () => setState(() => _availability = Availability.today),
-          theme: theme,
-        ),
-        SizedBox(width: 8.w),
-        _buildAvailabilityChip(
-          label: l10n.search_tomorrow,
-          isSelected: _availability == Availability.tomorrow,
-          onTap: () => setState(() => _availability = Availability.tomorrow),
-          theme: theme,
-        ),
-        SizedBox(width: 8.w),
-        _buildAvailabilityChip(
-          label: l10n.search_week,
-          isSelected: _availability == Availability.week,
-          onTap: () => setState(() => _availability = Availability.week),
-          theme: theme,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAvailabilityChip({
-    required String label,
-    required bool isSelected,
-    required VoidCallback onTap,
-    required ColorScheme theme,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColor.primaryColor
-              : Colors.grey.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        child: Text(
-          label,
-          style: Styles.textStyle12.copyWith(
-            color: isSelected ? theme.onPrimary : theme.onSurfaceVariant,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
       ),
     );
   }
@@ -425,7 +367,6 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
   void _resetFilters() {
     final bloc = context.read<SearchBloc>();
     setState(() {
-      _availability = Availability.today;
       // _sortOrder = SortOrder.desc;
       _regionId = null;
       _priceRange = const RangeValues(10, 1000);

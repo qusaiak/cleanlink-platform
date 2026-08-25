@@ -32,7 +32,7 @@ class SearchTabs extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             itemCount: tabs.length,
-            separatorBuilder: (_, __) => SizedBox(width: 8.w),
+            separatorBuilder: (_, _) => SizedBox(width: 8.w),
             itemBuilder: (context, index) {
               final entry = tabs.entries.elementAt(index);
               final isSelected = state.selectedTab == entry.key;

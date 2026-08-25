@@ -6,7 +6,6 @@ import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../payments/domain/entities/payment_entities.dart';
 import '../../domain/entities/booking_entity.dart';
 import 'booking_info_chip.dart';
 import 'booking_status_badge.dart';
@@ -31,18 +30,6 @@ class BookingCard extends StatelessWidget {
       case OrderStatus.unknown:
         return Colors.grey;
     }
-  }
-
-  String _paymentStatus(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return switch (booking.paymentStatusType) {
-      PaymentStatusType.pending => l10n.payment_status_pending,
-      PaymentStatusType.held => l10n.payment_status_held,
-      PaymentStatusType.captured => l10n.payment_status_captured,
-      PaymentStatusType.refunded => l10n.payment_status_refunded,
-      PaymentStatusType.failed => l10n.payment_status_failed,
-      null => '—',
-    };
   }
 
   @override

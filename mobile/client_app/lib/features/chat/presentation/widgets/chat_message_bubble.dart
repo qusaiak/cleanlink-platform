@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../domain/entities/chat_message.dart';
@@ -34,14 +35,46 @@ class ChatMessageBubble extends StatelessWidget {
               ? null
               : Border.all(color: colors.outlineVariant.withValues(alpha: .35)),
         ),
-        child: Text(
-          message.content,
-          textDirection: _direction(message.content),
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: isUser ? colors.onPrimary : colors.onSurface,
-            height: 1.5,
-          ),
-        ),
+        child: isUser
+            ? Text(
+                message.content,
+                textDirection: _direction(message.content),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: colors.onPrimary,
+                  height: 1.5,
+                ),
+              )
+            : MarkdownBody(
+                data: message.content,
+                selectable: true,
+                softLineBreak: true,
+                styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+                    .copyWith(
+                      p: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: colors.onSurface,
+                        height: 1.5,
+                      ),
+                      h1: Theme.of(context).textTheme.titleLarge,
+                      h2: Theme.of(context).textTheme.titleMedium,
+                      h3: Theme.of(context).textTheme.titleSmall,
+                      listBullet: Theme.of(context).textTheme.bodyMedium
+                          ?.copyWith(
+                            color: colors.primary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                      blockquoteDecoration: BoxDecoration(
+                        color: colors.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(8.r),
+                        border: BorderDirectional(
+                          start: BorderSide(color: colors.primary, width: 3),
+                        ),
+                      ),
+                      codeblockDecoration: BoxDecoration(
+                        color: colors.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                    ),
+              ),
       ),
     );
   }

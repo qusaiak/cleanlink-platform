@@ -63,6 +63,19 @@ class SelectPackageEvent extends ServicesEvent {
   List<Object?> get props => [package];
 }
 
+class UpdateServiceOpenPackageAttributeQty extends ServicesEvent {
+  const UpdateServiceOpenPackageAttributeQty({
+    required this.attributeId,
+    required this.qty,
+  });
+
+  final int attributeId;
+  final int qty;
+
+  @override
+  List<Object?> get props => [attributeId, qty];
+}
+
 class RefreshServiceDetailsEvent extends ServicesEvent {
   final int id;
 

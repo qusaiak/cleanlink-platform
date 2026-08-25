@@ -93,6 +93,12 @@ class BookingsState extends Equatable {
 
   bool get isOpenPackageConfigurationChecked => openPackageQuote != null;
 
+  bool get areAllOpenPackageAttributesConfigured =>
+      serviceAttributes.isNotEmpty &&
+      serviceAttributes.every(
+        (attribute) => (openPackageAttributeQuantities[attribute.id] ?? 0) > 0,
+      );
+
   List<SelectedOpenPackageAttribute> get selectedOpenPackageAttributes =>
       openPackageAttributeQuantities.entries
           .where((entry) => entry.value > 0)

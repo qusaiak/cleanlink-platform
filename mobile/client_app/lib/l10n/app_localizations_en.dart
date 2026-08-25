@@ -1147,6 +1147,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get before_and_after => 'Before & After';
 
   @override
+  String get before_label => 'Before';
+
+  @override
+  String get after_label => 'After';
+
+  @override
   String get add_review => 'Add Review';
 
   @override
@@ -1505,6 +1511,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please check price and duration for the current configuration first.';
 
   @override
+  String get configure_all_open_package_attributes =>
+      'Configure every service attribute before checking the price or booking.';
+
+  @override
   String get selected_configuration => 'Selected Configuration';
 
   @override
@@ -1718,6 +1728,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get chat_payment_failed =>
       'Payment could not be confirmed. Please try again from the booking details.';
+
+  @override
+  String get booking_conflict_message =>
+      'That time was just booked. Please choose another available time.';
 
   @override
   String message_count(int count) {

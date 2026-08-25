@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:client_app/core/widgets/custom_image_view.dart';
 import 'package:client_app/l10n/app_localizations.dart';
@@ -82,8 +81,8 @@ class _ExpertsSectionState extends State<ExpertsSection> {
                       image:
                           worker.user.profile!.image ??
                           Assets.images.test.test.path,
-                      name: worker.user.fullname!,
-                      exp: worker.experienceYears!.toString(),
+                      name: worker.user.fullname,
+                      exp: worker.experienceYears.toString(),
                       isActive: index == currentIndex,
                     );
                   },
@@ -148,7 +147,7 @@ class _WorkerCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isActive ? 0.25 : 0.1),
+            color: Colors.black.withValues(alpha: isActive ? 0.25 : 0.1),
             blurRadius: isActive ? 15 : 8,
             offset: const Offset(0, 6),
           ),
@@ -166,7 +165,10 @@ class _WorkerCard extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [Colors.black.withOpacity(0.75), Colors.transparent],
+                  colors: [
+                    Colors.black.withValues(alpha: 0.75),
+                    Colors.transparent,
+                  ],
                 ),
               ),
             ),
@@ -191,7 +193,7 @@ class _WorkerCard extends StatelessWidget {
                   Text(
                     "${AppLocalizations.of(context)!.years_of_experience}: $exp",
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.85),
+                      color: Colors.white.withValues(alpha: 0.85),
                       fontSize: 13.sp,
                     ),
                   ),

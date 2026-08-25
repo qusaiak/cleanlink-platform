@@ -126,11 +126,13 @@ class ConfigureBookingPackage extends BookingsEvent {
   const ConfigureBookingPackage({
     required this.package,
     required this.attributes,
+    this.initialAttributeQuantities = const {},
   });
   final PackageEntity package;
   final List<AttributeEntity> attributes;
+  final Map<int, int> initialAttributeQuantities;
   @override
-  List<Object?> get props => [package, attributes];
+  List<Object?> get props => [package, attributes, initialAttributeQuantities];
 }
 
 class UpdateOpenPackageAttributeQty extends BookingsEvent {

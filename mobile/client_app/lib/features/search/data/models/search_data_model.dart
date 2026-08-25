@@ -9,7 +9,7 @@ import '../../../services/data/models/service_model.dart';
 
 part 'search_data_model.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+@JsonSerializable(fieldRename: FieldRename.snake, createToJson: false)
 class SearchDataModel {
   final List<RegionModel>? regions;
 

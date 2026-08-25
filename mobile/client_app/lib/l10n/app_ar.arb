@@ -387,6 +387,8 @@
   "attributes": "الخصائص",
   "booking_in_progress": "جارٍ الحجز...",
   "before_and_after": "قبل وبعد",
+  "before_label": "قبل",
+  "after_label": "بعد",
   "add_review": "إضافة تقييم",
   "write_review": "اكتب تقييماً",
   "rating_required": "يرجى اختيار التقييم",
@@ -498,6 +500,7 @@
   "check_price_duration": "تحقق من السعر والمدة",
   "checking_price_duration": "جارٍ التحقق…",
   "please_check_price_duration_again": "يرجى التحقق من السعر والمدة للإعداد الحالي أولاً.",
+  "configure_all_open_package_attributes": "يرجى إعداد جميع خصائص الخدمة قبل التحقق من السعر أو الحجز.",
   "selected_configuration": "الإعداد المختار",
   "on_the_way": "في الطريق",
   "payment_method": "طريقة الدفع",
@@ -564,6 +567,7 @@
   "chat_payment_pending": "أكمل الدفع الآمن بالبطاقة لتأكيد حجزك.",
   "chat_payment_cancelled": "تم إلغاء الدفع. لم يتم اعتبار الحجز مدفوعاً.",
   "chat_payment_failed": "تعذر تأكيد الدفع. حاول مجدداً من تفاصيل الحجز.",
+  "booking_conflict_message": "تم حجز هذا الوقت للتو. يرجى اختيار وقت آخر متاح.",
   "message_count": "{count, plural, =0{لا توجد رسائل} =1{رسالة واحدة} =2{رسالتان} few{{count} رسائل} many{{count} رسالة} other{{count} رسالة}}",
   "@message_count": {"placeholders": {"count": {"type": "int"}}}
 }

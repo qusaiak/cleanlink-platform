@@ -4,7 +4,7 @@ import 'search_data_model.dart';
 
 part 'search_response_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createToJson: false)
 class SearchResponseModel {
   final int? status;
 

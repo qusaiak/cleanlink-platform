@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'content_horizontal_list.dart';
 import 'content_navigator.dart';
 import 'content_section.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'content_horizontal_list.dart';
-import 'content_navigator.dart';
-import 'content_section.dart';
 
 class ContentView extends StatelessWidget {
   const ContentView({super.key, required this.sections});

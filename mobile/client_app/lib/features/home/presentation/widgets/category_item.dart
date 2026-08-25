@@ -45,7 +45,7 @@ class CategoryItem extends StatelessWidget {
                 Image.network(
                   category.image,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) {
+                  errorBuilder: (_, _, _) {
                     return Container(
                       color: theme.primary.withValues(alpha: 0.08),
                       child: Icon(

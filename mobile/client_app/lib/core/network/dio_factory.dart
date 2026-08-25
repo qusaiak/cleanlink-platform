@@ -22,6 +22,7 @@ abstract class DioFactory {
     );
 
     dio.interceptors.add(AuthInterceptor());
+    // if (kDebugMode && AppConfig.enableLogs) {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
@@ -58,6 +59,7 @@ abstract class DioFactory {
         },
       ),
     );
+    // }
     return dio;
   }
 }

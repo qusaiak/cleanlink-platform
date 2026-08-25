@@ -27,7 +27,7 @@ class ServiceBookingBar extends StatelessWidget {
         color: theme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -70,7 +70,7 @@ class ServiceBookingBar extends StatelessWidget {
                         Text(
                           "$price ${AppLocalizations.of(context)!.sp}",
                           style: Styles.textStyle18.copyWith(
-                            color: theme.primary.withOpacity(0.7),
+                            color: theme.primary.withValues(alpha: 0.7),
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.lineThrough,
                             decorationColor: Colors.red.shade400,

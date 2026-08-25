@@ -9,7 +9,7 @@ class HelpCenterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context)!.colorScheme;
+    var theme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: customAppBar(
         AppLocalizations.of(context)!.help_center_title,

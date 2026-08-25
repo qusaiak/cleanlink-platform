@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../../companies/data/models/manager_model.dart';
 import '../../domain/entities/region_entity.dart';
-import 'manager_model.dart';
 
 part 'region_model.g.dart';
 

@@ -237,65 +237,6 @@ class _RegionContent extends StatelessWidget {
   }
 }
 
-class _ManagerTile extends StatelessWidget {
-  const _ManagerTile({required this.region});
-
-  final RegionDetailsEntity region;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
-    final l = AppLocalizations.of(context)!;
-    final manager = region.manager!;
-
-    return Container(
-      padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: theme.onSurface.withValues(alpha: 0.04),
-        borderRadius: BorderRadius.circular(18.r),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 24.r,
-            backgroundColor: theme.primary.withValues(alpha: 0.12),
-            child: Icon(Icons.person_rounded, color: theme.primary),
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l.manager_label,
-                  style: Styles.textStyle11.copyWith(
-                    color: theme.onSurfaceVariant,
-                  ),
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  manager.fullname,
-                  style: Styles.textStyle14.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(
-                  manager.email,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Styles.textStyle11.copyWith(
-                    color: theme.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _StatCard extends StatelessWidget {
   const _StatCard({
     required this.icon,

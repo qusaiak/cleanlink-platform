@@ -276,7 +276,7 @@ class _ReviewSheetState extends State<_ReviewSheet> {
                             ? colorScheme.surfaceContainerHighest.withValues(
                                 alpha: 0.55,
                               )
-                            : Colors.grey.withOpacity(0.3),
+                            : Colors.grey.withValues(alpha: 0.3),
                         contentPadding: EdgeInsets.all(16.r),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16.r),

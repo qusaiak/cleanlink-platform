@@ -21,7 +21,7 @@ class _AboutCompanySectionState extends State<AboutCompanySection> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context)!.colorScheme;
+    var theme = Theme.of(context).colorScheme;
     return Column(
       children: [
         RowTitle(

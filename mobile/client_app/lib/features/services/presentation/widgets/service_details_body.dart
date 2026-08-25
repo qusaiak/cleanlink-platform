@@ -66,6 +66,8 @@ class _ServiceDetailsBodyState extends State<ServiceDetailsBody> {
                           builder: (_) => BookingDetailsPage(
                             package: package,
                             attributes: service.attributes ?? const [],
+                            initialAttributeQuantities:
+                                state.openPackageAttributeQuantities,
                           ),
                         ),
                       );

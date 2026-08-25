@@ -19,7 +19,7 @@ class MoveNextPage extends StatelessWidget {
           height: 40.h,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: theme.primary.withOpacity(0.08),
+            color: theme.primary.withValues(alpha: 0.08),
           ),
           child: Icon(Icons.arrow_forward_ios, color: theme.primary, size: 12),
         ),
