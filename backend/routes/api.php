@@ -1,0 +1,309 @@
+<?php
+
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AttributeController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CompanyManagerController;
+use App\Http\Controllers\ComplaintController;
+use App\Http\Controllers\ComplaintResponseController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\PackageController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RegionController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ServiceImageController;
+use App\Http\Controllers\SkillController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\WorkerProfileController;
+use App\Http\Controllers\WorkgroupController;
+use App\Http\Controllers\WorkTimesController;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes Configuration Matrix
+|--------------------------------------------------------------------------
+*/
+
+// Apply global locale detection to all incoming mobile/client app traffic
+
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+    Route::post('/resend-otp', [AuthController::class, 'resendOTP']);
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::get('/me', [AuthController::class, 'me']);
+        Route::post('/fcm-token', [AuthController::class, 'updateFcmToken']);
+        Route::post('/update', [AuthController::class, 'updateProfile']);
+        Route::put('/change-password', [AuthController::class, 'changePassword']);
+        Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
+    });
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    // Regions & Region Managers Management Scope
+    Route::prefix('regions')->group(function () {
+        // Region Management Core
+        Route::post('/', [RegionController::class, 'addRegion']);
+        Route::get('/', [RegionController::class, 'getRegions']);
+        Route::get('/names', [RegionController::class, 'getRegionsNames']);
+        Route::get('/{region}', [RegionController::class, 'showRegion']);
+        Route::put('/{region}', [RegionController::class, 'updateRegion']);
+        Route::delete('/{region}', [RegionController::class, 'deleteRegion']);
+
+        // Specialized Territory Managers Mapping Roles
+        Route::post('/managers', [RegionController::class, 'addManager']);
+
+        Route::delete('/managers/{manager}', [RegionController::class, 'deleteManager']);
+    });
+    //names
+    Route::get('categories/names', [CategoryController::class, 'getCategoriesNames']);
+    Route::get('companies/names', [CompanyController::class, 'getCompaniesNames']);
+
+
+    Route::get('/managers', [RegionController::class, 'getManagers']);
+    //  Companies & Company Managers Management Scope
+    Route::prefix('companies')->group(function () {
+        // Corporate Profiles Core
+        Route::post('/', [CompanyController::class, 'addCompany']);
+        Route::get('/', [CompanyController::class, 'getCompanies']);
+        Route::get('/{company}', [CompanyController::class, 'showCompany']);
+        Route::put('/{company}', [CompanyController::class, 'updateCompany']);
+        Route::delete('/{company}', [CompanyController::class, 'deleteCompany']);
+
+
+        // Specialized Corporate Leaders Mapping Roles
+        Route::post('/managers', [CompanyController::class, 'addManager']);
+
+        Route::delete('/managers/{manager}', [CompanyController::class, 'deleteManager']);
+    });
+    Route::get('/company/managers', [CompanyController::class, 'getManagers']);
+
+    //  Field Workers Management Scope (Company Manager Operations)
+    Route::prefix('workers')->group(function () {
+        Route::post('/', [CompanyManagerController::class, 'addWorker']);
+        Route::get('/search', [CompanyManagerController::class, 'searchWorker']);
+        Route::get('/{company}', [CompanyManagerController::class, 'getWorkers']);
+        Route::put('/{worker}', [CompanyManagerController::class, 'updateWorker']);
+        Route::delete('/{worker}', [CompanyManagerController::class, 'deleteWorker']);
+    });
+
+    Route::apiResource('categories', CategoryController::class);
+
+
+    Route::prefix('admin/search')->group(function () {
+        Route::get('/region-managers', [AdminController::class, 'searchRegionManagers']);
+        Route::get('/regions', [AdminController::class, 'searchRegions']);
+        Route::get('/skills', [AdminController::class, 'searchSkills']);
+        Route::get('/attributes', [AdminController::class, 'searchAttributes']);
+        Route::get('/categories', [AdminController::class, 'searchCategories']);
+        Route::get('/companies', [AdminController::class, 'searchCompanies']);
+        Route::get('/services', [AdminController::class, 'searchServices']);
+    });
+
+    Route::prefix('admin/users')->group(function () {
+        Route::get('/clients', [AdminController::class, 'getClients']);
+        Route::get('/workers', [AdminController::class, 'getWorkers']);
+        Route::get('/clients/{user}', [AdminController::class, 'showClient']);
+        Route::get('/workers/{user}', [AdminController::class, 'showWorker']);
+        Route::delete('/{user}', [AdminController::class, 'deleteUser']);
+    });
+
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'show']);
+        Route::post('/', [ProfileController::class, 'update']);
+    });
+
+    Route::post('worker/update-skills', [WorkerProfileController::class, 'attachSkills']);
+    Route::delete('worker/detach-skills', [WorkerProfileController::class, 'detachSkills']);
+
+    Route::prefix('worker-profiles')->group(function () {
+        Route::get('/me', [WorkerProfileController::class, 'showOwn']);
+        Route::get('/{worker}', [WorkerProfileController::class, 'show']);
+        Route::put('/', [WorkerProfileController::class, 'update']);
+        Route::post('/evaluateWorker', [WorkerProfileController::class, 'evaluateWorker']);
+        Route::post('/update-image', [WorkerProfileController::class, 'updateImage']);
+    });
+
+    Route::prefix('attributes')->group(function () {
+        Route::get('/', [AttributeController::class, 'index']);      // Accessible to Admin & Company Managers
+        Route::put('/', [AttributeController::class, 'store']);     // Admin only
+        Route::delete('/{attribute}', [AttributeController::class, 'destroy']); // Admin only
+    });
+
+
+    Route::apiResource('services', ServiceController::class);
+    Route::get('services/{service}/skills', [ServiceController::class, 'skills']);
+    Route::put('/services/{service}/attributes', [ServiceController::class, 'updateAttributes']);
+
+    Route::apiResource('packages', PackageController::class);
+    Route::post('reviews', [ReviewController::class, 'store']);
+
+    Route::get('/home-page', [HomeController::class, 'index']);
+    Route::get('/search', [HomeController::class, 'search']);
+    Route::get('/offers', [HomeController::class, 'getoffers']);
+    Route::get('/dashboard-summary', [HomeController::class, 'userSummary']);
+    Route::get('/my-reviews', [HomeController::class, 'userReviews']);
+
+    Route::get('skills', [SkillController::class, 'index']);
+    Route::post('skills', [SkillController::class, 'store']);
+    Route::delete('skills/{skill}', [SkillController::class, 'destroy']);
+
+    // ==========================================
+    // 🎓 Dynamic Skill Assignment Mapping Routes
+    // ==========================================
+    Route::post('services/{service}/skills', [ServiceController::class, 'attachSkills']);
+    Route::delete('services/{service}/skills', [ServiceController::class, 'detachSkills']);
+    Route::post('workers/skills', [CompanyManagerController::class, 'attachSkills']);
+    // ==========================================
+    // ❤️ (Favorites Engine)
+    // ==========================================
+    Route::prefix('favorites')->group(function () {
+        Route::get('/', [FavoriteController::class, 'index']);
+        Route::post('/toggle', [FavoriteController::class, 'toggleFavorite']);
+    });
+
+    Route::post('service-images', [ServiceImageController::class, 'store']);
+    Route::delete('service-images/{id}', [ServiceImageController::class, 'detachImages']);
+    Route::post('work-times', [WorkTimesController::class, 'insertOrUpdate']);
+
+    // ==========================================
+    // 👥 Operational Crews & Workgroups Management
+    // ==========================================
+    Route::get('companies/{company}/workgroups/active', [WorkgroupController::class, 'activeWorkGroups']);
+    Route::get('companies/{company}/workgroups', [WorkgroupController::class, 'index']);
+    Route::apiResource('workgroups', WorkgroupController::class)->except(['index']);
+
+
+    Route::get('packages/{package}/available-slots', [OrderController::class, 'getAvailableSlots']);
+    Route::post('packages/{package}/open-package/check-price', [OrderController::class, 'checkPrice']);
+    Route::post('packages/{package}/open-package/available-slots', [OrderController::class, 'getAvailableSlotsForOpenPackage']);
+    Route::post('orders/open-package', [OrderController::class, 'bookOpenPackage']);
+    Route::post('orders', [OrderController::class, 'store']);
+    Route::post('orders/{order}/cancel', [OrderController::class, 'cancel']);
+    // ==========================================
+    // 🛒 مسارات الطلبات المتطورة (Orders Matrix)
+    // ==========================================
+    Route::get('orders/locations', [OrderController::class, 'locations']);
+    Route::get('orders', [OrderController::class, 'index']);
+    Route::get('orders/{order}', [OrderController::class, 'show']);
+
+    // ==========================================
+    // 👷 مسارات مهام العمال والورشات (Tasks Workflows)
+    // ==========================================
+    Route::get('tasks/today-summary', [TaskController::class, 'todaySummary']);
+    Route::get('tasks', [TaskController::class, 'index']); // جلب المهام (متاح لكل العمال في الورشة)
+    Route::get('tasks/{task}', [TaskController::class, 'show']); // جلب تفاصيل المهمة
+    Route::post('tasks/{task}/update-status', [TaskController::class, 'updateStatus']); // تحديث ورفع الصور (للقائد فقط)
+    // ==========================================
+    // 🧠 Smart Dashboard Dispatch Indicators
+    // ==========================================
+    Route::get('orders/{order}/qualified-groups', [OrderController::class, 'getQualifiedGroups']);
+
+    // ==========================================
+    // 🔔 صندوق وارد الإشعارات (In-App Notifications Inbox)
+    // ==========================================
+    Route::get('notifications', [NotificationController::class, 'index']);
+    Route::post('notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead']);
+    Route::get('notifications/unread-count', [NotificationController::class, 'unreadCount']);
+
+    Route::prefix('complaints')->group(function () {
+        Route::get('/', [ComplaintController::class, 'index']);
+        Route::post('/', [ComplaintController::class, 'store']);
+        Route::get('/unread-count', [ComplaintController::class, 'unreadCount']);
+        Route::get('/{complaint}', [ComplaintController::class, 'show']);
+        Route::put('/{complaint}', [ComplaintController::class, 'update']);
+        Route::delete('/{complaint}', [ComplaintController::class, 'destroy']);
+        Route::post('/{complaint}/mark-read', [ComplaintController::class, 'markAsRead']);
+        Route::post('/{complaint}/mark-unread', [ComplaintController::class, 'markAsUnread']);
+    });
+
+    // Complaint Response routes
+    Route::prefix('complaint-responses')->group(function () {
+        Route::post('/', [ComplaintResponseController::class, 'store']);
+        Route::get('/', [ComplaintResponseController::class, 'index']);
+        Route::put('/{response}', [ComplaintResponseController::class, 'update']);
+        Route::delete('/{response}', [ComplaintResponseController::class, 'destroy']);
+    });
+
+    Route::apiResource('locations', LocationController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
+
+    // ==========================================
+    // 💳 PAYMENT MANAGEMENT ROUTES
+    // ==========================================
+
+    // Stripe Payment Intent Creation (Client)
+    Route::post('/payments/create-intent', [PaymentController::class, 'createPaymentIntent']);
+
+    // ==========================================
+    // 👤 CLIENT PAYMENT ROUTES
+    // ==========================================
+    Route::prefix('client/payments')->group(function () {
+        Route::get('/', [PaymentController::class, 'clientPayments']);          // List client payments
+        Route::get('/{payment}', [PaymentController::class, 'clientShowPayment']); // Show payment details
+    });
+
+    // ==========================================
+    // 🏢 COMPANY MANAGER PAYMENT ROUTES
+    // ==========================================
+    Route::prefix('companies')->group(function () {
+        Route::prefix('{company}')->group(function () {
+            // Dashboard
+            Route::get('/dashboard', [PaymentController::class, 'companyDashboard']);
+
+            // Payment Management
+            Route::prefix('payments')->group(function () {
+                Route::post('/summary', [PaymentController::class, 'companyPaymentsSummary']);        // Analytics summary with filters
+                Route::post('/search', [PaymentController::class, 'companyPaymentsSearch']);          // Search payments with pagination
+                Route::get('/{payment}', [PaymentController::class, 'companyShowPayment']);           // Show payment details
+                Route::post('/services-statistics', [PaymentController::class, 'companyServicesStats']); // Service-wise stats
+                Route::post('/revenue-chart', [PaymentController::class, 'companyRevenueChart']);      // Revenue chart data
+            });
+        });
+    });
+
+    // ==========================================
+    // 🔐 ADMIN PAYMENT ROUTES
+    // ==========================================
+    Route::prefix('admin')->group(function () {
+        // Admin Dashboard
+        Route::get('/dashboard', [PaymentController::class, 'adminDashboard']);
+
+        // Payment Analytics & Reports
+        Route::prefix('payments')->group(function () {
+            Route::post('/analytics', [PaymentController::class, 'adminPaymentsAnalytics']);          // Overall analytics with filters
+            Route::post('/search', [PaymentController::class, 'adminPaymentsSearch']);                // Search all payments
+            Route::post('/revenue-chart', [PaymentController::class, 'adminRevenueChart']);           // System-wide revenue chart
+            Route::post('/companies-statistics', [PaymentController::class, 'adminCompaniesStats']);  // Company stats
+            Route::post('/regions-statistics', [PaymentController::class, 'adminRegionsStats']);      // Region stats
+            Route::post('/services-statistics', [PaymentController::class, 'adminServicesStats']);    // Service stats
+            Route::get('/{payment}', [PaymentController::class, 'adminShowPayment']);                 // Show payment details
+        });
+    });
+
+    Route::middleware([
+        'auth:sanctum',
+        'throttle:30,1',
+    ])->group(function () {
+        Route::get('/chat/conversations', [ChatController::class, 'index']);
+        Route::get('/chat/conversations/{conversation}', [ChatController::class, 'show']);
+        Route::post('/chat/messages', [ChatController::class, 'send']);
+        Route::delete('/chat/conversations/{conversation}', [ChatController::class, 'destroy']);
+    });
+});
+
+
+Route::post('stripe/webhook', [App\Http\Controllers\StripeWebhookController::class, 'handleWebhook']);

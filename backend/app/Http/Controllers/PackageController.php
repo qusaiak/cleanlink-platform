@@ -1,0 +1,157 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Http\Resources\PackageResource;
+use App\Models\Package;
+use App\Models\Service;
+use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+
+class PackageController extends Controller
+{
+    use ApiResponse;
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['index', 'show']);
+    }
+
+   
+    public function index(Request $request): JsonResponse
+    {
+        $request->validate([
+            'service_id' => 'required|exists:services,id'
+        ]);
+
+        $packages = Package::where('service_id', $request->service_id)
+            ->orderBy('price', 'asc')
+            ->get();
+        $user = auth()->user();
+        if ($user->isAdmin() || $user->isCompanyManager() || $user->isRegionManager()) {
+            return $this->successResponse($packages, 'Service variant packages retrieved successfully');
+        }
+        return $this->successResponse(PackageResource::collection($packages), 'Service variant packages retrieved successfully');
+    }
+
+    public function show(Package $package): JsonResponse
+    {
+        $package->load('service.company', 'service');
+        $user = auth()->user();
+        if ($user->isAdmin() || $user->isCompanyManager() || $user->isRegionManager()) {
+            return $this->successResponse($package, 'Package meta specifications loaded');
+        }
+        return $this->successResponse(new PackageResource($package), 'Package meta specifications loaded');
+    }
+
+    public function store(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'service_id' => 'required|exists:services,id',
+            'name_ar' => 'nullable|string|max:255',
+            'name_en' => 'nullable|string|max:255',
+            'duration' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+            'price_after_discount' => 'nullable|numeric|min:0',
+            'details_ar' => 'nullable|array|min:1',
+            'details_ar.*' => 'required|string|max:500',
+            'details_en' => 'nullable|array|min:1',
+            'details_en.*' => 'required|string|max:500',
+            'minimum_workers' => 'required|integer|min:1',
+        ]);
+
+        $forbiddenNames = [
+            'ar' => ['الباقة المفتوحة', 'باقة مفتوحة', 'باقة مفتوحه'],
+            'en' => ['open package', 'openpackage', 'open-package']
+        ];
+
+        if (!empty($validated['name_ar'])) {
+            $nameAr = trim($validated['name_ar']);
+            foreach ($forbiddenNames['ar'] as $forbidden) {
+                if (mb_strtolower($nameAr) === mb_strtolower($forbidden)) {
+                    return $this->errorResponse(
+                        'لا يمكن إضافة باقة باسم "' . $forbidden . '". هذا الاسم محجوز.',
+                        422
+                    );
+                }
+            }
+        }
+
+        if (!empty($validated['name_en'])) {
+            $nameEn = trim($validated['name_en']);
+            foreach ($forbiddenNames['en'] as $forbidden) {
+                if (strtolower($nameEn) === strtolower($forbidden)) {
+                    return $this->errorResponse(
+                        'Cannot add package with name "' . $forbidden . '". This name is reserved.',
+                        422
+                    );
+                }
+            }
+        }
+
+        if (empty($validated['name_ar']) && empty($validated['name_en'])) {
+            return $this->errorResponse(
+                'يجب تقديم اسم الباقة على الأقل باللغة العربية أو الإنجليزية.',
+                422
+            );
+        }
+
+        $service = Service::find($validated['service_id']);
+
+        $this->authorize('update', $service);
+
+        $package = Package::create($validated);
+        $package->price_after_discount = $service->discount > 0 ? $package->price * (1 - $service->discount / 100) : $package->price;
+        $package->save();
+
+        if ($package->price > $service->maximum_price) {
+            $service->update(['maximum_price' => $package->price]);
+        } elseif ($package->price < $service->minimum_price) {
+            $service->update(['minimum_price' => $package->price]);
+        }
+
+        if ($package->duration > $service->maximum_duration) {
+            $service->update(['maximum_duration' => $package->duration]);
+        } elseif ($package->duration < $service->minimum_duration) {
+            $service->update(['minimum_duration' => $package->duration]);
+        }
+
+        return $this->successResponse($package, 'New service variant package established successfully', 211);
+    }
+
+
+    public function update(Request $request, Package $package): JsonResponse
+    {
+        $this->authorize('update', $package->service);
+
+        $validated = $request->validate([
+            'name_ar' => 'sometimes|string|max:255',
+            'name_en' => 'sometimes|string|max:255',
+            'duration' => 'sometimes|integer|min:1',
+            'price' => 'sometimes|numeric|min:0',
+            'details_ar' => 'sometimes|array|min:1',
+            'details_ar.*' => 'required|string|max:500',
+            'details_en' => 'sometimes|array|min:1',
+            'details_en.*' => 'required|string|max:500',
+            'minimum_workers' => 'required|integer|min:1',
+        ]);
+        $service = $package->service;
+        $package->update($validated);
+        $package->price_after_discount = $service->discount > 0 ? $package->price * (1 - $service->discount / 100) :  $package->price;
+        $package->save();
+
+        return $this->successResponse($package, 'Package configuration properties modified successfully');
+    }
+
+    
+    public function destroy(Package $package): JsonResponse
+    {
+        $this->authorize('update', $package->service);
+
+        $package->delete();
+
+        return $this->successResponse([], 'Package variant scrubbed from listing catalogs');
+    }
+}

@@ -1,0 +1,99 @@
+<?php
+
+namespace App\Http\Controllers;
+
+
+use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\Review;
+use App\Models\Company;
+use App\Models\Service;
+use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+
+class ReviewController extends Controller
+{
+    use ApiResponse;
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['index']);
+    }
+
+    
+    public function index(Request $request): JsonResponse
+    {
+        $request->validate([
+            'type' => 'required|in:company,service',
+            'id' => 'required|integer',
+        ]);
+
+        $modelType = $request->type === 'company' ? Company::class : Service::class;
+        
+        $reviews = Review::where('reviewable_type', $modelType)
+            ->where('reviewable_id', $request->id)
+            ->with('client.profile')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return $this->successResponse($reviews, 'Reviews lookup index fetched successfully');
+    }
+
+    public function store(Request $request): JsonResponse
+    {
+        if (auth()->user()->role !== 'client') {
+            return $this->errorResponse('Only clients are authorized to post reviews', 403);
+        }
+
+        $validated = $request->validate([
+            'type' => 'required|in:company,service',
+            'id' => 'required|integer',
+            'comment' => 'nullable|string|max:1000',
+            'rating' => 'required|integer|between:1,5',
+        ]);
+
+        $modelClass = $validated['type'] === 'company' ? Company::class : Service::class;
+        $reviewableEntity = $modelClass::find($validated['id']);
+
+        if (!$reviewableEntity) {
+            return $this->errorResponse('Target review entity not found', 404);
+        }
+
+        $user = auth()->user();
+        $hasUsedReviewable = false;
+
+        if ($validated['type'] === 'company') {
+            $hasUsedReviewable = Order::where('client_id', $user->id)
+                ->whereHas('package.service', function ($query) use ($reviewableEntity) {
+                    $query->where('company_id', $reviewableEntity->id);
+                })
+                ->whereIn('status', ['assigned_to_worker', 'in_process', 'completed'])
+                ->exists();
+        } else {
+            $hasUsedReviewable = Order::where('client_id', $user->id)
+                ->whereHas('package.service', function ($query) use ($reviewableEntity) {
+                    $query->where('id', $reviewableEntity->id);
+                })
+                ->whereIn('status', ['assigned_to_worker', 'in_process', 'completed'])
+                ->exists();
+        }
+
+        if (!$hasUsedReviewable) {
+            return $this->errorResponse('Only clients who used this can review!', 403);
+        }
+
+        $review = new Review([
+            'client_id' => auth()->id(),
+            'comment' => $validated['comment'],
+            'rating' => $validated['rating']
+        ]);
+
+        $reviewableEntity->reviews()->save($review);
+
+        $reviewableEntity->recalculateRating();
+
+        return $this->successResponse($review->load('client.profile'), 'Review submitted successfully', 211);
+    }
+}
+

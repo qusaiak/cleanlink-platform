@@ -1,0 +1,64 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Http\Resources\AttributeResource;
+use App\Models\Attribute;
+use App\Models\AttributeModel;
+use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+
+class AttributeController extends Controller
+{
+    use ApiResponse;
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+    }
+
+    
+    public function index(Request $request): JsonResponse
+    {
+        $user = auth()->user();
+        $perPage = $request->integer('per_page', 10);
+        $perPage = max(1, min($perPage, 100));
+        $attributes = AttributeModel::orderBy('created_at', 'desc')->paginate($perPage);
+        if ($user->isAdmin() || $user->isCompanyManager() || $user->isRegionManager()) {
+            return $this->successResponse($attributes, 'Global attribute dictionary retrieved successfully');
+        }
+        return $this->successResponse(AttributeResource::collection($attributes), 'Global attribute dictionary retrieved successfully');
+    }
+
+    
+    public function store(Request $request): JsonResponse
+    {
+        if (!auth()->user()->isAdmin()) {
+            return $this->errorResponse('Access restricted to administrative accounts only', 403);
+        }
+
+        $validated = $request->validate([
+            'name_ar' => 'required|string|max:255|unique:attributes,name_ar',
+            'name_en' => 'required|string|max:255|unique:attributes,name_en',
+            'type' => 'required|in:number,text,boolean',
+        ]);
+
+        $attribute = AttributeModel::create($validated);
+        
+        return $this->successResponse($attribute, 'New global attribute added successfully to the dictionary', 211);
+    }
+
+    
+    public function destroy(AttributeModel $attribute): JsonResponse
+    {
+        if (!auth()->user()->isAdmin()) {
+            return $this->errorResponse('Access restricted to administrative accounts only', 403);
+        }
+
+        $attribute->delete();
+
+        return $this->successResponse([], 'Global attribute permanently removed from the system dictionary');
+    }
+}

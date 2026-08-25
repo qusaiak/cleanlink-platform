@@ -1,0 +1,340 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Service;
+use App\Models\Company;
+use App\Models\AttributeModel;
+use App\Models\Category;
+use App\Models\ServiceImage;
+use App\Models\Skill;
+use Illuminate\Database\Seeder;
+
+class ServiceSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $ecoCleanHome = Company::where('name_en', 'EcoClean Pro Solutions')->first();
+        $sparkleAuto = Company::where('name_en', 'Sparkle Auto Express')->first();
+
+        $homeCleaning = Category::where('name_en', 'Home')->first();
+        $carWash = Category::where('name_en', 'Car')->first();
+
+        $extraRooms = AttributeModel::where('name_en', 'Number of Extra Rooms')->first();
+        $extraBaths = AttributeModel::where('name_en', 'Number of Extra Bathrooms')->first();
+        $emptyHouse = AttributeModel::where('name_en', 'Is the House Empty (No Furniture)?')->first();
+        $postConst = AttributeModel::where('name_en', 'Post-Construction / Renovation Cleaning')->first();
+        $fridge = AttributeModel::where('name_en', 'Deep Inside Fridge Cleaning')->first();
+
+        $carSeats = AttributeModel::where('name_en', 'Number of Car Seats')->first();
+        $bodyWax = AttributeModel::where('name_en', 'Exterior Body Polishing & Waxing')->first();
+        $engineSteam = AttributeModel::where('name_en', 'Steam Engine Bay Cleaning')->first();
+        $headlights = AttributeModel::where('name_en', 'Headlight Restoration & Polishing')->first();
+
+        $standardCleaning = Skill::where('name_en', 'Standard Residential Cleaning')->first();
+        $deepCleaning = Skill::where('name_en', 'Deep Cleaning & Degreasing Operations')->first();
+         $advancsdBathroom = Skill::where('name_en', 'Advanced Bathroom Disinfection')->first();
+         $windowWashing = Skill::where('name_en', 'Window Washing & Exterior Glass Wiping')->first();
+         $exterior = Skill::where('name_en', 'Exterior Hydro-Steam Vehicle Washing')->first();
+         $thermalSteam = Skill::where('name_en', 'Thermal Steam Engine Bay Detailing')->first();
+         $headlights = Skill::where('name_en', 'Headlight Acrylic Restoration & Clarity Polishing')->first();
+
+        if (!$ecoCleanHome || !$sparkleAuto) {
+            return;
+        }
+
+        $s1 = Service::create([
+            'company_id' => $ecoCleanHome->id,
+            'category_id' => $homeCleaning->id,
+            'name_ar' => 'تنظيف الشقق السكنية القياسي',
+            'name_en' => 'Standard Apartment Cleaning',
+            'description_ar' => 'كنس ومسح وغسيل الغرف الأساسية مع تنظيف المطبخ والحمام.',
+            'description_en' => 'Vacuuming, mopping, and dusting of living spaces including standard kitchen and bathroom wash.',
+            'rating' => 4.20,
+            'min_duration' => 120,
+            'max_duration' => 180,
+            'minimum_price' => 55.00,
+            'maximum_price' => 95.00,
+            'image' => 'services/standard_apartment.jpg',
+            'discount' => 0.00,
+        ]);
+        $s1->attributes()->attach([
+            $extraRooms->id => ['price' => 15.00, 'duration' => 30],
+            $extraBaths->id => ['price' => 20.00, 'duration' => 45],
+            $fridge->id => ['price' => 10.00, 'duration' => 20]
+        ]);
+
+        $s1->requiredSkills()->attach([
+            $standardCleaning->id,
+            $windowWashing->id
+        ]);
+
+         ServiceImage::create([
+                    'service_id' => $s1->id,
+                    'image_before' => 'service_secondary/home_before.jpg',
+                    'image_after' => 'service_secondary/home_after.jpg',
+                ]);
+
+        $s2 = Service::create([
+            'company_id' => $ecoCleanHome->id,
+            'category_id' => $homeCleaning->id,
+            'name_ar' => 'خدمة التنظيف العميق والتعقيم',
+            'name_en' => 'Deep Sanitization Care',
+            'description_ar' => 'تنظيف شامل ومكثف يشمل إزالة الدهون المستعصية وتطهير الأسطح والمفروشات.',
+            'description_en' => 'Intensive surface scrub focusing on grime removal, absolute sanitization, and heavy dusting.',
+            'rating' => 4.90,
+            'min_duration' => 240,
+            'max_duration' => 360,
+            'minimum_price' => 80.00,
+            'maximum_price' => 210.00,            'image' => 'services/deep_home.jpg',
+            'discount' => 0.00,
+        ]);
+        $s2->attributes()->attach([
+            $extraRooms->id => ['price' => 25.00, 'duration' => 45],
+            $extraBaths->id => ['price' => 35.00, 'duration' => 60],
+            $emptyHouse->id => ['price' => 20.00, 'duration' => 30]
+        ]);
+        $s2->requiredSkills()->attach([
+            $deepCleaning->id,
+            $advancsdBathroom->id,
+            $windowWashing->id
+        ]);
+        ServiceImage::create([
+                    'service_id' => $s2->id,
+                    'image_before' => 'service_secondary/office_before.jpg',
+                    'image_after' => 'service_secondary/office_after.jpg',
+                ]);
+
+        // Service 3: Post-Construction Wiping
+        $s3 = Service::create([
+            'company_id' => $ecoCleanHome->id,
+            'category_id' => $homeCleaning->id,
+            'name_ar' => 'تنظيف المنازل ما بعد الطلاء والترميم',
+            'name_en' => 'Post-Renovation Cleaning Service',
+            'description_ar' => 'إزالة بقايا الطلاء، الاسمنت، الأتربة الكثيفة وتلميع السيراميك بعد أعمال البناء.',
+            'description_en' => 'Removal of industrial paint drops, heavy concrete dust, and detailed glass wiping after builder handovers.',
+            'rating' => 3.80,
+            'min_duration' => 300,
+            'max_duration' => 480,
+            'minimum_price' => 10.00,
+            'maximum_price' => 100.00,            'image' => 'services/post_con.jpg',
+            'discount' => 20.00,
+        ]);
+        $s3->attributes()->attach([
+            $postConst->id => ['price' => 50.00, 'duration' => 90],
+            $extraRooms->id => ['price' => 30.00, 'duration' => 60]
+        ]);
+        $s3->requiredSkills()->attach([
+            $standardCleaning->id,
+            $windowWashing->id,
+            $deepCleaning->id
+        ]);
+        ServiceImage::create([
+                    'service_id' => $s3->id,
+                    'image_before' => 'service_secondary/bath_before.jpg',
+                    'image_after' => 'service_secondary/bath_after.jpg',
+                ]);
+
+        $s4 = Service::create([
+            'company_id' => $ecoCleanHome->id,
+            'category_id' => $homeCleaning->id,
+            'name_ar' => 'تنظيف وتعقيم المطابخ الاحترافي',
+            'name_en' => 'Premium Kitchen Deep Clean',
+            'description_ar' => 'تفكيك فلاتر الشفاطات، غسيل الخزائن من الداخل والخارج وإزالة حروق الدهون من الأفران.',
+            'description_en' => 'Hood filter degreasing, internal cupboard scrub, and intensive oven carbon cleaning.',
+            'rating' => 4.50,
+            'min_duration' => 90,
+            'max_duration' => 150,
+            'minimum_price' => 20.00,
+            'maximum_price' => 50.00,            'image' => 'services/kitchen.jpg',
+            'discount' => 0.00,
+        ]);
+        $s4->attributes()->attach([
+            $fridge->id => ['price' => 12.00, 'duration' => 30]
+        ]);
+        $s4->requiredSkills()->attach([
+            $deepCleaning->id]);
+
+            ServiceImage::create([
+                    'service_id' => $s4->id,
+                    'image_before' => 'service_secondary/kitchen_before.jpg',
+                    'image_after' => 'service_secondary/kitchen_after.jpg',
+                ]);
+
+        $s5 = Service::create([
+            'company_id' => $ecoCleanHome->id,
+            'category_id' => $homeCleaning->id,
+            'name_ar' => 'الخدمة الملكية لتنظيف الفيلات والمساحات الواسعة',
+            'name_en' => 'Elite Villa Cleanup',
+            'description_ar' => 'فريق متكامل مجهز بأحدث الآلات لتنظيف الفيلات الفاخرة متعددة الطوابق بالكامل.',
+            'description_en' => 'Dedicated multi-worker crew deployment with advanced machines for multi-story mansion care.',
+            'rating' => 4.70,
+            'min_duration' => 360,
+            'max_duration' => 600,
+            'minimum_price' => 40.00,
+            'maximum_price' => 110.00,            'image' => 'services/villa.jpg',
+            'discount' => 0.00,
+        ]);
+        $s5->attributes()->attach([
+            $extraRooms->id => ['price' => 40.00, 'duration' => 60],
+            $extraBaths->id => ['price' => 50.00, 'duration' => 60]
+        ]);
+        $s5->requiredSkills()->attach([
+            $standardCleaning->id,
+            $deepCleaning->id
+        ]);
+
+        ServiceImage::create([
+                    'service_id' => $s5->id,
+                    'image_before' => 'service_secondary/pool_before.jpg',
+                    'image_after' => 'service_secondary/pool_after.jpg',
+                ]);
+
+        $s6 = Service::create([
+            'company_id' => $sparkleAuto->id,
+            'category_id' => $carWash->id,
+            'name_ar' => 'الغسيل السريع الخارجي الصديق للبيئة',
+            'name_en' => 'Quick Eco Exterior Wash',
+            'description_ar' => 'تنظيف خارجي سريع بهيدرو-بخار مع تلميع الإطارات في موقعك.',
+            'description_en' => 'Express hydro-steam exterior body wash topped with tire shine sealant at your location.',
+            'rating' => 4.10,
+            'min_duration' => 30,
+            'max_duration' => 45,
+            'minimum_price' => 10.00,
+            'maximum_price' => 30.00,            'image' => 'services/eco_wash.jpg',
+            'discount' => 10.00,
+        ]);
+        $s6->attributes()->attach([
+            $bodyWax->id => ['price' => 10.00, 'duration' => 20]
+        ]);
+        $s6->requiredSkills()->attach([
+            $headlights->id,
+            $exterior->id
+        ]);
+
+        ServiceImage::create([
+                    'service_id' => $s6->id,
+                    'image_before' => 'service_secondary/car_before.jpg',
+                    'image_after' => 'service_secondary/car_after.jpg',
+                ]);
+
+        $s7 = Service::create([
+            'company_id' => $sparkleAuto->id,
+            'category_id' => $carWash->id,
+            'name_ar' => 'غسيل وتفصيل داخلي وخارجي متكامل',
+            'name_en' => 'Full Interior & Exterior Care',
+            'description_ar' => 'كنس عميق، تنظيف التابلو، غسيل الديكورات الداخلية بالإضافة للغسيل الخارجي الكامل.',
+            'description_en' => 'Vacuum tracking, dashboard treatment, door card conditioning, and full exterior detailing.',
+            'rating' => 4.80,
+            'min_duration' => 60,
+            'max_duration' => 90,
+            'minimum_price' => 125.00,
+            'maximum_price' => 225.00,
+            'image' => 'services/full_car.jpg',
+            'discount' => 0.00,
+        ]);
+        $s7->attributes()->attach([
+            $carSeats->id => ['price' => 5.00, 'duration' => 15],
+            $bodyWax->id => ['price' => 15.00, 'duration' => 25],
+            $engineSteam->id => ['price' => 20.00, 'duration' => 30]
+        ]);
+        $s7->requiredSkills()->attach([
+            $exterior->id,
+            $thermalSteam->id
+        ]);
+
+        ServiceImage::create([
+                    'service_id' => $s7->id,
+                    'image_before' => 'service_secondary/car_before1.jpg',
+                    'image_after' => 'service_secondary/car_after1.jpg',
+                ]);
+
+
+        $s8 = Service::create([
+            'company_id' => $sparkleAuto->id,
+            'category_id' => $carWash->id,
+            'name_ar' => 'تنظيف وتطهير مقاعد ومقود السيارة بالبخار',
+            'name_en' => 'Executive Upholstery Steam Extract',
+            'description_ar' => 'سحب وإزالة البقع الصعبة من المقاعد المخملية أو ترطيب وتلميع المقاعد الجلدية.',
+            'description_en' => 'Hot-water extraction for velvet fabrics or advanced conditioning formulas for fine leathers.',
+            'rating' => 4.60,
+            'min_duration' => 90,
+            'max_duration' => 120,
+            'minimum_price' => 50.00,
+            'maximum_price' => 90.00,            'image' => 'services/car_steam.jpg',
+            'discount' => 0.00,
+        ]);
+        $s8->attributes()->attach([
+            $carSeats->id => ['price' => 8.00, 'duration' => 20]
+        ]);
+        $s8->requiredSkills()->attach([
+            $thermalSteam->id,
+            $exterior->id]);
+
+        ServiceImage::create([
+                    'service_id' => $s8->id,
+                    'image_before' => 'service_secondary/car_before.jpg',
+                    'image_after' => 'service_secondary/car_after.jpg',
+                ]);
+
+
+        $s9 = Service::create([
+            'company_id' => $sparkleAuto->id,
+            'category_id' => $carWash->id,
+            'name_ar' => 'تلميع وصيانة المصابيح الأمامية الباهتة',
+            'name_en' => 'Optical Headlight Restoration',
+            'description_ar' => 'إزالة غشاوة الاصفرار الناتجة عن الشمس واستعادة شفافية زجاج الأضواء بالكامل.',
+            'description_en' => 'Oxidization scraping and multi-stage polishing to restore complete headlight clarity.',
+            'rating' => 3.50,
+            'min_duration' => 40,
+            'max_duration' => 60,
+            'minimum_price' => 49.00,
+            'maximum_price' => 99.00,            'image' => 'services/headlights.jpg',
+            'discount' => 5.00,
+        ]);
+        $s9->attributes()->attach([
+            $headlights->id => ['price' => 0.00, 'duration' => 0]
+        ]);
+        $s9->requiredSkills()->attach([
+            $headlights->id,
+            $exterior->id]);
+
+        ServiceImage::create([
+                    'service_id' => $s9->id,
+                    'image_before' => 'service_secondary/car_before1.jpg',
+                    'image_after' => 'service_secondary/car_after1.jpg',
+                ]);
+
+
+        $s10 = Service::create([
+            'company_id' => $sparkleAuto->id,
+            'category_id' => $carWash->id,
+            'name_ar' => 'تفصيل صالة العرض الشامل (تجديد السيارة بالكامل)',
+            'name_en' => 'Ultimate Showroom Detailing Master',
+            'description_ar' => 'الخدمة القصوى للسيارات: تنظيف بخار للمحرك، تفصيل المقصورة، بولش خشن وناعم لإزالة الخدوش.',
+            'description_en' => 'The absolute highest-tier care: deep steam extraction, multi-stage machine scratch removal, and undercarriage jet wash.',
+            'rating' => 4.95,
+            'min_duration' => 180,
+            'max_duration' => 300,
+            'minimum_price' => 60.00,
+            'maximum_price' => 120.00,
+            'image' => 'services/showroom.jpg',
+            'discount' => 0.00,]);
+        $s10->attributes()->attach([
+            $bodyWax->id => ['price' => 0.00, 'duration' => 0],
+            $engineSteam->id => ['price' => 0.00, 'duration' => 0],
+            $carSeats->id => ['price' => 6.00, 'duration' => 10]
+        ]);
+        $s10->requiredSkills()->attach([
+            $thermalSteam->id,
+            $exterior->id]);
+
+
+        ServiceImage::create([
+                    'service_id' => $s10->id,
+                    'image_before' => 'service_secondary/car_before.jpg',
+                    'image_after' => 'service_secondary/car_after.jpg',
+                ]);
+
+    }
+}

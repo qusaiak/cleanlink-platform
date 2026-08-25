@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Console;
+
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+
+class Kernel extends ConsoleKernel
+{
+    /**
+     * Define the application's command schedule.
+     */
+    protected function schedule(Schedule $schedule): void
+    {
+        $schedule->command('orders:cancel-pending')
+            ->everyThirtyMinutes()  // ينفذ كل نصف ساعة
+            ->withoutOverlapping()  // يمنع التشغيل المتزامن لمهمات طويلة
+            ->runInBackground();
+
+        // Check pending card payments every minute.
+        $schedule->command('orders:cancel-card-pending')
+            ->everyMinute()
+            ->withoutOverlapping()
+            ->runInBackground();
+    }
+
+    /**
+     * Register the commands for the application.
+     */
+    protected function commands(): void
+    {
+        $this->load(__DIR__ . '/Commands');
+
+        require base_path('routes/console.php');
+    }
+}

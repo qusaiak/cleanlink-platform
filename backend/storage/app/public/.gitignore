@@ -1,0 +1,14 @@
+*
+!.gitignore
+!categories/
+!categories/**
+!services/
+!services/**
+!companies/
+!companies/**
+!regions/
+!regions/**
+!service-images/
+!service-images/**
+!worker-images/
+!worker-images/**
