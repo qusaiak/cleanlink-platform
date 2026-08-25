@@ -1,11 +1,46 @@
 import 'package:equatable/equatable.dart';
 
 enum PaymentMethodType {
-  manual('manual'),
-  electric('electric');
+  cash('cash'),
+  card('card');
 
   const PaymentMethodType(this.apiValue);
   final String apiValue;
+}
+
+enum PaymentStatusType {
+  pending('pending'),
+  held('held'),
+  captured('captured'),
+  refunded('refunded'),
+  failed('failed');
+
+  const PaymentStatusType(this.apiValue);
+  final String apiValue;
+}
+
+PaymentMethodType paymentMethodFromApi(String? value) =>
+    PaymentMethodType.values.firstWhere(
+      (method) => method.apiValue == value?.trim().toLowerCase(),
+      orElse: () => throw FormatException(
+        'Unsupported payment method: ${value ?? 'null'}',
+      ),
+    );
+
+PaymentStatusType paymentStatusFromApi(String? value) =>
+    PaymentStatusType.values.firstWhere(
+      (status) => status.apiValue == value?.trim().toLowerCase(),
+      orElse: () => throw FormatException(
+        'Unsupported payment status: ${value ?? 'null'}',
+      ),
+    );
+
+PaymentStatusType? tryPaymentStatusFromApi(String? value) {
+  final normalized = value?.trim().toLowerCase();
+  for (final status in PaymentStatusType.values) {
+    if (status.apiValue == normalized) return status;
+  }
+  return null;
 }
 
 class PaymentIntentEntity extends Equatable {
@@ -59,8 +94,8 @@ class ClientPaymentEntity extends Equatable {
   final String orderStatus;
   final double amount;
   final String currency;
-  final String paymentMethod;
-  final String paymentStatus;
+  final PaymentMethodType paymentMethod;
+  final PaymentStatusType paymentStatus;
   final DateTime? createdAt;
   final DateTime? bookingDate;
   final DateTime? paidAt;
@@ -78,9 +113,8 @@ class ClientPaymentEntity extends Equatable {
   final String? packageNameEn;
   final String? paymentIntentId;
 
-  bool get isElectronic => paymentMethod.toLowerCase() == 'electric';
-  bool get isCash =>
-      const {'cash', 'manual'}.contains(paymentMethod.toLowerCase());
+  bool get isCard => paymentMethod == PaymentMethodType.card;
+  bool get isCash => paymentMethod == PaymentMethodType.cash;
 
   @override
   List<Object?> get props => [

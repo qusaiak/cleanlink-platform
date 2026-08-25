@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../payments/domain/entities/payment_entities.dart';
+
 enum OrderStatus {
   pending,
   assigned,
@@ -164,14 +166,16 @@ class OrderEntity extends Equatable {
   String get paymentStatusNormalized =>
       paymentStatus?.trim().toLowerCase() ?? '';
 
-  bool get isElectricPayment => paymentMethodNormalized == 'electric';
-  bool get isPaymentPending => paymentStatusNormalized == 'pending';
+  PaymentStatusType? get paymentStatusType =>
+      tryPaymentStatusFromApi(paymentStatus);
+
+  bool get isCardPayment => paymentMethodNormalized == 'card';
+  bool get isPaymentPending => paymentStatusType == PaymentStatusType.pending;
   bool get isPaymentConfirmed =>
-      paymentStatusNormalized == 'held' ||
-      paymentStatusNormalized == 'paid' ||
-      paymentStatusNormalized == 'captured';
+      paymentStatusType == PaymentStatusType.held ||
+      paymentStatusType == PaymentStatusType.captured;
   bool get canRetryPayment =>
-      isElectricPayment &&
+      isCardPayment &&
       isPaymentPending &&
       (statusType == OrderStatus.pending || statusType == OrderStatus.assigned);
 

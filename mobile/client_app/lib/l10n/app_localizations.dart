@@ -2972,11 +2972,11 @@ abstract class AppLocalizations {
   /// **'Cash'**
   String get cash;
 
-  /// No description provided for @credit_debit_card.
+  /// No description provided for @card.
   ///
   /// In en, this message translates to:
-  /// **'Credit / Debit Card'**
-  String get credit_debit_card;
+  /// **'Card'**
+  String get card;
 
   /// No description provided for @electronic_payment_expiry_notice.
   ///
@@ -3020,41 +3020,41 @@ abstract class AppLocalizations {
   /// **'The booking was created, but card payment could not be completed.'**
   String get payment_failed_message;
 
-  /// No description provided for @electronic_payment.
-  ///
-  /// In en, this message translates to:
-  /// **'Electronic payment'**
-  String get electronic_payment;
-
   /// No description provided for @payment_status.
   ///
   /// In en, this message translates to:
   /// **'Payment Status'**
   String get payment_status;
 
-  /// No description provided for @pending_payment.
+  /// No description provided for @payment_status_pending.
   ///
   /// In en, this message translates to:
-  /// **'Pending payment'**
-  String get pending_payment;
+  /// **'Pending'**
+  String get payment_status_pending;
 
-  /// No description provided for @payment_authorized.
+  /// No description provided for @payment_status_held.
   ///
   /// In en, this message translates to:
-  /// **'Payment authorized'**
-  String get payment_authorized;
+  /// **'Held'**
+  String get payment_status_held;
 
-  /// No description provided for @paid.
+  /// No description provided for @payment_status_captured.
   ///
   /// In en, this message translates to:
-  /// **'Paid'**
-  String get paid;
+  /// **'Captured'**
+  String get payment_status_captured;
 
-  /// No description provided for @refunded.
+  /// No description provided for @payment_status_refunded.
   ///
   /// In en, this message translates to:
   /// **'Refunded'**
-  String get refunded;
+  String get payment_status_refunded;
+
+  /// No description provided for @payment_status_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get payment_status_failed;
 
   /// No description provided for @pay_now.
   ///
@@ -3283,6 +3283,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We couldn\'t complete your message. Please try again.'**
   String get chat_error;
+
+  /// No description provided for @chat_booking_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Summary'**
+  String get chat_booking_summary;
+
+  /// No description provided for @chat_change_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Details'**
+  String get chat_change_details;
+
+  /// No description provided for @chat_view_booking.
+  ///
+  /// In en, this message translates to:
+  /// **'View Booking'**
+  String get chat_view_booking;
+
+  /// No description provided for @chat_booking_created.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking created'**
+  String get chat_booking_created;
+
+  /// No description provided for @chat_available_times.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Times'**
+  String get chat_available_times;
+
+  /// No description provided for @chat_choose_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Location'**
+  String get chat_choose_location;
+
+  /// No description provided for @chat_no_note.
+  ///
+  /// In en, this message translates to:
+  /// **'No note'**
+  String get chat_no_note;
+
+  /// No description provided for @chat_payment_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete the secure card payment to confirm your booking.'**
+  String get chat_payment_pending;
+
+  /// No description provided for @chat_payment_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment was cancelled. Your booking is not marked as paid.'**
+  String get chat_payment_cancelled;
+
+  /// No description provided for @chat_payment_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment could not be confirmed. Please try again from the booking details.'**
+  String get chat_payment_failed;
 
   /// No description provided for @message_count.
   ///

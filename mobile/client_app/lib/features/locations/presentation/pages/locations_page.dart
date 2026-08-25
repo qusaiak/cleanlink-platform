@@ -154,7 +154,7 @@ class _LocationsPageState extends State<LocationsPage> {
         title: l.delete_location,
         body: l.delete_location_confirmation,
         cancelButtonText: l.cancel,
-        doneButtonText: l.delete_location,
+        doneButtonText: l.ok,
         onCancel: () => Navigator.of(dialogContext).pop(),
         onTap: () {
           Navigator.of(dialogContext).pop();

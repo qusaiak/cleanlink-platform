@@ -34,7 +34,7 @@ void main() {
         'latitude': 33.5031234,
         'longitude': 36.2556789,
           'start_time': '2026-08-10 08:00:00',
-        'payment_method': 'manual',
+        'payment_method': 'cash',
           'note': 'Call before arrival',
       });
     });

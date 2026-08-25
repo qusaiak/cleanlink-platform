@@ -19,12 +19,14 @@ class SendChatResponseModel {
     if (user is! Map || assistant is! Map) {
       throw const FormatException('Invalid chat messages response');
     }
+    final assistantBody = Map<String, dynamic>.from(assistant);
+    if (assistantBody['action'] == null && body['action'] is Map) {
+      assistantBody['action'] = body['action'];
+    }
     return SendChatResponseModel(
       conversationId: int.tryParse('${body['conversation_id']}') ?? 0,
       userMessage: ChatMessageModel.fromJson(Map<String, dynamic>.from(user)),
-      assistantMessage: ChatMessageModel.fromJson(
-        Map<String, dynamic>.from(assistant),
-      ),
+      assistantMessage: ChatMessageModel.fromJson(assistantBody),
     );
   }
 

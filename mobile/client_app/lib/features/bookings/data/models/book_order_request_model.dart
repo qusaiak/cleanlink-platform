@@ -18,7 +18,7 @@ class BookOrderRequestModel {
     required this.startTime,
     this.note,
     this.attributes,
-    this.paymentMethod = PaymentMethodType.manual,
+    this.paymentMethod = PaymentMethodType.cash,
   });
   Map<String, dynamic> toJson() => {
     'package_id': packageId,

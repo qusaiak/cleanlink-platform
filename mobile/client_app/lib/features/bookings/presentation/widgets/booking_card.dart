@@ -6,6 +6,7 @@ import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../payments/domain/entities/payment_entities.dart';
 import '../../domain/entities/booking_entity.dart';
 import 'booking_info_chip.dart';
 import 'booking_status_badge.dart';
@@ -34,13 +35,13 @@ class BookingCard extends StatelessWidget {
 
   String _paymentStatus(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return switch (booking.paymentStatusNormalized) {
-      'pending' => l10n.pending_payment,
-      'held' => l10n.payment_authorized,
-      'paid' || 'captured' => l10n.paid,
-      'refunded' => l10n.refunded,
-      'failed' => l10n.payment_failed,
-      _ => booking.paymentStatus ?? '—',
+    return switch (booking.paymentStatusType) {
+      PaymentStatusType.pending => l10n.payment_status_pending,
+      PaymentStatusType.held => l10n.payment_status_held,
+      PaymentStatusType.captured => l10n.payment_status_captured,
+      PaymentStatusType.refunded => l10n.payment_status_refunded,
+      PaymentStatusType.failed => l10n.payment_status_failed,
+      null => '—',
     };
   }
 
@@ -95,21 +96,6 @@ class BookingCard extends StatelessWidget {
                               color: theme.onSurfaceVariant,
                             ),
                           ),
-                        // if (company?.name.isNotEmpty == true)
-                        //   Text(
-                        //     company!.name,
-                        //     style: Styles.textStyle12.copyWith(
-                        //       color: theme.onSurfaceVariant,
-                        //     ),
-                        //   ),
-                        // if (booking.leader?.fullname.isNotEmpty == true &&
-                        //     (booking.isAssigned || booking.isInProgress))
-                        //   Text(
-                        //     '${AppLocalizations.of(context)!.team_leader}: ${booking.leader!.fullname}',
-                        //     style: Styles.textStyle12.copyWith(
-                        //       color: theme.onSurfaceVariant,
-                        //     ),
-                        //   ),
                       ],
                     ),
                   ),
@@ -122,11 +108,6 @@ class BookingCard extends StatelessWidget {
                 icon: Icons.location_on_outlined,
                 text: booking.location,
               ),
-              if (booking.isElectricPayment)
-                BookingInfoChip(
-                  icon: Icons.credit_card_outlined,
-                  text: _paymentStatus(context),
-                ),
               Row(
                 children: [
                   Expanded(

@@ -143,11 +143,11 @@ class _Filters extends StatelessWidget {
             selectedValue: state.statusFilter,
             options: [
               (value: '', label: l.all),
-              (value: 'pending', label: l.pending),
-              (value: 'held', label: l.payment_authorized),
-              (value: 'captured', label: l.paid),
-              (value: 'failed', label: l.payment_failed),
-              (value: 'refunded', label: l.refunded),
+              (value: 'pending', label: l.payment_status_pending),
+              (value: 'held', label: l.payment_status_held),
+              (value: 'captured', label: l.payment_status_captured),
+              (value: 'refunded', label: l.payment_status_refunded),
+              (value: 'failed', label: l.payment_status_failed),
             ],
             onSelected: (value) => context.read<PaymentHistoryBloc>().add(
               ChangePaymentHistoryFilters(
@@ -163,8 +163,8 @@ class _Filters extends StatelessWidget {
             selectedValue: state.paymentMethodFilter,
             options: [
               (value: '', label: l.all),
-              (value: 'manual', label: l.cash),
-              (value: 'electric', label: l.electronic_payment),
+              (value: 'cash', label: l.cash),
+              (value: 'card', label: l.card),
             ],
             onSelected: (value) => context.read<PaymentHistoryBloc>().add(
               ChangePaymentHistoryFilters(
@@ -409,10 +409,10 @@ class _PaymentCard extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 _MetaPill(
-                  icon: payment.isElectronic
+                  icon: payment.isCard
                       ? Icons.credit_card_rounded
                       : Icons.payments_outlined,
-                  label: payment.isElectronic ? l.electronic_payment : l.cash,
+                  label: payment.isCard ? l.card : l.cash,
                 ),
                 _MetaPill(icon: Icons.calendar_today_outlined, label: date),
               ],
@@ -516,25 +516,23 @@ class _MetaPill extends StatelessWidget {
 
 class _StatusChip extends StatelessWidget {
   const _StatusChip({required this.status});
-  final String status;
+  final PaymentStatusType status;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    final normalized = status.toLowerCase();
-    final label = switch (normalized) {
-      'pending' => l.pending,
-      'held' => l.payment_authorized,
-      'paid' || 'captured' => l.paid,
-      'refunded' => l.refunded,
-      'failed' => l.payment_failed,
-      _ => status,
+    final label = switch (status) {
+      PaymentStatusType.pending => l.payment_status_pending,
+      PaymentStatusType.held => l.payment_status_held,
+      PaymentStatusType.captured => l.payment_status_captured,
+      PaymentStatusType.refunded => l.payment_status_refunded,
+      PaymentStatusType.failed => l.payment_status_failed,
     };
-    final color = switch (normalized) {
-      'paid' || 'captured' => Colors.green,
-      'held' => Colors.blue,
-      'failed' || 'refunded' => Colors.red,
-      _ => Colors.orange,
+    final color = switch (status) {
+      PaymentStatusType.captured => Colors.green,
+      PaymentStatusType.held => Colors.blue,
+      PaymentStatusType.failed || PaymentStatusType.refunded => Colors.red,
+      PaymentStatusType.pending => Colors.orange,
     };
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),

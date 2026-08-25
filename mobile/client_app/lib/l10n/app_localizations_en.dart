@@ -1517,7 +1517,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cash => 'Cash';
 
   @override
-  String get credit_debit_card => 'Credit / Debit Card';
+  String get card => 'Card';
 
   @override
   String get electronic_payment_expiry_notice =>
@@ -1544,22 +1544,22 @@ class AppLocalizationsEn extends AppLocalizations {
       'The booking was created, but card payment could not be completed.';
 
   @override
-  String get electronic_payment => 'Electronic payment';
-
-  @override
   String get payment_status => 'Payment Status';
 
   @override
-  String get pending_payment => 'Pending payment';
+  String get payment_status_pending => 'Pending';
 
   @override
-  String get payment_authorized => 'Payment authorized';
+  String get payment_status_held => 'Held';
 
   @override
-  String get paid => 'Paid';
+  String get payment_status_captured => 'Captured';
 
   @override
-  String get refunded => 'Refunded';
+  String get payment_status_refunded => 'Refunded';
+
+  @override
+  String get payment_status_failed => 'Failed';
 
   @override
   String get pay_now => 'Pay Now';
@@ -1685,6 +1685,39 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get chat_error =>
       'We couldn\'t complete your message. Please try again.';
+
+  @override
+  String get chat_booking_summary => 'Booking Summary';
+
+  @override
+  String get chat_change_details => 'Change Details';
+
+  @override
+  String get chat_view_booking => 'View Booking';
+
+  @override
+  String get chat_booking_created => 'Booking created';
+
+  @override
+  String get chat_available_times => 'Available Times';
+
+  @override
+  String get chat_choose_location => 'Choose Location';
+
+  @override
+  String get chat_no_note => 'No note';
+
+  @override
+  String get chat_payment_pending =>
+      'Complete the secure card payment to confirm your booking.';
+
+  @override
+  String get chat_payment_cancelled =>
+      'Payment was cancelled. Your booking is not marked as paid.';
+
+  @override
+  String get chat_payment_failed =>
+      'Payment could not be confirmed. Please try again from the booking details.';
 
   @override
   String message_count(int count) {

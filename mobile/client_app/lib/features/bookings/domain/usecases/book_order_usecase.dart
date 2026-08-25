@@ -14,7 +14,7 @@ class BookOrderUseCase {
     String? note,
     bool isOpenPackage = false,
     List<SelectedOpenPackageAttribute> attributes = const [],
-    PaymentMethodType paymentMethod = PaymentMethodType.manual,
+    PaymentMethodType paymentMethod = PaymentMethodType.cash,
   }) => isOpenPackage
       ? repository.bookOpenPackage(
           packageId: packageId,

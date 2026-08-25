@@ -35,3 +35,7 @@ class DeleteCurrentConversation extends ChatEvent {
 class ClearChatError extends ChatEvent {
   const ClearChatError();
 }
+
+class ChatActionHandled extends ChatEvent {
+  const ChatActionHandled();
+}

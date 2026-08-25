@@ -15,6 +15,7 @@ import '../../domain/entities/booking_entity.dart';
 import '../bloc/bookings_bloc.dart';
 import '../widgets/booking_status_badge.dart';
 import '../../../payments/presentation/bloc/payments_bloc.dart';
+import '../../../payments/domain/entities/payment_entities.dart';
 
 class OrderDetailsPage extends StatefulWidget {
   final int orderId;
@@ -49,21 +50,21 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   String _paymentMethodLabel(OrderEntity order) {
     final l10n = AppLocalizations.of(context)!;
     return switch (order.paymentMethodNormalized) {
-      'cash' || 'manual' => l10n.cash,
-      'electric' => l10n.electronic_payment,
-      _ => order.paymentMethod ?? '—',
+      'cash' => l10n.cash,
+      'card' => l10n.card,
+      _ => '—',
     };
   }
 
   String _paymentStatusLabel(OrderEntity order) {
     final l10n = AppLocalizations.of(context)!;
-    return switch (order.paymentStatusNormalized) {
-      'pending' => l10n.pending_payment,
-      'held' => l10n.payment_authorized,
-      'paid' || 'captured' => l10n.paid,
-      'refunded' => l10n.refunded,
-      'failed' => l10n.payment_failed,
-      _ => order.paymentStatus ?? '—',
+    return switch (order.paymentStatusType) {
+      PaymentStatusType.pending => l10n.payment_status_pending,
+      PaymentStatusType.held => l10n.payment_status_held,
+      PaymentStatusType.captured => l10n.payment_status_captured,
+      PaymentStatusType.refunded => l10n.payment_status_refunded,
+      PaymentStatusType.failed => l10n.payment_status_failed,
+      null => '—',
     };
   }
 
@@ -428,7 +429,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             imagePath: order.package!.service!.image!,
                             height: 190.h,
                             width: double.infinity,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fill,
                           ),
                         ),
                       SizedBox(height: 16.h),

@@ -59,52 +59,27 @@ class ClientPaymentResponseModel {
 }
 
 abstract final class ClientPaymentModel {
-  static ClientPaymentEntity fromListJson(Map<String, dynamic> json) {
-    final package = _map(json['package']);
-    final service = _map(package?['service']);
-    final company = _map(service?['company']);
-    final id = _int(json['id']);
-    return ClientPaymentEntity(
-      id: id,
-      orderId: id,
-      orderStatus: json['status']?.toString() ?? '',
-      amount: _double(json['total_price']),
-      currency: 'USD',
-      paymentMethod: json['payment_method']?.toString() ?? '',
-      paymentStatus: json['payment_status']?.toString() ?? '',
-      createdAt: _date(json['created_at']),
-      bookingDate: _date(json['start_time']),
-      serviceId: _nullableInt(service?['id']),
-      serviceName: service?['name']?.toString(),
-      serviceNameAr: service?['name_ar']?.toString(),
-      serviceNameEn: service?['name_en']?.toString(),
-      companyId: _nullableInt(company?['id']),
-      companyName: company?['name']?.toString(),
-      companyNameAr: company?['name_ar']?.toString(),
-      companyNameEn: company?['name_en']?.toString(),
-      packageId: _nullableInt(package?['id']),
-      packageName: package?['name']?.toString(),
-      packageNameAr: package?['name_ar']?.toString(),
-      packageNameEn: package?['name_en']?.toString(),
-      paymentIntentId: json['stripe_payment_intent_id']?.toString(),
-    );
-  }
+  static ClientPaymentEntity fromListJson(Map<String, dynamic> json) =>
+      fromJson(json);
 
-  static ClientPaymentEntity fromDetailsJson(Map<String, dynamic> json) {
-    final order = _map(json['order']);
+  static ClientPaymentEntity fromDetailsJson(Map<String, dynamic> json) =>
+      fromJson(json);
+
+  static ClientPaymentEntity fromJson(Map<String, dynamic> json) {
     final service = _map(json['service']);
     final company = _map(json['company']);
     final package = _map(json['package']);
     final id = _int(json['id']);
     return ClientPaymentEntity(
       id: id,
-      orderId: _int(order?['id'], fallback: id),
-      orderStatus: order?['status']?.toString() ?? '',
-      amount: _double(json['total_price']),
+      orderId: _int(json['order_id']),
+      orderStatus: json['order_status']?.toString() ?? '',
+      amount: _double(json['amount']),
       currency: json['currency']?.toString() ?? 'USD',
-      paymentMethod: json['payment_method']?.toString() ?? '',
-      paymentStatus: json['payment_status']?.toString() ?? '',
+      paymentMethod: paymentMethodFromApi(json['payment_method']?.toString()),
+      paymentStatus: paymentStatusFromApi(json['payment_status']?.toString()),
       createdAt: _date(json['created_at']),
+      bookingDate: _date(json['booking_date']),
       paidAt: _date(json['paid_at']),
       serviceId: _nullableInt(service?['id']),
       serviceName: service?['name']?.toString(),
@@ -118,7 +93,6 @@ abstract final class ClientPaymentModel {
       packageName: package?['name']?.toString(),
       packageNameAr: package?['name_ar']?.toString(),
       packageNameEn: package?['name_en']?.toString(),
-      paymentIntentId: json['stripe_payment_intent_id']?.toString(),
     );
   }
 }

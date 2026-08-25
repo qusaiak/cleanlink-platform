@@ -46,7 +46,7 @@ class BookingDetailsPage extends StatefulWidget {
 class _BookingDetailsPageState extends State<BookingDetailsPage> {
   final TextEditingController _notesController = TextEditingController();
   StreamSubscription<LocationsState>? _locationsSubscription;
-  PaymentMethodType _paymentMethod = PaymentMethodType.manual;
+  PaymentMethodType _paymentMethod = PaymentMethodType.cash;
 
   Future<void> _selectLocation() async {
     final bookingBloc = context.read<BookingsBloc>();
@@ -287,7 +287,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
           listener: (context, state) {
             if (state.bookingSuccess) {
               final order = state.selectedOrder;
-              if (order?.paymentMethod == PaymentMethodType.electric.apiValue) {
+              if (order?.paymentMethod == PaymentMethodType.card.apiValue) {
                 context.read<PaymentsBloc>().add(
                   PayForOrder(
                     orderId: order!.id,
@@ -453,6 +453,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                 SizedBox(height: 16.h),
                 BlocBuilder<BookingsBloc, BookingsState>(
                   buildWhen: (previous, current) =>
+                      previous.serviceAttributes != current.serviceAttributes ||
                       previous.openPackageAttributeQuantities !=
                           current.openPackageAttributeQuantities ||
                       previous.openPackageQuote != current.openPackageQuote ||
@@ -1091,7 +1092,7 @@ class _PaymentMethodSelector extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   dense: true,
                   leading: Icon(
-                    method == PaymentMethodType.manual
+                    method == PaymentMethodType.cash
                         ? Icons.payments_outlined
                         : Icons.credit_card_outlined,
                     color: method == value
@@ -1099,9 +1100,7 @@ class _PaymentMethodSelector extends StatelessWidget {
                         : colors.onSurfaceVariant,
                   ),
                   title: Text(
-                    method == PaymentMethodType.manual
-                        ? l.cash
-                        : l.credit_debit_card,
+                    method == PaymentMethodType.cash ? l.cash : l.card,
                     style: Styles.textStyle16.copyWith(
                       fontWeight: method == value
                           ? FontWeight.w600
@@ -1118,7 +1117,7 @@ class _PaymentMethodSelector extends StatelessWidget {
           ),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 220),
-          child: value != PaymentMethodType.electric
+          child: value != PaymentMethodType.card
               ? const SizedBox.shrink()
               : Container(
                   key: const ValueKey('electronic-payment-expiry-notice'),

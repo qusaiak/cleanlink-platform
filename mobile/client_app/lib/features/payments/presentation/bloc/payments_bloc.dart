@@ -7,6 +7,7 @@ import '../../../../core/payment/stripe_payment_service.dart';
 import '../../domain/usecases/create_payment_intent_usecase.dart';
 import '../../../bookings/domain/entities/booking_entity.dart';
 import '../../../bookings/domain/usecases/show_order_usecase.dart';
+import '../../domain/entities/payment_entities.dart';
 
 part 'payments_event.dart';
 part 'payments_state.dart';
@@ -77,7 +78,7 @@ class PaymentsBloc extends Bloc<PaymentsEvent, PaymentsState> {
         ),
       );
       final order = await _waitForBackend(event.orderId);
-      if (order.paymentStatusNormalized == 'failed') {
+      if (order.paymentStatusType == PaymentStatusType.failed) {
         emit(
           PaymentsState(
             stage: PaymentStage.failed,
@@ -195,7 +196,7 @@ class PaymentsBloc extends Bloc<PaymentsEvent, PaymentsState> {
     try {
       final order = await _showOrderWithTimeout(event.orderId);
       if (event.session != _paymentSession) return;
-      if (order.paymentStatusNormalized == 'failed') {
+      if (order.paymentStatusType == PaymentStatusType.failed) {
         emit(
           PaymentsState(
             stage: PaymentStage.failed,

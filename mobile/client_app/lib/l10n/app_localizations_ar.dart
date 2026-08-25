@@ -1497,7 +1497,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cash => 'نقداً';
 
   @override
-  String get credit_debit_card => 'بطاقة ائتمان / خصم';
+  String get card => 'بطاقة';
 
   @override
   String get electronic_payment_expiry_notice =>
@@ -1524,22 +1524,22 @@ class AppLocalizationsAr extends AppLocalizations {
       'تم إنشاء الحجز، لكن تعذر إكمال الدفع بالبطاقة.';
 
   @override
-  String get electronic_payment => 'الدفع الإلكتروني';
-
-  @override
   String get payment_status => 'حالة الدفع';
 
   @override
-  String get pending_payment => 'الدفع معلّق';
+  String get payment_status_pending => 'قيد الانتظار';
 
   @override
-  String get payment_authorized => 'تم تفويض الدفع';
+  String get payment_status_held => 'محجوز';
 
   @override
-  String get paid => 'مدفوع';
+  String get payment_status_captured => 'محصّل';
 
   @override
-  String get refunded => 'تم رد المبلغ';
+  String get payment_status_refunded => 'مسترد';
+
+  @override
+  String get payment_status_failed => 'فشل';
 
   @override
   String get pay_now => 'ادفع الآن';
@@ -1663,6 +1663,38 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get chat_error => 'تعذر إكمال رسالتك. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get chat_booking_summary => 'ملخص الحجز';
+
+  @override
+  String get chat_change_details => 'تغيير التفاصيل';
+
+  @override
+  String get chat_view_booking => 'عرض الحجز';
+
+  @override
+  String get chat_booking_created => 'تم إنشاء الحجز';
+
+  @override
+  String get chat_available_times => 'الأوقات المتاحة';
+
+  @override
+  String get chat_choose_location => 'اختر الموقع';
+
+  @override
+  String get chat_no_note => 'بدون ملاحظة';
+
+  @override
+  String get chat_payment_pending => 'أكمل الدفع الآمن بالبطاقة لتأكيد حجزك.';
+
+  @override
+  String get chat_payment_cancelled =>
+      'تم إلغاء الدفع. لم يتم اعتبار الحجز مدفوعاً.';
+
+  @override
+  String get chat_payment_failed =>
+      'تعذر تأكيد الدفع. حاول مجدداً من تفاصيل الحجز.';
 
   @override
   String message_count(int count) {

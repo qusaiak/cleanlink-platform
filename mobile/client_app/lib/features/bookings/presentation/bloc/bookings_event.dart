@@ -53,7 +53,7 @@ class BookOrderEvent extends BookingsEvent {
     required this.longitude,
     required this.startTime,
     this.note,
-    this.paymentMethod = PaymentMethodType.manual,
+    this.paymentMethod = PaymentMethodType.cash,
   });
   @override
   List<Object?> get props => [

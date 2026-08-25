@@ -10,6 +10,7 @@ class ChatState extends Equatable {
     this.failure,
     this.failedMessage,
     this.deleteSucceeded = false,
+    this.actionToHandle,
   });
 
   final List<ChatMessage> messages;
@@ -20,6 +21,7 @@ class ChatState extends Equatable {
   final Failure? failure;
   final String? failedMessage;
   final bool deleteSucceeded;
+  final ChatAction? actionToHandle;
 
   ChatState copyWith({
     List<ChatMessage>? messages,
@@ -33,6 +35,8 @@ class ChatState extends Equatable {
     String? failedMessage,
     bool clearFailedMessage = false,
     bool? deleteSucceeded,
+    ChatAction? actionToHandle,
+    bool clearActionToHandle = false,
   }) => ChatState(
     messages: messages ?? this.messages,
     conversationId: clearConversationId
@@ -46,6 +50,9 @@ class ChatState extends Equatable {
         ? null
         : failedMessage ?? this.failedMessage,
     deleteSucceeded: deleteSucceeded ?? this.deleteSucceeded,
+    actionToHandle: clearActionToHandle
+        ? null
+        : actionToHandle ?? this.actionToHandle,
   );
 
   @override
@@ -58,5 +65,6 @@ class ChatState extends Equatable {
     failure,
     failedMessage,
     deleteSucceeded,
+    actionToHandle,
   ];
 }

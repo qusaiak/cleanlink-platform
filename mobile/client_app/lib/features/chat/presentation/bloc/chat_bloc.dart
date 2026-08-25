@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/chat_message.dart';
+import '../../domain/entities/chat_action.dart';
 import '../../domain/usecases/chat_usecases.dart';
 
 part 'chat_event.dart';
@@ -17,6 +18,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<RetryFailedChatMessage>(_onRetryFailedMessage);
     on<DeleteCurrentConversation>(_onDeleteConversation);
     on<ClearChatError>((_, emit) => emit(state.copyWith(clearFailure: true)));
+    on<ChatActionHandled>(
+      (_, emit) => emit(state.copyWith(clearActionToHandle: true)),
+    );
   }
 
   final GetChatConversationUseCase _getConversation;
@@ -113,6 +117,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           ],
           isSending: false,
           clearFailedMessage: true,
+          actionToHandle: result.assistantMessage.action,
         ),
       );
     } catch (error) {
