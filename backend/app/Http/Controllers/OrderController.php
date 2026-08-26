@@ -171,9 +171,9 @@ class OrderController extends Controller
         }
 
         $validated = $request->validate([
-            'attributes' => 'required|array|min:1',
+            'attributes' => 'present|array',
             'attributes.*.id' => 'required|exists:attributes,id',
-            'attributes.*.qty' => 'required|integer|min:1',
+            'attributes.*.qty' => 'required|integer|min:0',
         ]);
 
         $service = $package->service;
@@ -197,9 +197,9 @@ class OrderController extends Controller
         $validated = $request->validate([
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'attributes' => 'required|array|min:1',
+            'attributes' => 'present|array',
             'attributes.*.id' => 'required|exists:attributes,id',
-            'attributes.*.qty' => 'required|integer|min:1',
+            'attributes.*.qty' => 'required|integer|min:0',
         ]);
 
         $service = $package->service;
@@ -352,9 +352,9 @@ class OrderController extends Controller
             'longitude' => 'required|numeric',
             'start_time' => 'required|date|after:now',
             'note' => 'nullable|string|max:1000',
-            'attributes' => 'required|array|min:1',
+            'attributes' => 'present|array',
             'attributes.*.id' => 'required|exists:attributes,id',
-            'attributes.*.qty' => 'required|integer|min:1',
+            'attributes.*.qty' => 'required|integer|min:0',
 
             'payment_method' => 'required|in:card,cash',
         ]);
@@ -573,14 +573,13 @@ class OrderController extends Controller
             'payment_status' => ['nullable', 'string', 'in:pending,held,captured,refunded,failed'],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
             'page' => 'sometimes|integer|min:1',
-            'company_id' => ['sometimes', 'integer', 'exists:companies,id'], // تعديل هنا لجعل company_id غير مطلوب
+            'company_id' => ['sometimes', 'integer', 'exists:companies,id'],
         ]);
 
         $perPage = $validated['per_page'] ?? 10;
 
         $user = auth()->user();
 
-        // إذا كان المستخدم غير إداري، تحقق من الأذونات
         if (!$user->isAdmin() && isset($validated['company_id'])) {
             $company = Company::find($validated['company_id']);
             if (!$user->canManageCompany($company)) {
@@ -590,27 +589,22 @@ class OrderController extends Controller
 
         $query = Order::with(['client.profile', 'package.service.company', 'tasks.workgroup.leader.profile']);
 
-        // إضافة شرط لتصفية الطلبات حسب company_id إذا كان موجودًا
         if (isset($validated['company_id'])) {
             $query->whereHas('package.service', function (Builder $serviceQuery) use ($validated) {
                 $serviceQuery->where('company_id', $validated['company_id']);
             });
         }
 
-        // إضافة شرط لتصفية الطلبات حسب الحالة
         if (!empty($validated['status'])) {
             $query->where('status', $validated['status']);
         }
 
-        // إضافة شرط لتصفية الطلبات حسب حالة الدفع
         if (!empty($validated['payment_status'])) {
             $query->where('payment_status', $validated['payment_status']);
         }
 
-        // استرجاع الطلبات مع الترتيب والتقسيم
         $orders = $query->orderBy('created_at', 'desc')->paginate($perPage);
 
-        // إعداد البيانات للاستجابة
         $responseData = [
             'data' => OrderResource::collection($orders->items()),
             'pagination' => [
@@ -635,13 +629,12 @@ class OrderController extends Controller
         $this->authorize('viewAny', Order::class);
 
         $validated = $request->validate([
-            'company_id' => ['sometimes', 'integer', 'exists:companies,id'], // company_id غير مطلوب
+            'company_id' => ['sometimes', 'integer', 'exists:companies,id'],
         ]);
 
         $user = auth()->user();
         $company = isset($validated['company_id']) ? Company::find($validated['company_id']) : null;
 
-        // تحقق من الأذونات فقط إذا كانت company_id موجودة
         if (!$user->isAdmin() && $company && !$user->canManageCompany($company)) {
             return $this->errorResponse('You do not have permission to view orders for this company', 403);
         }
@@ -667,7 +660,6 @@ class OrderController extends Controller
             ->whereNotNull('latitude')
             ->whereNotNull('longitude');
 
-        // إضافة شرط لتصفية الطلبات حسب company_id إذا كان موجودًا
         if ($company) {
             $query->whereHas('package.service', function (Builder $serviceQuery) use ($company) {
                 $serviceQuery->where('company_id', $company->id);
@@ -763,7 +755,7 @@ class OrderController extends Controller
         $runningTotalDuration = $baseDuration;
 
         foreach ($attributeInputs as $item) {
-            $qty = (int) ($item['qty'] ?? 1);
+            $qty = (int) ($item['qty'] ?? 0);
             $price = (float) ($item['price'] ?? 0.0);
             $duration = (int) ($item['duration'] ?? 0);
 

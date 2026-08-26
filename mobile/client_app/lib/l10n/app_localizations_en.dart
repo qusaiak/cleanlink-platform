@@ -1511,10 +1511,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please check price and duration for the current configuration first.';
 
   @override
-  String get configure_all_open_package_attributes =>
-      'Configure every service attribute before checking the price or booking.';
-
-  @override
   String get selected_configuration => 'Selected Configuration';
 
   @override

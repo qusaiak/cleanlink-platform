@@ -500,7 +500,6 @@
   "check_price_duration": "تحقق من السعر والمدة",
   "checking_price_duration": "جارٍ التحقق…",
   "please_check_price_duration_again": "يرجى التحقق من السعر والمدة للإعداد الحالي أولاً.",
-  "configure_all_open_package_attributes": "يرجى إعداد جميع خصائص الخدمة قبل التحقق من السعر أو الحجز.",
   "selected_configuration": "الإعداد المختار",
   "on_the_way": "في الطريق",
   "payment_method": "طريقة الدفع",

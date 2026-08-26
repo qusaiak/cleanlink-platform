@@ -2960,12 +2960,6 @@ abstract class AppLocalizations {
   /// **'Please check price and duration for the current configuration first.'**
   String get please_check_price_duration_again;
 
-  /// No description provided for @configure_all_open_package_attributes.
-  ///
-  /// In en, this message translates to:
-  /// **'Configure every service attribute before checking the price or booking.'**
-  String get configure_all_open_package_attributes;
-
   /// No description provided for @selected_configuration.
   ///
   /// In en, this message translates to:

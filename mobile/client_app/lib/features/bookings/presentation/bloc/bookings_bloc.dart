@@ -186,7 +186,7 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
         startTime: event.startTime,
         note: event.note,
         isOpenPackage: state.package?.isOpenPackage ?? false,
-        attributes: state.selectedOpenPackageAttributes,
+        attributes: state.openPackageAttributesPayload,
         paymentMethod: event.paymentMethod,
       );
       emit(
@@ -305,7 +305,7 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
               packageId: event.packageId,
               latitude: event.latitude,
               longitude: event.longitude,
-              attributes: state.selectedOpenPackageAttributes,
+              attributes: state.openPackageAttributesPayload,
             )
           : await getAvailableSlotsUseCase(
               packageId: event.packageId,
@@ -424,15 +424,6 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
       emit(state.copyWith(isCheckingOpenPackagePrice: false));
       return;
     }
-    // if (!state.areAllOpenPackageAttributesConfigured) {
-    //   emit(
-    //     state.copyWith(
-    //       isCheckingOpenPackagePrice: false,
-    //       errorMessage: 'configure_all_open_package_attributes',
-    //     ),
-    //   );
-    //   return;
-    // }
     final requestId = ++_quoteRequestId;
     emit(
       state.copyWith(
@@ -444,7 +435,7 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
     try {
       final quote = await useCase(
         packageId: event.packageId,
-        attributes: state.selectedOpenPackageAttributes,
+        attributes: state.openPackageAttributesPayload,
       );
       if (requestId != _quoteRequestId) return;
       emit(

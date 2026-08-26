@@ -178,9 +178,9 @@ class AtomicBookingService
         $normalizedPivot = [];
         foreach ($attributes as $attribute) {
             $quantity = (int) ($attributePivot[$attribute->id]['qty'] ?? 0);
-            if ($quantity < 1) {
+            if ($quantity < 0) {
                 throw \Illuminate\Validation\ValidationException::withMessages([
-                    'attributes' => ['Every service attribute requires a quantity of at least one.'],
+                    'attributes' => ['Service attribute quantities cannot be negative.'],
                 ]);
             }
 

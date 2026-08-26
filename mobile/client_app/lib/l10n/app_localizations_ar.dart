@@ -1491,10 +1491,6 @@ class AppLocalizationsAr extends AppLocalizations {
       'يرجى التحقق من السعر والمدة للإعداد الحالي أولاً.';
 
   @override
-  String get configure_all_open_package_attributes =>
-      'يرجى إعداد جميع خصائص الخدمة قبل التحقق من السعر أو الحجز.';
-
-  @override
   String get selected_configuration => 'الإعداد المختار';
 
   @override

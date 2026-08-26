@@ -499,7 +499,6 @@
   "check_price_duration": "Check Price & Duration",
   "checking_price_duration": "Checking…",
   "please_check_price_duration_again": "Please check price and duration for the current configuration first.",
-  "configure_all_open_package_attributes": "Configure every service attribute before checking the price or booking.",
   "selected_configuration": "Selected Configuration",
   "on_the_way": "On the Way",
   "payment_method": "Payment Method",

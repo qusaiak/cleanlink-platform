@@ -161,32 +161,31 @@ class _ServicePackagesSectionState extends State<ServicePackagesSection> {
                     ),
                   ),
                   SizedBox(height: 12.h),
-                  ...(selectedPackage.isOpenPackage
-                          ? state.service.attributes?.map(
-                                  (item) => item.name,
-                                ) ??
-                                const Iterable<String>.empty()
-                          : selectedPackage.details)
-                      .map(
-                        (feature) => Padding(
-                          padding: EdgeInsets.only(bottom: 8.h),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.check_circle_outline,
-                                size: 16.sp,
-                                color: theme.primary,
+                  if (selectedPackage.isOpenPackage)
+                    _ServiceOpenPackageCustomizer(
+                      attributes: state.service.attributes ?? const [],
+                      quantities: state.openPackageAttributeQuantities,
+                    )
+                  else
+                    for (final feature in selectedPackage.details)
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 8.h),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.check_circle_outline,
+                              size: 16.sp,
+                              color: theme.primary,
+                            ),
+                            SizedBox(width: 10.w),
+                            Expanded(
+                              child: Text(
+                                feature,
+                                maxLines: 5,
+                                style: Styles.textStyle12,
                               ),
-                              SizedBox(width: 10.w),
-                              Expanded(
-                                child: Text(
-                                  feature,
-                                  maxLines: 5,
-                                  style: Styles.textStyle12,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                 ],
@@ -199,118 +198,110 @@ class _ServicePackagesSectionState extends State<ServicePackagesSection> {
   }
 }
 
-// class _ServiceOpenPackageCustomizer extends StatelessWidget {
-//   const _ServiceOpenPackageCustomizer({
-//     required this.attributes,
-//     required this.quantities,
-//   });
-//
-//   final List<AttributeEntity> attributes;
-//   final Map<int, int> quantities;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final l = AppLocalizations.of(context)!;
-//     final colors = Theme.of(context).colorScheme;
-//     if (attributes.isEmpty) return Text(l.no_attributes_available);
-//
-//     return Column(
-//       children: [
-//         for (final attribute in attributes)
-//           Padding(
-//             padding: EdgeInsets.only(bottom: 8.h),
-//             child: attribute.isBoolean == true
-//                 ? CheckboxListTile(
-//                     key: ValueKey('service-open-boolean-${attribute.id}'),
-//                     value: (quantities[attribute.id] ?? 0) > 0,
-//                     contentPadding: EdgeInsets.zero,
-//                     dense: true,
-//                     controlAffinity: ListTileControlAffinity.trailing,
-//                     title: Text(attribute.name, style: Styles.textStyle12),
-//                     subtitle: _AttributePriceDuration(
-//                       price: attribute.price,
-//                       duration: attribute.duration,
-//                     ),
-//                     onChanged: (value) => context.read<ServicesBloc>().add(
-//                       UpdateServiceOpenPackageAttributeQty(
-//                         attributeId: attribute.id,
-//                         qty: value == true ? 1 : 0,
-//                       ),
-//                     ),
-//                   )
-//                 : Row(
-//                     key: ValueKey('service-open-number-${attribute.id}'),
-//                     children: [
-//                       Expanded(
-//                         child: Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             Text(attribute.name, style: Styles.textStyle12),
-//                             _AttributePriceDuration(
-//                               price: attribute.price,
-//                               duration: attribute.duration,
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                       IconButton(
-//                         tooltip: l.decrease,
-//                         onPressed: (quantities[attribute.id] ?? 0) <= 0
-//                             ? null
-//                             : () => context.read<ServicesBloc>().add(
-//                                 UpdateServiceOpenPackageAttributeQty(
-//                                   attributeId: attribute.id,
-//                                   qty: (quantities[attribute.id] ?? 0) - 1,
-//                                 ),
-//                               ),
-//                         icon: const Icon(Icons.remove_circle_outline),
-//                       ),
-//                       SizedBox(
-//                         width: 28.w,
-//                         child: Text(
-//                           '${quantities[attribute.id] ?? 0}',
-//                           textAlign: TextAlign.center,
-//                         ),
-//                       ),
-//                       IconButton(
-//                         tooltip: l.increase,
-//                         onPressed: () => context.read<ServicesBloc>().add(
-//                           UpdateServiceOpenPackageAttributeQty(
-//                             attributeId: attribute.id,
-//                             qty: (quantities[attribute.id] ?? 0) + 1,
-//                           ),
-//                         ),
-//                         icon: const Icon(Icons.add_circle_outline),
-//                       ),
-//                     ],
-//                   ),
-//           ),
-//         Align(
-//           alignment: AlignmentDirectional.centerStart,
-//           child: Text(
-//             l.configure_all_open_package_attributes,
-//             style: Styles.textStyle11.copyWith(color: colors.onSurfaceVariant),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
+class _ServiceOpenPackageCustomizer extends StatelessWidget {
+  const _ServiceOpenPackageCustomizer({
+    required this.attributes,
+    required this.quantities,
+  });
 
-// class _AttributePriceDuration extends StatelessWidget {
-//   const _AttributePriceDuration({required this.price, required this.duration});
-//
-//   final num price;
-//   final int duration;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final l = AppLocalizations.of(context)!;
-//     return Text(
-//       '+$price ${l.sp} · +$duration ${l.track_minutes_short}',
-//       style: Styles.textStyle11.copyWith(
-//         color: Theme.of(context).colorScheme.onSurfaceVariant,
-//       ),
-//     );
-//   }
-// }
+  final List<AttributeEntity> attributes;
+  final Map<int, int> quantities;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    if (attributes.isEmpty) return Text(l.no_attributes_available);
+
+    return Column(
+      children: [
+        for (final attribute in attributes)
+          Padding(
+            padding: EdgeInsets.only(bottom: 8.h),
+            child: attribute.isBoolean
+                ? CheckboxListTile(
+                    key: ValueKey('service-open-boolean-${attribute.id}'),
+                    value: (quantities[attribute.id] ?? 0) > 0,
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                    controlAffinity: ListTileControlAffinity.trailing,
+                    title: Text(attribute.name, style: Styles.textStyle12),
+                    subtitle: _AttributePriceDuration(
+                      price: attribute.price,
+                      duration: attribute.duration,
+                    ),
+                    onChanged: (value) => context.read<ServicesBloc>().add(
+                      UpdateServiceOpenPackageAttributeQty(
+                        attributeId: attribute.id,
+                        qty: value == true ? 1 : 0,
+                      ),
+                    ),
+                  )
+                : Row(
+                    key: ValueKey('service-open-number-${attribute.id}'),
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(attribute.name, style: Styles.textStyle12),
+                            _AttributePriceDuration(
+                              price: attribute.price,
+                              duration: attribute.duration,
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        tooltip: l.decrease,
+                        onPressed: (quantities[attribute.id] ?? 0) <= 0
+                            ? null
+                            : () => context.read<ServicesBloc>().add(
+                                UpdateServiceOpenPackageAttributeQty(
+                                  attributeId: attribute.id,
+                                  qty: (quantities[attribute.id] ?? 0) - 1,
+                                ),
+                              ),
+                        icon: const Icon(Icons.remove_circle_outline),
+                      ),
+                      SizedBox(
+                        width: 28.w,
+                        child: Text(
+                          '${quantities[attribute.id] ?? 0}',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      IconButton(
+                        tooltip: l.increase,
+                        onPressed: () => context.read<ServicesBloc>().add(
+                          UpdateServiceOpenPackageAttributeQty(
+                            attributeId: attribute.id,
+                            qty: (quantities[attribute.id] ?? 0) + 1,
+                          ),
+                        ),
+                        icon: const Icon(Icons.add_circle_outline),
+                      ),
+                    ],
+                  ),
+          ),
+      ],
+    );
+  }
+}
+
+class _AttributePriceDuration extends StatelessWidget {
+  const _AttributePriceDuration({required this.price, required this.duration});
+
+  final num price;
+  final int duration;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return Text(
+      '$price ${l.sp} · $duration ${l.track_minutes_short}',
+      style: Styles.textStyle11.copyWith(
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+    );
+  }
+}

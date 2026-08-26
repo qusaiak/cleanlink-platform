@@ -1,4 +1,5 @@
 import 'package:client_app/features/bookings/domain/repositories/bookings_repo.dart';
+import 'package:client_app/features/bookings/domain/entities/open_package_entities.dart';
 import 'package:client_app/features/bookings/domain/usecases/book_order_usecase.dart';
 import 'package:client_app/features/bookings/domain/usecases/cancel_order_usecase.dart';
 import 'package:client_app/features/bookings/domain/usecases/get_available_slots_usecase.dart';
@@ -89,7 +90,10 @@ void main() {
     );
 
     expect(bloc.state.openPackageAttributeQuantities, const {1: 3, 22: 1});
-    expect(bloc.state.selectedOpenPackageAttributes, hasLength(2));
+    expect(bloc.state.openPackageAttributesPayload, const [
+      SelectedOpenPackageAttribute(id: 1, qty: 3),
+      SelectedOpenPackageAttribute(id: 22, qty: 1),
+    ]);
   });
 
   testWidgets('boolean uses a checkbox while number uses stepper buttons', (
@@ -131,7 +135,6 @@ void main() {
                   quantities: state.openPackageAttributeQuantities,
                   quote: state.openPackageQuote,
                   isCalculating: state.isCheckingOpenPackagePrice,
-                  canCalculate: state.areAllOpenPackageAttributesConfigured,
                 ),
               ),
             ),
@@ -148,13 +151,18 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('open-package-boolean-22')));
     await tester.pump();
     expect(bloc.state.openPackageAttributeQuantities[22], 1);
-    expect(bloc.state.selectedOpenPackageAttributes.single.id, 22);
-    expect(bloc.state.selectedOpenPackageAttributes.single.qty, 1);
+    expect(bloc.state.openPackageAttributesPayload, const [
+      SelectedOpenPackageAttribute(id: 1, qty: 0),
+      SelectedOpenPackageAttribute(id: 22, qty: 1),
+    ]);
 
     await tester.tap(find.byKey(const ValueKey('open-package-boolean-22')));
     await tester.pump();
     expect(bloc.state.openPackageAttributeQuantities[22], 0);
-    expect(bloc.state.selectedOpenPackageAttributes, isEmpty);
+    expect(bloc.state.openPackageAttributesPayload, const [
+      SelectedOpenPackageAttribute(id: 1, qty: 0),
+      SelectedOpenPackageAttribute(id: 22, qty: 0),
+    ]);
 
     await tester.tap(find.byIcon(Icons.add_circle_outline));
     await tester.pump();

@@ -135,15 +135,6 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
     final startTime = _selectedStartTime(state);
     final l = AppLocalizations.of(context)!;
     if (widget.package.isOpenPackage &&
-        !state.areAllOpenPackageAttributesConfigured) {
-      AppSnackBar.showWarning(
-        context: context,
-        title: l.warning,
-        message: l.configure_all_open_package_attributes,
-      );
-      return;
-    }
-    if (widget.package.isOpenPackage &&
         !state.isOpenPackageConfigurationChecked) {
       AppSnackBar.showWarning(
         context: context,
@@ -270,9 +261,6 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
     }
     if (message.contains('not enough eligible workers')) {
       return l.no_qualified_workgroup;
-    }
-    if (message == 'configure_all_open_package_attributes') {
-      return l.configure_all_open_package_attributes;
     }
     if (message == 'booking_conflict') {
       return l.booking_conflict_message;
@@ -482,7 +470,6 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                     quantities: state.openPackageAttributeQuantities,
                     quote: state.openPackageQuote,
                     isCalculating: state.isCheckingOpenPackagePrice,
-                    canCalculate: state.areAllOpenPackageAttributesConfigured,
                   ),
                 ),
               ],
@@ -940,14 +927,12 @@ class OpenPackageCustomizer extends StatelessWidget {
     required this.quantities,
     required this.quote,
     required this.isCalculating,
-    required this.canCalculate,
   });
 
   final List<AttributeEntity> attributes;
   final Map<int, int> quantities;
   final OpenPackageQuote? quote;
   final bool isCalculating;
-  final bool canCalculate;
 
   @override
   Widget build(BuildContext context) {
@@ -1055,13 +1040,6 @@ class OpenPackageCustomizer extends StatelessWidget {
                   : Text(l.check_price_duration),
             ),
           ),
-          // if (!canCalculate && attributes.isNotEmpty) ...[
-          //   SizedBox(height: 8.h),
-          //   Text(
-          //     l.configure_all_open_package_attributes,
-          //     style: Styles.textStyle11.copyWith(color: colors.error),
-          //   ),
-          // ],
           if (quote != null) Divider(color: colors.outlineVariant),
           if (quote != null)
             Text(
