@@ -82,16 +82,6 @@ class CustomInfoTileCard extends StatelessWidget {
             onTap: onEditAddress,
             trailing: _editButton(onEditAddress),
           ),
-          Divider(height: 8.h, color: dividerColor),
-
-          CustomTile(
-            icon: isLeader
-                ? Icons.workspace_premium_outlined
-                : Icons.shield_outlined,
-            title: leaderLabel,
-            subtitle: leaderValue,
-            trailing: const SizedBox.shrink(),
-          ),
         ],
       ),
     );

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/theme/app_decoration.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/utils/functions/spinkit.dart';
 import '../../../tasks/presentation/utils/task_formatting.dart';
 import '../../domain/entities/app_notification.dart';
 import 'app_notification_ui.dart';
@@ -103,10 +104,8 @@ class NotificationTile extends StatelessWidget {
                       ),
                     ),
 
-                    if (notification.type ==
-                            AppNotificationType.clientRequest &&
-                        (notification.location != null ||
-                            notification.scheduledAt != null)) ...[
+                    if (notification.location != null ||
+                        notification.scheduledAt != null) ...[
                       SizedBox(height: 8.h),
                       Wrap(
                         spacing: 12.w,
@@ -169,14 +168,7 @@ class NotificationTile extends StatelessWidget {
         ),
       ),
       icon: isMarkingRead
-          ? SizedBox(
-              width: 14.r,
-              height: 14.r,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: theme.primary,
-              ),
-            )
+          ? spinKitApp(theme.primary, size: 14.r, strokeWidth: 2)
           : Icon(Icons.done_all_rounded, size: 16.r),
       label: Text(
         l.notification_mark_as_read,

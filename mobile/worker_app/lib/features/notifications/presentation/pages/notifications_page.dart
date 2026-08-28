@@ -26,8 +26,34 @@ class NotificationsPage extends StatelessWidget {
   }
 }
 
-class _NotificationsView extends StatelessWidget {
+class _NotificationsView extends StatefulWidget {
   const _NotificationsView();
+
+  @override
+  State<_NotificationsView> createState() => _NotificationsViewState();
+}
+
+class _NotificationsViewState extends State<_NotificationsView> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    if (_scrollController.position.extentAfter < 240) {
+      context.read<NotificationsBloc>().add(const LoadMoreNotifications());
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,11 +98,35 @@ class _NotificationsView extends StatelessWidget {
                 const LoadNotifications(silent: true),
               ),
               child: ListView.separated(
+                controller: _scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
-                itemCount: state.notifications.length,
+                itemCount: state.notifications.length + (state.hasMore ? 1 : 0),
                 separatorBuilder: (_, __) => SizedBox(height: 6.h),
                 itemBuilder: (context, index) {
+                  if (index == state.notifications.length) {
+                    if (state.loadMoreError == null) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (!mounted) return;
+                        context.read<NotificationsBloc>().add(
+                          const LoadMoreNotifications(),
+                        );
+                      });
+                    }
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      child: Center(
+                        child: state.loadMoreError == null
+                            ? spinKitApp(theme.primary, size: 24.r)
+                            : TextButton(
+                                onPressed: () => context
+                                    .read<NotificationsBloc>()
+                                    .add(const LoadMoreNotifications()),
+                                child: Text(l.retry),
+                              ),
+                      ),
+                    );
+                  }
                   final n = state.notifications[index];
                   final orderId = n.requestId;
                   return NotificationTile(

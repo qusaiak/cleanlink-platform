@@ -969,7 +969,11 @@ class OpenPackageCustomizer extends StatelessWidget {
                             qty: value == true ? 1 : 0,
                           ),
                         ),
-                        title: Text(attribute.name),
+                        title: Text(
+                          attribute.name,
+                          style: Styles.textStyle12,
+                          maxLines: 5,
+                        ),
                         contentPadding: EdgeInsets.zero,
                         dense: true,
                         controlAffinity: ListTileControlAffinity.trailing,
@@ -977,7 +981,13 @@ class OpenPackageCustomizer extends StatelessWidget {
                     : Row(
                         key: ValueKey('open-package-number-${attribute.id}'),
                         children: [
-                          Expanded(child: Text(attribute.name)),
+                          Expanded(
+                            child: Text(
+                              attribute.name,
+                              style: Styles.textStyle12,
+                              maxLines: 5,
+                            ),
+                          ),
                           IconButton(
                             tooltip: l.decrease,
                             onPressed: (quantities[attribute.id] ?? 0) == 0

@@ -212,4 +212,40 @@ void main() {
       },
     );
   });
+
+  test('maps Open Package attributes and nullable work images', () {
+    final task = TaskModel.fromJson({
+      'id': 7,
+      'status': 'handling',
+      'image_before': 'http://localhost/storage/task_images/before.jpg',
+      'image_after': null,
+      'order': {
+        'id': 18,
+        'start_time': '2026-08-26T08:00:00Z',
+        'payment_method': 'card',
+        'payment_status': 'held',
+        'package': {
+          'name': 'Flexible cleaning',
+          'is_open_package': true,
+          'attributes': null,
+        },
+        'attributes': [
+          {'id': 3, 'name': 'Long attribute name', 'type': 'number', 'qty': 4},
+          {'id': 4, 'name': 'Optional extra', 'type': 'boolean', 'qty': 0},
+        ],
+      },
+    });
+
+    expect(task.isOpenPackage, isTrue);
+    expect(task.packageAttributes, hasLength(2));
+    expect(task.packageAttributes.first.name, 'Long attribute name');
+    expect(task.packageAttributes.first.quantity, 4);
+    expect(task.packageAttributes.last.isBoolean, isTrue);
+    expect(task.packageAttributes.last.quantity, 0);
+    expect(task.beforePhotos, hasLength(1));
+    expect(task.afterPhotos, isEmpty);
+    expect(task.paymentMethod, 'card');
+    expect(task.paymentStatus, 'held');
+    expect(task.status, TaskStatus.inProgress);
+  });
 }

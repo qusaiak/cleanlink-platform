@@ -17,6 +17,8 @@ class TaskModel extends Task {
     super.companyImageUrl,
     super.companyName,
     super.packageName,
+    super.isOpenPackage,
+    super.packageAttributes,
     super.price,
     super.currency,
     super.durationLabel,
@@ -120,6 +122,8 @@ class TaskModel extends Task {
       packageName:
           (json['packageName'] ?? json['package_name'] ?? packageTitle ?? '')
               .toString(),
+      isOpenPackage: _toBool(package['is_open_package']),
+      packageAttributes: _packageAttributes(order['attributes']),
       price: _toDouble(json['price'] ?? order['total_price']),
       currency: (json['currency'] ?? '').toString(),
       durationLabel:
@@ -201,6 +205,16 @@ class TaskModel extends Task {
     'companyImageUrl': companyImageUrl,
     'companyName': companyName,
     'packageName': packageName,
+    'isOpenPackage': isOpenPackage,
+    'packageAttributes': [
+      for (final attribute in packageAttributes)
+        {
+          'id': attribute.id,
+          'name': attribute.name,
+          'type': attribute.type,
+          'qty': attribute.quantity,
+        },
+    ],
     'price': price,
     'currency': currency,
     'durationLabel': durationLabel,
@@ -249,6 +263,8 @@ class TaskModel extends Task {
     companyImageUrl: task.companyImageUrl,
     companyName: task.companyName,
     packageName: task.packageName,
+    isOpenPackage: task.isOpenPackage,
+    packageAttributes: task.packageAttributes,
     price: task.price,
     currency: task.currency,
     durationLabel: task.durationLabel,
@@ -334,9 +350,35 @@ class TaskModel extends Task {
   }
 
   static List<String> _photoList(dynamic value) {
-    if (value is List) return value.map((e) => e.toString()).toList();
-    if (value == null) return const [];
-    return [value.toString()];
+    if (value is List) {
+      return value
+          .map((e) => ApiUrlParameters.resolveImageUrl(e?.toString() ?? ''))
+          .where((url) => url.isNotEmpty)
+          .toList();
+    }
+    final url = ApiUrlParameters.resolveImageUrl(value?.toString() ?? '');
+    return url.isEmpty ? const [] : [url];
+  }
+
+  static List<TaskPackageAttribute> _packageAttributes(dynamic value) {
+    if (value is! List) return const [];
+    return [
+      for (final raw in value.whereType<Map>())
+        if (_toIntOrNull(raw['qty']) case final int quantity
+            when quantity > 0 || raw['type'] == 'boolean')
+          TaskPackageAttribute(
+            id: _toIntOrNull(raw['id']) ?? 0,
+            name: (raw['name'] ?? '').toString().trim(),
+            type: (raw['type'] ?? '').toString(),
+            quantity: quantity,
+          ),
+    ].where((attribute) => attribute.name.isNotEmpty).toList();
+  }
+
+  static bool _toBool(dynamic value) {
+    if (value is bool) return value;
+    if (value is num) return value != 0;
+    return value?.toString().toLowerCase() == 'true' || value == '1';
   }
 
   static bool _isLeader(dynamic leaderId) {

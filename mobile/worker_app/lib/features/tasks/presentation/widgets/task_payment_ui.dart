@@ -9,10 +9,10 @@ class TaskPaymentUi {
   static String methodLabel(BuildContext context, String code) {
     final l = AppLocalizations.of(context)!;
     switch (code) {
-      case 'manual':
-        return l.payment_method_manual;
-      case 'electric':
-        return l.payment_method_electric;
+      case 'cash':
+        return l.payment_method_cash;
+      case 'card':
+        return l.payment_method_card;
       default:
         return code;
     }
@@ -25,10 +25,10 @@ class TaskPaymentUi {
         return l.payment_status_pending;
       case 'held':
         return l.payment_status_held;
-      case 'paid':
-        return l.payment_status_paid;
       case 'captured':
         return l.payment_status_captured;
+      case 'refunded':
+        return l.payment_status_refunded;
       case 'failed':
         return l.payment_status_failed;
       default:
@@ -38,9 +38,10 @@ class TaskPaymentUi {
 
   static Color statusColor(BuildContext context, String code) {
     switch (code) {
-      case 'paid':
       case 'captured':
         return AppColor.successColor;
+      case 'refunded':
+        return AppColor.infoColor;
       case 'failed':
         return Theme.of(context).colorScheme.error;
       case 'held':

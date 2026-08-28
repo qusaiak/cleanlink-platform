@@ -119,9 +119,16 @@ class _DashboardContent extends StatelessWidget {
           child: Column(
             children: [
               if (refreshing)
-                const LinearProgressIndicator(minHeight: 2)
+                Padding(
+                  padding: EdgeInsets.only(top: 4.h),
+                  child: spinKitApp(
+                    Theme.of(context).colorScheme.primary,
+                    size: 18.r,
+                    strokeWidth: 2,
+                  ),
+                )
               else
-                SizedBox(height: 2.h),
+                SizedBox(height: 22.h),
               const _WorkerHomeHeader(),
               SizedBox(height: 20.h),
               Padding(

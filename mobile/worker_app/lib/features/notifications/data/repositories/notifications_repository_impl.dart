@@ -48,8 +48,12 @@ class NotificationsRepositoryImpl implements NotificationsRepository {
   }
 
   @override
-  Future<Either<Failure, List<AppNotification>>> getNotifications() =>
-      _guard(() => remoteDataSource.getNotifications());
+  Future<Either<Failure, NotificationsPageResult>> getNotifications({
+    int page = 1,
+    int perPage = 20,
+  }) => _guard(
+    () => remoteDataSource.getNotifications(page: page, perPage: perPage),
+  );
 
   @override
   Future<Either<Failure, Unit>> markAsRead(String id) => _guard(() async {

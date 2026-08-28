@@ -11,12 +11,14 @@ class AvailabilitySelector extends StatelessWidget {
   final WorkerAvailability selected;
   final WorkerAvailability? updatingTo;
   final ValueChanged<WorkerAvailability> onChanged;
+  final bool loading;
 
   const AvailabilitySelector({
     super.key,
     required this.selected,
     required this.updatingTo,
     required this.onChanged,
+    this.loading = false,
   });
 
   static const _options = [
@@ -46,7 +48,12 @@ class AvailabilitySelector extends StatelessWidget {
             style: Styles.textStyle14.copyWith(fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 12.h),
-          if (isBusy)
+          if (loading)
+            SizedBox(
+              height: 50.h,
+              child: Center(child: spinKitApp(theme.primary, size: 24.r)),
+            )
+          else if (isBusy)
             _busyReadOnly(context, theme)
           else
             Row(

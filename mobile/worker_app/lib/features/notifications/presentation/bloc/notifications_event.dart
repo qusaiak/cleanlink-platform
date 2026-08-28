@@ -16,6 +16,10 @@ class LoadNotifications extends NotificationsEvent {
   List<Object?> get props => [silent];
 }
 
+class LoadMoreNotifications extends NotificationsEvent {
+  const LoadMoreNotifications();
+}
+
 class StartNotificationsPolling extends NotificationsEvent {
   const StartNotificationsPolling();
 }

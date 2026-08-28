@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
+import '../../../../core/utils/functions/spinkit.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class OtpResendTimer extends StatefulWidget {
@@ -71,14 +72,7 @@ class _OtpResendTimerState extends State<OtpResendTimer> {
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
       ),
       child: _sending
-          ? SizedBox(
-              width: 16.r,
-              height: 16.r,
-              child: const CircularProgressIndicator(
-                strokeWidth: 2,
-                color: AppColor.primaryColor,
-              ),
-            )
+          ? spinKitApp(AppColor.primaryColor, size: 16.r, strokeWidth: 2)
           : Text(
               _remaining > 0
                   ? l.auth_otp_resend_in(_remaining)

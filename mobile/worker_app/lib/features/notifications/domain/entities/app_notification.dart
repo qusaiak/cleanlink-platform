@@ -1,6 +1,18 @@
 import 'package:equatable/equatable.dart';
 
-enum AppNotificationType { clientRequest, taskAssigned, taskReminder, general }
+enum AppNotificationType { taskAssigned, taskUpdated, general }
+
+class NotificationsPageResult {
+  final List<AppNotification> items;
+  final int currentPage;
+  final bool hasMore;
+
+  const NotificationsPageResult({
+    required this.items,
+    required this.currentPage,
+    required this.hasMore,
+  });
+}
 
 class AppNotification extends Equatable {
   final String id;

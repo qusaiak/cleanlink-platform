@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/theme/app_decoration.dart';
+import '../../../../config/theme/colors.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/task.dart';
@@ -16,7 +17,7 @@ class TaskProgressStepper extends StatelessWidget {
     TaskStatus.assigned: Icons.assignment_outlined,
     TaskStatus.onTheWay: Icons.route_outlined,
     TaskStatus.inProgress: Icons.cleaning_services_outlined,
-    TaskStatus.completed: Icons.check_rounded,
+    TaskStatus.completed: Icons.flag_outlined,
   };
 
   @override
@@ -44,8 +45,7 @@ class TaskProgressStepper extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           Directionality(
-            // Progress chronology stays pending → done in both locales.
-            textDirection: TextDirection.ltr,
+            textDirection: Directionality.of(context),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -89,31 +89,47 @@ class _Step extends StatelessWidget {
     final ui = TaskStatusUi.of(context, status);
     return Column(
       children: [
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 220),
-          width: 30.r,
-          height: 30.r,
-          decoration: BoxDecoration(
-            color: complete
-                ? ui.color
-                : current
-                ? ui.background
-                : colors.surfaceContainerLow,
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: reached ? ui.color : colors.outlineVariant,
-              width: current ? 2 : 1,
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              width: 32.r,
+              height: 32.r,
+              decoration: BoxDecoration(
+                color: reached ? ui.background : colors.surfaceContainerLow,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: reached ? ui.color : colors.outlineVariant,
+                  width: current ? 2 : 1,
+                ),
+              ),
+              child: Icon(
+                TaskProgressStepper._icons[status],
+                color: reached ? ui.color : colors.onSurfaceVariant,
+                size: 16.r,
+              ),
             ),
-          ),
-          child: Icon(
-            complete ? Icons.check_rounded : TaskProgressStepper._icons[status],
-            color: complete
-                ? colors.onPrimary
-                : reached
-                ? ui.color
-                : colors.onSurfaceVariant,
-            size: 15.r,
-          ),
+            if (complete)
+            PositionedDirectional(
+              top: -4.h,
+              end: -4.w,
+              child: Container(
+                width: 14.r,
+                height: 14.r,
+                decoration: BoxDecoration(
+                  color: colors.primary,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: colors.surface, width: 1.5),
+                ),
+                child: Icon(
+                  Icons.check_rounded,
+                  size: 9.r,
+                  color: colors.onPrimary,
+                ),
+              ),
+            ),
+          ],
         ),
         SizedBox(height: 5.h),
         Directionality(

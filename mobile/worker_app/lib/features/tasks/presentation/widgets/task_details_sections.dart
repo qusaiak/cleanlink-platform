@@ -117,6 +117,45 @@ class TaskServicePackageCard extends StatelessWidget {
                 ),
               ),
           ],
+          if (task.isOpenPackage && task.packageAttributes.isNotEmpty) ...[
+            SizedBox(height: 14.h),
+            Divider(color: colors.outlineVariant),
+            SizedBox(height: 10.h),
+            Text(
+              l.task_open_package_details,
+              style: Styles.textStyle14.copyWith(fontWeight: FontWeight.w700),
+            ),
+            SizedBox(height: 8.h),
+            for (final attribute in task.packageAttributes)
+              Padding(
+                padding: EdgeInsets.only(bottom: 8.h),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        attribute.name,
+                        style: Styles.textStyle12.copyWith(
+                          color: colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Flexible(
+                      child: Text(
+                        attribute.isBoolean
+                            ? (attribute.quantity > 0 ? l.yes : l.no)
+                            : '${attribute.quantity}',
+                        textAlign: TextAlign.end,
+                        style: Styles.textStyle12.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
           if (task.minimumWorkers != null) ...[
             SizedBox(height: 7.h),
             Text(

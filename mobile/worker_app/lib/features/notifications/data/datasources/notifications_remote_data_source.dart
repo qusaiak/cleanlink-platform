@@ -5,9 +5,13 @@ import 'package:flutter/foundation.dart';
 
 import '../../../../config/constants/api_url_parameters.dart';
 import '../models/app_notification_model.dart';
+import '../../domain/entities/app_notification.dart';
 
 abstract class NotificationsRemoteDataSource {
-  Future<List<AppNotificationModel>> getNotifications();
+  Future<NotificationsPageResult> getNotifications({
+    int page = 1,
+    int perPage = 20,
+  });
 
   Future<void> markAsRead(String id);
 
@@ -16,8 +20,6 @@ abstract class NotificationsRemoteDataSource {
 
 class NotificationsRemoteDataSourceImpl
     implements NotificationsRemoteDataSource {
-  static const int kPageSize = 50;
-
   final Dio dio;
 
   NotificationsRemoteDataSourceImpl(this.dio);
@@ -69,14 +71,31 @@ class NotificationsRemoteDataSourceImpl
   }
 
   @override
-  Future<List<AppNotificationModel>> getNotifications() async {
+  Future<NotificationsPageResult> getNotifications({
+    int page = 1,
+    int perPage = 20,
+  }) async {
     final response = await dio.get(
       ApiUrlParameters.notifications,
 
-      queryParameters: const {'page': 1, 'per_page': kPageSize},
+      queryParameters: {'page': page, 'per_page': perPage},
     );
     _logResponse(response);
-    return _parseList(response.data);
+    final items = _parseList(response.data);
+    final envelope = response.data is Map
+        ? Map<String, dynamic>.from(response.data as Map)
+        : const <String, dynamic>{};
+    final data = envelope['data'] is Map
+        ? Map<String, dynamic>.from(envelope['data'] as Map)
+        : const <String, dynamic>{};
+    final pagination = data['pagination'] is Map
+        ? Map<String, dynamic>.from(data['pagination'] as Map)
+        : const <String, dynamic>{};
+    return NotificationsPageResult(
+      items: items,
+      currentPage: (pagination['current_page'] as num?)?.toInt() ?? page,
+      hasMore: pagination['has_more_pages'] == true,
+    );
   }
 
   @override
@@ -87,8 +106,8 @@ class NotificationsRemoteDataSourceImpl
 
   @override
   Future<List<AppNotificationModel>> markAllAsRead() async {
-    final current = await getNotifications();
-    final unread = current.where((n) => !n.isRead);
+    final current = await getNotifications(perPage: 100);
+    final unread = current.items.where((n) => !n.isRead);
     for (final n in unread) {
       try {
         await markAsRead(n.id);
@@ -96,7 +115,9 @@ class NotificationsRemoteDataSourceImpl
         _log('mark-all: failed to mark ${n.id} ($error)', stackTrace);
       }
     }
-    return getNotifications();
+    return (await getNotifications(
+      perPage: 100,
+    )).items.whereType<AppNotificationModel>().toList();
   }
 
   void _logResponse(Response<dynamic> response) {

@@ -79,6 +79,15 @@ class DetachSkill extends WorkerProfileEvent {
   List<Object?> get props => [skillId];
 }
 
+class SaveSkillsSelection extends WorkerProfileEvent {
+  final Set<int> skillIds;
+
+  const SaveSkillsSelection(this.skillIds);
+
+  @override
+  List<Object?> get props => [skillIds];
+}
+
 class LanguageChanged extends WorkerProfileEvent {
   final String languageCode;
 

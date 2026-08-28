@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-Widget spinKitApp(Color color) {
+Widget spinKitApp(Color color, {double? size, double strokeWidth = 3}) {
+  final indicatorSize = size ?? 30.r;
   return SizedBox(
-    width: 30.r,
-    height: 30.r,
+    width: indicatorSize,
+    height: indicatorSize,
     child: CircularProgressIndicator.adaptive(
-      strokeWidth: 3,
+      strokeWidth: strokeWidth,
       valueColor: AlwaysStoppedAnimation<Color>(color),
       backgroundColor: color.withValues(alpha: 0.15),
     ),

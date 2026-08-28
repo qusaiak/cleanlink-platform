@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/functions/build_app_snack_bar.dart';
 import '../../../../core/utils/functions/localized_failure_message.dart';
+import '../../../../core/utils/functions/spinkit.dart';
 import '../../../../core/widgets/app_primary_button.dart';
 import '../../../../config/theme/styles.dart';
 import '../../../../injection_container.dart';
@@ -81,6 +82,13 @@ class _TaskDetailsView extends StatelessWidget {
           final bloc = context.read<TaskDetailBloc>();
           final next = state.nextStatus;
 
+          if (state.status == TaskDetailStatus.loading) {
+            return SafeArea(
+              top: false,
+              child: Center(child: spinKitApp(theme.primary)),
+            );
+          }
+
           return SafeArea(
             top: false,
             child: Column(
@@ -91,8 +99,6 @@ class _TaskDetailsView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (state.status == TaskDetailStatus.loading)
-                          const LinearProgressIndicator(minHeight: 2),
                         if (state.status == TaskDetailStatus.loadFailure) ...[
                           Container(
                             padding: EdgeInsets.all(14.w),
@@ -177,6 +183,9 @@ class _TaskDetailsView extends StatelessWidget {
                               onRemoveNew: (isBefore, index) => bloc.add(
                                 PhotoRemoved(index: index, isBefore: isBefore),
                               ),
+                              canEdit:
+                                  state.task.isTeamLeader &&
+                                  state.isMarkingDone,
                             ),
                           ),
                         ],

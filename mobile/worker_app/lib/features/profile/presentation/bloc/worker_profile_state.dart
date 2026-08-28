@@ -15,6 +15,8 @@ enum WorkerProfileStatus {
 
   skillAttached,
   skillDetached,
+  savingSkills,
+  skillsSaved,
   skillsFailure,
 }
 
@@ -28,6 +30,7 @@ class WorkerProfileState extends Equatable {
   final XFile? pendingImage;
 
   final bool hasActiveOrder;
+  final bool loadingOperationalStatus;
 
   final List<WorkerSkill> allSkills;
 
@@ -42,12 +45,14 @@ class WorkerProfileState extends Equatable {
     this.error,
     this.pendingImage,
     this.hasActiveOrder = false,
+    this.loadingOperationalStatus = true,
     this.allSkills = const [],
     this.loadingSkills = false,
     this.pendingSkillIds = const {},
   });
 
-  bool get savingSkills => pendingSkillIds.isNotEmpty;
+  bool get savingSkills =>
+      status == WorkerProfileStatus.savingSkills || pendingSkillIds.isNotEmpty;
 
   bool isSkillPending(int skillId) => pendingSkillIds.contains(skillId);
 
@@ -74,6 +79,7 @@ class WorkerProfileState extends Equatable {
     Failure? error,
     XFile? pendingImage,
     bool? hasActiveOrder,
+    bool? loadingOperationalStatus,
     List<WorkerSkill>? allSkills,
     bool? loadingSkills,
     Set<int>? pendingSkillIds,
@@ -86,6 +92,8 @@ class WorkerProfileState extends Equatable {
       error: error,
       pendingImage: pendingImage,
       hasActiveOrder: hasActiveOrder ?? this.hasActiveOrder,
+      loadingOperationalStatus:
+          loadingOperationalStatus ?? this.loadingOperationalStatus,
       allSkills: allSkills ?? this.allSkills,
       loadingSkills: loadingSkills ?? this.loadingSkills,
       pendingSkillIds: pendingSkillIds ?? this.pendingSkillIds,
@@ -100,6 +108,7 @@ class WorkerProfileState extends Equatable {
     error,
     pendingImage?.path,
     hasActiveOrder,
+    loadingOperationalStatus,
     allSkills,
     loadingSkills,
     pendingSkillIds,

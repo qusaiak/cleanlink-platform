@@ -635,6 +635,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get payment_method_electric => 'دفع إلكتروني';
 
   @override
+  String get payment_method_cash => 'نقداً';
+
+  @override
+  String get payment_method_card => 'بطاقة';
+
+  @override
   String get payment_status_pending => 'قيد الانتظار';
 
   @override
@@ -648,6 +654,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get payment_status_failed => 'فشل';
+
+  @override
+  String get payment_status_refunded => 'مسترد';
 
   @override
   String get task_notes_section => 'ملاحظات';
@@ -666,6 +675,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get task_service_details => 'الخدمة والباقة';
+
+  @override
+  String get task_open_package_details => 'تفاصيل الباقة المفتوحة';
 
   @override
   String get task_minimum_workers => 'الحد الأدنى للعمال';
@@ -742,6 +754,26 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get profile_skills_title => 'المهارات';
+
+  @override
+  String get professional_information => 'المعلومات المهنية';
+
+  @override
+  String get my_skills => 'مهاراتي';
+
+  @override
+  String get save_changes => 'حفظ التغييرات';
+
+  @override
+  String skills_selected_count(int count) {
+    return '$count محددة';
+  }
+
+  @override
+  String get skills_saved_message => 'تم تحديث المهارات';
+
+  @override
+  String get skills_save_failed => 'تعذّر حفظ مهاراتك';
 
   @override
   String get profile_no_skills => 'لا توجد مهارات مضافة بعد';

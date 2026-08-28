@@ -1298,6 +1298,18 @@ abstract class AppLocalizations {
   /// **'Electronic payment'**
   String get payment_method_electric;
 
+  /// No description provided for @payment_method_cash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get payment_method_cash;
+
+  /// No description provided for @payment_method_card.
+  ///
+  /// In en, this message translates to:
+  /// **'Card'**
+  String get payment_method_card;
+
   /// No description provided for @payment_status_pending.
   ///
   /// In en, this message translates to:
@@ -1307,7 +1319,7 @@ abstract class AppLocalizations {
   /// No description provided for @payment_status_held.
   ///
   /// In en, this message translates to:
-  /// **'Authorized'**
+  /// **'Held'**
   String get payment_status_held;
 
   /// No description provided for @payment_status_paid.
@@ -1327,6 +1339,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed'**
   String get payment_status_failed;
+
+  /// No description provided for @payment_status_refunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get payment_status_refunded;
 
   /// No description provided for @task_notes_section.
   ///
@@ -1363,6 +1381,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Service & package'**
   String get task_service_details;
+
+  /// No description provided for @task_open_package_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Package Details'**
+  String get task_open_package_details;
 
   /// No description provided for @task_minimum_workers.
   ///
@@ -1513,6 +1537,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Skills'**
   String get profile_skills_title;
+
+  /// No description provided for @professional_information.
+  ///
+  /// In en, this message translates to:
+  /// **'Professional Information'**
+  String get professional_information;
+
+  /// No description provided for @my_skills.
+  ///
+  /// In en, this message translates to:
+  /// **'My Skills'**
+  String get my_skills;
+
+  /// No description provided for @save_changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get save_changes;
+
+  /// No description provided for @skills_selected_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String skills_selected_count(int count);
+
+  /// No description provided for @skills_saved_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Skills updated'**
+  String get skills_saved_message;
+
+  /// No description provided for @skills_save_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save your skills'**
+  String get skills_save_failed;
 
   /// No description provided for @profile_no_skills.
   ///

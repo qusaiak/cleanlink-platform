@@ -21,7 +21,6 @@ import '../bloc/profile_bloc.dart';
 import '../bloc/worker_profile_bloc.dart';
 import '../widgets/availability_selector.dart';
 import '../widgets/edit_field_dialog.dart';
-import '../widgets/profile_skills_section.dart';
 import '../widgets/custom_tile.dart';
 import '../widgets/section_card.dart';
 import '../widgets/worker_availability_ui.dart';
@@ -152,6 +151,7 @@ class _WorkerProfileView extends StatelessWidget {
                     ),
                     SizedBox(height: 24.h),
                     AvailabilitySelector(
+                      loading: state.loadingOperationalStatus,
                       selected:
                           state.effectiveAvailability ?? profile.availability,
                       updatingTo: state.status == WorkerProfileStatus.updating
@@ -187,18 +187,26 @@ class _WorkerProfileView extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 16.h),
-                    ProfileSkillsSection(
-                      skills: state.ownedSkills,
-                      availableSkills: state.availableSkills,
-                      loadingSkills: state.loadingSkills,
-                      pendingSkillIds: state.pendingSkillIds,
-
-                      onAddSkill: (skill) => context
-                          .read<WorkerProfileBloc>()
-                          .add(AttachSkill(skill.id)),
-                      onRemoveSkill: (skill) => context
-                          .read<WorkerProfileBloc>()
-                          .add(DetachSkill(skill.id)),
+                    SectionCard(
+                      title: l.professional_information,
+                      children: [
+                        CustomTile(
+                          icon: Icons.handyman_outlined,
+                          title: l.my_skills,
+                          subtitle: l.skills_selected_count(
+                            state.ownedSkills.length,
+                          ),
+                          onTap: () => context.push(
+                            AppRouter.kSkills,
+                            extra: context.read<WorkerProfileBloc>(),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: theme.onSurfaceVariant,
+                            size: 15.r,
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 16.h),
                     CustomInfoTileCard(
@@ -560,30 +568,75 @@ class _EditableStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        StatCard(label: label, value: value, icon: icon, filled: true),
-        PositionedDirectional(
-          bottom: 4.h,
-          end: 4.w,
-          child: Material(
-            color: Colors.white.withValues(alpha: 0.25),
-            shape: const CircleBorder(),
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: onEdit,
-              child: Padding(
-                padding: EdgeInsets.all(5.r),
-                child: Icon(
-                  Icons.edit_outlined,
-                  size: 15.r,
-                  color: Colors.white,
+    final colors = Theme.of(context).colorScheme;
+
+    final background = colors.primary.withValues(alpha: 0.08);
+    final foreground = colors.primary;
+
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: AppRadius.card,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Styles.textStyle12.copyWith(
+                    color: foreground.withValues(alpha: 0.9),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
+              SizedBox(width: 8.w),
+
+              Icon(
+                icon,
+                color: foreground,
+                size: 20.r,
+              ),
+
+              SizedBox(width: 6.w),
+
+              Material(
+                color: foreground.withValues(alpha: 0.14),
+                shape: const CircleBorder(),
+                child: InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: onEdit,
+                  child: Padding(
+                    padding: EdgeInsets.all(6.r),
+                    child: Icon(
+                      Icons.edit_outlined,
+                      size: 15.r,
+                      color: foreground,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 12.h),
+
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Styles.textStyle22.copyWith(
+              color: foreground,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

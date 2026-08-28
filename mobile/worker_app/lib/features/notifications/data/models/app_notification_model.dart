@@ -101,14 +101,11 @@ class AppNotificationModel extends AppNotification {
 
   static AppNotificationType _typeFromCode(String? code) {
     switch (code) {
-      case 'client_request':
-        return AppNotificationType.clientRequest;
-
       case 'new_task_assigned':
       case 'task_assigned':
         return AppNotificationType.taskAssigned;
-      case 'task_reminder':
-        return AppNotificationType.taskReminder;
+      case 'order_status_changed':
+        return AppNotificationType.taskUpdated;
       case 'general':
       default:
         return AppNotificationType.general;
@@ -117,12 +114,10 @@ class AppNotificationModel extends AppNotification {
 
   static String typeCode(AppNotificationType type) {
     switch (type) {
-      case AppNotificationType.clientRequest:
-        return 'client_request';
       case AppNotificationType.taskAssigned:
-        return 'task_assigned';
-      case AppNotificationType.taskReminder:
-        return 'task_reminder';
+        return 'new_task_assigned';
+      case AppNotificationType.taskUpdated:
+        return 'order_status_changed';
       case AppNotificationType.general:
         return 'general';
     }

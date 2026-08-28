@@ -7,28 +7,15 @@ import 'package:worker_app/features/profile/data/models/worker_profile_model.dar
 void main() {
   group('SkillsPayload', () {
     test('array shape encodes to a real JSON array of NUMBERS', () {
-      final body = SkillsPayload.preferred.body([4]);
+      final body = SkillsPayload.body([4]);
 
       // The exact bytes that go on the wire — not ["4"], not "[4]".
       expect(jsonEncode(body), '{"skill_ids":[4]}');
       expect(body['skill_ids'], isA<List<int>>());
     });
 
-    test('scalar shape encodes to a bare number', () {
-      const scalar = SkillsPayload(field: 'skill_id', asArray: false);
-      expect(jsonEncode(scalar.body([4])), '{"skill_id":4}');
-    });
-
-    test('candidates cover the four realistic Laravel spellings', () {
-      final labels = SkillsPayload.candidates.map((c) => c.label).toList();
-      expect(labels, [
-        '{"skill_ids": [<int>]}',
-        '{"skills": [<int>]}',
-        '{"skill_id": <int>}',
-        '{"skills": <int>}',
-      ]);
-      // The preferred shape must be attempted first.
-      expect(SkillsPayload.candidates.first, same(SkillsPayload.preferred));
+    test('uses the backend contract for multiple ids', () {
+      expect(jsonEncode(SkillsPayload.body([4, 7])), '{"skill_ids":[4,7]}');
     });
   });
 

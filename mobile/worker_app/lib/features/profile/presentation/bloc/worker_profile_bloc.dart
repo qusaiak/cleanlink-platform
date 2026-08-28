@@ -42,6 +42,7 @@ class WorkerProfileBloc extends Bloc<WorkerProfileEvent, WorkerProfileState> {
   StreamSubscription<DailyTasks>? _ordersSub;
 
   bool _savingImage = false;
+  bool _operationalStatusResolved = false;
 
   StreamSubscription<String>? _avatarSub;
 
@@ -67,13 +68,16 @@ class WorkerProfileBloc extends Bloc<WorkerProfileEvent, WorkerProfileState> {
     on<LoadAvailableSkills>(_onLoadSkills);
     on<AttachSkill>(_onAttachSkill);
     on<DetachSkill>(_onDetachSkill);
+    on<SaveSkillsSelection>(_onSaveSkillsSelection);
     on<LanguageChanged>(_onLanguageChanged);
     on<SkillsChangedExternally>(_onSkillsChangedExternally);
     on<OrdersChanged>(_onOrdersChanged);
     on<ProfileImageChanged>(_onProfileImageChanged);
 
     _ordersSub = watchDailyTasks().listen((daily) {
-      if (!isClosed) add(OrdersChanged(_hasActiveOrder(daily)));
+      if (!isClosed && _operationalStatusResolved) {
+        add(OrdersChanged(_hasActiveOrder(daily)));
+      }
     });
 
     _avatarSub = LoginSession.avatarChanges.listen((url) {
@@ -145,7 +149,15 @@ class WorkerProfileBloc extends Bloc<WorkerProfileEvent, WorkerProfileState> {
       );
     }
 
-    unawaited(getDailyTasks());
+    unawaited(_loadOperationalStatus());
+  }
+
+  Future<void> _loadOperationalStatus() async {
+    final result = await getDailyTasks();
+    _operationalStatusResolved = true;
+    if (!isClosed) {
+      add(OrdersChanged(result.fold((_) => false, _hasActiveOrder)));
+    }
   }
 
   WorkerProfile _withLoginSession(WorkerProfile profile) => profile.copyWith(
@@ -165,9 +177,17 @@ class WorkerProfileBloc extends Bloc<WorkerProfileEvent, WorkerProfileState> {
     OrdersChanged event,
     Emitter<WorkerProfileState> emit,
   ) async {
-    if (event.hasActiveOrder == state.hasActiveOrder) return;
+    if (event.hasActiveOrder == state.hasActiveOrder &&
+        !state.loadingOperationalStatus) {
+      return;
+    }
 
-    emit(state.copyWith(hasActiveOrder: event.hasActiveOrder));
+    emit(
+      state.copyWith(
+        hasActiveOrder: event.hasActiveOrder,
+        loadingOperationalStatus: false,
+      ),
+    );
   }
 
   Future<void> _onChangeAvailability(
@@ -429,6 +449,68 @@ class WorkerProfileBloc extends Bloc<WorkerProfileEvent, WorkerProfileState> {
       rollbackTo: rollbackTo,
       successStatus: WorkerProfileStatus.skillDetached,
       request: () => detachSkills(params: [event.skillId]),
+    );
+  }
+
+  Future<void> _onSaveSkillsSelection(
+    SaveSkillsSelection event,
+    Emitter<WorkerProfileState> emit,
+  ) async {
+    final current = state.profile;
+    if (current == null || state.savingSkills) return;
+
+    final currentIds = {for (final skill in current.skills) skill.id};
+    final toAttach = event.skillIds.difference(currentIds).toList();
+    final toDetach = currentIds.difference(event.skillIds).toList();
+    if (toAttach.isEmpty && toDetach.isEmpty) {
+      emit(state.copyWith(status: WorkerProfileStatus.skillsSaved));
+      emit(state.copyWith(status: WorkerProfileStatus.loaded));
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        status: WorkerProfileStatus.savingSkills,
+        pendingSkillIds: {...toAttach, ...toDetach},
+      ),
+    );
+
+    Either<Failure, WorkerProfile>? result;
+    if (toAttach.isNotEmpty) {
+      result = await attachSkills(params: toAttach);
+    }
+    if ((result == null || result.isRight()) && toDetach.isNotEmpty) {
+      result = await detachSkills(params: toDetach);
+    }
+
+    final failure = result?.fold<Failure?>((value) => value, (_) => null);
+    if (failure != null) {
+      emit(
+        state.copyWith(
+          status: WorkerProfileStatus.skillsFailure,
+          error: failure,
+          pendingSkillIds: const {},
+        ),
+      );
+      return;
+    }
+
+    final updated = result?.fold<WorkerProfile?>((_) => null, (value) => value);
+    if (updated == null) return;
+    final merged = await _adoptServerWorker(updated);
+    emit(
+      state.copyWith(
+        status: WorkerProfileStatus.skillsSaved,
+        profile: merged,
+        pendingSkillIds: const {},
+      ),
+    );
+    emit(
+      state.copyWith(
+        status: WorkerProfileStatus.loaded,
+        profile: merged,
+        pendingSkillIds: const {},
+      ),
     );
   }
 

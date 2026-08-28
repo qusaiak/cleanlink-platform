@@ -7,10 +7,10 @@ void main() {
   group('SkillModel.fromJson', () {
     test('dictionary shape ({id, name}) files the name under the fetch '
         'language', () {
-      final ar = SkillModel.fromJson(
-        {'id': 1, 'name': 'التنظيف العام'},
-        languageCode: 'ar',
-      );
+      final ar = SkillModel.fromJson({
+        'id': 1,
+        'name': 'التنظيف العام',
+      }, languageCode: 'ar');
       expect(ar.id, 1);
       expect(ar.nameAr, 'التنظيف العام');
       expect(ar.nameEn, '');
@@ -18,10 +18,10 @@ void main() {
       expect(ar.nameFor('en'), 'التنظيف العام');
       expect(ar.nameFor('ar'), 'التنظيف العام');
 
-      final en = SkillModel.fromJson(
-        {'id': 2, 'name': 'General Cleaning'},
-        languageCode: 'en',
-      );
+      final en = SkillModel.fromJson({
+        'id': 2,
+        'name': 'General Cleaning',
+      }, languageCode: 'en');
       expect(en.nameEn, 'General Cleaning');
       expect(en.nameAr, '');
       expect(en.nameFor('ar'), 'General Cleaning');
@@ -45,25 +45,28 @@ void main() {
       expect(empty.id, 0);
       expect(empty.nameFor('en'), '');
 
-      final nulls = SkillModel.fromJson(
-        const {'id': null, 'name': null, 'name_ar': null, 'name_en': null},
-        languageCode: 'ar',
-      );
+      final nulls = SkillModel.fromJson(const {
+        'id': null,
+        'name': null,
+        'name_ar': null,
+        'name_en': null,
+      }, languageCode: 'ar');
       expect(nulls.id, 0);
       expect(nulls.nameFor('ar'), '');
 
       // id arriving as a string is still usable — it is what attach/detach send.
-      final stringId = SkillModel.fromJson(
-        const {'id': '7', 'name': 'Windows'},
-        languageCode: 'en',
-      );
+      final stringId = SkillModel.fromJson(const {
+        'id': '7',
+        'name': 'Windows',
+      }, languageCode: 'en');
       expect(stringId.id, 7);
 
       // Only one of the pair present.
-      final arOnly = SkillModel.fromJson(
-        const {'id': 3, 'name_ar': 'نوافذ', 'name_en': null},
-        languageCode: 'en',
-      );
+      final arOnly = SkillModel.fromJson(const {
+        'id': 3,
+        'name_ar': 'نوافذ',
+        'name_en': null,
+      }, languageCode: 'en');
       expect(arOnly.nameFor('en'), 'نوافذ');
     });
   });

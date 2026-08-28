@@ -32,6 +32,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState>
     required this.markAllRead,
   }) : super(const NotificationsState()) {
     on<LoadNotifications>(_onLoad);
+    on<LoadMoreNotifications>(_onLoadMore);
     on<StartNotificationsPolling>(_onStartPolling);
     on<MarkNotificationRead>(_onMarkRead);
 
@@ -72,12 +73,43 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState>
           );
         }
       },
-      (items) => emit(
+      (page) => emit(
         state.copyWith(
           status: NotificationsStatus.loaded,
-          notifications: items,
+          notifications: page.items,
+          currentPage: page.currentPage,
+          hasMore: page.hasMore,
         ),
       ),
+    );
+  }
+
+  Future<void> _onLoadMore(
+    LoadMoreNotifications event,
+    Emitter<NotificationsState> emit,
+  ) async {
+    if (!state.hasMore || state.loadingMore) return;
+    emit(state.copyWith(loadingMore: true));
+    final result = await getNotifications(
+      params: GetNotificationsParams(page: state.currentPage + 1),
+    );
+    result.fold(
+      (failure) =>
+          emit(state.copyWith(loadingMore: false, loadMoreError: failure)),
+      (page) {
+        final merged = <String, AppNotification>{
+          for (final item in state.notifications) item.id: item,
+          for (final item in page.items) item.id: item,
+        }.values.toList()..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        emit(
+          state.copyWith(
+            notifications: merged,
+            currentPage: page.currentPage,
+            hasMore: page.hasMore,
+            loadingMore: false,
+          ),
+        );
+      },
     );
   }
 

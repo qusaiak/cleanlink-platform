@@ -17,6 +17,7 @@ class TaskPhotoDocumentation extends StatelessWidget {
   final void Function(bool isBefore, String path) onPicked;
 
   final void Function(bool isBefore, int index) onRemoveNew;
+  final bool canEdit;
 
   const TaskPhotoDocumentation({
     super.key,
@@ -26,11 +27,16 @@ class TaskPhotoDocumentation extends StatelessWidget {
     required this.afterNew,
     required this.onPicked,
     required this.onRemoveNew,
+    required this.canEdit,
   });
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
+    final showBefore =
+        canEdit || beforeExisting.isNotEmpty || beforeNew.isNotEmpty;
+    final showAfter =
+        canEdit || afterExisting.isNotEmpty || afterNew.isNotEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,25 +46,27 @@ class TaskPhotoDocumentation extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: _slot(
-                context,
-                label: l.photo_before,
-                isBefore: true,
-                existing: beforeExisting,
-                picked: beforeNew,
+            if (showBefore)
+              Expanded(
+                child: _slot(
+                  context,
+                  label: l.photo_before,
+                  isBefore: true,
+                  existing: beforeExisting,
+                  picked: beforeNew,
+                ),
               ),
-            ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: _slot(
-                context,
-                label: l.photo_after,
-                isBefore: false,
-                existing: afterExisting,
-                picked: afterNew,
+            if (showBefore && showAfter) SizedBox(width: 12.w),
+            if (showAfter)
+              Expanded(
+                child: _slot(
+                  context,
+                  label: l.photo_after,
+                  isBefore: false,
+                  existing: afterExisting,
+                  picked: afterNew,
+                ),
               ),
-            ),
           ],
         ),
       ],
@@ -96,7 +104,11 @@ class TaskPhotoDocumentation extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         GestureDetector(
-          onTap: () => _showSourceSheet(context, isBefore),
+          onTap: canEdit
+              ? () => _showSourceSheet(context, isBefore)
+              : preview == null
+              ? null
+              : () => _showPreview(context, preview),
           child: SizedBox(
             height: 120.h,
             child: CustomPaint(
@@ -111,7 +123,7 @@ class TaskPhotoDocumentation extends StatelessWidget {
           ),
         ),
 
-        if (picked.isNotEmpty) _pickedStrip(theme, isBefore, picked),
+        if (canEdit && picked.isNotEmpty) _pickedStrip(theme, isBefore, picked),
       ],
     );
   }
@@ -264,6 +276,35 @@ class TaskPhotoDocumentation extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  void _showPreview(BuildContext context, String path) {
+    showDialog<void>(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.88),
+      builder: (dialogContext) => Dialog.fullscreen(
+        backgroundColor: Colors.black,
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Center(
+                child: InteractiveViewer(
+                  child: CustomImageView(imagePath: path, fit: BoxFit.contain),
+                ),
+              ),
+              PositionedDirectional(
+                top: 8.h,
+                end: 8.w,
+                child: IconButton.filled(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  icon: const Icon(Icons.close_rounded),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

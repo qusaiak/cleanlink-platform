@@ -11,19 +11,14 @@ class AppNotificationUi {
 
   factory AppNotificationUi.of(AppNotificationType type) {
     switch (type) {
-      case AppNotificationType.clientRequest:
-        return const AppNotificationUi(
-          icon: Icons.handshake_rounded,
-          color: AppColor.primaryColor,
-        );
       case AppNotificationType.taskAssigned:
         return const AppNotificationUi(
           icon: Icons.assignment_turned_in_rounded,
           color: AppColor.successColor,
         );
-      case AppNotificationType.taskReminder:
+      case AppNotificationType.taskUpdated:
         return const AppNotificationUi(
-          icon: Icons.alarm_rounded,
+          icon: Icons.update_rounded,
           color: AppColor.warningColor,
         );
       case AppNotificationType.general:

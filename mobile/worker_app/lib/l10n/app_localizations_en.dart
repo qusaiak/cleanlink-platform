@@ -641,10 +641,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payment_method_electric => 'Electronic payment';
 
   @override
+  String get payment_method_cash => 'Cash';
+
+  @override
+  String get payment_method_card => 'Card';
+
+  @override
   String get payment_status_pending => 'Pending';
 
   @override
-  String get payment_status_held => 'Authorized';
+  String get payment_status_held => 'Held';
 
   @override
   String get payment_status_paid => 'Paid';
@@ -654,6 +660,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get payment_status_failed => 'Failed';
+
+  @override
+  String get payment_status_refunded => 'Refunded';
 
   @override
   String get task_notes_section => 'Notes';
@@ -672,6 +681,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get task_service_details => 'Service & package';
+
+  @override
+  String get task_open_package_details => 'Open Package Details';
 
   @override
   String get task_minimum_workers => 'Minimum workers';
@@ -748,6 +760,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profile_skills_title => 'Skills';
+
+  @override
+  String get professional_information => 'Professional Information';
+
+  @override
+  String get my_skills => 'My Skills';
+
+  @override
+  String get save_changes => 'Save Changes';
+
+  @override
+  String skills_selected_count(int count) {
+    return '$count selected';
+  }
+
+  @override
+  String get skills_saved_message => 'Skills updated';
+
+  @override
+  String get skills_save_failed => 'Couldn\'t save your skills';
 
   @override
   String get profile_no_skills => 'No skills added yet';

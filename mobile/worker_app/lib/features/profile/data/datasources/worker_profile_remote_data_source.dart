@@ -116,8 +116,6 @@ class WorkerProfileRemoteDataSourceImpl
     return WorkerProfileModel.fromMeJson(response.data as Map<String, dynamic>);
   }
 
-  static _SkillsAttempt? _knownGoodAttempt;
-
   @override
   Future<List<WorkerSkill>> getAllSkills() async {
     final languageCode = AppLanguageInfo.languageCode;
@@ -137,7 +135,7 @@ class WorkerProfileRemoteDataSourceImpl
   Future<WorkerProfileModel> attachSkills(List<int> skillIds) => _changeSkills(
     label: 'ATTACH',
     path: ApiUrlParameters.updateSkills,
-    isDelete: false,
+    method: 'POST',
     skillIds: skillIds,
   );
 
@@ -145,103 +143,28 @@ class WorkerProfileRemoteDataSourceImpl
   Future<WorkerProfileModel> detachSkills(List<int> skillIds) => _changeSkills(
     label: 'DETACH',
     path: ApiUrlParameters.detachSkills,
-    isDelete: true,
+    method: 'DELETE',
     skillIds: skillIds,
   );
 
   Future<WorkerProfileModel> _changeSkills({
     required String label,
     required String path,
-    required bool isDelete,
+    required String method,
     required List<int> skillIds,
   }) async {
-    final attempts = _attemptsFor(isDelete);
-    DioException? lastValidationFailure;
-
-    for (final attempt in attempts) {
-      final body = attempt.payload.body(skillIds);
-      final description = '$label ${attempt.describe()}';
-
-      try {
-        final response = await _send(
-          description,
-          () => _perform(
-            attempt: attempt,
-            path: path,
-            isDelete: isDelete,
-            body: body,
-          ),
-        );
-
-        _knownGoodAttempt = attempt;
-        log(
-          '✅ $label WORKED — body shape ${attempt.payload.label} sent as '
-          '${attempt.transport.name.toUpperCase()}.\n'
-          '   Pin it by making this the `preferred` shape in SkillsPayload.',
-          name: 'Skills',
-        );
-
-        return await _parseWorker(description, response);
-      } on DioException catch (e) {
-        if (e.response?.statusCode != 422) rethrow;
-        lastValidationFailure = e;
-
-        if (_knownGoodAttempt == attempt) _knownGoodAttempt = null;
-      }
-    }
-
-    log(
-      '❌ $label FAILED — every candidate body shape was rejected with 422.\n'
-      '   Tried: ${attempts.map((a) => a.describe()).join(', ')}\n'
-      '   Read the `errors` bag logged above: it names the field the backend '
-      'wants. Move that shape to the front of SkillsPayload.candidates.',
-      name: 'Skills',
-    );
-
-    throw lastValidationFailure!;
-  }
-
-  List<_SkillsAttempt> _attemptsFor(bool isDelete) {
-    final attempts = <_SkillsAttempt>[
-      for (final payload in SkillsPayload.candidates)
-        _SkillsAttempt(payload, _SkillsTransport.body),
-      if (isDelete)
-        for (final payload in SkillsPayload.candidates)
-          _SkillsAttempt(payload, _SkillsTransport.query),
-    ];
-
-    final known = _knownGoodAttempt;
-    if (known == null) return attempts;
-
-    final normalized = isDelete
-        ? known
-        : _SkillsAttempt(known.payload, _SkillsTransport.body);
-
-    return [normalized, ...attempts.where((a) => a != normalized)];
-  }
-
-  Future<Response<dynamic>> _perform({
-    required _SkillsAttempt attempt,
-    required String path,
-    required bool isDelete,
-    required Map<String, dynamic> body,
-  }) {
+    final body = SkillsPayload.body(skillIds);
     final options = Options(
       contentType: Headers.jsonContentType,
-
       listFormat: ListFormat.multiCompatible,
     );
-
-    if (!isDelete) return dio.post(path, data: body, options: options);
-
-    return dio.delete(
-      path,
-      data: body,
-      queryParameters: attempt.transport == _SkillsTransport.query
-          ? body
-          : null,
-      options: options,
+    final response = await _send(
+      '$label {"skill_ids": [<int>]}',
+      () => method == 'DELETE'
+          ? dio.delete(path, data: body, options: options)
+          : dio.post(path, data: body, options: options),
     );
+    return _parseWorker(label, response);
   }
 
   Future<WorkerProfileModel> _parseWorker(
@@ -303,9 +226,7 @@ class WorkerProfileRemoteDataSourceImpl
       log(
         '$label → 422 VALIDATION FAILED.\n'
         '  sent     : ${_encode(options.data)}\n'
-        '  errors   : ${errors ?? data}\n'
-        '  → the key(s) named above are what the backend expects; make that '
-        'shape the `preferred` one in SkillsPayload.',
+        '  errors   : ${errors ?? data}',
         name: 'Skills',
       );
     }
@@ -358,25 +279,4 @@ class WorkerProfileRemoteDataSourceImpl
       error: 'Body status $bodyStatus on a ${response.statusCode} response',
     );
   }
-}
-
-enum _SkillsTransport { body, query }
-
-class _SkillsAttempt {
-  final SkillsPayload payload;
-  final _SkillsTransport transport;
-
-  const _SkillsAttempt(this.payload, this.transport);
-
-  String describe() => '${payload.label} via ${transport.name}';
-
-  @override
-  bool operator ==(Object other) =>
-      other is _SkillsAttempt &&
-      other.payload.field == payload.field &&
-      other.payload.asArray == payload.asArray &&
-      other.transport == transport;
-
-  @override
-  int get hashCode => Object.hash(payload.field, payload.asArray, transport);
 }

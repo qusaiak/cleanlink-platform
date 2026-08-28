@@ -17,6 +17,9 @@ import '../../features/tasks/presentation/pages/task_details_page.dart';
 import '../../features/tasks/presentation/pages/task_map_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/profile/presentation/pages/worker_profile_page.dart';
+import '../../features/profile/presentation/pages/my_skills_page.dart';
+import '../../features/profile/presentation/bloc/worker_profile_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 
 class AppRouter {
@@ -33,6 +36,7 @@ class AppRouter {
   static const kProfile = '/profile';
   static const kSettings = '/settings';
   static const kNotifications = '/notifications';
+  static const kSkills = '/my-skills';
 
   static final rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -133,6 +137,15 @@ class AppRouter {
       path: kNotifications,
       pageBuilder: (context, state) =>
           slideTransitionHorizontal(NotificationsPage(key: state.pageKey)),
+    ),
+    GoRoute(
+      path: kSkills,
+      pageBuilder: (context, state) => slideTransitionHorizontal(
+        BlocProvider.value(
+          value: state.extra as WorkerProfileBloc,
+          child: const MySkillsPage(),
+        ),
+      ),
     ),
   ];
 

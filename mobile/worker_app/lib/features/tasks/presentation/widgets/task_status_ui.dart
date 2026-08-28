@@ -21,14 +21,14 @@ class TaskStatusUi {
       case TaskStatus.assigned:
         return TaskStatusUi(
           label: l.task_status_assigned,
-          color: AppColor.secondaryColorDark,
-          background: AppColor.secondarySoft,
+          color: AppColor.primaryColorDarker,
+          background: AppColor.primarySoft,
         );
       case TaskStatus.onTheWay:
         return TaskStatusUi(
           label: l.task_status_on_the_way,
-          color: AppColor.infoColor,
-          background: AppColor.infoSoft,
+          color: AppColor.primaryColorDarker,
+          background: AppColor.primarySoft,
         );
       case TaskStatus.inProgress:
         return TaskStatusUi(

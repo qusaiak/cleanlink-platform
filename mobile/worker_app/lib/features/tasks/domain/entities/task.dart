@@ -28,6 +28,25 @@ extension TaskStatusProgression on TaskStatus {
 
 enum ServiceType { acMaintenance, plumbing, electrical, cleaning, general }
 
+class TaskPackageAttribute extends Equatable {
+  final int id;
+  final String name;
+  final String type;
+  final int quantity;
+
+  const TaskPackageAttribute({
+    required this.id,
+    required this.name,
+    required this.type,
+    required this.quantity,
+  });
+
+  bool get isBoolean => type == 'boolean';
+
+  @override
+  List<Object?> get props => [id, name, type, quantity];
+}
+
 class TaskTeamMember extends Equatable {
   final String id;
   final String name;
@@ -68,6 +87,10 @@ class Task extends Equatable {
   final String companyName;
 
   final String packageName;
+
+  final bool isOpenPackage;
+
+  final List<TaskPackageAttribute> packageAttributes;
 
   final double price;
 
@@ -132,6 +155,8 @@ class Task extends Equatable {
     this.companyImageUrl = '',
     this.companyName = '',
     this.packageName = '',
+    this.isOpenPackage = false,
+    this.packageAttributes = const [],
     this.price = 0,
     this.currency = '',
     this.durationLabel = '',
@@ -182,6 +207,8 @@ class Task extends Equatable {
       companyImageUrl: companyImageUrl,
       companyName: companyName,
       packageName: packageName,
+      isOpenPackage: isOpenPackage,
+      packageAttributes: packageAttributes,
       price: price,
       currency: currency,
       durationLabel: durationLabel,
@@ -230,6 +257,8 @@ class Task extends Equatable {
     companyImageUrl,
     companyName,
     packageName,
+    isOpenPackage,
+    packageAttributes,
     price,
     currency,
     durationLabel,
