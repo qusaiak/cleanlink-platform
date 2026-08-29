@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../config/routes/app_router.dart';
 import '../../../../config/theme/app_decoration.dart';
@@ -192,7 +191,7 @@ class _DashboardContent extends StatelessWidget {
                     }
                   },
                   onAdvance: () => _advance(context, task),
-                  onNavigate: () => _openMaps(task),
+                  onNavigate: () => {},
                 );
               },
             ),
@@ -227,18 +226,6 @@ class _DashboardContent extends StatelessWidget {
             : TaskActionType.start,
       ),
     );
-  }
-
-  Future<void> _openMaps(Task task) async {
-    final destination = task.latitude != null && task.longitude != null
-        ? '${task.latitude},${task.longitude}'
-        : Uri.encodeComponent(task.location);
-    final uri = Uri.parse(
-      'https://www.google.com/maps/dir/?api=1&destination=$destination',
-    );
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
   }
 }
 
