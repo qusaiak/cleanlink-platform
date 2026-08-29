@@ -52,6 +52,8 @@
   "auth_sign_in": "Sign in",
   "auth_sign_up": "Sign up",
   "auth_login_button": "Login",
+  "auth_client_role_not_allowed": "Client accounts cannot sign in to the Worker app. Please use the Client app instead.",
+  "auth_role_not_allowed": "This account is not allowed to sign in to the Worker app.",
   "auth_register_button": "Register",
   "auth_continue": "Continue",
   "validation_required": "This field is required",

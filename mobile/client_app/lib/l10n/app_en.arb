@@ -125,6 +125,8 @@
   "auth_otp_incomplete": "Enter the complete 6-digit verification code",
   "auth_otp_code_sent": "A new code was sent",
   "auth_error_generic": "Something went wrong. Please try again.",
+  "auth_worker_role_not_allowed": "Worker accounts cannot sign in to the Client app. Please use the Worker app instead.",
+  "auth_role_not_allowed": "This account is not allowed to sign in to the Client app.",
   "yes": "Yes",
   "no": "No",
   "ok": "OK",

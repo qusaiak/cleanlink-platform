@@ -159,6 +159,16 @@ class ValidationFailure extends Failure {
   }
 }
 
+class InvalidUserRoleFailure extends Failure {
+  final String actualRole;
+
+  const InvalidUserRoleFailure(this.actualRole)
+    : super('Account role is not allowed in this application', 'INVALID_ROLE');
+
+  @override
+  List<Object> get props => [...super.props, actualRole];
+}
+
 class ConnectionFailure extends Failure {
   const ConnectionFailure(super.message, super.errorCode);
 

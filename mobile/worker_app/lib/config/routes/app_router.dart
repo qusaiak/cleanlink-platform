@@ -48,6 +48,28 @@ class AppRouter {
       initialLocation: kSplash,
       navigatorKey: rootNavigatorKey,
       routes: _routes,
+      redirect: (context, state) {
+        final location = state.matchedLocation;
+        final onboardingCompleted = AppStartup.onboardingCompleted;
+        final authenticated = LoginSession.hasValidWorkerSession;
+
+        if (!onboardingCompleted && location != kOnboarding) {
+          return kOnboarding;
+        }
+        if (onboardingCompleted &&
+            !authenticated &&
+            location != kLogin &&
+            location != kOnboarding) {
+          return kLogin;
+        }
+        if (authenticated &&
+            (location == kLogin ||
+                location == kOnboarding ||
+                location == kSplash)) {
+          return kHome;
+        }
+        return null;
+      },
     );
 
     goRouter.routerDelegate.addListener(() => _logInterfacePath(goRouter));
@@ -71,7 +93,7 @@ class AppRouter {
       path: kSplash,
       redirect: (context, state) => !AppStartup.onboardingCompleted
           ? kOnboarding
-          : LoginSession.hasToken
+          : LoginSession.hasValidWorkerSession
           ? kHome
           : kLogin,
     ),

@@ -341,6 +341,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get auth_error_generic => 'حدث خطأ ما. يرجى المحاولة مرة أخرى.';
 
   @override
+  String get auth_worker_role_not_allowed =>
+      'لا يمكن استخدام حساب العامل لتسجيل الدخول إلى تطبيق العميل. يرجى استخدام تطبيق العامل.';
+
+  @override
+  String get auth_role_not_allowed =>
+      'هذا الحساب غير مسموح له بتسجيل الدخول إلى تطبيق العميل.';
+
+  @override
   String get yes => 'نعم';
 
   @override

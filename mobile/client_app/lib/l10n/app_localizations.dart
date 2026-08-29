@@ -722,6 +722,18 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Please try again.'**
   String get auth_error_generic;
 
+  /// No description provided for @auth_worker_role_not_allowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker accounts cannot sign in to the Client app. Please use the Worker app instead.'**
+  String get auth_worker_role_not_allowed;
+
+  /// No description provided for @auth_role_not_allowed.
+  ///
+  /// In en, this message translates to:
+  /// **'This account is not allowed to sign in to the Client app.'**
+  String get auth_role_not_allowed;
+
   /// No description provided for @yes.
   ///
   /// In en, this message translates to:

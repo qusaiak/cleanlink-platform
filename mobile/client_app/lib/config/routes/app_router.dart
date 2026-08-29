@@ -47,6 +47,7 @@ import '../../injection_container.dart';
 
 import '../../core/storage/shared_storage.dart';
 import '../../core/storage/storage_data.dart';
+import '../../core/auth/user_role.dart';
 import '../../features/categories/presentation/pages/categories_page.dart';
 import '../../features/categories/presentation/pages/category_details_page.dart';
 import '../../features/regions/presentation/pages/region_page.dart';
@@ -440,7 +441,14 @@ class AppRouter {
         StorageData.isOnboarding,
       );
 
-      final authenticated = await SharedStorage.authenticated;
+      final hasToken = await SharedStorage.authenticated;
+      final storedRole = await SharedStorage.get<String>(StorageData.role);
+      final authenticated =
+          hasToken && UserRole.parse(storedRole) == UserRole.client;
+
+      if (hasToken && !authenticated) {
+        await SharedStorage.clear();
+      }
 
       /// FIRST RUN
       if (!onboardingDone && location != kOnboarding) {

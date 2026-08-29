@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../error/failure.dart';
+import '../../auth/user_role.dart';
 
 String localizedFailureMessage(
   BuildContext context,
@@ -9,6 +10,12 @@ String localizedFailureMessage(
   String? fallback,
 }) {
   final l = AppLocalizations.of(context)!;
+
+  if (failure is InvalidUserRoleFailure) {
+    return UserRole.parse(failure.actualRole) == UserRole.client
+        ? l.auth_client_role_not_allowed
+        : l.auth_role_not_allowed;
+  }
 
   switch (failure?.errorCode) {
     case ErrorCode.invalidStatusTransition:

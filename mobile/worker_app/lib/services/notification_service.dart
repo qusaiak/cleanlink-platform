@@ -94,7 +94,7 @@ class NotificationService {
   }
 
   Future<void> registerToken() async {
-    if (!LoginSession.hasToken) return;
+    if (!LoginSession.hasValidWorkerSession) return;
 
     try {
       final token = await _messaging.getToken().timeout(
@@ -103,7 +103,7 @@ class NotificationService {
       );
       if (token == null || token.isEmpty) return;
 
-      if (!LoginSession.hasToken) return;
+      if (!LoginSession.hasValidWorkerSession) return;
 
       await sl<Dio>().post(
         ApiUrlParameters.fcmToken,

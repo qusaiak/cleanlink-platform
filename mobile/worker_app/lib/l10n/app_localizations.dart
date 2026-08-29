@@ -416,6 +416,18 @@ abstract class AppLocalizations {
   /// **'Login'**
   String get auth_login_button;
 
+  /// No description provided for @auth_client_role_not_allowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Client accounts cannot sign in to the Worker app. Please use the Client app instead.'**
+  String get auth_client_role_not_allowed;
+
+  /// No description provided for @auth_role_not_allowed.
+  ///
+  /// In en, this message translates to:
+  /// **'This account is not allowed to sign in to the Worker app.'**
+  String get auth_role_not_allowed;
+
   /// No description provided for @auth_register_button.
   ///
   /// In en, this message translates to:

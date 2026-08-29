@@ -2,6 +2,7 @@ import 'package:client_app/config/routes/app_router.dart';
 import 'package:client_app/core/widgets/custom_toast.dart';
 import 'package:client_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:client_app/features/auth/presentation/widgets/login_body.dart';
+import 'package:client_app/features/auth/presentation/utils/auth_error_localizer.dart';
 import 'package:client_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +21,7 @@ class LoginPage extends StatelessWidget {
           AppSnackBar.showError(
             context: context,
             title: AppLocalizations.of(context)!.error,
-            message: state.error!.message,
+            message: localizedAuthFailureMessage(context, state.error!),
           );
         }
       },

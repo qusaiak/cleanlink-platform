@@ -177,6 +177,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get auth_login_button => 'تسجيل الدخول';
 
   @override
+  String get auth_client_role_not_allowed =>
+      'لا يمكن استخدام حساب العميل لتسجيل الدخول إلى تطبيق العامل. يرجى استخدام تطبيق العميل.';
+
+  @override
+  String get auth_role_not_allowed =>
+      'هذا الحساب غير مسموح له بتسجيل الدخول إلى تطبيق العامل.';
+
+  @override
   String get auth_register_button => 'إنشاء الحساب';
 
   @override

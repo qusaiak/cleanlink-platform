@@ -178,6 +178,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_login_button => 'Login';
 
   @override
+  String get auth_client_role_not_allowed =>
+      'Client accounts cannot sign in to the Worker app. Please use the Client app instead.';
+
+  @override
+  String get auth_role_not_allowed =>
+      'This account is not allowed to sign in to the Worker app.';
+
+  @override
   String get auth_register_button => 'Register';
 
   @override

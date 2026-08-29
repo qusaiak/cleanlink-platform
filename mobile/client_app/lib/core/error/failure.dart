@@ -11,6 +11,7 @@ enum AppFailureType {
   conflict,
   server,
   cancelled,
+  invalidUserRole,
   unknown,
 }
 
@@ -129,6 +130,19 @@ class BookingConflictFailure extends Failure {
 
   @override
   AppFailureType get type => AppFailureType.conflict;
+}
+
+class InvalidUserRoleFailure extends Failure {
+  final String actualRole;
+
+  const InvalidUserRoleFailure(this.actualRole)
+    : super('Account role is not allowed in this application', 'INVALID_ROLE');
+
+  @override
+  AppFailureType get type => AppFailureType.invalidUserRole;
+
+  @override
+  List<Object> get props => [...super.props, actualRole];
 }
 
 class DatabaseFailure extends Failure {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../auth/user_role.dart';
 import '../storage/shared_storage.dart';
 import '../storage/storage_data.dart';
 
@@ -13,7 +14,10 @@ class UserSession extends ChangeNotifier {
   String? address;
   String? image;
 
-  bool get isAuthenticated => token != null && token!.isNotEmpty;
+  bool get hasToken => token != null && token!.isNotEmpty;
+
+  bool get isAuthenticated =>
+      hasToken && UserRole.parse(role) == UserRole.client;
 
   Future<void> load() async {
     id = await SharedStorage.get<int>(StorageData.userId);
@@ -24,6 +28,10 @@ class UserSession extends ChangeNotifier {
     phone = await SharedStorage.get<String>(StorageData.phone);
     address = await SharedStorage.get<String>(StorageData.address);
     image = await SharedStorage.get<String>(StorageData.image);
+    if (hasToken && !isAuthenticated) {
+      await clear();
+      return;
+    }
     notifyListeners();
   }
 

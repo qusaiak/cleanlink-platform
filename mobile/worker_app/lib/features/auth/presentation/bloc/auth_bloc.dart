@@ -73,6 +73,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await onTokenReceived(entity.accessToken);
       await LoginSession.saveIdentity(
         employeeId: entity.id.toString(),
+        role: entity.role,
         address: entity.address,
         phone: entity.phone,
       );

@@ -347,6 +347,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_error_generic => 'Something went wrong. Please try again.';
 
   @override
+  String get auth_worker_role_not_allowed =>
+      'Worker accounts cannot sign in to the Client app. Please use the Worker app instead.';
+
+  @override
+  String get auth_role_not_allowed =>
+      'This account is not allowed to sign in to the Client app.';
+
+  @override
   String get yes => 'Yes';
 
   @override

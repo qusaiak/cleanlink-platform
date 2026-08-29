@@ -6,6 +6,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 import '../../../../core/error/failure.dart';
+import '../../../../core/auth/user_role.dart';
 import '../../domain/entities/login_client_entity.dart';
 import '../../domain/repositories/auth_repo.dart';
 import '../datasources/auth_api_service.dart';
@@ -19,8 +20,18 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, LoginEntity>> login({
     required String email,
     required String password,
-  }) =>
-      _guard('login', () => apiService.login(email: email, password: password));
+  }) async {
+    final result = await _guard(
+      'login',
+      () => apiService.login(email: email, password: password),
+    );
+    return result.fold(
+      Left.new,
+      (entity) => UserRole.parse(entity.role) == UserRole.worker
+          ? Right(entity)
+          : Left(InvalidUserRoleFailure(entity.role)),
+    );
+  }
 
   @override
   Future<Either<Failure, Unit>> logout() => _guard('logout', () async {

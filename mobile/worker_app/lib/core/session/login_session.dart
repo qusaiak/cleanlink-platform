@@ -4,11 +4,14 @@ import 'dart:developer';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../auth/user_role.dart';
+
 class LoginSession {
   LoginSession._();
 
   static const String _tokenKey = 'auth_token';
   static const String _employeeIdKey = 'session_employee_id';
+  static const String _roleKey = 'session_role';
   static const String _addressKey = 'session_address';
   static const String _phoneKey = 'session_phone';
   static const String _avatarUrlKey = 'session_avatar_url';
@@ -16,6 +19,7 @@ class LoginSession {
   static const String _skillsKey = 'session_skills';
 
   static String? employeeId;
+  static String? role;
   static String? address;
   static String? phone;
 
@@ -40,15 +44,22 @@ class LoginSession {
 
   static bool get hasToken => token != null && token!.isNotEmpty;
 
+  static bool get hasValidWorkerSession =>
+      hasToken && UserRole.parse(role) == UserRole.worker;
+
   static Future<void> restore() async {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString(_tokenKey);
     employeeId = prefs.getString(_employeeIdKey);
+    role = prefs.getString(_roleKey);
     address = prefs.getString(_addressKey);
     phone = prefs.getString(_phoneKey);
     avatarUrl = prefs.getString(_avatarUrlKey);
     imagePath = prefs.getString(_imagePathKey);
     skills = _decodeSkills(prefs.getString(_skillsKey));
+    if (hasToken && !hasValidWorkerSession) {
+      await clear();
+    }
   }
 
   static List<Map<String, dynamic>> _decodeSkills(String? raw) {
@@ -74,10 +85,12 @@ class LoginSession {
 
   static Future<void> saveIdentity({
     String? employeeId,
+    String? role,
     String? address,
     String? phone,
   }) async {
     LoginSession.employeeId = employeeId ?? LoginSession.employeeId;
+    LoginSession.role = role ?? LoginSession.role;
     LoginSession.address = address ?? LoginSession.address;
     LoginSession.phone = phone ?? LoginSession.phone;
 
@@ -85,6 +98,8 @@ class LoginSession {
     await Future.wait([
       if (LoginSession.employeeId != null)
         prefs.setString(_employeeIdKey, LoginSession.employeeId!),
+      if (LoginSession.role != null)
+        prefs.setString(_roleKey, LoginSession.role!),
       if (LoginSession.address != null)
         prefs.setString(_addressKey, LoginSession.address!),
       if (LoginSession.phone != null)
@@ -118,6 +133,7 @@ class LoginSession {
   static Future<void> clear() async {
     token = null;
     employeeId = null;
+    role = null;
     address = null;
     phone = null;
     avatarUrl = null;
@@ -128,6 +144,7 @@ class LoginSession {
     await Future.wait([
       prefs.remove(_tokenKey),
       prefs.remove(_employeeIdKey),
+      prefs.remove(_roleKey),
       prefs.remove(_addressKey),
       prefs.remove(_phoneKey),
       prefs.remove(_avatarUrlKey),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 
+import '../../../../core/auth/user_role.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/network/base_response_model.dart';
 import '../../../../core/network/network_exceptions.dart';
@@ -192,8 +193,12 @@ class AuthRepoImpl implements AuthRepo {
     if (data == null || data.accessToken.trim().isEmpty) {
       throw ServerFailure(baseResponse.message, baseResponse.status.toString());
     }
+    final user = data.user.toEntity();
+    if (UserRole.parse(user.role) != UserRole.client) {
+      throw InvalidUserRoleFailure(user.role);
+    }
     return AuthEntity(
-      user: data.user.toEntity(),
+      user: user,
       accessToken: data.accessToken,
       status: baseResponse.status,
       message: baseResponse.message,
